@@ -1,11 +1,11 @@
-site_name: Cafuringa
+site_name: Rede Cafuringa
 site_description: 'Repositório de projeto da disciplina de REQ-T1, 2026.2'
 site_author: 'Equipe Bytelab'
 
 theme: 
   name: material
-  logo: 
-  favicon: 
+  logo: img/logo.png
+  favicon: img/logo.png
   language: pt-BR
   palette:
     # Palette toggle for light mode

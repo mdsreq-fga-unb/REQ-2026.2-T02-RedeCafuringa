@@ -1,8 +1,10 @@
 # Página Inicial
 
-<span class="version-badge">Versão 0.1</span>
+<span class="version-badge">Versão 0.2</span>
 
 Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado ao gerenciamento e à transparência das demandas do ecossistema local. Desenvolvido no âmbito da disciplina de Requisitos de Software, este espaço reúne todo o artefatiamento técnico, mapeamento de processos e especificações do sistema. 
+
+<img src="img/propaganda.png" alt="Propaganda da rede cafuringa" style="margin-top: 10px; border-radius: 20px; width: 100%;">
 
 ---
 
@@ -25,16 +27,59 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 
 ---
 
-
 ## Integrantes da Equipe
 
-|  |  |  |
-| :---: | :---: | :---: |
-| <a href="https://github.com/macedoPedro20" target="_blank"><img src="https://github.com/macedoPedro20.png?size=120" alt="Pedro Macedo" width="96"><br>Pedro Macedo</a> | <a href="https://github.com/Beatriz-ge" target="_blank"><img src="https://github.com/Beatriz-ge.png?size=120" alt="Beatriz Lins" width="96"><br>Beatriz Lins</a> | <a href="https://github.com/AgenteL007" target="_blank"><img src="https://github.com/AgenteL007.png?size=120" alt=" Luccas Rodrigues" width="96"><br>Luccas Rodrigues</a> |
-| <a href="https://github.com/lucaszg-g" target="_blank"><img src="https://github.com/lucaszg-g.png?size=120" alt=" Lucas Gabriel" width="96"><br>Lucas Gabriel</a> | <a href="https://github.com/Pedroluizfo" target="_blank"><img src="https://github.com/Pedroluizfo.png?size=120" alt="Pedro Luiz" width="96"><br>Pedro Luiz</a> | <a href="https://github.com/ItaloSamP" target="_blank"><img src="https://github.com/ItaloSamP.png?size=120" alt="Ítalo Alves" width="96"><br>Ítalo Alves</a> |
+<div class="grid cards" markdown>
+
+-   [**Beatriz Lins**](https://github.com/Beatriz-ge){ target="_blank" }
+        
+    ![Beatriz Lins](https://github.com/Beatriz-ge.png?size=120){ width="100" align=left }
+    Membro da equipe com preferências por gestão de projeto, documentação e Front-end.
+
+
+-   [**Ítalo Alves**](https://github.com/ItaloSamP){ target="_blank" }
+        
+    ![Ítalo Alves](https://github.com/ItaloSamP.png?size=120){ width="100" align=left }
+    Membro da equipe com preferências por Back-end, infraestrutura e testes.
+
+
+-   [**Lucas Gabriel**](https://github.com/lucaszg-g){ target="_blank" }
+    
+    ![Lucas Gabriel](https://github.com/lucaszg-g.png?size=120){ width="100" align=left }
+    Membro da equipe com preferências por Front-end.
+
+
+-   [**Luccas Rodrigues**](https://github.com/AgenteL007){ target="_blank" }
+        
+    ![Luccas Rodrigues](https://github.com/AgenteL007.png?size=120){ width="100" align=left }
+    Membro da equipe com preferências por Back-end.
+
+
+-   [**Paulo Filho**](https://github.com/Pirata2040){ target="_blank" }
+        
+    ![Pedro Luiz](https://github.com/Pirata2040.png?size=120){ width="100" align=left }
+    Membro da equipe com preferências por gestão de projeto, documentação e Front-end.
+
+
+-   [**Pedro Luiz**](https://github.com/Pedroluizfo){ target="_blank" }
+        
+    ![Pedro Luiz](https://github.com/Pedroluizfo.png?size=120){ width="100" align=left }
+    Membro da equipe com preferências por Back-end.
+
+
+-   [**Pedro Macedo**](https://github.com/macedoPedro20){ target="_blank" }
+
+    ![Pedro Macedo](https://github.com/macedoPedro20.png?size=120){ width="100" align=left }
+    Membro da equipe com preferências por Front-end e Back-end.
+
+</div>
+
+---
 
 ## Histórico de Revisão
 
 | Data | Versão | Descrição | Autor |
 | :---: | :---: | :--- | :--- |
 | 01/09/26 | 0.1 | Criação da página inicial, estilização inicial da gitpage e esqueleto de arquivos essenciais | Beatriz Lins |
+| 01/09/26 | 0.2 | Definição da página inicial adicionando propaganda, logo e redefinindo estilo | Beatriz Lins |
+
