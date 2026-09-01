@@ -1,16 +1,12 @@
-```yaml
 name: CI
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -25,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -55,4 +51,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-```
