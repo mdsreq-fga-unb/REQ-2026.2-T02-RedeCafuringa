@@ -496,7 +496,7 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1rem;
-  margin: 1.8rem 0 2rem;
+  margin: 1rem 0 0rem;
 }
 
 .section-card {
@@ -790,3 +790,28 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 [data-md-color-scheme="slate"] .md-typeset strong {
   color: var(--nativo-cream);
 }
+
+/* =====================================================
+   CONTORNO/CAIXAS
+   ===================================================== */
+
+[data-md-color-scheme="slate"] .md-typeset .admonition.info,
+[data-md-color-scheme="slate"] .md-typeset details.info {
+  border-left-color: var(--nativo-sage) !important;
+  background-color: rgba(217, 119, 50, 0.12) !important;
+  border-color: var(--nativo-sage) !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition.info > .admonition-title,
+[data-md-color-scheme="slate"] .md-typeset details.info > summary {
+  background-color: rgba(217, 119, 50, 0.22) !important;
+  color: var(--nativo-cream) !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition.info .admonition-title::before {
+  color: var(--nativo-sage) !important;
+  background-color: var(--nativo-sage) !important;
+  mask-image: var(--md-admonition-icon--info);
+  -webkit-mask-image: var(--md-admonition-icon--info);
+}
+
