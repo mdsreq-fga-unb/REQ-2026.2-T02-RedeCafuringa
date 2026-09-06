@@ -34,7 +34,7 @@ extra_javascript:
 nav:
   - Início: index.md
 
-  - Visão Geral e Concepção do Projeto: 
+  - Unidade 1 - Concepção do Projeto: 
     - 1. Cenário Atual do Cliente e do Negócio: unidade1/cenario.md
     - 2. Solução Proposta: unidade1/solucao.md
     - 3. Intervenção Social: unidade1/intervencao.md
@@ -42,17 +42,33 @@ nav:
     - 5. Engenharia de Requisitos: unidade1/requisitos.md
     - 6. Cronograma e Entregas: unidade1/cronograma.md
     - 7. Interação Entre Equipe e Cliente: unidade1/interacao.md
+    - Vídeo de Apresentação: unidade1/video1.md
 
-  - Requisitos de Software e Backlog do Produto:
+  - Unidade 2 - Requisitos de Software:
     - 8. Requisitos de Software: unidade2/requisitos.md
     - 9. DoR e DoD: unidade2/dor_dod.md
     - 10. Backlog do Produto: unidade2/backlog.md
     - 11. Lições Aprendidas: unidade2/licoes_aprendidas.md
     - 12. Referências Bibliográficas: unidade2/referencias.md
+    - Vídeo de Apresentação: unidade2/video2.md
 
-  - Vídeos Demonstrativos:
-      - Unidade 1: videos/unidade1.md
-      - Unidade 2: videos/unidade2.md
+  - AUP - Concepção:
+    - Iteração 01: aup-concepcao/iteracao1.md
+    - Iteração 02: aup-concepcao/iteracao2.md
+
+  - AUP - Elaboração:
+    - Iteração 03: aup-elaboracao/iteracao3.md
+    - Iteração 04: aup-elaboracao/iteracao4.md
+
+  - AUP - Construção:
+    - Iteração 05: aup-construcao/iteracao5.md
+    - Iteração 06: aup-construcao/iteracao6.md
+    - Iteração 07: aup-construcao/iteracao7.md
+    - Iteração 08: aup-construcao/iteracao8.md
+
+  - AUP - Transição:
+    - Iteração 09: aup-transicao/iteracao9.md
+    - Iteração 10: aup-transicao/iteracao10.md
 
 markdown_extensions:
   - attr_list
