@@ -27,8 +27,8 @@ A rede já opera uma iniciativa própria de comercialização, a Cafuringa Store
 O Rich Picture ilustra o cenário atual da APA da Cafuringa, evidenciando o contraste entre a demanda urbana do Distrito Federal por alimentos agroecológicos e ecoturismo e as dificuldades enfrentadas pelos produtores rurais e ecovilas na comercialização e divulgação de seus serviços. No centro do modelo, destacam-se os gargalos operacionais, como a dependência de canais informais e pulverizados (WhatsApp e Instagram), a perda de margem de lucro para atravessadores, a incerteza jurídica quanto à certificação orgânica e o risco de sobrecarga nas propriedades por falta de agendamento prévio.
 
 <p align="center">
-  <img src="/img/reach_picture.png" alt="Rede Cafuringa" width="100%"style="border-radius: 15px;">
-</p></p>
+  <img src="../../img/reach_picture.png" alt="Rede Cafuringa" width="100%" style="border-radius: 15px;">
+</p>
 
 ---
 
@@ -46,7 +46,7 @@ A figura a seguir apresenta o diagrama de Ishikawa contendo as causas e o proble
 ### Diagrama de Ishikawa
 
 <p align="center">
-  <img src="/img/escama_peixe.png" alt="Rede Cafuringa" 
+  <img src="../../img/escama_peixe.png" alt="Rede Cafuringa" 
   width="100%"style="border-radius: 15px;">
 </p></p> 
 
@@ -65,7 +65,7 @@ Outro desafio crítico envolve a conformidade legal e regulatória, especialment
 Os principais stakeholders do projeto são: Jefferson Sooma, como representante dos produtores e comunidades intencionais da APA da Cafuringa, sendo o principal responsável por alinhar necessidades locais e validar as entregas do sistema; produtores rurais familiares e representantes de associações/ecovilas, diretamente impactados pela plataforma na divulgação de seus produtos e atrativos turísticos; consumidores e visitantes do Distrito Federal, que buscam alimentos agroecológicos de procedência garantida e opções de lazer em meio à natureza; e a equipe de desenvolvimento (Grupo Bytelab), responsável por viabilizar tecnicamente a aplicação web responsiva (PWA), garantindo acessibilidade, segurança e gratuidade operacional.
 
 <p align="center">
-  <img src="/img/steakholders.png" alt="Rede Cafuringa" 
+  <img src="../../img/steakholders.png" alt="Rede Cafuringa" 
   width="100%"style="border-radius: 15px;">
 </p></p> 
 
