@@ -12,6 +12,8 @@
 | **Analista de QA** | Garante a qualidade do produto, executando testes de funcionalidade, performance e usabilidade. | Ítalo Alves |
 | **Analista de Requisitos** | Define os requisitos funcionais e não funcionais do sistema e garante que eles sejam atendidos. | Beatriz Lins |
 
+---
+
 ## 7.2 Comunicação
 !!! info "Fluxo de Informações Participativo" 
     A comunicação se dá pela interação contínua entre todas as partes (stakeholders, dono do produto e equipe técnica), garantindo um nível alto de proximidade com o cliente.
@@ -21,6 +23,8 @@
      Em contextos de alta proximidade, as histórias de usuário, cenários narrativos e critérios de aceitação funcionam como verdadeiros "prompts" (estímulos) para conversações diárias e o aprendizado conjunto entre cliente e equipe.
 !!! info "Adaptação Contínua"
      Este formato iterativo compensa a informalidade relativa dos registros com uma altíssima velocidade de validação, aproveitando a presença constante do cliente no processo decisório para adaptações rápidas.
+
+---
 
 ## 7.3 Processo de Validação
 !!! info "Validação Contínua e Precoce"
