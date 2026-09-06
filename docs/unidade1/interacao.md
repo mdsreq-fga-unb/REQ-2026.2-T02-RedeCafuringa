@@ -23,7 +23,7 @@
      Este formato iterativo compensa a informalidade relativa dos registros com uma altíssima velocidade de validação, aproveitando a presença constante do cliente no processo decisório para adaptações rápidas.
 
 ## 7.3 Processo de Validação
-!!! info"*Validação Contínua e Precoce"
+!!! info "Validação Contínua e Precoce"
      O processo de validação não ocorre apenas no final; ele acontece continuamente por meio de demonstrações frequentes, revisões e testes diretos com os stakeholders.
 !!! info "Integração de Práticas Técnicas (TDD)"
      A equipe emprega validação por meio de testes de aceitação e aplica fortemente o Desenvolvimento Orientado a Testes (TDD), o que permite validar os requisitos técnicos através de testes automatizados antes mesmo da implementação completa.
