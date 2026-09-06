@@ -107,4 +107,5 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | 01/09/26 | 0.2 | Definição da página inicial adicionando propaganda, logo e redefinindo estilo | Beatriz Lins |
 | 02/09/26 | 0.3 | Adiciona tópicos 1, 2 (todos da primeira entrega) e organiza estética | Beatriz Lins |
 | 05/09/26 | 0.4 | Reformula toda gitpage, adiciona tópicos de AUP e respectivas documentações, adiciona tópicos 5 e 6 da unidade 1 e adiciona imagens de comprovação de AUP | Beatriz Lins |
+| 06/09/26 | 0.5 | Adiciona o conteudo do tópico 7 | Lucas Gabriel |
 
