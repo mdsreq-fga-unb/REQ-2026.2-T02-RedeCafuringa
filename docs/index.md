@@ -34,6 +34,18 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
       <p>Navegue pelas iterações da fase de transição do nosso projeto.</p>
     </a>
   </div>
+  <div class="section-cards">
+    <a class="section-card" href="unidade1/cenario">
+      <h3>Visão Geral do Projeto</h3>
+      <p>Navegue pela visão geral do cliente e do produto.</p>
+    </a>
+  </div>
+  <div class="section-cards">
+    <a class="section-card" href="unidade2/requisitos">
+      <h3>Requisitos do Sistema</h3>
+      <p>Navegue pelo backlog do sistema e dos requisitos.</p>
+    </a>
+  </div>
 </div>
 
 ---
@@ -93,5 +105,6 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | :---: | :---: | :--- | :--- |
 | 01/09/26 | 0.1 | Criação da página inicial, estilização inicial da gitpage e esqueleto de arquivos essenciais | Beatriz Lins |
 | 01/09/26 | 0.2 | Definição da página inicial adicionando propaganda, logo e redefinindo estilo | Beatriz Lins |
-| 02/09/26 | 0.3 | Adiciona todos os tópicos da primeira entrega e organiza estética | Beatriz Lins |
+| 02/09/26 | 0.3 | Adiciona tópicos 1, 2 (todos da primeira entrega) e organiza estética | Beatriz Lins |
+| 05/09/26 | 0.4 | Reformula toda gitpage, adiciona tópicos de AUP e respectivas documentações, adiciona tópicos 5 e 6 da unidade 1 e adiciona imagens de comprovação de AUP | Beatriz Lins |
 
