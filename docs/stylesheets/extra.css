@@ -815,3 +815,132 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   -webkit-mask-image: var(--md-admonition-icon--info);
 }
 
+.schedule-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  background-color: transparent;
+}
+
+.schedule-table th {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.schedule-row {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.schedule-row td {
+  padding: 15px;
+  vertical-align: middle;
+}
+
+.schedule-phase {
+  font-size: 0.85rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.schedule-status {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  background-color: rgba(255, 165, 0, 0.2);
+  color: #ffa500;
+  display: inline-block;
+}
+
+.schedule-activity {
+  text-decoration: none;
+}
+
+.schedule-activity:hover {
+  text-decoration: underline;
+}
+
+/* Ajusta a largura máxima do container principal do site */
+.md-grid {
+  max-width: 1400px !important;
+}
+
+/* Transforma a tabela em linhas estilo cards */
+.schedule-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+  background-color: transparent;
+  margin-top: 20px;
+}
+
+.schedule-table th {
+  background-color: transparent;
+  color: #dcdcdc;
+  padding: 10px 15px;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.schedule-row {
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.schedule-row td {
+  padding: 20px 15px;
+  vertical-align: middle;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.schedule-row td:first-child {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.schedule-row td:last-child {
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.schedule-phase {
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.15);
+  display: inline-block;
+  margin-top: 6px;
+  color: #fff;
+}
+
+.schedule-status {
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  background-color: rgba(212, 160, 23, 0.2);
+  color: #e5b83b;
+  display: inline-block;
+  text-align: center;
+}
+
+.schedule-activity {
+  color: inherit;
+  text-decoration: none;
+}
+
+.schedule-activity:hover {
+  text-decoration: underline;
+}
