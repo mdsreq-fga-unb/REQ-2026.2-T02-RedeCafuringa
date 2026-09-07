@@ -1,84 +1,14 @@
-### Visão Geral do Cronograma
+<span class="version-badge">Unidade 01</span>
 
-<table class="schedule-table">
-  <colgroup>
-    <col style="width: 15%;">
-    <col style="width: 18%;">
-    <col style="width: 37%;">
-    <col style="width: 12%;">
-    <col style="width: 18%;">
-  </colgroup>
-  
-  <tbody>
-    <tr class="schedule-row">
-      <td><strong>Iteração 1</strong><br><span class="schedule-phase">Concepção</span></td>
-      <td>Não aplicável</td>
-      <td><a class="schedule-activity" href="../evidencias/iteracao-1/">Elicitação e descoberta: entrevistas, brainstorming e registro da visão inicial do produto e domínio do Cafuringa.</a></td>
-      <td><span class="schedule-status">Planejado</span></td>
-      <td>24/08/2026 a 29/08/2026</td>
-    </tr>
-    <tr class="schedule-row">
-      <td><strong>Iteração 2</strong><br><span class="schedule-phase">Concepção</span></td>
-      <td>Não aplicável</td>
-      <td><a class="schedule-activity" href="../evidencias/iteracao-2/">Análise e consenso: avaliação de valor de negócio, priorização inicial (MoSCoW), alinhamento técnico e registro dos requisitos preliminares.</a></td>
-      <td><span class="schedule-status">Planejado</span></td>
-      <td>30/08/2026 a 08/09/2026</td>
-    </tr>
-    <tr class="schedule-row">
-      <td><strong>Iteração 3</strong><br><span class="schedule-phase">Elaboração</span></td>
-      <td>UCs em descoberto por protótipo</td>
-      <td><a class="schedule-activity" href="../evidencias/iteracao-3/">Representação: prototipagem, wireframes, revegetação e descoberta visual de fluxos e regras de negócio para o app.</a></td>
-      <td><span class="schedule-status">Planejado</span></td>
-      <td>09/09/2026 a 24/09/2026</td>
-    </tr>
-    <tr class="schedule-row">
-      <td><strong>Iteração 4</strong><br><span class="schedule-phase">Elaboração</span></td>
-      <td><a href="../backlog/#9-casos-de-uso">Conjunto de UCs</a></td>
-      <td><a class="schedule-activity" href="../evidencias/iteracao-4/">Declaração, análise e consenso, organização e detalhamento: RNF/RNF, casos de uso, matriz de priorização, escopo do MVP e rastreabilidade inicial.</a></td>
-      <td><span class="schedule-status">Planejado</span></td>
-      <td>24/09/2026 a 10/10/2026</td>
-    </tr>
-    <tr class="schedule-row">
-      <td><strong>Iteração 5</strong><br><span class="schedule-phase">Construção</span></td>
-      <td><a href="../casos-uso/uc01/">UC01</a>, <a href="../casos-uso/uc02/">UC02</a></td>
-      <td><a class="schedule-activity" href="../evidencias/iteracao-5/">Declaração, representação, verificação e validação: detalhamento dos UCs, prototipagem, verificação por DoR, validação por DoD e validações com cliente para autenticação e perfil de usuário.</a></td>
-      <td><span class="schedule-status">Planejado</span></td>
-      <td>10/10/2026 a 18/10/2026</td>
-    </tr>
-    <tr class="schedule-row">
-      <td><strong>Iteração 6</strong><br><span class="schedule-phase">Construção</span></td>
-      <td><a href="../casos-uso/uc03/">UC03</a>, <a href="../casos-uso/uc04/">UC04</a></td>
-      <td><a class="schedule-activity" href="../evidencias/iteracao-6/">Declaração, representação, verificação e validação: detalhamento dos UCs, prototipagem, verificação por DoR, validação por DoD e validações com cliente para catálogo de produtos e atrações rurais.</a></td>
-      <td><span class="schedule-status">Planejado</span></td>
-      <td>18/10/2026 a 01/11/2026</td>
-    </tr>
-    <tr class="schedule-row">
-      <td><strong>Iteração 7</strong><br><span class="schedule-phase">Construção</span></td>
-      <td><a href="../casos-uso/uc05/">UC05</a>, <a href="../casos-uso/uc06/">UC06</a></td>
-      <td><a class="schedule-activity" href="../evidencias/iteracao-7/">Declaração, representação, verificação e validação: detalhamento dos UCs, prototipagem, verificação por DoR, validação por DoD e validações com cliente para geolocalização e mapa.</a></td>
-      <td><span class="schedule-status">Planejado</span></td>
-      <td>01/11/2026 a 08/11/2026</td>
-    </tr>
-    <tr class="schedule-row">
-      <td><strong>Iteração 8</strong><br><span class="schedule-phase">Construção</span></td>
-      <td><a href="../casos-uso/uc07/">UC07</a>, <a href="../casos-uso/uc08/">UC08</a></td>
-      <td><a class="schedule-activity" href="../evidencias/iteracao-8/">Declaração, representação, verificação e validação: detalhamento dos UCs, prototipagem, verificação por DoR, validação por DoD e validações com cliente para suporte e feiras comunitárias digitais.</a></td>
-      <td><span class="schedule-status">Planejado</span></td>
-      <td>08/11/2026 a 15/11/2026</td>
-    </tr>
-    <tr class="schedule-row">
-      <td><strong>Iteração 9</strong><br><span class="schedule-phase">Transição</span></td>
-      <td>Produto integrado para homologação</td>
-      <td><a class="schedule-activity" href="../evidencias/iteracao-9/">Validação: geração do build/APK, demonstração do produto, testes de aceitação e registro de homologação com a comunidade e cliente.</a></td>
-      <td><span class="schedule-status">Planejado</span></td>
-      <td>16/11/2026 a 20/11/2026</td>
-    </tr>
-    <tr class="schedule-row">
-      <td><strong>Iteração 10</strong><br><span class="schedule-phase">Transição</span></td>
-      <td>Versão final do aplicativo</td>
-      <td><a class="schedule-activity" href="../evidencias/iteracao-10/">Organização e atualização: documentação as-built, fechamento e entrega final da versão para a comunidade.</a></td>
-      <td><span class="schedule-status">Planejado</span></td>
-      <td>21/11/2026 a 24/11/2026</td>
-    </tr>
-  </tbody>
-</table>
+| Iteração / Fase | Artefatos de Entrada | Atividades e Descrição | Status | Período |
+| :--- | :--- | :--- | :---: | :--- |
+| **Iteração 1**<br><span class="schedule-phase">Concepção</span> | Não aplicável | [Elicitação e descoberta: entrevistas, brainstorming e registro da visão inicial do produto e domínio do Cafuringa.](../evidencias/iteracao-1/) | <span class="schedule-status">Planejado</span> | 24/08/2026 a 29/08/2026 |
+| **Iteração 2**<br><span class="schedule-phase">Concepção</span> | Não aplicável | [Análise e consenso: avaliação de valor de negócio, priorização inicial (MoSCoW), alinhamento técnico e registro dos requisitos preliminares.](../evidencias/iteracao-2/) | <span class="schedule-status">Planejado</span> | 30/08/2026 a 08/09/2026 |
+| **Iteração 3**<br><span class="schedule-phase">Elaboração</span> | UCs em descoberto por protótipo | [Representação: prototipagem, wireframes, revegetação e descoberta visual de fluxos e regras de negócio para o app.](../evidencias/iteracao-3/) | <span class="schedule-status">Planejado</span> | 09/09/2026 a 24/09/2026 |
+| **Iteração 4**<br><span class="schedule-phase">Elaboração</span> | [Conjunto de UCs](../backlog/#9-casos-de-uso) | [Declaração, análise e consenso, organização e detalhamento: RNF/RNF, casos de uso, matriz de priorização, escopo do MVP e rastreabilidade inicial.](../evidencias/iteracao-4/) | <span class="schedule-status">Planejado</span> | 24/09/2026 a 10/10/2026 |
+| **Iteração 5**<br><span class="schedule-phase">Construção</span> | [UC01](../casos-uso/uc01/), [UC02](../casos-uso/uc02/) | [Declaração, representação, verificação e validação: detalhamento dos UCs, prototipagem, verificação por DoR, validação por DoD e validações com cliente para autenticação e perfil de usuário.](../evidencias/iteracao-5/) | <span class="schedule-status">Planejado</span> | 10/10/2026 a 18/10/2026 |
+| **Iteração 6**<br><span class="schedule-phase">Construção</span> | [UC03](../casos-uso/uc03/), [UC04](../casos-uso/uc04/) | [Declaração, representação, verificação e validação: detalhamento dos UCs, prototipagem, verificação por DoR, validação por DoD e validações com cliente para catálogo de produtos e atrações rurais.](../evidencias/iteracao-6/) | <span class="schedule-status">Planejado</span> | 18/10/2026 a 01/11/2026 |
+| **Iteração 7**<br><span class="schedule-phase">Construção</span> | [UC05](../casos-uso/uc05/), [UC06](../casos-uso/uc06/) | [Declaração, representação, verificação e validação: detalhamento dos UCs, prototipagem, verificação por DoR, validação por DoD e validações com cliente para geolocalização e mapa.](../evidencias/iteracao-7/) | <span class="schedule-status">Planejado</span> | 01/11/2026 a 08/11/2026 |
+| **Iteração 8**<br><span class="schedule-phase">Construção</span> | [UC07](../casos-uso/uc07/), [UC08](../casos-uso/uc08/) | [Declaração, representação, verificação e validação: detalhamento dos UCs, prototipagem, verificação por DoR, validação por DoD e validações com cliente para suporte e feiras comunitárias digitais.](../evidencias/iteracao-8/) | <span class="schedule-status">Planejado</span> | 08/11/2026 a 15/11/2026 |
+| **Iteração 9**<br><span class="schedule-phase">Transição</span> | Produto integrado para homologação | [Validação: geração do build/APK, demonstração do produto, testes de aceitação e registro de homologação com a comunidade e cliente.](../evidencias/iteracao-9/) | <span class="schedule-status">Planejado</span> | 16/11/2026 a 20/11/2026 |
+| **Iteração 10**<br><span class="schedule-phase">Transição</span> | Versão final do aplicativo | [Organização e atualização: documentação as-built, fechamento e entrega final da versão para a comunidade.](../evidencias/iteracao-10/) | <span class="schedule-status">Planejado</span> | 21/11/2026 a 24/11/2026 |
