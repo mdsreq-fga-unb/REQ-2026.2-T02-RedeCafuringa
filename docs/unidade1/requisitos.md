@@ -29,7 +29,7 @@
     Análise de domínio aprofundada para estruturar as regras centrais de negócio do novo sistema e identificar premissas arquiteturais e técnicas de alto risco (ex: suporte a baixa conectividade e geolocalização).
 
 !!! info "Declaração de Requisitos"
-    Compilação da Lista de Requisitos e especificação funcional por meio de Casos de Uso que descrevem os fluxos principais, alternativos e de exceção para cada ator (produtores, consumidores e administradores). A Especificação Suplementar agrupa os requisitos não funcionais, destacando restrições de desempenho e usabilidade.
+    Compilação da Lista de Requisitos e especificação funcional por meio de User Stories que descrevem as funcionalidades e critérios de aceite para cada ator (produtores, consumidores e administradores). A Especificação Suplementar agrupa os requisitos não funcionais, destacando restrições de desempenho e usabilidade.
 
 !!! info "Análise e Consenso"
     Utilização da Matriz de Quadrantes (Valor de Negócio vs. Dificuldade Técnica) para definir objetivamente o escopo do Produto Mínimo Viável (MVP) e mitigar riscos técnicos logo no início do projeto.
@@ -53,7 +53,7 @@
     Descoberta contínua e refinamento iterativo de novos detalhes e regras de negócio (como fluxo de pré-reservas e catálogo) à medida que cada micro-incremento é construído.
 
 !!! info "Declaração de Requisitos"
-    Detalhamento pontual de novos cenários de Casos de Uso e critérios de aceitação necessários para orientar os ciclos incrementais de código.
+    Detalhamento pontual de novos cenários de User Stories e critérios de aceitação necessários para orientar os ciclos incrementais de código.
 
 !!! info "Análise e Consenso"
     Negociação flexível de mudanças de escopo e repriorização baseada nos feedbacks obtidos nas validações periódicas de cada entrega.
@@ -91,7 +91,7 @@
 | | Declaração | Registro Inicial | Documento de Visão Enxuto | Objetivos Específicos e Características de Produto documentados. |
 | **Elaboração** | Elicitação e Descoberta | Análise de Viabilidade e Domínio | Estudo de Domínio e Requisitos | Premissas arquiteturais e riscos técnicos iniciais identificados. |
 | | Análise e Consenso | Análise de Viabilidade | Matriz de Quadrantes | MVP consolidado cruzando valor de negócio e complexidade técnica. |
-| | Declaração | Especificação Funcional | Casos de Uso e Especificação Suplementar | Requisitos funcionais e técnicos (ex: baixa conectividade e geolocalização) formalizados. |
+| | Declaração | Especificação Funcional | User Stories e Especificação Suplementar | Requisitos funcionais e técnicos (ex: baixa conectividade e geolocalização) formalizados. |
 | | Representação | Modelagem Visual | Protótipos e Wireframes Navegáveis | Jornadas dos usuários validadas visualmente antes do desenvolvimento. |
 | **Construção** | Elicitação e Descoberta | Descoberta Contínua | Reuniões de Feedback Periódico | Regras de negócio refinadas iterativamente a cada incremento entregue. |
 | | Verificação e Validação | Controle de Qualidade Ágil | Demonstrações, Checklists e Testes | Incrementos validados continuamente em aderência aos Objetivos Específicos. |
