@@ -54,43 +54,43 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 
 <div class="grid cards" markdown>
 
--   [**Beatriz Lins - **](https://github.com/Beatriz-ge){ target="_blank" }
+-   [**Beatriz Lins - Analista de Requisitos**](https://github.com/Beatriz-ge){ target="_blank" }
         
     ![Beatriz Lins](https://github.com/Beatriz-ge.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por gestão de projeto e documentação.
 
 
--   [**Ítalo Alves - **](https://github.com/ItaloSamP){ target="_blank" }
+-   [**Ítalo Alves - Analista de QA**](https://github.com/ItaloSamP){ target="_blank" }
         
     ![Ítalo Alves](https://github.com/ItaloSamP.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por backend, infraestrutura e testes.
 
 
--   [**Lucas Gabriel - **](https://github.com/lucaszg-g){ target="_blank" }
+-   [**Lucas Gabriel - Desenvolvedor Frontend**](https://github.com/lucaszg-g){ target="_blank" }
     
     ![Lucas Gabriel](https://github.com/lucaszg-g.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por frontend.
 
 
--   [**Luccas Rodrigues - **](https://github.com/AgenteL007){ target="_blank" }
+-   [**Luccas Rodrigues - Desenvolvedor Backend**](https://github.com/AgenteL007){ target="_blank" }
         
     ![Luccas Rodrigues](https://github.com/AgenteL007.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por backend.
 
 
--   [**Paulo Filho - **](https://github.com/Pirata2040){ target="_blank" }
+-   [**Paulo Filho - Gerente de Projeto**](https://github.com/Pirata2040){ target="_blank" }
         
     ![Paulo Filho](https://github.com/Pirata2040.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por gestão de projeto e documentação.
 
 
--   [**Pedro Luiz - **](https://github.com/Pedroluizfo){ target="_blank" }
+-   [**Pedro Luiz - Desenvolvedor Backend**](https://github.com/Pedroluizfo){ target="_blank" }
         
     ![Pedro Luiz](https://github.com/Pedroluizfo.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por backend.
 
 
--   [**Pedro Macedo - **](https://github.com/macedoPedro20){ target="_blank" }
+-   [**Pedro Macedo - Desenvolvedor Frontend**](https://github.com/macedoPedro20){ target="_blank" }
 
     ![Pedro Macedo](https://github.com/macedoPedro20.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por frontend e backend.
