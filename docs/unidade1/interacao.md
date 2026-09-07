@@ -15,25 +15,25 @@
 ---
 
 ## 7.2 Comunicação
-!!! info "Fluxo de Informações Participativo" 
-    A comunicação se dá pela interação contínua entre todas as partes (stakeholders, dono do produto e equipe técnica), garantindo um nível alto de proximidade com o cliente.
-!!! info "Artefatos como Base de Diálogo"
-     A comunicação substitui a documentação formal e engessada por artefatos mais leves geridos no Backlog do Produto, como histórias de usuários, descrições de tarefas e protótipos.
-!!! info "Conversação e Aprendizado Conjunto"
-     Em contextos de alta proximidade, as histórias de usuário, cenários narrativos e critérios de aceitação funcionam como verdadeiros "prompts" (estímulos) para conversações diárias e o aprendizado conjunto entre cliente e equipe.
-!!! info "Adaptação Contínua"
-     Este formato iterativo compensa a informalidade relativa dos registros com uma altíssima velocidade de validação, aproveitando a presença constante do cliente no processo decisório para adaptações rápidas.
+
+* **Fluxo de Informações Participativo:** A comunicação se dá pela interação contínua entre todas as partes (stakeholders, dono do produto e equipe técnica), garantindo um nível alto de proximidade com o cliente.
+
+* **Artefatos como Base de Diálogo:** A comunicação substitui a documentação formal e engessada por artefatos mais leves geridos no Backlog do Produto, como histórias de usuários, descrições de tarefas e protótipos.
+
+* **Conversação e Aprendizado Conjunto:** Em contextos de alta proximidade, as histórias de usuário, cenários narrativos e critérios de aceitação funcionam como verdadeiros "prompts" (estímulos) para conversações diárias e o aprendizado conjunto entre cliente e equipe.
+
+* **Adaptação Contínua:** Este formato iterativo compensa a informalidade relativa dos registros com uma altíssima velocidade de validação, aproveitando a presença constante do cliente no processo decisório para adaptações rápidas.
 
 ---
 
 ## 7.3 Processo de Validação
-!!! info "Validação Contínua e Precoce"
-     O processo de validação não ocorre apenas no final; ele acontece continuamente por meio de demonstrações frequentes, revisões e testes diretos com os stakeholders.
-!!! info "Integração de Práticas Técnicas (TDD)"
-     A equipe emprega validação por meio de testes de aceitação e aplica fortemente o Desenvolvimento Orientado a Testes (TDD), o que permite validar os requisitos técnicos através de testes automatizados antes mesmo da implementação completa.
-!!! info "Feedback Rápido e Incremental"
-     O feedback coletado do usuário é imediatamente incorporado nas iterações subsequentes do processo (que ocorrem em dias ou semanas), permitindo ajustes constantes no produto.
-!!! info "Foco no Software Funcional"
-     O sucesso da validação é medido pela entrega iterativa e incremental de um sistema que funciona e agrega valor, reduzindo a necessidade de documentação excessiva e burocrática.
-!!! info "Rastreabilidade Visual"
-     A validação também inclui dinâmicas de cocriação e uso de storyboards, que são validados com usuários reais e atualizados sempre que o fluxo de interação muda, garantindo total coerência e rastreabilidade entre a visão de uso, os critérios de aceitação e o produto entregue.
+
+* **Validação Contínua e Precoce:** O processo de validação não ocorre apenas no final; ele acontece continuamente por meio de demonstrações frequentes, revisões e testes diretos com os stakeholders.
+
+* **Integração de Práticas Técnicas (TDD):** A equipe emprega validação por meio de testes de aceitação e aplica fortemente o Desenvolvimento Orientado a Testes (TDD), permitindo validar requisitos técnicos por testes automatizados antes da implementação completa.
+
+* **Feedback Rápido e Incremental:** O feedback coletado do usuário é imediatamente incorporado nas iterações subsequentes (que ocorrem em dias ou semanas), permitindo ajustes constantes no produto.
+
+* **Foco no Software Funcional:** O sucesso da validação é medido pela entrega iterativa e incremental de um sistema que funciona e agrega valor, reduzindo a necessidade de documentação excessiva e burocrática.
+
+* **Rastreabilidade Visual:** A validação inclui dinâmicas de cocriação e uso de *storyboards*, que são validados com usuários reais e atualizados sempre que o fluxo de interação muda, garantindo total coerência e rastreabilidade entre a visão de uso, os critérios de aceitação e o produto entregue.

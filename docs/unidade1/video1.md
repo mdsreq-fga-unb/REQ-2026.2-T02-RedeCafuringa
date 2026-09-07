@@ -1,3 +1,5 @@
+<span class="version-badge">Unidade 01</span>
+
 ## Vídeo da Unidade 1
 
 <div style="display: flex; justify-content: center; margin: 20px 0;">
