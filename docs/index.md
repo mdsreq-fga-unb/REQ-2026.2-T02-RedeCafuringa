@@ -1,6 +1,6 @@
 # Visão do Produto e Projeto
 
-<span class="version-badge">Versão 0.7</span>
+<span class="version-badge">Versão 0.8</span>
 
 Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado ao gerenciamento e à transparência das demandas do ecossistema local. Desenvolvido no âmbito da disciplina de Requisitos de Software, este espaço reúne todo o artefatiamento técnico, mapeamento de processos e especificações do sistema. 
 
@@ -110,3 +110,4 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | 06/09/26 | 0.5 | Adiciona conteúdo do tópico 7 e organiza a estética | Lucas Gabriel |
 | 06/09/26 | 0.6 | Adição dos tópicos 2.6, 2.7, 3 inteiro e correção do tópico 6 | Beatriz Lins |
 | 06/09/26 | 0.7 | Adição do tópico 4 - Estratégias de Engenharia de Software  | Paulo Ferreira |
+| 07/09/26 | 0.8 | Adição do vídeo de apresentação da Unidade 1  | Paulo Ferreira |
