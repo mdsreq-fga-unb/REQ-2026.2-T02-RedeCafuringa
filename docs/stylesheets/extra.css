@@ -299,14 +299,27 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
   font-weight: 600;
   font-size: 0.8rem;
-  color: var(--nativo-black);
   padding: 0.6rem 0.75rem;
   min-height: 2.6rem;
   border-radius: 7px;
 }
 
+[data-md-color-scheme="default"] .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
+  color: var(--nativo-black) !important;
+}
+
 [data-md-color-scheme="slate"] .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
-  color: var(--nativo-cream);
+  color: var(--nativo-cream) !important;
+}
+
+[data-md-color-scheme="default"] .md-nav--primary .md-nav__item--nested > .md-nav__link,
+[data-md-color-scheme="default"] .md-nav--primary .md-nav__item--nested > .md-nav > .md-nav__title {
+  color: var(--nativo-black) !important;
+}
+
+[data-md-color-scheme="slate"] .md-nav--primary .md-nav__item--nested > .md-nav__link,
+[data-md-color-scheme="slate"] .md-nav--primary .md-nav__item--nested > .md-nav > .md-nav__title {
+  color: var(--nativo-cream) !important;
 }
 
 .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link:hover {
@@ -919,10 +932,15 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   font-size: 0.75rem;
   padding: 3px 10px;
   border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(212, 160, 23, 0.2);
   display: inline-block;
   margin-top: 6px;
-  color: #fff;
+  color: var(--nativo-black);
+}
+
+[data-md-color-scheme="slate"] .schedule-phase {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--nativo-cream);
 }
 
 .schedule-status {
