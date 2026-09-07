@@ -1,6 +1,6 @@
 # Visão do Produto e Projeto
 
-<span class="version-badge">Versão 0.4</span>
+<span class="version-badge">Versão 0.6</span>
 
 Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado ao gerenciamento e à transparência das demandas do ecossistema local. Desenvolvido no âmbito da disciplina de Requisitos de Software, este espaço reúne todo o artefatiamento técnico, mapeamento de processos e especificações do sistema. 
 
@@ -108,4 +108,4 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | 02/09/26 | 0.3 | Adiciona tópicos 1, 2 (todos da primeira entrega) e organiza estética | Beatriz Lins |
 | 05/09/26 | 0.4 | Reformula toda gitpage, adiciona tópicos de AUP e respectivas documentações, adiciona tópicos 5 e 6 da unidade 1 e adiciona imagens de comprovação de AUP | Beatriz Lins |
 | 06/09/26 | 0.5 | Adiciona conteúdo do tópico 7 e organiza a estética | Lucas Gabriel |
-
+| 06/09/26 | 0.6 | Adição dos tópicos 2.6, 2.7, 3 inteiro e correção do tópico 6 | Beatriz Lins |
