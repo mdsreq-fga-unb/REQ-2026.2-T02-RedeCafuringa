@@ -1,5 +1,6 @@
 # 4. Estratégias de Engenharia de Software
 
+<span class="version-badge">Unidade 01</span>
 
 ## 4.1 Estratégia Priorizada
 
