@@ -1,12 +1,15 @@
 # 4. Estratégias de Engenharia de Software
 
-Unidade 01
 
 ## 4.1 Estratégia Priorizada
 
-**Abordagem de Desenvolvimento de Software:** Híbrida
-**Ciclo de Vida:** Iterativo e Incremental Adaptável
-**Processo de Engenharia de Software:** AUP (*Agile Unified Process*)
+A estratégia de engenharia de software priorizada para o desenvolvimento do projeto Rede Cafuringa é apresentada no quadro a seguir:
+
+| Elemento                                     | Estratégia Priorizada              |
+| -------------------------------------------- | ---------------------------------- |
+| **Abordagem de Desenvolvimento de Software** | Híbrida                            |
+| **Ciclo de Vida**                            | Iterativo e Incremental  
+| **Processo de Engenharia de Software**       | AUP (*Agile Unified Process*)      |
 
 ---
 
