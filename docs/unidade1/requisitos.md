@@ -19,6 +19,10 @@
 !!! info "Organização e Atualização"
     Estruturação da baseline inicial de escopo para guiar os primeiros ciclos iterativos de desenvolvimento.
 
+<p align="center">
+  <img src="../../img/concepcao.png" alt="Rede Cafuringa" width="90%" style="border-radius: 15px;">
+</p>
+
 ## **Fase de Elaboração**
 
 !!! info "Elicitação e Descoberta"
@@ -39,6 +43,10 @@
 !!! info "Organização e Atualização"
     Estabelecimento da baseline formal de requisitos e início da Matriz de Rastreabilidade leve.
 
+<p align="center">
+  <img src="../../img/elaboracao.png" alt="Rede Cafuringa" width="90%" style="border-radius: 15px;">
+</p>
+
 ## **Fase de Construção**
 
 !!! info "Elicitação e Descoberta"
@@ -56,6 +64,10 @@
 !!! info "Organização e Atualização"
     Manutenção simplificada da Matriz de Rastreabilidade para preservar o conhecimento arquitetural e funcional durante os ciclos de desenvolvimento.
 
+<p align="center">
+  <img src="../../img/construcao.png" alt="Rede Cafuringa" width="90%" style="border-radius: 15px;">
+</p>
+
 ## **Fase de Transição**
 
 !!! info "Verificação e Validação"
@@ -63,6 +75,10 @@
 
 !!! info "Organização e Atualização"
     Fechamento da documentação essencial (as-built) e atualização final da rastreabilidade para refletir a entrega exata do Cafuringa.
+
+<p align="center">
+  <img src="../../img/transicao.png" alt="Rede Cafuringa" width="90%" style="border-radius: 15px;">
+</p>
 
 ---
 

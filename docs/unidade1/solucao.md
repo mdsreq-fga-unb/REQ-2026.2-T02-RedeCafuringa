@@ -87,11 +87,43 @@ A solução da Cafuringa irá se diferenciar por:
 
 ## **2.6 Viabilidade da proposta**
 
+A proposta é considerada viável no contexto da disciplina, tendo em vista o escopo dimensionado de forma realista e a capacidade técnica da equipe com dedicação parcial ao longo de dezesseis semanas letivas. A viabilidade é sustentada, primeiramente, pelo acesso contínuo à parte interessada por meio de reuniões periódicas de alinhamento e canal direto de mensagens, mitigando riscos de validação de requisitos.
+
+No aspecto financeiro, a restrição de orçamento zero é integralmente atendida por meio de escolhas estratégicas de infraestrutura, combinando hospedagem e APIs gratuitas, certificados TLS automáticos e mapas sem licenciamento, o que elimina custos recorrentes de operação e taxas de lojas de aplicativos.
+Na dimensão legal, regulatória e técnica, a viabilidade está condicionada à implementação de restrições fundamentais no sistema. Isso abrange o bloqueio sistêmico contra a rotulagem indevida de produtos “orgânicos" (Lei nº 10.831/2003), a rigorosa adequação à LGPD no tratamento de geolocalização e a conformidade com diretrizes locais de turismo. Para mitigar riscos de responsabilidade civil, a plataforma atuará exclusivamente como diretório, gerência e ferramenta de pré-agendamento, mantendo transações financeiras, logística e contratos de hospedagem estritamente fora do software.
+
+Dessa forma, a viabilidade da proposta está condicionada aos seguintes fatores-chave:
+
+* A manutenção de um escopo controlado, com foco rigoroso nas características essenciais e corte inflexível de escopos secundários para garantir a entrega do MVP;
+
+* A priorização e especificação antecipada da regra de rotulagem de certificação com casos de teste próprios, por ser requisito legal não sacrificável;
+
+* A estruturação da reserva de experiências e hospedagem estritamente como pré-reserva com aceite do anfitrião, sem pagamentos ou contratos integrados;
+
+* A definição clara de um responsável (dono) pela conferência dos cadastros e auditoria contínua de conteúdo.
+
 
 **Gestão de riscos preliminar da equipe** 
+Para garantir a integridade da plataforma, a conformidade regulamentar e o sucesso do MVP, o projeto adota uma gestão de riscos ativa focada nas seguintes frentes:
+
+<p align="center">
+  <img src="../../img/gestao_risco.png" alt="Quadro de gestão de risco" 
+  width="100%"style="border-radius: 15px;">
+</p></p> 
 
 ---
 
 ## **2.7 Benefícios Esperados**
 
 
+**1) Para a gestão da Rede Cafuringa (Cliente/Organização):** 
+
+Centraliza e dá visibilidade pública à produção e aos atrativos do território (antes dispersos em redes sociais e grupos), atuando como um complemento estratégico à Cafuringa Store. A solução organiza a visitação por agendamento prévio e consolida dados estruturados da oferta local, facilitando a articulação institucional com órgãos como Emater-DF e IBRAM.
+
+**2) Para os produtores rurais e ecovilas (Usuários da Oferta):** 
+
+Cria uma nova via de escoamento contínuo para reduzir perdas pós-colheita, operando com modelo de custo zero e retenção integral das margens de lucro (sem taxas ou intermediários). A ferramenta promove a diversificação de renda ao unir produtos e turismo rural, garante previsibilidade de fluxo com o pré-agendamento de visitantes e fortalece a reputação digital dos produtores certificados.
+
+**3) Para os consumidores e visitantes (Usuários da Demanda):** 
+
+Facilita a descoberta e o acesso a produtos agroecológicos e atrativos rurais por meio de busca georreferenciada, rompendo a restrição de horários das feiras tradicionais. Oferece transparência sobre a certificação de origem dos produtos, previsibilidade sobre as regras de visitação e contato direto com os produtores.
