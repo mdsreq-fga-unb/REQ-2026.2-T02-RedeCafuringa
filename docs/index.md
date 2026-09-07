@@ -109,3 +109,4 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | 05/09/26 | 0.4 | Reformula toda gitpage, adiciona tópicos de AUP e respectivas documentações, adiciona tópicos 5 e 6 da unidade 1 e adiciona imagens de comprovação de AUP | Beatriz Lins |
 | 06/09/26 | 0.5 | Adiciona conteúdo do tópico 7 e organiza a estética | Lucas Gabriel |
 | 06/09/26 | 0.6 | Adição dos tópicos 2.6, 2.7, 3 inteiro e correção do tópico 6 | Beatriz Lins |
+| 06/09/26 | 0.7 | Adição do tópico 4 - Estratégias de Engenharia de Software  | Paulo Ferreira |
