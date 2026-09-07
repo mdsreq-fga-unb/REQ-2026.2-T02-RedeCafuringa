@@ -236,6 +236,14 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 
 .md-typeset p {
   word-wrap: break-word;
+  text-align: justify;
+}
+
+.md-typeset h2[id="71-composicao-da-equipe"] + ul,
+.md-typeset h2[id="71-composicao-da-equipe"] + ul li,
+.md-typeset h2[id="71-composicao-da-equipe"] + ul + table,
+.md-typeset h2[id="71-composicao-da-equipe"] + ul + table td {
+  text-align: justify;
 }
 
 .md-typeset h1 {
