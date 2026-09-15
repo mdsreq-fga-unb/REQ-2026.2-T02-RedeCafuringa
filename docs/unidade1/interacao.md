@@ -9,31 +9,35 @@
 | **Gerente de projeto/facilitador** | Coordena o projeto dentro do ciclo estruturado do AUP, garante a comunicação contínua entre cliente e equipe, e controla prazos e entregas. | Paulo Filho |
 | **Desenvolvedor Frontend** | Responsável pela interface do usuário, design e implementação das funcionalidades no lado do cliente. | Lucas Gabriel, Pedro Augusto, Paulo Filho, Beatriz Lins |
 | **Desenvolvedor Backend** | Implementa a lógica de negócios, integração com banco de dados e APIs. | Pedro Luiz, Ítalo Alves, Luccas Rodrigues, Pedro Augusto |
-| **Analista de QA** | Garante a qualidade do produto, executando testes de funcionalidade, performance e usabilidade. | Ítalo Alves |
-| **Analista de Requisitos** | Define os requisitos funcionais e não funcionais do sistema e garante que eles sejam atendidos. | Beatriz Lins |
+| **Analista de QA** | Garante a qualidade do produto, executando testes de funcionalidade, performance e usabilidade. | Beatriz Lins, Ítalo Alves, Lucas Gabriel, Luccas Rodrigues, Paulo Filho, Pedro Augusto, Pedro Luiz |
+| **Analista de Requisitos** | Define os requisitos funcionais e não funcionais do sistema e garante que eles sejam atendidos. | Beatriz Lins, Ítalo Alves, Lucas Gabriel, Luccas Rodrigues, Paulo Filho, Pedro Augusto, Pedro Luiz |
 
 ---
 
 ## 7.2 Comunicação
+A comunicação do projeto é baseada em um fluxo de informações participativo, garantindo uma interação contínua entre todas as partes (stakeholders, dono do produto e equipe técnica). Esse formato iterativo permite uma adaptação contínua e uma altíssima velocidade de validação, aproveitando a proximidade com o cliente.
 
-* **Fluxo de Informações Participativo:** A comunicação se dá pela interação contínua entre todas as partes (stakeholders, dono do produto e equipe técnica), garantindo um nível alto de proximidade com o cliente.
+Para sustentar essa dinâmica, a comunicação substitui a documentação formal e engessada por artefatos mais leves geridos no Backlog do Produto (como histórias de usuários e protótipos), que funcionam como estímulos para conversações diárias.
 
-* **Artefatos como Base de Diálogo:** A comunicação substitui a documentação formal e engessada por artefatos mais leves geridos no Backlog do Produto, como histórias de usuários, descrições de tarefas e protótipos.
+Para viabilizar esse fluxo, o projeto utiliza as seguintes ferramentas e rotinas:
 
-* **Conversação e Aprendizado Conjunto:** Em contextos de alta proximidade, as histórias de usuário, cenários narrativos e critérios de aceitação funcionam como verdadeiros "prompts" (estímulos) para conversações diárias e o aprendizado conjunto entre cliente e equipe.
+* **WhatsApp:** Canal prioritário para a comunicação diária da equipe técnica e interações contínuas com o cliente. É utilizado para o esclarecimento rápido de dúvidas, compartilhamento de arquivos, aprovação de histórias de usuário e validação ágil de requisitos.
 
-* **Adaptação Contínua:** Este formato iterativo compensa a informalidade relativa dos registros com uma altíssima velocidade de validação, aproveitando a presença constante do cliente no processo decisório para adaptações rápidas.
+* **Microsoft Teams:** Ferramenta oficial para as videoconferências. A equipe de desenvolvimento realiza duas reuniões internas semanais para acompanhar o progresso e solucionar impedimentos.
+
+* **GitHub Projects:** Ferramenta oficial para gerenciar o quadro Kanban, centralizando a criação, priorização e movimentação das tarefas durante o desenvolvimento.
+
+* **Reuniões de Revisão com o Cliente:** Ocorrem com uma frequência de 7 a 15 dias, dependendo da necessidade. Nessas reuniões, o cliente participa ativamente para revisar os cartões concluídos, testar funcionalidades, fornecer feedbacks e ajudar a priorizar os próximos itens do backlog.
 
 ---
 
 ## 7.3 Processo de Validação
+O processo de validação não ocorre apenas na entrega final, ele acontece de forma contínua e precoce, com foco na entrega iterativa e incremental de um software funcional que agregue valor. Para garantir a qualidade de ponta a ponta e a rastreabilidade visual (uso de storyboards validados com usuários reais), o fluxo de trabalho é regido por políticas explícitas em diferentes estágios:
 
-* **Validação Contínua e Precoce:** O processo de validação não ocorre apenas no final; ele acontece continuamente por meio de demonstrações frequentes, revisões e testes diretos com os stakeholders.
+* **Critérios de Puxada (Definition of Ready):** Ponto de comprometimento. Para que um cartão do GitHub Projects seja puxado para a etapa de desenvolvimento, os requisitos devem estar bem definidos, documentados e com critérios de aceitação previamente estabelecidos.
 
 * **Integração de Práticas Técnicas (TDD):** A equipe emprega validação por meio de testes de aceitação e aplica fortemente o Desenvolvimento Orientado a Testes (TDD), permitindo validar requisitos técnicos por testes automatizados antes da implementação completa.
 
-* **Feedback Rápido e Incremental:** O feedback coletado do usuário é imediatamente incorporado nas iterações subsequentes (que ocorrem em dias ou semanas), permitindo ajustes constantes no produto.
+* **Critérios de Saída (Definition of Done):** Um cartão só avança para a etapa de entrega se cumprir as políticas de saída da engenharia. Isso exige que a funcionalidade seja aprovada em testes unitários e de integração, além de passar por uma revisão técnica e visual por parte da equipe.
 
-* **Foco no Software Funcional:** O sucesso da validação é medido pela entrega iterativa e incremental de um sistema que funciona e agrega valor, reduzindo a necessidade de documentação excessiva e burocrática.
-
-* **Rastreabilidade Visual:** A validação inclui dinâmicas de cocriação e uso de *storyboards*, que são validados com usuários reais e atualizados sempre que o fluxo de interação muda, garantindo total coerência e rastreabilidade entre a visão de uso, os critérios de aceitação e o produto entregue.
+* **Homologação pelo Cliente (UAT) e Feedback Rápido:** Na etapa final, o produto é disponibilizado ao cliente para testes de aceitação diretos. O feedback coletado é imediatamente incorporado nas iterações seguintes, permitindo ajustes constantes no produto e garantindo total coerência com a visão de uso inicial.
