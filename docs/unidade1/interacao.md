@@ -21,13 +21,13 @@ Para sustentar essa dinâmica, a comunicação substitui a documentação formal
 
 Para viabilizar esse fluxo, o projeto utiliza as seguintes ferramentas e rotinas:
 
-* **WhatsApp:** Canal prioritário para a comunicação diária da equipe técnica e interações contínuas com o cliente. É utilizado para o esclarecimento rápido de dúvidas, compartilhamento de arquivos, aprovação de histórias de usuário e validação ágil de requisitos.
+* **WhatsApp:** Canal prioritário para a comunicação diária da equipe técnica e interações contínuas com o cliente. É utilizado para o esclarecimento ágil de dúvidas, compartilhamento de arquivos, aprovação de histórias de usuário, validação de requisitos e contato direto com o monitor responsável pela equipe.
 
-* **Microsoft Teams:** Ferramenta oficial para as videoconferências. A equipe de desenvolvimento realiza duas reuniões internas semanais para acompanhar o progresso e solucionar impedimentos.
+* **Microsoft Teams:** Ferramenta oficial para as videoconferências. A equipe de desenvolvimento realiza duas reuniões internas semanais para acompanhar o progresso e solucionar impedimentos. Nesses encontros, espera-se a participação de todos os integrantes da equipe, sempre que possível, sendo obrigatória a presença do monitor em pelo menos uma dessas reuniões.
 
 * **GitHub Projects:** Ferramenta oficial para gerenciar o quadro Kanban, centralizando a criação, priorização e movimentação das tarefas durante o desenvolvimento.
 
-* **Reuniões de Revisão com o Cliente:** Ocorrem com uma frequência de 7 a 15 dias, dependendo da necessidade. Nessas reuniões, o cliente participa ativamente para revisar os cartões concluídos, testar funcionalidades, fornecer feedbacks e ajudar a priorizar os próximos itens do backlog.
+* **Reuniões de Revisão com o Cliente:** Ocorrem via Microsoft Teams a cada 7 ou 15 dias, conforme a necessidade e a disponibilidade do cliente. Durante as agendas, o cliente participa ativamente da revisão dos cartões concluídos, validação de funcionalidades, coleta de feedbacks e priorização do backlog. Espera-se a presença de todos os integrantes da equipe técnica, sempre que possível.
 
 ---
 
