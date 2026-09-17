@@ -2,7 +2,7 @@
 
 ## **2.1 Objetivo geral do produto**
 
-O objetivo do produto é expandir a conexão direta dos produtores da agricultura familiar e as comunidades da APA da Cafuringa aos consumidores e visitantes do Distrito Federal e Entorno por meio de uma plataforma digital pública, gratuita e sem intermediação financeira. A solução visa eliminar a dependência de atravessadores, dar visibilidade ao catálogo de alimentos agroecológicos e produtos artesanais, e estruturar a oferta do ecoturismo de base comunitária (trilhas, vivências e hospedagens). Com isso, o sistema garante transparência regulatória quanto à certificação orgânica e promove a geração de renda sustentável e a preservação ambiental no território.
+O objetivo do produto é expandir a conexão direta dos produtores da agricultura familiar e as comunidades da APA da Cafuringa aos consumidores e visitantes do Distrito Federal e Entorno por meio de uma plataforma digital pública, gratuita e sem intermediação financeira. A solução visa reduzir a dependência de atravessadores, dar visibilidade ao catálogo de alimentos agroecológicos e produtos artesanais, e estruturar a oferta do ecoturismo de base comunitária (trilhas, vivências e hospedagens). Com isso, o sistema busca contribuir para a transparência regulatória quanto à certificação orgânica, para a geração de renda sustentável e para a preservação ambiental no território — resultados que dependem também de fatores externos ao software, como adoção, manutenção do catálogo e atuação contínua dos produtores.
 
 ---
 
@@ -36,17 +36,17 @@ Os objetivos específicos orientam o desenvolvimento das funcionalidades e serve
 
 ## 2.3 Características do Produto
 
-As características do produto (CPs) foram mapeadas diretamente aos Objetivos Específicos (OEs), garantindo rastreabilidade entre funcionalidades e objetivos de negócio.
+As características do produto (CPs) foram mapeadas diretamente aos Objetivos Específicos (OEs), garantindo rastreabilidade entre funcionalidades e objetivos de negócio. As descrições abaixo são mantidas em nível de capacidade — isto é, expressam *o que* a solução deverá viabilizar, sem antecipar decisões de implementação (como fluxos de tela, regras de negócio específicas ou nomes de operações). Esses detalhes serão derivados posteriormente como requisitos funcionais, regras de negócio e histórias de usuário.
 
-| ID | Característica do Produto | Descrição resumida | Valor de negócio principal | OE principal | Contribuição secundária |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| **CP1** | Gestão de Perfil e Certificação Transparente | A solução deverá desenvolver uma ferramenta de cadastro de produtores/propriedades com exibição da situação de certificação e verificação. | Conformidade legal (Lei nº 10.831/2003) e geração de confiança para o consumidor urbano. | OE3 | OE2 |
-| **CP2** | Catálogo Unificado de Produtos | A solução deverá permitir cadastrar alimentos agrícolas frescos, beneficiados e artesanais, com atualização rápida de estoque e sazonalidade. | Redução de perdas pós-colheita entre dias de feira e eliminação de intermediários comerciais. | OE2 | OE4 |
-| **CP3** | Diretório de Atrativos Rurais | A solução deverá conter a ficha detalhada de propriedades com cadastro de atrativos naturais, vivências agroecológicas e hospedagem rústica. | Diversificação das fontes de renda do produtor e fortalecimento do ecoturismo de base comunitária. | OE2 | OE4 |
-| **CP4** | Busca e Descoberta Georreferenciada | A solução deverá conter um motor de consulta com mapa interativo e filtros por proximidade, categorias, perfil de interesse e situação de certificação. | Facilidade na localização hiperlocal de produtores e atrativos próximos ao consumidor. | OE2 | OE1, OE4 |
-| **CP5** | Motor de Pré-Reserva e Conexão Direta | A solução deverá conter registro de intenções de compra/visita com aceite obrigatório e liberação recíproca dos dados de contato. | Viabilização de transações sem retenção de margem e prevenção contra sobrecarga turística nas ecovilas. | OE4 | OE2, OE3 |
-| **CP6** | Interface PWA Acessível e Resiliente | A solução deverá ser uma aplicação web responsiva instalável, leve, otimizada para conexões rurais lentas e acessível. | Inclusão digital de produtores rurais com conectividade instável e baixo letramento tecnológico. | OE1 | OE4 |
-| **CP7** | Arquitetura Desacoplada e Custo Zero | A solução deverá ser uma API RESTful em infraestrutura de nuvem gratuita. | Sustentabilidade financeira e operacional do projeto, mantendo autonomia e ausência de taxas para produtores. | OE3 | OE1, OE4 |
+| ID | Característica do Produto | Descrição resumida | ID | Valor de negócio principal | OE principal | Contribuição secundária |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **CP1** | Gestão de Perfil e Certificação Transparente | A solução deverá viabilizar a identificação de produtores e propriedades e a transparência quanto à sua situação de certificação. | **VN1** | Conformidade legal (Lei nº 10.831/2003) e geração de confiança para o consumidor urbano. | OE3 | OE2 |
+| **CP2** | Catálogo Unificado de Produtos | A solução deverá viabilizar a disponibilização unificada da oferta de alimentos agrícolas frescos, beneficiados e artesanais, contemplando variações de disponibilidade e sazonalidade. | **VN2** | Redução de perdas pós-colheita entre dias de feira e aproximação direta entre produtor e consumidor. | OE2 | OE4 |
+| **CP3** | Diretório de Atrativos Rurais | A solução deverá viabilizar a divulgação detalhada de propriedades, incluindo atrativos naturais, vivências agroecológicas e hospedagem rústica. | **VN3** | Diversificação das fontes de renda do produtor e fortalecimento do ecoturismo de base comunitária. | OE2 | OE4 |
+| **CP4** | Busca e Descoberta Georreferenciada | A solução deverá viabilizar a busca e a descoberta georreferenciada de produtores e atrativos, considerando critérios de proximidade, categoria, perfil de interesse e situação de certificação. | **VN4** | Facilidade na localização hiperlocal de produtores e atrativos próximos ao consumidor. | OE2 | OE1, OE4 |
+| **CP5** | Motor de Pré-Reserva e Conexão Direta | A solução deverá viabilizar o registro de intenções de compra ou visita e a conexão direta entre as partes, mediante confirmação mútua e compartilhamento controlado dos dados de contato. | **VN5** | Viabilização de transações sem retenção de margem pela plataforma e apoio à prevenção de sobrecarga turística nas ecovilas. | OE4 | OE2, OE3 |
+
+
 
 ---
 
@@ -71,7 +71,9 @@ No contexto de comercialização de produtos agroecológicos e promoção do eco
 
 * **Plataformas Comerciais de Delivery e Marketplace (iFood / Mercado Livre):** Cobram comissões expressivas sobre as vendas, exigem rotinas logísticas de entrega imediata incompatíveis com o ritmo produtivo do campo e não contemplam a oferta de atrativos do ecoturismo de base comunitária.
 
-* **Plataformas Comerciais de Turismo e Experiências (Airbnb / Booking):** Focam exclusivamente em meios de hospedagem urbanos ou comerciais de alto padrão, cobram taxas de reserva abusivas e ignoram a integração do turismo com a produção agrícola familiar local e o ecossistema comunitário da APA.
+* **Plataformas Comerciais de Turismo e Experiências (Airbnb / Booking):** Concentram sua oferta majoritariamente em hospedagens urbanas e comerciais, com baixa representatividade de propriedades rurais de base comunitária. Cobram comissões sobre reservas que, conforme as políticas públicas divulgadas pelas próprias plataformas, chegam a aproximadamente 15,5% (16% no Brasil) do valor da diária no caso do Airbnb¹. Já no caso do Booking.com², essa comissão pode variar entre 10% e 25% (média em torno de 15%). Além disso, não contemplam a integração do turismo com a produção agrícola familiar local, tampouco o ecossistema comunitário da APA.
+
+<small>¹ Airbnb, *Host service fee*: taxa padrão de 15,5% sobre o valor da diária (16% para anúncios no Brasil e México). ² Booking.com, *Commission fees for partners*: comissão típica entre 10% e 25% por reserva, com média em torno de 15%. Valores sujeitos a alteração pelas plataformas; devem ser reconfirmados nas políticas oficiais vigentes no momento do uso como referência.</small>
 
 A solução da Cafuringa irá se diferenciar por:
 
@@ -89,8 +91,11 @@ A solução da Cafuringa irá se diferenciar por:
 
 A proposta é considerada viável no contexto da disciplina, tendo em vista o escopo dimensionado de forma realista e a capacidade técnica da equipe com dedicação parcial ao longo de dezesseis semanas letivas. A viabilidade é sustentada, primeiramente, pelo acesso contínuo à parte interessada por meio de reuniões periódicas de alinhamento e canal direto de mensagens, mitigando riscos de validação de requisitos.
 
-No aspecto financeiro, a restrição de orçamento zero é integralmente atendida por meio de escolhas estratégicas de infraestrutura, combinando hospedagem e APIs gratuitas, certificados TLS automáticos e mapas sem licenciamento, o que elimina custos recorrentes de operação e taxas de lojas de aplicativos.
-Na dimensão legal, regulatória e técnica, a viabilidade está condicionada à implementação de restrições fundamentais no sistema. Isso abrange o bloqueio sistêmico contra a rotulagem indevida de produtos “orgânicos" (Lei nº 10.831/2003), a rigorosa adequação à LGPD no tratamento de geolocalização e a conformidade com diretrizes locais de turismo. Para mitigar riscos de responsabilidade civil, a plataforma atuará exclusivamente como diretório, gerência e ferramenta de pré-agendamento, mantendo transações financeiras, logística e contratos de hospedagem estritamente fora do software.
+No aspecto financeiro, a restrição de orçamento zero é buscada por meio de escolhas estratégicas de infraestrutura, combinando hospedagem e APIs em camadas gratuitas (*free tier*), certificados TLS automáticos e mapas sem licenciamento. Essa combinação reduz significativamente os custos recorrentes de operação e as taxas de lojas de aplicativos. Essa condição de custo zero, no entanto, não é uma garantia permanente: ela depende dos limites de uso e da continuidade das políticas de planos gratuitos praticadas pelos provedores externos (nuvem, mapas, certificação). Por isso, constitui uma dependência a ser monitorada ao longo do projeto e tratada como risco na gestão de riscos da equipe.
+
+Na dimensão legal, regulatória e técnica, a viabilidade está condicionada à implementação de restrições fundamentais no sistema. Isso abrange o bloqueio sistêmico contra a rotulagem indevida de produtos "orgânicos" (Lei nº 10.831/2003), a rigorosa adequação à LGPD no tratamento de geolocalização e a conformidade com diretrizes locais de turismo. Para mitigar riscos de responsabilidade civil, a plataforma atuará exclusivamente como diretório, gerência e ferramenta de pré-agendamento. Dessa forma, mantém transações financeiras, logística e contratos de hospedagem estritamente fora do software.
+
+Do ponto de vista tecnológico, o conjunto de capacidades previsto — PWA resiliente a baixa conectividade, geolocalização e mapas, certificação, autenticação, catálogo e controle de disponibilidade, pré-reservas, acessibilidade (WCAG), front-end e back-end desacoplados, infraestrutura distribuída entre provedores gratuitos e conteinerização com Docker, Caddy e MongoDB — representa um escopo tecnológico elevado para ser integralmente implementado em um único semestre letivo por uma equipe com dedicação parcial. Por isso, a viabilidade técnica está condicionada à definição objetiva de um MVP que priorize o subconjunto de maior valor de negócio e menor complexidade técnica, conforme a Matriz de Quadrantes descrita na Seção 5.2. Esse recorte deve postergar ou simplificar explicitamente as funcionalidades de menor prioridade.
 
 Dessa forma, a viabilidade da proposta está condicionada aos seguintes fatores-chave:
 
@@ -122,7 +127,7 @@ Centraliza e dá visibilidade pública à produção e aos atrativos do territó
 
 **2) Para os produtores rurais e ecovilas (Usuários da Oferta):** 
 
-Cria uma nova via de escoamento contínuo para reduzir perdas pós-colheita, operando com modelo de custo zero e retenção integral das margens de lucro (sem taxas ou intermediários). A ferramenta promove a diversificação de renda ao unir produtos e turismo rural, garante previsibilidade de fluxo com o pré-agendamento de visitantes e fortalece a reputação digital dos produtores certificados.
+Cria uma nova via de escoamento contínuo para reduzir perdas pós-colheita, operando com modelo de custo zero para o produtor e sem retenção de margem pela plataforma (ausência de taxas de intermediação). A ferramenta contribui para a diversificação de renda ao unir produtos e turismo rural, favorece maior previsibilidade de fluxo por meio do pré-agendamento de visitantes e fortalece a reputação digital dos produtores certificados.
 
 **3) Para os consumidores e visitantes (Usuários da Demanda):** 
 

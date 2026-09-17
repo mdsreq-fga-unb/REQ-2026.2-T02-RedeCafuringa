@@ -18,8 +18,17 @@ A implantação do sistema também pode gerar **efeitos emergentes e riscos cola
 * **Estigmatização comercial:** Possibilidade de a ausência temporária de certificação oficial ser interpretada de forma punitiva pelo mercado.
 * **Pressão turística:** Aumento do fluxo sobre vias e nascentes rurais da APA.
 * **Exposição de privacidade:** Divulgação vulnerável da geolocalização de residências e ecovilas.
+* **Exclusão digital:** Dificuldade de adoção da plataforma por produtores com baixo letramento tecnológico ou acesso limitado e instável à internet.
 
-Dessa forma, esses efeitos colaterais não invalidam a viabilidade da solução, mas atuam como balizadores de engenharia e design de software. Para mitigá-los, os riscos sociais serão traduzidos em requisitos técnicos verificáveis.
+Dessa forma, esses efeitos colaterais não invalidam a viabilidade da solução, mas atuam como balizadores de engenharia e design de software. Para mitigá-los, os riscos sociais serão traduzidos em requisitos técnicos verificáveis, conforme a derivação inicial apresentada a seguir. Essa derivação será detalhada como requisitos funcionais e não funcionais nas próximas unidades:
+
+| Risco identificado | Requisito verificável derivado |
+| :--- | :--- |
+| Exposição de privacidade | Exibição de localização aproximada (por raio/área) como padrão, com liberação da localização exata condicionada a consentimento explícito do produtor e à confirmação da pré-reserva. |
+| Pressão turística | Definição de um limite máximo de visitantes por período, configurável pelo anfitrião, com liberação da visita condicionada à confirmação expressa do anfitrião. |
+| Desigualdade interna (concentração de visibilidade) | Critérios de ordenação e filtros de busca transparentes e auditáveis (ex.: proximidade, categoria, data de atualização), sem priorização paga ou oculta de perfis. |
+| Estigmatização comercial | Distinção visual e textual explícita entre as situações "certificado", "em transição" e "não informado", vedando rótulos ambíguos ou de caráter punitivo. |
+| Exclusão digital | Realização de testes de usabilidade durante o desenvolvimento e disponibilização de interface leve.|
 
 <p align="center">
   <img src="../../img/intervencao_social.png" alt="Rede Cafuringa" 
