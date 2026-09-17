@@ -5,7 +5,15 @@
 Para atender às necessidades do ecossistema de turismo rural da **Rede Cafuringa**, adota-se uma abordagem híbrida combinando a governança do **AUP (Agile Unified Process)** com a execução contínua do **Kanban**:
 
 - **Elementos Dirigidos por Plano (_Plan-Driven_):** Definição prévia dos Objetivos Específicos (OEs) e Características do Produto (CPs); mapeamento dos **Épicos/Histórias Macro** para estruturação da arquitetura e do cronograma; congelamento da baseline dos Épicos essenciais ao final da fase de Elaboração.
-- \*\*Elementos Ágeis e Adaptativos (\_## 5.1 Atividades e Técnicas de ER
+- **Elementos Ágeis e Adaptativos (_Agile/Adaptive_):** Decomposição e detalhamento _Just-In-Time_ (JIT) dos Épicos em **Histórias de Usuário (_User Stories_) granulares** com critérios de aceite; gestão visual do fluxo de trabalho contínuo via Kanban; repriorização constante do backlog durante a fase de Construção.
+- **Mecanismo de Incorporação de Mudanças:** Novas solicitações ou alterações no Kanban passam por análise de impacto em relação à baseline estabelecida na Elaboração. Se a mudança afetar o escopo macro ou a arquitetura, exige alinhamento formal; se afetar apenas critérios de detalhamento interno, é ajustada em nível de _User Story_ no backlog.
+- **Baselines e Marcos de Controle (_Milestones_):**
+  - _Marco de Objetivos do Ciclo de Vida (Fim da Concepção):_ Alinhamento do Documento de Visão, OEs e CPs.
+  - _Marco da Arquitetura do Ciclo de Vida (Fim da Elaboração):_ Congelamento da baseline de requisitos (Épicos essenciais e especificações suplementares), validação dos protótipos e PoC arquitetural.
+  - _Marco de Capacidade Operacional Inicial (Fim da Construção):_ Entrega do incremento funcional (MVP) testado para homologação.
+  - _Marco do Produto Final (Fim da Transição):_ Aceite oficial e entrega do sistema consolidado.
+
+---
 
 ## **Fase de Concepção**
 
