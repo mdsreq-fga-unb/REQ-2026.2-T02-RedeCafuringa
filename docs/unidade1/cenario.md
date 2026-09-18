@@ -78,11 +78,11 @@ A seguir, é apresentado um quadro resumo dos stakeholders.
 | **Produtores Rurais Individuais e Associações** | Usuários primários (lado da oferta) | Vender alimentos diretos da origem e divulgar atrativos rurais sem pagar comissões | Alta | Visitas diretas às propriedades/ecovilas |
 | **Consumidores e Visitantes do DF** | Usuários finais (lado da demanda) | Localizar produtores por geolocalização, garantir a veracidade dos orgânicos e agendar visitas | Média | Questionários virtuais e testes de usabilidade com protótipos navegáveis |
 | **Equipe de Desenvolvimento (Bytelab)** | Responsável pela construção e arquitetura do produto | Entregar um MVP funcional, acessível, seguro e dentro do prazo acadêmico | Alta | Ciclos contínuos de desenvolvimento e alinhamentos assíncronos |
-| **Emater-DF** | Apoio técnico e extensão rural | Fortalecer a agricultura familiar e o desenvolvimento rural | Média | Pesquisas sobre informações técnicas pela internet |
-| **IBRAM** | Licenciamento ambiental e gestão da APA | Preservação ambiental e uso sustentável da área | Média | Pesquisas sobre informações técnicas pela internet |
-| **Organismos de certificação e OCS** | Garantia da produção orgânica e rastreabilidade | Conformidade com normas e certificações | Média | Pesquisas sobre informações técnicas pela internet |
-| **Órgãos e entidades ligadas ao turismo** | Promoção e apoio ao turismo sustentável | Fomento ao ecoturismo de base comunitária | Média | Pesquisas sobre informações técnicas pela internet |
-| **Pessoas responsáveis por conferir cadastros** | Validação de informações da plataforma | Confiabilidade e segurança dos dados | Média | Treinamento e comunicação direta |
+| **Emater-DF** | Apoio técnico e extensão rural | Fortalecer a agricultura familiar e o desenvolvimento rural | Baixa | Monitoramento passivo de cartilhas técnicas, normativas e legislações vigentes disponibilizadas pelos órgãos |
+| **IBRAM** | Licenciamento ambiental e gestão da APA | Preservação ambiental e uso sustentável da área | Baixa | Monitoramento passivo de cartilhas técnicas, normativas e legislações vigentes disponibilizadas pelos órgãos |
+| **Organismos de certificação e OCS** | Garantia da produção orgânica e rastreabilidade | Conformidade com normas e certificações | Baixa | Consulta à legislação orgânica e validação das regras de negócio com o cliente |
+| **Órgãos e entidades ligadas ao turismo** | Promoção e apoio ao turismo sustentável | Fomento ao ecoturismo de base comunitária | Baixa | Monitoramento passivo de cartilhas técnicas, normativas e legislações vigentes disponibilizadas pelos órgãos |
+| **Administradores da Plataforma** | Validação de informações da plataforma | Confiabilidade e segurança dos dados | Média | Treinamento e comunicação direta |
 
 ---
 
