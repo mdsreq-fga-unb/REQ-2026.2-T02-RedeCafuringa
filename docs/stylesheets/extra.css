@@ -118,21 +118,11 @@ body, .md-typeset {
 }
 
 .md-sidebar--primary {
-  width: 16rem;
-  transition: transform 0.2s ease, width 0.2s ease;
-}
-
-@media screen and (min-width: 76.25em) {
-  .md-sidebar--primary {
-    width: 16rem;
-  }
-}
-
-/* Botões para abrir/fechar as sidebars */
-.md-sidebar--primary {
   width: 12rem;
   transition: transform 0.2s ease, width 0.2s ease;
 }
+
+/* Botões para abrir/fechar as sidebars */
 
 .md-sidebar--secondary {
   transition: transform 0.2s ease, width 0.2s ease;
@@ -246,18 +236,6 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   text-align: justify;
 }
 
-.md-typeset h1 {
-  font-size: clamp(1.7rem, 4vw, 2.4rem);
-}
-
-.md-typeset h2 {
-  font-size: clamp(1.3rem, 3vw, 1.8rem);
-}
-
-.md-typeset h3 {
-  font-size: clamp(1.05rem, 2.5vw, 1.3rem);
-}
-
 /* Título da sidebar (label "NATIVO" no topo) */
 .md-nav__title {
   font-family: var(--nativo-font-body) !important;
@@ -272,7 +250,7 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 /* ── Todos os links da sidebar ── */
 .md-nav__link {
   font-family: var(--nativo-font-body);
-  font-size: 0.5rem;           /* maior que antes (era 0.83rem) */
+  font-size: 0.8rem;           /* base; sobrescrita por regras de nível 1 e 2 */
   font-weight: 400;
   border-radius: 6px;
   /* padding vertical generoso para "centralizar" na altura */
@@ -370,11 +348,6 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 }
 
 /* Scrollbar da sidebar */
-.md-sidebar__scrollwrap {
-  scrollbar-width: thin;
-  scrollbar-color: var(--nativo-sage) transparent;
-}
-
 .md-sidebar__scrollwrap::-webkit-scrollbar {
   width: 4px;
 }
@@ -836,106 +809,12 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   -webkit-mask-image: var(--md-admonition-icon--info);
 }
 
-.schedule-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 10px;
-  background-color: transparent;
-}
-
-.schedule-table th {
-  background-color: rgba(0, 0, 0, 0.1);
-  padding: 12px;
-  text-align: left;
-  font-weight: bold;
-}
-
-.schedule-row {
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-}
-
-.schedule-row td {
-  padding: 15px;
-  vertical-align: middle;
-}
-
-.schedule-phase {
-  font-size: 0.85rem;
-  padding: 2px 8px;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.1);
-  display: inline-block;
-  margin-top: 4px;
-}
-
-.schedule-status {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  background-color: rgba(255, 165, 0, 0.2);
-  color: #ffa500;
-  display: inline-block;
-}
-
-.schedule-activity {
-  text-decoration: none;
-}
-
-.schedule-activity:hover {
-  text-decoration: underline;
-}
-
 /* Ajusta a largura máxima do container principal do site */
 .md-grid {
   max-width: 1400px !important;
 }
 
 /* Transforma a tabela em linhas estilo cards */
-.schedule-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 12px;
-  background-color: transparent;
-  margin-top: 20px;
-}
-
-.schedule-table th {
-  background-color: transparent;
-  color: #dcdcdc;
-  padding: 10px 15px;
-  text-align: left;
-  font-weight: bold;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.schedule-row {
-  background-color: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-}
-
-.schedule-row td {
-  padding: 20px 15px;
-  vertical-align: middle;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.schedule-row td:first-child {
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-}
-
-.schedule-row td:last-child {
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-
 .schedule-phase {
   font-size: 0.75rem;
   padding: 3px 10px;
@@ -960,13 +839,4 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   color: #e5b83b;
   display: inline-block;
   text-align: center;
-}
-
-.schedule-activity {
-  color: inherit;
-  text-decoration: none;
-}
-
-.schedule-activity:hover {
-  text-decoration: underline;
 }
