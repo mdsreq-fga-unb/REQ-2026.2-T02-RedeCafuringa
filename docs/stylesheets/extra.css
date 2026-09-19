@@ -840,3 +840,22 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   display: inline-block;
   text-align: center;
 }
+
+.schedule-status--executed {
+  background-color: rgba(198, 93, 30, 0.2);
+  color: #c65d1e;
+}
+
+.schedule-status--in-progress {
+  background-color: rgba(47, 125, 72, 0.2);
+  color: #2f7d48;
+}
+
+.schedule-activity {
+  color: inherit;
+  text-decoration: none;
+}
+
+.schedule-activity:hover {
+  text-decoration: underline;
+}
