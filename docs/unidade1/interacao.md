@@ -31,7 +31,7 @@ Para viabilizar esse fluxo, o projeto utiliza as seguintes ferramentas e rotinas
 
 * **Registro de Decisões:** Durante as reuniões e ao longo das interações, quem registra as decisões técnicas e de negócio é o **Gerente de projeto/facilitador** (ou um membro da equipe expressamente designado no dia).
 
-* **Repositório Oficial:** Para assegurar a rastreabilidade e a organização do projeto, todas as decisões de arquitetura, atas de reuniões e critérios acordados são documentados no repositório oficial no GitHub: [mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa](mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa). O uso contínuo das seções de Wiki e Docs garante que o histórico de evolução do software esteja sempre acessível, seguro e versionado.
+* **Repositório Oficial:** Para assegurar a rastreabilidade e a organização do projeto, todas as decisões de arquitetura, atas de reuniões e critérios acordados são documentados no repositório oficial no GitHub: [mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-RedeCafuringa/). O uso contínuo das seções de Wiki e Docs garante que o histórico de evolução do software esteja sempre acessível, seguro e versionado.
 
 * **Prazo de Feedback:** O prazo esperado para que os stakeholders e cliente forneçam os feedbacks de validação após a apresentação de uma entrega ou funcionalidade é de até **3 dias úteis**, a fim de não comprometer o andamento do projeto. 
 
