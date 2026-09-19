@@ -25,9 +25,15 @@ Para viabilizar esse fluxo, o projeto utiliza as seguintes ferramentas e rotinas
 
 * **Microsoft Teams:** Ferramenta oficial para as videoconferências. A equipe de desenvolvimento realiza duas reuniões internas semanais para acompanhar o progresso e solucionar impedimentos. Nesses encontros, espera-se a participação de todos os integrantes da equipe, sempre que possível, sendo obrigatória a presença do monitor em pelo menos uma dessas reuniões.
 
-* **GitHub Projects:** Ferramenta oficial para gerenciar o quadro Kanban, centralizando a criação, priorização e movimentação das tarefas durante o desenvolvimento.
+* **GitHub Projects:** Ferramenta oficial para gerenciar o quadro de projetos, centralizando a criação, priorização e movimentação das tarefas durante o desenvolvimento.
 
 * **Reuniões de Revisão com o Cliente:** Ocorrem via Microsoft Teams a cada 7 ou 15 dias, conforme a necessidade e a disponibilidade do cliente. Durante as agendas, o cliente participa ativamente da revisão dos cartões concluídos, validação de funcionalidades, coleta de feedbacks e priorização do backlog. Espera-se a presença de todos os integrantes da equipe técnica, sempre que possível.
+
+* **Registro de Decisões:** Durante as reuniões e ao longo das interações, quem registra as decisões técnicas e de negócio é o **Gerente de projeto/facilitador** (ou um membro da equipe expressamente designado no dia).
+
+* **Repositório Oficial:** Para assegurar a rastreabilidade e a organização do projeto, todas as decisões de arquitetura, atas de reuniões e critérios acordados são documentados no repositório oficial no GitHub: [mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa](mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa). O uso contínuo das seções de Wiki e Docs garante que o histórico de evolução do software esteja sempre acessível, seguro e versionado.
+
+* **Prazo de Feedback:** O prazo esperado para que os stakeholders e cliente forneçam os feedbacks de validação após a apresentação de uma entrega ou funcionalidade é de até **3 dias úteis**, a fim de não comprometer o andamento do projeto. 
 
 ---
 
@@ -42,6 +48,11 @@ O processo de validação não ocorre apenas na entrega final, ele acontece de f
 
 * **Homologação pelo Cliente (UAT) e Feedback Rápido:** Na etapa final, o produto é disponibilizado ao cliente para testes de aceitação diretos. O feedback coletado é imediatamente incorporado nas iterações seguintes, permitindo ajustes constantes no produto e garantindo total coerência com a visão de uso inicial.
 
-* **Testes com Stakeholders:** Além do TDD e do cliente do projeto, espera-se que o software seja periodicamente testado por stakeholders do projeto, como a própria equipe técnica, alguns usuários primários, como produtores rurais familiares e representantes de associações/ecovilas, bem como por consumidores e visitantes do Distrito Federal. <!-- Recomenda-se a revisão deste critério de aceitação. A exigência de validação direta com usuários primários, além do cliente, introduzirá uma carga logística e burocrática significativa ao fluxo de desenvolvimento. -->
+* **Avaliação da Experiência do Usuário Final:** A qualidade e adequação do sistema serão validadas de forma metódica junto aos usuários e stakeholders por meio de testes de aceitação e usabilidade. Espera-se que ao menos 70% das funcionalidades do Produto Mínimo Viável (MVP) sejam validadas por meio desses testes realizados diretamente pelos clientes ou stakeholders. Os critérios avaliados nesta etapa englobam: 
+    1. **Eficácia:** Taxa de conclusão de tarefas e incidência de erros (ex: se o usuário conseguiu preencher o fluxo de cadastro sem travar).
+    2. **Eficiência:** O tempo necessário ou a quantidade de cliques exigida para executar as ações principais.
+    3. **Satisfação:** O nível de clareza visual e conforto do usuário ao navegar pela interface.
 
-* **Alterações decorrentes dos feedbacks:** Os feedbacks coletados junto aos stakeholders serão analisados pela equipe técnica e incorporados o mais rápido possível nas iterações seguintes. Tratadas com alta prioridade no backlog, essas adequações permitem ajustes constantes no produto, garantindo que ele evolua em total coerência com o cumprimento dos requisitos e as expectativas reais dos usuários.
+* **Documentação de Resultados:** Como o resultado vai ser documentado, as respostas e observações dessas avaliações não serão apenas discutidas verbalmente. Elas serão formalizadas em Relatórios de Teste de Aceitação e Usabilidade. Esses relatórios consolidarão notas de observação, formulários pós-teste preenchidos pelos usuários e propostas de melhoria, sendo imediatamente versionados no repositório oficial dos registros do projeto.
+
+* **Alterações decorrentes dos feedbacks:** Os feedbacks coletados junto aos stakeholders e estruturados nos relatórios serão analisados pela equipe técnica e incorporados o mais rápido possível nas iterações seguintes. Tratadas com alta prioridade no backlog, essas adequações permitem ajustes constantes no produto, garantindo que ele evolua em total coerência com o cumprimento dos requisitos e as expectativas reais dos usuários.
