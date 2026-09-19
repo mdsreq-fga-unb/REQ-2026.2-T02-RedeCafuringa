@@ -1,6 +1,6 @@
 # Visão do Produto e Projeto
 
-<span class="version-badge">Versão 1.0</span>
+<span class="version-badge">Versão 1.1</span>
 
 Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado ao gerenciamento e à transparência das demandas do ecossistema local. Desenvolvido no âmbito da disciplina de Requisitos de Software, este espaço reúne todo o artefatiamento técnico, mapeamento de processos e especificações do sistema. 
 
@@ -113,3 +113,4 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | 07/09/26 | 0.8 | Adição do vídeo de apresentação da Unidade 1  | Paulo Ferreira |
 | 16/09/26 | 0.9 | Revisão dos tópicos 2 e 3 (issues #2 e #3): nível de abstração das CPs, migração de CP6/CP7 para RNFs, rastreabilidade de valor de negócio (VN1-VN5), dados sourced na pesquisa competitiva, derivação de riscos sociais em requisitos verificáveis e refinamento de redação | Pedro Luiz |
 | 18/09/26 | 1.0 | Correção do Cenário Atual do Cliente e do Negócio de acordo com a issue aberta pelo professor | Beatriz Lins |
+| 19/09/26 | 1.1 | Correção da Interação Entre Equipe e Cliente de acordo com a issue aberta pelo professor | Lucas Gabriel |
