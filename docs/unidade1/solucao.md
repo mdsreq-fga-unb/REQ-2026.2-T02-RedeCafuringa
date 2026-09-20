@@ -2,7 +2,7 @@
 
 ## **2.1 Objetivo geral do produto**
 
-O objetivo do produto é expandir a conexão direta dos produtores da agricultura familiar e as comunidades da APA da Cafuringa aos consumidores e visitantes do Distrito Federal e Entorno por meio de uma plataforma digital pública, gratuita e sem intermediação financeira. A solução visa reduzir a dependência de atravessadores, dar visibilidade ao catálogo de alimentos agroecológicos e produtos artesanais, e estruturar a oferta do ecoturismo de base comunitária (trilhas, vivências e hospedagens). Com isso, o sistema busca contribuir para a transparência regulatória quanto à certificação orgânica, para a geração de renda sustentável e para a preservação ambiental no território — resultados que dependem também de fatores externos ao software, como adoção, manutenção do catálogo e atuação contínua dos produtores.
+O objetivo do produto é expandir a conexão direta dos produtores da agricultura familiar e as comunidades da APA da Cafuringa aos consumidores e visitantes do Distrito Federal e Entorno por meio de uma plataforma digital pública, gratuita e sem intermediação financeira. A solução visa reduzir a dependência de atravessadores, dar visibilidade ao catálogo de alimentos agroecológicos e produtos artesanais, e estruturar a oferta do ecoturismo de base comunitária (trilhas, vivências e hospedagens). Com isso, o sistema busca contribuir para a transparência regulatória quanto à certificação orgânica, para a geração de renda sustentável e para a preservação ambiental no território. Esses resultados dependem também de fatores externos ao software, como adoção, manutenção do catálogo e atuação contínua dos produtores.
 
 ---
 
@@ -36,7 +36,7 @@ Os objetivos específicos orientam o desenvolvimento das funcionalidades e serve
 
 ## 2.3 Características do Produto
 
-As características do produto (CPs) foram mapeadas diretamente aos Objetivos Específicos (OEs), garantindo rastreabilidade entre funcionalidades e objetivos de negócio. As descrições abaixo são mantidas em nível de capacidade — isto é, expressam *o que* a solução deverá viabilizar, sem antecipar decisões de implementação (como fluxos de tela, regras de negócio específicas ou nomes de operações). Esses detalhes serão derivados posteriormente como requisitos funcionais, regras de negócio e histórias de usuário.
+As características do produto (CPs) foram mapeadas diretamente aos Objetivos Específicos (OEs), garantindo rastreabilidade entre funcionalidades e objetivos de negócio. As descrições abaixo são mantidas em nível de capacidade, isto é, expressam *o que* a solução deverá viabilizar, sem antecipar decisões de implementação (como fluxos de tela, regras de negócio específicas ou nomes de operações). Esses detalhes serão derivados posteriormente como requisitos funcionais, regras de negócio e histórias de usuário.
 
 | ID | Característica do Produto | Descrição resumida | ID | Valor de negócio principal | OE principal | Contribuição secundária |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -95,7 +95,9 @@ No aspecto financeiro, a restrição de orçamento zero é buscada por meio de e
 
 Na dimensão legal, regulatória e técnica, a viabilidade está condicionada à implementação de restrições fundamentais no sistema. Isso abrange o bloqueio sistêmico contra a rotulagem indevida de produtos "orgânicos" (Lei nº 10.831/2003), a rigorosa adequação à LGPD no tratamento de geolocalização e a conformidade com diretrizes locais de turismo. Para mitigar riscos de responsabilidade civil, a plataforma atuará exclusivamente como diretório, gerência e ferramenta de pré-agendamento. Dessa forma, mantém transações financeiras, logística e contratos de hospedagem estritamente fora do software.
 
-Do ponto de vista tecnológico, o conjunto de capacidades previsto — PWA resiliente a baixa conectividade, geolocalização e mapas, certificação, autenticação, catálogo e controle de disponibilidade, pré-reservas, acessibilidade (WCAG), front-end e back-end desacoplados, infraestrutura distribuída entre provedores gratuitos e conteinerização com Docker, Caddy e MongoDB — representa um escopo tecnológico elevado para ser integralmente implementado em um único semestre letivo por uma equipe com dedicação parcial. Por isso, a viabilidade técnica está condicionada à definição objetiva de um MVP que priorize o subconjunto de maior valor de negócio e menor complexidade técnica, conforme a Matriz de Quadrantes descrita na Seção 5.2. Esse recorte deve postergar ou simplificar explicitamente as funcionalidades de menor prioridade.
+Do ponto de vista tecnológico, a viabilidade é sustentada pela maturidade das tecnologias escolhidas: React, PWA, Nest.js, TypeScript, MongoDB e a dupla OpenStreetMap/Leaflet.js são soluções de código aberto, amplamente adotadas pelo mercado e com farta documentação, o que reduz a curva de aprendizado da equipe e o risco de decisões arquiteturais experimentais. Além disso, nenhuma das capacidades previstas exige o desenvolvimento de tecnologia nova: a resiliência offline do PWA, a geolocalização e a integração com provedores de nuvem gratuitos são recursos consolidados de suas respectivas bibliotecas e serviços. Isso caracteriza um desafio de integração e de gestão de escopo, não de inovação tecnológica, o que torna o projeto tecnicamente executável dentro do prazo.
+
+Ainda assim, o conjunto de capacidades previsto é extenso: PWA resiliente a baixa conectividade, geolocalização e mapas, certificação, autenticação, catálogo e controle de disponibilidade, pré-reservas, acessibilidade (WCAG), front-end e back-end desacoplados, infraestrutura distribuída entre provedores gratuitos e conteinerização com Docker, Caddy e MongoDB. Esse volume de funcionalidades representa um escopo elevado para ser integralmente implementado em um único semestre letivo por uma equipe com dedicação parcial. Por isso, a viabilidade técnica está condicionada à definição objetiva de um MVP que priorize o subconjunto de maior valor de negócio e menor complexidade técnica. Esse recorte deve postergar ou simplificar explicitamente as funcionalidades de menor prioridade.
 
 Dessa forma, a viabilidade da proposta está condicionada aos seguintes fatores-chave:
 
@@ -111,10 +113,12 @@ Dessa forma, a viabilidade da proposta está condicionada aos seguintes fatores-
 **Gestão de riscos preliminar da equipe** 
 Para garantir a integridade da plataforma, a conformidade regulamentar e o sucesso do MVP, o projeto adota uma gestão de riscos ativa focada nas seguintes frentes:
 
-<p align="center">
-  <img src="../../img/gestao_risco.png" alt="Quadro de gestão de risco" 
-  width="100%"style="border-radius: 15px;">
-</p></p> 
+| ID | Descrição do Risco | Tipo | Impacto | Probabilidade | Ação de Mitigação |
+| :---: | :--- | :---: | :---: | :---: | :--- |
+| **R1** | Burla de Regras de Certificação: risco de usuários não certificados burlarem a restrição do selo orgânico digitando termos equivalentes em campos de texto livre (títulos e descrições). | Legal / Técnico | Alto | Alto | Disponibilizar acesso à validação de certificados via redirecionamento externo e implementar filtros automatizados (palavras-chave no front-end e back-end) para bloquear submissões de perfis não validados. |
+| **R2** | Moderação e Responsabilidade Operacional: a tecnologia isolada não elimina riscos de uso indevido ou inserção de dados falsos pelos produtores. | Operacional | Alto | Médio | Definir claramente um responsável (dono) operacional pela conferência de cadastros e auditoria contínua de anúncios. |
+| **R3** | Escopo e Cronograma: riscos associados a atrasos por desvios de escopo ou complexidade técnica imprevista no MVP, dado o volume elevado de capacidades tecnológicas previstas. | Gerencial / Técnico | Médio | Alto | Foco no conjunto de características essenciais, priorização rígida do MVP por valor de negócio e complexidade técnica, e adoção de marcos de revisão claros ao final de cada iteração curta. |
+| **R4** | Dependência de Provedores Gratuitos: a condição de custo zero depende da continuidade das políticas de *free tier* de nuvem, mapas e certificação TLS, que podem mudar limites ou ser descontinuadas pelos provedores externos. | Financeiro / Técnico | Médio | Média | Monitorar continuamente os limites de uso dos planos gratuitos e manter um plano de contingência de migração para provedores alternativos. |
 
 ---
 
