@@ -100,7 +100,7 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
     #### Grupo Focal (Focus Group)
 
-    - **Descrição:** Reuniões em grupo com produtores rurais e anfitriões para mapear processos de campo e restrições operacionais (como áreas com baixa conectividade).
+    - **Descrição:** Reuniões em grupo com anfitriões para mapear processos de campo e restrições operacionais.
     - **Entradas:** Roteiro de tópicos operacionais e mapa de processos locais.
     - **Saídas:** Relatório de restrições operacionais e de conectividade.
     - **Participantes:** Engenheiros de Requisitos, Amostra de Produtores Rurais e Anfitriões.
@@ -128,7 +128,7 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
     - **Descrição:** Ponderação entre o valor para os usuários e o esforço de engenharia para delimitar o escopo do MVP.
     - **Entradas:** Backlog de User Stories e Especificação Suplementar.
     - **Saídas:** Backlog de MVP Priorizado.
-    - **Participantes:** Engenheiros de Requisitos, Arquitetos de Software, Cliente e Amostra de Produtores Rurais e Consumidores.
+    - **Participantes:** Engenheiros de Requisitos, Arquitetos de Software e Cliente.
 
 !!! info "Representação de Requisitos"
 

@@ -1,6 +1,6 @@
 # Visão do Produto e Projeto
 
-<span class="version-badge">Versão 1.2</span>
+<span class="version-badge">Versão 1.3</span>
 
 Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado ao gerenciamento e à transparência das demandas do ecossistema local. Desenvolvido no âmbito da disciplina de Requisitos de Software, este espaço reúne todo o artefatiamento técnico, mapeamento de processos e especificações do sistema. 
 
@@ -50,47 +50,54 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 
 ---
 
+## Conhecendo a Cafuringa
+<video width="100%" controls>
+    <source src="../../img/aup-elaboracao/visitacao.mp4" type="video/mp4">
+</video>
+
+---
+
 ## Integrantes da Equipe
 
 <div class="grid cards" markdown>
 
--   [**Beatriz Lins - Analista de Requisitos**](https://github.com/Beatriz-ge){ target="_blank" }
+-   [**Beatriz Lins**](https://github.com/Beatriz-ge){ target="_blank" }
         
     ![Beatriz Lins](https://github.com/Beatriz-ge.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por gestão de projeto e documentação.
 
 
--   [**Ítalo Alves - Analista de QA**](https://github.com/ItaloSamP){ target="_blank" }
+-   [**Ítalo Alves**](https://github.com/ItaloSamP){ target="_blank" }
         
     ![Ítalo Alves](https://github.com/ItaloSamP.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por backend, infraestrutura e testes.
 
 
--   [**Lucas Gabriel - Desenvolvedor Frontend**](https://github.com/lucaszg-g){ target="_blank" }
+-   [**Lucas Gabriel**](https://github.com/lucaszg-g){ target="_blank" }
     
     ![Lucas Gabriel](https://github.com/lucaszg-g.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por frontend.
 
 
--   [**Luccas Rodrigues - Desenvolvedor Backend**](https://github.com/AgenteL007){ target="_blank" }
+-   [**Luccas Rodrigues**](https://github.com/AgenteL007){ target="_blank" }
         
     ![Luccas Rodrigues](https://github.com/AgenteL007.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por backend.
 
 
--   [**Paulo Filho - Gerente de Projeto**](https://github.com/Pirata2040){ target="_blank" }
+-   [**Paulo Filho**](https://github.com/Pirata2040){ target="_blank" }
         
     ![Paulo Filho](https://github.com/Pirata2040.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por gestão de projeto e documentação.
 
 
--   [**Pedro Luiz - Desenvolvedor Backend**](https://github.com/Pedroluizfo){ target="_blank" }
+-   [**Pedro Luiz**](https://github.com/Pedroluizfo){ target="_blank" }
         
     ![Pedro Luiz](https://github.com/Pedroluizfo.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por backend.
 
 
--   [**Pedro Macedo - Desenvolvedor Frontend**](https://github.com/macedoPedro20){ target="_blank" }
+-   [**Pedro Macedo**](https://github.com/macedoPedro20){ target="_blank" }
 
     ![Pedro Macedo](https://github.com/macedoPedro20.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por frontend e backend.
@@ -115,3 +122,4 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | 18/09/26 | 1.0 | Correção do Cenário Atual do Cliente e do Negócio de acordo com a issue aberta pelo professor | Beatriz Lins |
 | 19/09/26 | 1.1 | Correção da Interação Entre Equipe e Cliente de acordo com a issue aberta pelo professor | Lucas Gabriel |
 | 22/09/26 | 1.2 | Correções no tópico 2.6 apontadas em revisão de colega (remoção de referência indevida à Matriz de Quadrantes, remoção de travessões, conversão da tabela de gestão de riscos de imagem para Markdown com novo risco de dependência de free tier, e reforço da demonstração de viabilidade tecnológica) e reestruturação dos tópicos 2.2 e 2.3 (novos Objetivos Específicos e Características do Produto, com matriz de rastreabilidade OE × CP) | Pedro Luiz |
+| 22/09/26 | 1.3 | Correção dos tópicos AUP - Concepção, AUP - Elaboração, AUP - Construção e AUP - Transição. Adição de todas as evidências das fases anteriores até hoje. Correção e atualização do tópico 5. Atualização da página inicial | Beatriz Lins |
