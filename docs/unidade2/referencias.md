@@ -1,3 +1,5 @@
+<span class="version-badge">Unidade 02</span>
+
 # Referências Bibliográficas
 
 MARSICANO, George. **Requisitos de Software – Comunicação é tudo!** V1.1 - Draft. [Brasília]: Universidade de Brasília, 2026.
