@@ -1,24 +1,31 @@
 # Evidências da Iteração 2
 
-## Atividade de Engenharia de Requisitos
+## Análise e Consenso
 
-!!! info "Análise e Consenso"
-    Classifcação dos requisitos iniciais utilizando o método MoSCoW.
+Leitura técnica do Documento de Visão entre os membros da equipe para identificar lacunas, ambiguidades e inconsistências e reuniões de revisão para confirmação dos objetivos geral e específicos e das decisões de abordagem, ciclo de vida e processo de software.
 
-!!! info "Declaração"
-    Documentação enxuta enviada para o cliente como ideia inicial do projeto.
+??? info "Inspeção por Pares (Revisão Técnica Cruzada)"
+
+    Relatório feito pelo grupo sobre as inconsistências sanadas no documento de Visão.
+
+    <iframe src="https://docs.google.com/document/d/e/2PACX-1vSuB0hJGUM_tQqyeObhlf-DETNHDtAI037fsd8zz0pFC5TA33cBkRf6xGuogn0V_1Isj3fEmuzBOavZ/pub?embedded=true"width="100%" height="500" frameborder="0"></iframe>
+
+??? info "Reuniões de Revisão da Entrega"
+
+    Prints comprobatórios de confirmação de revisão e aceitação por parte do cliente sobre as documnetações. Os vídeos comprobatórios constam logo abaixo na sessão de vídeos.
+
+    - ![Gitpage](../../img/aup-concepcao/prints_conversas/gitpage.jpeg){ width="300" }
 
 ---
 
-## Evidências
+## Análise e Consenso
 
-Na Iteração 2, a equipe deu continuidade ao refinamento do projeto, embora tenha enfrentado desafios técnicos logísticos operacionais. Algumas reuniões de alinhamento e concepção não foram gravadas porque a equipe estava com dificuldade de encontrar uma plataforma que oferecesse recursos de gravação de forma gratuita. Por esse motivo, a importante reunião dedicada à priorização e definição utilizando o método MoSCoW também acabou não possuindo registro em vídeo.
+Indexação de cada OE e CP com códigos identificadores únicos e atribuição de estado de aprovação, com migração das decisões consolidadas no documento compartilhado para o repositório oficial (GitPages).
 
-Diferente da primeira etapa, não houve agendamento de reuniões síncronas formais com o cliente neste ciclo. Em vez disso, o alinhamento, a validação do escopo e a aprovação das documentações referentes à Entrega 2 foram conduzidos de maneira assíncrona por meio de troca de mensagens, canal pelo qual a equipe obteve o aval e a concordância direta do cliente para seguir com o planejado.
+??? info "Atribuição de Metadados & Versionamento"
 
-As discussões e análises de valor de negócio foram consolidadas inicialmente em rascunhos de alinhamento interno da equipe e, posteriormente, estruturadas e migradas para o GitPages.
-
-A construção desta etapa baseou-se no refinamento contínuo do material de Requisitos de Software, diretrizes do Template de entregas, literatura técnica recomendada e nas demandas reais levantadas junto aos produtores e à comunidade da Rede Cafuringa.
+    Link do repositório oficial do github para comprovação e acompanhamento do projeto.
+    [Cafuringa - Requisitos de Software](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa)
 
 ---
 
@@ -32,12 +39,3 @@ O vídeo abaixo registra decisões acerca da abordagem, ciclo de vida e processo
 
 <iframe width="800" height="450" src="https://www.youtube.com/embed/qv9w89JXDFo" title="Vídeo do YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
----
-
-## Print do Histórico do Documento
-
-<div class="grid cards" markdown>
-- ![Histórico 4](../../img/prints_historico/historico4.png)
-- ![Histórico 5](../../img/prints_historico/historico5.png)
-- ![Histórico 6](../../img/prints_historico/historico6.png)
-</div>
