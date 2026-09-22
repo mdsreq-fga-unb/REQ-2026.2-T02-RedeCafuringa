@@ -41,37 +41,7 @@ Uma característica pode contribuir para mais de um objetivo, sendo identificado
 | **OE2 — Visibilidade e descoberta da oferta local** | **X** | **X** | **X** | **X** | | |
 | **OE3 — Conexão direta e autonomia dos produtores** | | **X** | **X** | **X** | **X** | **X** |
 
-### Relação entre os Objetivos Específicos e as Características do Produto
 
-#### OE1 — Promover inclusão e acessibilidade digital
-
-O OE1 possui caráter transversal e está relacionado a todas as Características do Produto, uma vez que todas as funcionalidades devem ser acessíveis e utilizáveis por produtores, consumidores e visitantes, inclusive em dispositivos com recursos limitados e em condições de conectividade restrita.
-
-**CPs relacionadas:** CP1, CP2, CP3, CP4, CP5 e CP6.
-
----
-
-#### OE2 — Ampliar a visibilidade e descoberta da oferta local
-
-O OE2 está diretamente relacionado às características responsáveis por representar, organizar e permitir a descoberta da oferta existente na Rede Cafuringa.
-
-A CP1 possibilita apresentar os produtores e demais participantes da rede; a CP2 organiza e divulga seus produtos; a CP3 apresenta os atrativos e experiências disponíveis; e a CP4 permite que essas informações sejam encontradas por meio de mecanismos de busca e localização georreferenciada.
-
-**CPs relacionadas:** CP1, CP2, CP3 e CP4.
-
----
-
-#### OE3 — Fortalecer a conexão direta e a autonomia dos produtores
-
-O OE3 está relacionado às características que possibilitam aproximar produtores, consumidores e visitantes.
-
-O catálogo de produtos e os atrativos rurais apresentam aquilo que pode despertar o interesse do usuário; a busca georreferenciada auxilia na descoberta dos participantes e das ofertas; a intenção de compra permite iniciar o contato direto com os produtores; e a pré-reserva possibilita a aproximação entre visitantes e responsáveis pelas experiências rurais. Essas interações ocorrem sem que a plataforma realize a intermediação financeira entre as partes.
-
-**CPs relacionadas:** CP2, CP3, CP4, CP5 e CP6.
-
-
-
----
 
 ## **2.4 Tecnologias a serem utilizadas**
 
