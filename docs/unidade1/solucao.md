@@ -10,41 +10,64 @@ O objetivo do produto é expandir a conexão direta dos produtores da agricultur
 
 Os objetivos específicos orientam o desenvolvimento das funcionalidades e servem como critério de avaliação das entregas.
 
-<div class="section-cards">
-  <div class="section-card">
-      <h3>Objetivo Específico 01</h3>
-      <p>Promover a inclusão e a acessibilidade digital para produtores e consumidores no meio rural, assegurando uma experiência intuitiva e utilizável sob condições restritas de conectividade e de dispositivos.</p>
-  </div>
+* **OE1 — Promover inclusão e acessibilidade digital:** promover a inclusão e a acessibilidade digital para produtores e consumidores no meio rural, assegurando uma experiência intuitiva e utilizável sob condições restritas de conectividade e de dispositivos.
 
-  <div class="section-card">
-      <h3>Objetivo Específico 02</h3>
-      <p>Mapear e visibilizar a produção agroecológica e os atrativos locais, facilitando a descoberta georreferenciada da oferta regional por parte de consumidores e visitantes.</p>
-  </div>
+* **OE2 — Ampliar a visibilidade e descoberta da oferta local:** mapear e dar visibilidade à produção agroecológica, aos produtores e aos atrativos locais, facilitando a descoberta da oferta regional por consumidores e visitantes.
 
-  <div class="section-card">
-      <h3>Objetivo Específico 03</h3>
-      <p>Assegurar a confiabilidade e a conformidade regulatória da rede de comercialização, garantindo o respeito à privacidade dos usuários e a integridade da identificação de produtos orgânicos e agroecológicos.</p>
-  </div>
-
-  <div class="section-card">
-      <h3>Objetivo Específico 04</h3>
-      <p>Fomentar o circuito curto de comercialização e a autonomia dos produtores, viabilizando a aproximação e o contato direto entre as partes sem intermediação financeira.</p>
-  </div>
-</div>
+* **OE3 — Fortalecer a conexão direta e a autonomia dos produtores:** fomentar o circuito curto de comercialização e o ecoturismo de base comunitária, viabilizando a aproximação, a manifestação de interesse e o contato direto entre produtores, consumidores e visitantes, sem intermediação financeira pela plataforma.
 
 ---
 
 ## 2.3 Características do Produto
 
-As características do produto (CPs) foram mapeadas diretamente aos Objetivos Específicos (OEs), garantindo rastreabilidade entre funcionalidades e objetivos de negócio. As descrições abaixo são mantidas em nível de capacidade, isto é, expressam *o que* a solução deverá viabilizar, sem antecipar decisões de implementação (como fluxos de tela, regras de negócio específicas ou nomes de operações). Esses detalhes serão derivados posteriormente como requisitos funcionais, regras de negócio e histórias de usuário.
+As Características do Produto (CPs) representam as principais capacidades que a solução deverá oferecer para atingir os objetivos específicos definidos.
 
-| ID | Característica do Produto | Descrição resumida | ID | Valor de negócio principal | OE principal | Contribuição secundária |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **CP1** | Gestão de Perfil e Certificação Transparente | A solução deverá viabilizar a identificação de produtores e propriedades e a transparência quanto à sua situação de certificação. | **VN1** | Conformidade legal (Lei nº 10.831/2003) e geração de confiança para o consumidor urbano. | OE3 | OE2 |
-| **CP2** | Catálogo Unificado de Produtos | A solução deverá viabilizar a disponibilização unificada da oferta de alimentos agrícolas frescos, beneficiados e artesanais, contemplando variações de disponibilidade e sazonalidade. | **VN2** | Redução de perdas pós-colheita entre dias de feira e aproximação direta entre produtor e consumidor. | OE2 | OE4 |
-| **CP3** | Diretório de Atrativos Rurais | A solução deverá viabilizar a divulgação detalhada de propriedades, incluindo atrativos naturais, vivências agroecológicas e hospedagem rústica. | **VN3** | Diversificação das fontes de renda do produtor e fortalecimento do ecoturismo de base comunitária. | OE2 | OE4 |
-| **CP4** | Busca e Descoberta Georreferenciada | A solução deverá viabilizar a busca e a descoberta georreferenciada de produtores e atrativos, considerando critérios de proximidade, categoria, perfil de interesse e situação de certificação. | **VN4** | Facilidade na localização hiperlocal de produtores e atrativos próximos ao consumidor. | OE2 | OE1, OE4 |
-| **CP5** | Motor de Pré-Reserva e Conexão Direta | A solução deverá viabilizar o registro de intenções de compra ou visita e a conexão direta entre as partes, mediante confirmação mútua e compartilhamento controlado dos dados de contato. | **VN5** | Viabilização de transações sem retenção de margem pela plataforma e apoio à prevenção de sobrecarga turística nas ecovilas. | OE4 | OE2, OE3 |
+Uma característica pode contribuir para mais de um objetivo, sendo identificado um objetivo principal e, quando aplicável, objetivos para os quais ela também contribui de forma secundária.
+
+| ID | Característica do Produto | Descrição resumida | OE principal | Contribuição secundária |
+| :---: | :--- | :--- | :---: | :---: |
+| **CP1** | Perfis e Certificação | Permitir a representação de produtores, propriedades, associações e comunidades na plataforma, apresentando suas informações e sua situação de certificação de forma clara para consumidores e visitantes. | **OE2** | OE1 |
+| **CP2** | Catálogo e Disponibilidade de Produtos | Permitir a divulgação organizada dos produtos oferecidos pelos participantes da Rede Cafuringa, contemplando características, categorias, disponibilidade e sazonalidade. | **OE2** | OE1, OE3 |
+| **CP3** | Atrativos e Experiências Rurais | Permitir a divulgação de atrativos e experiências oferecidos no território, como trilhas, visitas, vivências agroecológicas, passeios e hospedagens. | **OE2** | OE1, OE3 |
+| **CP4** | Busca e Descoberta Georreferenciada | Permitir que consumidores e visitantes encontrem produtores, produtos, propriedades e atrativos por meio de localização, proximidade, mapa e critérios de busca. | **OE2** | OE1, OE3 |
+| **CP5** | Intenção de Compra e Conexão Direta | Permitir que consumidores manifestem interesse nos produtos e estabeleçam contato direto com os respectivos produtores para continuidade da negociação fora da plataforma, sem intermediação financeira. | **OE3** | OE1 |
+| **CP6** | Pré-reserva de Experiências | Permitir que visitantes manifestem interesse e solicitem previamente participação em visitas, experiências ou hospedagens, sujeitas à confirmação do respectivo responsável. | **OE3** | OE1 |
+
+### Matriz de Rastreabilidade OE × CP
+
+| Objetivo Específico | CP1 | CP2 | CP3 | CP4 | CP5 | CP6 |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **OE1 — Inclusão e acessibilidade digital** | **X** | **X** | **X** | **X** | **X** | **X** |
+| **OE2 — Visibilidade e descoberta da oferta local** | **X** | **X** | **X** | **X** | | |
+| **OE3 — Conexão direta e autonomia dos produtores** | | **X** | **X** | **X** | **X** | **X** |
+
+### Relação entre os Objetivos Específicos e as Características do Produto
+
+#### OE1 — Promover inclusão e acessibilidade digital
+
+O OE1 possui caráter transversal e está relacionado a todas as Características do Produto, uma vez que todas as funcionalidades devem ser acessíveis e utilizáveis por produtores, consumidores e visitantes, inclusive em dispositivos com recursos limitados e em condições de conectividade restrita.
+
+**CPs relacionadas:** CP1, CP2, CP3, CP4, CP5 e CP6.
+
+---
+
+#### OE2 — Ampliar a visibilidade e descoberta da oferta local
+
+O OE2 está diretamente relacionado às características responsáveis por representar, organizar e permitir a descoberta da oferta existente na Rede Cafuringa.
+
+A CP1 possibilita apresentar os produtores e demais participantes da rede; a CP2 organiza e divulga seus produtos; a CP3 apresenta os atrativos e experiências disponíveis; e a CP4 permite que essas informações sejam encontradas por meio de mecanismos de busca e localização georreferenciada.
+
+**CPs relacionadas:** CP1, CP2, CP3 e CP4.
+
+---
+
+#### OE3 — Fortalecer a conexão direta e a autonomia dos produtores
+
+O OE3 está relacionado às características que possibilitam aproximar produtores, consumidores e visitantes.
+
+O catálogo de produtos e os atrativos rurais apresentam aquilo que pode despertar o interesse do usuário; a busca georreferenciada auxilia na descoberta dos participantes e das ofertas; a intenção de compra permite iniciar o contato direto com os produtores; e a pré-reserva possibilita a aproximação entre visitantes e responsáveis pelas experiências rurais. Essas interações ocorrem sem que a plataforma realize a intermediação financeira entre as partes.
+
+**CPs relacionadas:** CP2, CP3, CP4, CP5 e CP6.
 
 
 
