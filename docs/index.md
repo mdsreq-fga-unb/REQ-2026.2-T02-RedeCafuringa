@@ -52,7 +52,7 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 
 ## Conhecendo a Cafuringa
 <video width="100%" controls>
-    <source src="../../img/aup-elaboracao/visitacao.mp4" type="video/mp4">
+    <source src="img/aup-elaboracao/visitacao.mp4" type="video/mp4">
 </video>
 
 ---
