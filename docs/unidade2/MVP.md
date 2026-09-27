@@ -69,3 +69,76 @@
 | **RNF12** | Compatibilidade entre navegadores | **3** | Should Have | Amplia a disponibilidade da plataforma em diferentes ambientes de acesso e reduz restrições tecnológicas aos usuários. |
 | **RNF13** | Baixo custo operacional | **4** | Must Have | Está diretamente relacionado à sustentabilidade da solução e à necessidade de evitar custos recorrentes significativos para a Rede Cafuringa. |
 | **RNF14** | Disponibilização como aplicação web progressiva | **2** | Could Have | A utilização de PWA pode facilitar o acesso e a instalação da aplicação, mas sua ausência não impede a utilização da plataforma como aplicação web. |
+
+--- Consolidação das avaliações ---
+
+-Requisitos Funcionais-
+
+| RF | Requisito | MoSCoW correto | Valor | E | C | L | ET |
+|---|---|---|---:|---:|---:|---:|---:|
+| RF01 | Cadastrar perfil de consumidor | **Must Have** | **4** | 2 | 1 | 1 | **1,3 → 1** |
+| RF02 | Cadastrar perfil de produtor | **Must Have** | **4** | 2 | 1 | 1 | **1,3 → 1** |
+| RF03 | Cadastrar usuário admin | **Must Have** | **4** | 2 | 1 | 1 | **1,3 → 1** |
+| RF04 | Consultar usuários cadastrados | **Must Have** | **4** | 2 | 2 | 1 | **1,7 → 2** |
+| RF05 | Desativar usuário | **Should Have** | **3** | 1 | 2 | 1 | **1,3 → 1** |
+| RF06 | Consultar conteúdos cadastrados | **Should Have** | **3** | 2 | 3 | 1 | **2,0 → 2** |
+| RF07 | Remover conteúdo inadequado | **Should Have** | **3** | 2 | 3 | 1 | **2,0 → 2** |
+| RF08 | Atualizar informações institucionais | **Could Have** | **2** | 1 | 1 | 1 | **1,0 → 1** |
+| RF09 | Autenticar usuário | **Must Have** | **4** | 2 | 3 | 2 | **2,3 → 2** |
+| RF10 | Recuperar acesso à conta | **Should Have** | **3** | 2 | 3 | 1 | **2,0 → 2** |
+| RF11 | Excluir conta | **Should Have** | **3** | 2 | 3 | 1 | **2,0 → 2** |
+| RF12 | Registrar trajetória do produtor | **Should Have** | **3** | 1 | 2 | 1 | **1,3 → 1** |
+| RF13 | Atualizar perfil de produtor | **Should Have** | **3** | 2 | 2 | 1 | **1,7 → 2** |
+| RF14 | Consultar perfil de produtor | **Must Have** | **4** | 2 | 2 | 1 | **1,7 → 2** |
+| RF15 | Informar certificação | **Won't Have Now** | **1** | 2 | 4 | 3 | **3,0 → 3** |
+| RF16 | Preencher questionário do produtor | **Should Have** | **3** | 2 | 3 | 3 | **2,6 → 3** |
+| RF17 | Cadastrar produto | **Must Have** | **4** | 2 | 2 | 1 | **1,7 → 2** |
+| RF18 | Atualizar produto | **Should Have** | **3** | 2 | 2 | 1 | **1,7 → 2** |
+| RF19 | Excluir produto | **Could Have** | **2** | 1 | 2 | 1 | **1,3 → 1** |
+| RF20 | Informar disponibilidade de produto | **Should Have** | **3** | 2 | 3 | 1 | **2,0 → 2** |
+| RF21 | Consultar catálogo de produtos | **Must Have** | **4** | 2 | 2 | 1 | **1,7 → 2** |
+| RF22 | Consultar detalhes do produto | **Must Have** | **4** | 2 | 2 | 1 | **1,7 → 2** |
+| RF23 | Cadastrar experiência | **Must Have** | **4** | 2 | 2 | 2 | **2,0 → 2** |
+| RF24 | Atualizar experiência | **Should Have** | **3** | 2 | 2 | 2 | **2,0 → 2** |
+| RF25 | Consultar experiência | **Must Have** | **4** | 2 | 3 | 2 | **2,3 → 2** |
+| RF26 | Excluir experiência | **Could Have** | **2** | 1 | 2 | 1 | **1,3 → 1** |
+| RF27 | Cadastrar evento | **Should Have** | **3** | 2 | 2 | 2 | **2,0 → 2** |
+| RF28 | Atualizar evento | **Could Have** | **2** | 2 | 2 | 1 | **1,7 → 2** |
+| RF29 | Consultar evento | **Should Have** | **3** | 1 | 2 | 1 | **1,3 → 1** |
+| RF30 | Excluir evento | **Won't Have Now** | **1** | 1 | 2 | 1 | **1,3 → 1** |
+| RF31 | Auxiliar cadastro de atividade | **Won't Have Now** | **1** | 4 | 4 | 4 | **4 → 4** |
+| RF32 | Apresentar informações da Cafuringa | **Could Have** | **2** | 1 | 1 | 1 | **1,0 → 1** |
+| RF33 | Consultar guia de boas práticas | **Should Have** | **3** | 1 | 2 | 2 | **1,7 → 2** |
+| RF34 | Notificar eventos | **Could Have** | **2** | 3 | 3 | 3 | **3,0 → 3** |
+| RF35 | Visualizar ofertas no mapa | **Won't Have Now** | **1** | 4 | 4 | 2 | **3,3 → 3** |
+| RF36 | Buscar ofertas | **Must Have** | **4** | 3 | 3 | 2 | **2,6 → 3** |
+| RF37 | Buscar locais por proximidade | **Won't Have Now** | **1** | 4 | 3 | 4 | **3,6 → 4** |
+| RF38 | Filtrar resultados de busca | **Should Have** | **3** | 2 | 3 | 2 | **2,3 → 2** |
+| RF39 | Disponibilizar contato direto | **Must Have** | **4** | 4 | 4 | 4 | **4,0 → 4** |
+| RF40 | Enviar feedback ao fornecedor | **Could Have** | **2** | 3 | 3 | 2 | **2,6 → 3** |
+| RF41 | Visualizar feedback | **Could Have** | **2** | 2 | 2 | 1 | **1,7 → 2** |
+| RF42 | Editar feedback | **Won't Have Now** | **1** | 1 | 2 | 1 | **1,3 → 1** |
+| RF43 | Excluir feedback ao fornecedor | **Won't Have Now** | **1** | 1 | 2 | 2 | **1,7 → 2** |
+| RF44 | Solicitar pré-reserva de experiência | **Must Have** | **4** | 4 | 3 | 3 | **3,3 → 3** |
+| RF45 | Consultar pré-reserva | **Should Have** | **3** | 2 | 2 | 2 | **2,0 → 2** |
+| RF46 | Cancelar solicitação de pré-reserva | **Must Have** | **4** | 2 | 3 | 2 | **2,3 → 2** |
+| RF47 | Responder pré-reserva de experiência | **Must Have** | **4** | 3 | 3 | 3 | **3,0 → 3** |
+| RF48 | Notificar alteração de pré-reserva | **Should Have** | **3** | 3 | 4 | 3 | **3,3 → 3** |
+
+-Requisitos Não Funcionais-
+| RNF | Requisito | MoSCoW | Valor | E | C | L | ET |
+|---|---|---|---:|---:|---:|---:|---:|
+| RNF01 | Eficiência de navegação | Could Have | 2 | 2 | 2 | 1 | 1,7 → 2 |
+| RNF02 | Desempenho na execução de tarefas | Could Have | 2 | 2 | 2 | 1 | 1,7 → 2 |
+| RNF03 | Prevenção e recuperação de erros | Must Have | 4 | 2 | 2 | 1 | 1,7 → 2 |
+| RNF04 | Acessibilidade digital | Should Have | 3 | 3 | 3 | 2 | 2,7 → 3 |
+| RNF05 | Responsividade da interface | Must Have | 4 | 2 | 2 | 1 | 1,7 → 2 |
+| RNF06 | Desempenho em conectividade limitada | Must Have | 4 | 3 | 3 | 2 | 2,7 → 3 |
+| RNF07 | Resiliência à perda de conexão | Should Have | 3 | 3 | 3 | 2 | 2,7 → 3 |
+| RNF08 | Controle de acesso por perfil | Must Have | 4 | 3 | 3 | 2 | 2,7 → 3 |
+| RNF09 | Privacidade do feedback | Could Have | 2 | 2 | 2 | 1 | 1,7 → 2 |
+| RNF10 | Proteção da comunicação | Must Have | 4 | 2 | 2 | 1 | 1,7 → 2 |
+| RNF11 | Proteção de dados pessoais | Must Have | 4 | 3 | 3 | 2 | 2,7 → 3 |
+| RNF12 | Compatibilidade entre navegadores | Should Have | 3 | 2 | 2 | 1 | 1,7 → 2 |
+| RNF13 | Baixo custo operacional | Must Have | 4 | 2 | 2 | 1 | 1,7 → 2 |
+| RNF14 | Disponibilização como aplicação web progressiva | Could Have | 2 | 3 | 3 | 2 | 2,7 → 3 |
