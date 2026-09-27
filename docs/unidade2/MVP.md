@@ -1,3 +1,5 @@
+--Avaliação dos Requisitos Funcionais--
+
 | Código | Requisito | Valor | MoSCoW | Justificativa |
 |---|---|---:|---|---|
 | **RF01** | Cadastrar perfil de consumidor | **4** | Must Have | É necessário para identificar os consumidores e permitir sua participação nos principais fluxos da plataforma. |
@@ -48,3 +50,22 @@
 | **RF46** | Cancelar solicitação de pré-reserva | **4** | Must Have | Permite ao visitante controlar uma solicitação enquanto ela está pendente e completa o gerenciamento do fluxo de pré-reserva. |
 | **RF47** | Responder pré-reserva de experiência | **4** | Must Have | É indispensável para que o responsável possa aceitar ou rejeitar uma solicitação, completando o fluxo de pré-reserva. |
 | **RF48** | Notificar alteração de pré-reserva | **3** | Should Have | Mantém os envolvidos informados sobre mudanças no estado da solicitação e reduz a necessidade de consultas manuais. |
+
+--Avaliação dos Requisitos Não Funcionais--
+
+| Código | Requisito | Valor | MoSCoW | Justificativa |
+|---|---|---:|---|---|
+| **RNF01** | Eficiência de navegação | **2** | Could Have | Uma navegação eficiente melhora a experiência, mas o aprimoramento específico da hierarquia pode ser realizado posteriormente sem impedir a utilização da plataforma. |
+| **RNF02** | Desempenho na execução de tarefas | **2** | Could Have | Contribui para uma experiência mais rápida e simples, mas os critérios específicos de desempenho podem ser aprimorados posteriormente. |
+| **RNF03** | Prevenção e recuperação de erros | **4** | Must Have | É necessária para evitar falhas de operação e orientar os usuários durante ações inválidas nos principais fluxos. |
+| **RNF04** | Acessibilidade digital | **3** | Should Have | Amplia a possibilidade de utilização da plataforma por pessoas com diferentes necessidades e níveis de familiaridade tecnológica. |
+| **RNF05** | Responsividade da interface | **4** | Must Have | É necessária para que os principais fluxos permaneçam utilizáveis em diferentes tamanhos de tela, especialmente em dispositivos móveis. |
+| **RNF06** | Desempenho em conectividade limitada | **4** | Must Have | Está diretamente relacionado ao contexto de utilização rural, no qual podem existir condições de baixa velocidade ou alta latência. |
+| **RNF07** | Resiliência à perda de conexão | **3** | Should Have | Reduz o risco de perda de informações durante o preenchimento de formulários em ambientes sujeitos à instabilidade de conexão. |
+| **RNF08** | Controle de acesso por perfil | **4** | Must Have | É indispensável para impedir que usuários executem operações incompatíveis com seus perfis e para proteger funcionalidades restritas. |
+| **RNF09** | Privacidade do feedback | **2** | Could Have | Contribui para a proteção das informações relacionadas aos feedbacks, mas pode ser priorizado após os requisitos essenciais de segurança e proteção de dados. |
+| **RNF10** | Proteção da comunicação | **4** | Must Have | A transmissão segura dos dados é necessária para proteger as informações trafegadas entre usuários e plataforma. |
+| **RNF11** | Proteção de dados pessoais | **4** | Must Have | Trata-se de uma restrição legal relacionada ao tratamento de dados pessoais e deve ser considerada desde a concepção da solução. |
+| **RNF12** | Compatibilidade entre navegadores | **3** | Should Have | Amplia a disponibilidade da plataforma em diferentes ambientes de acesso e reduz restrições tecnológicas aos usuários. |
+| **RNF13** | Baixo custo operacional | **4** | Must Have | Está diretamente relacionado à sustentabilidade da solução e à necessidade de evitar custos recorrentes significativos para a Rede Cafuringa. |
+| **RNF14** | Disponibilização como aplicação web progressiva | **2** | Could Have | A utilização de PWA pode facilitar o acesso e a instalação da aplicação, mas sua ausência não impede a utilização da plataforma como aplicação web. |
