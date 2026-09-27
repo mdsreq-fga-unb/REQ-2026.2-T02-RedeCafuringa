@@ -1,20 +1,22 @@
 <span class="version-badge">Unidade 02</span>
 
+## Requisitos Funcionais — RFs
+
 | Código   | Nome                                     | Descrição                                                                                                                                                   | CP  |
 | -------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
 | **RF01** | **Cadastrar perfil de consumidor**       | O sistema deve permitir o cadastro do perfil do consumidor, contendo nome, cpf, telefone e email.                                                | CP1 |
 | **RF02** | **Cadastrar perfil de produtor**         | O sistema deve permitir o cadastro do perfil do produtor, propriedade, associação ou comunidade, contendo nome, cpf/cnpj, telefone, email e endereço. | CP1 |
-| **RF03** | **Cadastrar usuário admim**              | O sistema deve permitir o cadastro de um perfil admistrador que tenha controle total do sistema.                 | CP1 |
-| **RF04** | **Consultar usuários cadatrados**         |O sistema deve permitir que o administrador consulte os usuários cadastrados na plataforma, incluindo consumidores e produtores.                               | CP1 |
+| **RF03** | **Cadastrar usuário admin**              | O sistema deve permitir o cadastro de um perfil administrador que tenha controle total do sistema.                 | CP1 |
+| **RF04** | **Consultar usuários cadastrados**         |O sistema deve permitir que o administrador consulte os usuários cadastrados na plataforma, incluindo consumidores e produtores.                               | CP1 |
 | **RF05** | **Desativar usuário**              | O sistema deve permitir que o administrador desative a conta de um usuário quando houver necessidade administrativa ou descumprimento das regras da plataforma.                 | CP1 |
 | **RF06** | **Consultar conteúdos cadastrados**         |O sistema deve permitir que o administrador consulte os produtos, experiências e eventos cadastrados pelos produtores.                                 | CP1 |
 | **RF07** | **Remover conteúdo inadequado**         | O sistema deve permitir que o administrador remova produtos, experiências ou eventos que violem as regras da plataforma.                                            | CP1 |
 | **RF08** | **Atualizar informações institucionais**         |O sistema deve permitir que o administrador atualize as informações institucionais disponibilizadas pela Rede Cafuringa na plataforma. | CP1 |
 | **RF09** | **Autenticar usuário**         | O sistema deve permitir que usuários cadastrados acessem suas contas por meio de autenticação, via cpf e senha. | CP1 |
 | **RF10** | **Recuperar acesso à conta**         | O sistema deve permitir que o usuário recupere o acesso à sua conta caso esqueça suas credenciais. | CP1 |
-| **RF11** | **Excluir conta**                        | O sistema deve permitir que o usuario possa exluir sua própria conta.                                                                     | CP1 |
+| **RF11** | **Excluir conta**                        | O sistema deve permitir que o usuário possa excluir sua própria conta.                                                                     | CP1 |
 | **RF12** | **Registrar trajetória do produtor**     | O sistema deve permitir incluir no perfil do produtor informações sobre sua história, experiência e atividades desenvolvidas.                               | CP1 |
-| **RF13** | **Atualizar perfil de produtor**         | O sistema deve permitir que o consumidor atualize as informações do próprio perfil.                                                                              | CP1 |
+| **RF13** | **Atualizar perfil de produtor**         | O sistema deve permitir que o produtor atualize as informações do próprio perfil.                                                                              | CP1 |
 | **RF14** | **Consultar perfil de produtor**         | O sistema deve permitir aos usuários visualizar nome, cpf/cnpj, telefone e email dos produtores e propriedades cadastrados.                                          | CP1 |
 | **RF15** | **Informar certificação**   | O sistema deve permitir registrar a situação de certificação do produtor ou propriedade quando aplicável.                                                   | CP1 |
 | **RF16** | **Preencher questionário do produtor**   | O sistema deve permitir que o produtor responda a um questionário com informações relacionadas ao seu perfil, produção e atividades.                        | CP1 |
