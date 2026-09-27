@@ -24,11 +24,11 @@ A plataforma busca aproximar **produtores e comunidade**, valorizando a produç�
 
 ### Objetivos
 
-* Incentivar a agricultura familiar e práticas agroecológicas;
-* Valorizar produtores e produtos da região;
-* Facilitar a comercialização direta com a comunidade;
-* Contribuir para a preservação ambiental da APA de Cafuringa;
-* Fortalecer a economia e as iniciativas locais.
+- Incentivar a agricultura familiar e práticas agroecológicas;
+- Valorizar produtores e produtos da região;
+- Facilitar a comercialização direta com a comunidade;
+- Contribuir para a preservação ambiental da APA de Cafuringa;
+- Fortalecer a economia e as iniciativas locais.
 
 ---
 
@@ -64,6 +64,32 @@ http://localhost:8000
 
 ---
 
+## Padrões de contribuição
+
+**Branches** — crie a partir da `main`, no formato `<tipo>/<descricao>`:
+
+```text
+docs/atualiza-requisitos
+feat/cadastro-produtor
+fix/corrige-links
+chore: remove imagens descontinuadas
+refactor(styles): consolida regras duplicadas
+```
+
+```text
+<tipo>: <descricao>
+```
+
+Tipos: `feat`, `fix`, `docs`, `chore`, `refactor`.
+
+```text
+docs: atualiza requisitos da unidade 2
+feat: adiciona cadastro de produtor
+fix: corrige links das USs
+```
+
+---
+
 ## Equipe
 
 <table>
@@ -77,8 +103,6 @@ http://localhost:8000
     <td align="center"><a href="https://github.com/macedoPedro20"><img style="border-radius: 50%;" src="https://github.com/macedoPedro20.png" width="100px;" alt=""/><br/><sub><b>Pedro Macedo</b></sub></a><br/>
   </tr>
 </table>
-
-
 
 <p align="center">
   <sub>Projeto desenvolvido no contexto da disciplina de Requisitos de Software — UnB/FGA.</sub>
