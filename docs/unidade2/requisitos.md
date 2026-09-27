@@ -5,7 +5,7 @@
 | **RF01** | **Cadastrar perfil de consumidor**       | O sistema deve permitir o cadastro do perfil do consumidor, contendo nome, cpf, telefone e email.                                                | CP1 |
 | **RF02** | **Cadastrar perfil de produtor**         | O sistema deve permitir o cadastro do perfil do produtor, propriedade, associação ou comunidade, contendo nome, cpf/cnpj, telefone, email e endereço. | CP1 |
 | **RF03** | **Cadastrar usuário admim**              | O sistema deve permitir o cadastro de um perfil admistrador que tenha controle total do sistema.                 | CP1 |
-| **RF04** | **Consultar usuários cadatrodos**         |O sistema deve permitir que o administrador consulte os usuários cadastrados na plataforma, incluindo consumidores e produtores.                               | CP1 |
+| **RF04** | **Consultar usuários cadatrados**         |O sistema deve permitir que o administrador consulte os usuários cadastrados na plataforma, incluindo consumidores e produtores.                               | CP1 |
 | **RF05** | **Desativar usuário**              | O sistema deve permitir que o administrador desative a conta de um usuário quando houver necessidade administrativa ou descumprimento das regras da plataforma.                 | CP1 |
 | **RF06** | **Consultar conteúdos cadastrados**         |O sistema deve permitir que o administrador consulte os produtos, experiências e eventos cadastrados pelos produtores.                                 | CP1 |
 | **RF07** | **Remover conteúdo inadequado**         | O sistema deve permitir que o administrador remova produtos, experiências ou eventos que violem as regras da plataforma.                                            | CP1 |
