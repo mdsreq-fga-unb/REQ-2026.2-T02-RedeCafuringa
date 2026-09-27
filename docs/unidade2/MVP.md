@@ -126,6 +126,7 @@
 | RF48 | Notificar alteração de pré-reserva | **Should Have** | **3** | 3 | 4 | 3 | **3,3 → 3** |
 
 -Requisitos Não Funcionais-
+
 | RNF | Requisito | MoSCoW | Valor | E | C | L | ET |
 |---|---|---|---:|---:|---:|---:|---:|
 | RNF01 | Eficiência de navegação | Could Have | 2 | 2 | 2 | 1 | 1,7 → 2 |
