@@ -1,7 +1,78 @@
 <span class="version-badge">Unidade 02</span>
 
 # MVP
+#Avaliação do Valor de Negócio
+---A avaliação do valor de negócio foi realizada com o método MoSCoW
 
+--A escala de valor de negócio utilizado:
+| Nota | Classificação | Significado para a Rede Cafuringa |
+|---:|---|---|
+| **4** | Must Have | Essencial para validar a proposta central do produto ou necessária para viabilizar outros RFs |
+| **3** | Should Have | Muito importante e gera valor significativo, mas o primeiro MVP consegue operar temporariamente sem ela |
+| **2** | Could Have | Útil e desejável, porém pode ser entregue posteriormente sem impedir a validação principal |
+| **1** | Won’t Have Now | Não é necessária para o MVP atual; fica planejada para evolução |
+
+#Avaliação do Esforço Técnico
+---Para avaliação do esforço técnico a equipe utilizou as seguintes escalas;
+
+--Para Esforço de Implementação (Representado pela letra "A"):
+| Nota | Interpretação |
+|---:|---|
+| 1 | até 2 h |
+| 2 | 2–6 h |
+| 3 | 6–12 h |
+| 4 | mais de 12 h |
+-
+--Para Complexidade Técnica (Representada pela letra "B"):
+| Nota | Significado |
+|---:|---|
+| 1 | solução conhecida, quase sem dependências |
+| 2 | exige pequena integração/investigação |
+| 3 | várias dependências ou incertezas |
+| 4 | integração crítica ou alta incerteza |
+-
+--Para Lacuna de Capacidade (Representada pela letra "C"):
+| Nota | Significado |
+|---:|---|
+| 1 | equipe domina |
+| 2 | equipe conhece suficientemente |
+| 3 | exige aprendizagem relevante |
+| 4 | equipe ainda não domina |
+
+#Fórmula de Esforço Técnico
+
+--Com base nas notas atribuidas em cada categoria foi adotada a seguinte fórmula:
+\[
+ET = \frac{E + C + L}{3}
+\]Onde:
+- E = esforço;
+- C = complexidade;
+- L = lacuna de capacidade.
+Exemplo:
+RF01 — Cadastrar Perfil do Consumidor:
+- esforço = 2
+- complexidade = 1
+- lacuna = 1
+Então:
+\[
+ET=(2+1+1)/3=1,3
+\]              
+  O número 1,3 no resultado desse cálculo significa que o esforço técnico consolidado é = 1, portanto é Baixo> De acordo com a tabela abaixo:
+  | Média | Classe |
+|---:|---|
+| 1,00–1,49 | **1 — Baixo** |
+| 1,50–2,49 | **2 — Moderado** |
+| 2,50–3,49 | **3 — Alto** |
+| 3,50–4,00 | **4 — Muito alto** |
+
+###Tabelas de Requisitos já consolidados com aplicação do Esforço Técnico Consolidado
+-LEGENDA:
+| Sigla | Termo | Significado |
+|---|---|---|
+| **E** | **Esforço** | Estimativa do esforço necessário para implementar o requisito, considerando principalmente o tempo de desenvolvimento. |
+| **C** | **Complexidade** | Grau de dificuldade técnica da implementação, considerando integrações, dependências e incertezas técnicas. |
+| **L** | **Lacuna de Capacidade** | Representa o quanto a equipe precisa adquirir novos conhecimentos ou habilidades para implementar o requisito. |
+| **ET** | **Esforço Técnico Consolidado** | Resultado obtido pela média das pontuações de Esforço, Complexidade e Lacuna de Capacidade. |
 ## Requisitos Funcionais
 
 | Código | Requisito | Valor | MoSCoW | Justificativa | E | C | L | ET |
