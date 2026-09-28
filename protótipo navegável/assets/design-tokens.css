@@ -1,0 +1,91 @@
+/* Design Tokens - generated — do not edit */
+/* Source registry: reviewed machine-readable token JSON passed via --config. */
+/* Normative authority: approved PROJECT_CONTEXT.md §8 + DESIGN.md; review the registry diff before regenerating. */
+
+/* === PRIMITIVES === */
+:root {
+  --primitive-color-brand-forest: #163C2F;
+  --primitive-color-brand-forest-soft: #2C4A38;
+  --primitive-color-brand-clay: #B85C2E;
+  --primitive-color-brand-clay-dark: #8F3F20;
+  --primitive-color-brand-sun: #E9B949;
+  --primitive-color-surface-paper: #FFFCF7;
+  --primitive-color-surface-cream: #FFF8ED;
+  --primitive-color-surface-sand: #F3EADC;
+  --primitive-color-neutral-ink: #2B2118;
+  --primitive-color-neutral-muted: #67594E;
+  --primitive-color-neutral-border: #D8CEC2;
+  --primitive-color-neutral-white: #FFFFFF;
+  --primitive-color-status-success: #2E6B4E;
+  --primitive-color-status-error: #B42318;
+  --primitive-spacing-1: 4px;
+  --primitive-spacing-2: 8px;
+  --primitive-spacing-3: 12px;
+  --primitive-spacing-4: 16px;
+  --primitive-spacing-5: 20px;
+  --primitive-spacing-6: 24px;
+  --primitive-spacing-8: 32px;
+  --primitive-spacing-10: 40px;
+  --primitive-spacing-12: 48px;
+  --primitive-spacing-16: 64px;
+  --primitive-fontFamily-display: Lora;
+  --primitive-fontFamily-body: Atkinson Hyperlegible;
+  --primitive-fontFamily-mono: ui-monospace;
+  --primitive-fontSize-caption: 12px;
+  --primitive-fontSize-small: 14px;
+  --primitive-fontSize-body: 16px;
+  --primitive-fontSize-body-lg: 18px;
+  --primitive-fontSize-h3: 20px;
+  --primitive-fontSize-h2: 28px;
+  --primitive-fontSize-h1: 36px;
+  --primitive-fontSize-display: 48px;
+  --primitive-radius-sm: 8px;
+  --primitive-radius-md: 12px;
+  --primitive-radius-lg: 16px;
+  --primitive-radius-xl: 24px;
+  --primitive-radius-full: 9999px;
+  --primitive-duration-fast: 150ms;
+  --primitive-duration-normal: 200ms;
+  --primitive-duration-slow: 300ms;
+}
+
+/* === SEMANTIC === */
+:root {
+  --color-background: #F3EADC;
+  --color-surface: #FFFCF7;
+  --color-surface-warm: #FFF8ED;
+  --color-foreground: #2B2118;
+  --color-foreground-muted: #67594E;
+  --color-primary: #B85C2E;
+  --color-primary-hover: #8F3F20;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #163C2F;
+  --color-secondary-soft: #2C4A38;
+  --color-secondary-foreground: #FFFFFF;
+  --color-accent: #E9B949;
+  --color-border: #D8CEC2;
+  --color-success: #2E6B4E;
+  --color-error: #B42318;
+  --spacing-component: 16px;
+  --spacing-section: 48px;
+}
+
+/* === COMPONENTS === */
+:root {
+  --button-primary-bg: #B85C2E;
+  --button-primary-fg: #FFFFFF;
+  --button-primary-hover-bg: #8F3F20;
+  --button-radius: 8px;
+  --button-padding-x: 16px;
+  --button-padding-y: 12px;
+  --button-min-height: 44px;
+  --card-bg: #FFFCF7;
+  --card-border: #D8CEC2;
+  --card-radius: 16px;
+  --card-padding: 24px;
+  --input-bg: #FFFCF7;
+  --input-border: #D8CEC2;
+  --input-focus-ring: #E9B949;
+  --input-radius: 8px;
+  --input-min-height: 48px;
+}
