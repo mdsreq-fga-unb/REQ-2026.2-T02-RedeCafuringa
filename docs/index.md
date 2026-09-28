@@ -1,6 +1,6 @@
 # Visão do Produto e Projeto
 
-<span class="version-badge">Versão 1.3</span>
+<span class="version-badge">Versão 1.4</span>
 
 Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado ao gerenciamento e à transparência das demandas do ecossistema local. Desenvolvido no âmbito da disciplina de Requisitos de Software, este espaço reúne todo o artefatiamento técnico, mapeamento de processos e especificações do sistema. 
 
@@ -111,3 +111,4 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | 19/09/26 | 1.1 | Correção da Interação Entre Equipe e Cliente de acordo com a issue aberta pelo professor | Lucas Gabriel |
 | 22/09/26 | 1.2 | Correções no tópico 2.6 apontadas em revisão de colega (remoção de referência indevida à Matriz de Quadrantes, remoção de travessões, conversão da tabela de gestão de riscos de imagem para Markdown com novo risco de dependência de free tier, e reforço da demonstração de viabilidade tecnológica) e reestruturação dos tópicos 2.2 e 2.3 (novos Objetivos Específicos e Características do Produto, com matriz de rastreabilidade OE × CP) | Pedro Luiz |
 | 22/09/26 | 1.3 | Correção dos tópicos AUP - Concepção, AUP - Elaboração, AUP - Construção e AUP - Transição. Adição de todas as evidências das fases anteriores até hoje. Correção e atualização do tópico 5. Atualização da página inicial | Beatriz Lins |
+| 28/09/26 | 1.4 | Adição do tópico "Documentação Complementar" da ativiade 4 publicada no aprender (Valor de Negócio, Esforço Técnico, Consolidação das Atividades, Construção da Matriz 4x4, Definição dos RFs, Tratamento dos RNFs, Validação do MVP) | Beatriz Lins |
