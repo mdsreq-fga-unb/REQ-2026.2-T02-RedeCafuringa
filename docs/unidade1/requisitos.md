@@ -58,7 +58,7 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
 !!! info "Verificação e Validação"
 
-    #### Inspeção por Pares (Revisão Técnica Cruzada)
+    #### Inspeção por Pares
 
     - **Descrição:** Leitura técnica do Documento de Visão entre os membros da equipe para identificar lacunas, ambiguidades e inconsistências.
     - **Entradas:** Minuta do Documento de Visão.
@@ -78,7 +78,7 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
     - **Descrição:** Indexação de cada OE e CP com códigos identificadores únicos e atribuição de estado de aprovação, com migração das decisões consolidadas no documento compartilhado para o repositório oficial (GitPages).
     - **Entradas:** Documento de Visão validado.
-    - **Saídas:** Baseline 0 - Escopo de Visão Inicial versionado no repositório oficial (GitPages).
+    - **Saídas:** Escopo de Visão Inicial versionado no repositório oficial (GitPages).
     - **Participantes:** Engenheiros de Requisitos (Gerência de Configuração).
 
 <p align="center">
@@ -94,7 +94,7 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
     #### Análise de Domínio e Pesquisa Normativa
 
     - **Descrição:** Investigação documental de regulamentações do turismo rural, LGPD e regras fiscais/municipais locais.
-    - **Entradas:** Legislação de turismo rural e requisitos da Baseline 0.
+    - **Entradas:** Legislação de turismo rural e requisitos preliminares.
     - **Saídas:** Mapeamento de regras de negócio normativas e restrições legais.
     - **Participantes:** Engenheiros de Requisitos e Consultores/Fontes Regulatórias.
 
@@ -107,18 +107,18 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
 !!! info "Declaração de Requisitos"
 
-    #### Decomposição Funcional das Características do Produto em User Stories
+    #### Decomposição Funcional em Histórias de Usuário
 
     - **Descrição:** Estruturação das Características do Produto (CPs) em Histórias de Usuário (_User Stories_) contendo critérios de aceite em linguagem estruturada.
-    - **Entradas:** CPs da Baseline 0 e relatório de restrições operacionais.
-    - **Saídas:** Backlog de User Stories preliminares (Artefato).
+    - **Entradas:** Relatório de restrições operacionais.
+    - **Saídas:** Backlog de histórias de usuário preliminares.
     - **Participantes:** Engenheiros de Requisitos.
 
-    #### Especificação de Requisitos Não Funcionais (RNFs)
+    #### Especificação de Requisitos Funcionais e Não Funcionais
 
     - **Descrição:** Detalhamento de restrições de desempenho, usabilidade, operação _offline_ e segurança.
     - **Entradas:** Relatório de restrições operacionais e arquitetura pretendida.
-    - **Saídas:** Especificação Suplementar de RNFs (Artefato).
+    - **Saídas:** Especificação suplementar dos requisitos.
     - **Participantes:** Engenheiros de Requisitos e Arquitetos de Software.
 
 !!! info "Análise e Consenso"
