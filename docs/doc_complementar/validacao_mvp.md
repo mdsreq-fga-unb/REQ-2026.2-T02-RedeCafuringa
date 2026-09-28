@@ -1,0 +1,145 @@
+## 7.1 Registro da validação
+
+| Informação | Registro |
+|---|---|
+| **Projeto** | Rede Cafuringa |
+| **Data da validação** | 28/09/2026 |
+| **Participantes da equipe** | Todos |
+| **Participantes do cliente** | Jefferson Sooma |
+| **Forma de validação** | Reunião / apresentação do MVP / revisão colaborativa |
+| **Documento utilizado** | Matriz 4 × 4 e definição dos RFs e RNFs do MVP |
+
+## 7.2 RFs aprovados para o MVP
+
+Após a apresentação da proposta de MVP ao cliente, deverão ser registrados os requisitos funcionais aprovados para compor a primeira versão da solução.
+
+| Código | Requisito | Status da validação | Observação |
+|---|---|---|---|
+| RF01 | Cadastrar perfil de consumidor | A validar | — |
+| RF02 | Cadastrar perfil de produtor | A validar | — |
+| RF03 | Cadastrar usuário admin | A validar | — |
+| RF04 | Consultar usuários cadastrados | A validar | — |
+| RF09 | Autenticar usuário | A validar | — |
+| RF14 | Consultar perfil de produtor | A validar | — |
+| RF17 | Cadastrar produto | A validar | — |
+| RF21 | Consultar catálogo de produtos | A validar | — |
+| RF22 | Consultar detalhes do produto | A validar | — |
+| RF23 | Cadastrar experiência | A validar | — |
+| RF25 | Consultar experiência | A validar | — |
+| RF36 | Buscar ofertas | A validar | — |
+| RF39 | Disponibilizar contato direto | A validar | — |
+| RF44 | Solicitar pré-reserva de experiência | A validar | — |
+| RF45 | Consultar pré-reserva | A validar | — |
+| RF46 | Cancelar solicitação de pré-reserva | A validar | — |
+| RF47 | Responder pré-reserva de experiência | A validar | — |
+
+## 7.3 RNFs aplicáveis ao MVP
+
+Os seguintes requisitos não funcionais deverão ser considerados durante a implementação do MVP:
+
+### RNFs obrigatórios
+
+- **RNF03 — Prevenção e recuperação de erros**
+- **RNF04 — Acessibilidade digital**
+- **RNF05 — Responsividade da interface**
+- **RNF06 — Desempenho em conectividade limitada**
+- **RNF08 — Controle de acesso por perfil**
+- **RNF10 — Proteção da comunicação**
+- **RNF11 — Proteção de dados pessoais**
+- **RNF13 — Baixo custo operacional**
+
+### RNFs associados aos RFs do MVP
+
+- **RNF01 — Eficiência de navegação**
+- **RNF02 — Desempenho na execução de tarefas**
+- **RNF07 — Resiliência à perda de conexão**
+
+### RNFs evolutivos
+
+- **RNF12 — Compatibilidade entre navegadores**
+- **RNF14 — Disponibilização como aplicação web progressiva**
+
+### RNF não aplicável ao MVP
+
+- **RNF09 — Privacidade do feedback**, devido à não inclusão das funcionalidades de feedback no escopo inicial.
+
+## 7.4 Requisitos destinados a entregas futuras
+
+Os requisitos que não fizerem parte do MVP deverão ser registrados para posterior planejamento e priorização.
+
+| Código | Requisito | Motivo para não inclusão no MVP | Possível entrega |
+|---|---|---|---|
+| RF05 | Desativar usuário | Manutenção administrativa complementar | Futuro |
+| RF06 | Consultar conteúdos cadastrados | Gestão complementar de conteúdo | Futuro |
+| RF07 | Remover conteúdo inadequado | Gestão complementar de conteúdo | Futuro |
+| RF08 | Atualizar informações institucionais | Funcionalidade complementar | Futuro |
+| RF10 | Recuperar acesso à conta | Não essencial para validação inicial | Futuro |
+| RF11 | Excluir conta | Não essencial para validação inicial | Futuro |
+| RF12 | Registrar trajetória do produtor | Complementa o perfil do produtor | Futuro |
+| RF13 | Atualizar perfil de produtor | Manutenção posterior dos dados | Futuro |
+| RF15 | Informar certificação | Baixo valor na primeira versão e maior esforço | Futuro |
+| RF16 | Preencher questionário do produtor | Complementar à caracterização do produtor | Futuro |
+| RF18 | Atualizar produto | Manutenção posterior do catálogo | Futuro |
+| RF19 | Excluir produto | Manutenção complementar | Futuro |
+| RF20 | Informar disponibilidade de produto | Evolução do gerenciamento do catálogo | Futuro |
+| RF24 | Atualizar experiência | Manutenção posterior das experiências | Futuro |
+| RF26 | Excluir experiência | Manutenção complementar | Futuro |
+| RF27 | Cadastrar evento | Expansão do escopo de ofertas | Futuro |
+| RF28 | Atualizar evento | Manutenção de eventos | Futuro |
+| RF29 | Consultar evento | Expansão da consulta de ofertas | Futuro |
+| RF30 | Excluir evento | Manutenção complementar | Futuro |
+| RF31 | Auxiliar cadastro de atividade | Alto esforço e caráter complementar | Futuro |
+| RF32 | Apresentar informações da Cafuringa | Complementar aos fluxos principais | Futuro |
+| RF33 | Consultar guia de boas práticas | Conteúdo complementar | Futuro |
+| RF34 | Notificar eventos | Depende da estrutura de eventos e notificações | Futuro |
+| RF35 | Visualizar ofertas no mapa | Alto esforço e funcionalidade complementar | Futuro |
+| RF37 | Buscar locais por proximidade | Alto esforço e funcionalidade complementar | Futuro |
+| RF38 | Filtrar resultados de busca | Aprimoramento da busca | Futuro |
+| RF40 | Enviar feedback ao fornecedor | Funcionalidade complementar | Futuro |
+| RF41 | Visualizar feedback | Depende da implementação de feedback | Futuro |
+| RF42 | Editar feedback | Depende da implementação de feedback | Futuro |
+| RF43 | Excluir feedback ao fornecedor | Depende da implementação de feedback | Futuro |
+| RF48 | Notificar alteração de pré-reserva | Aprimoramento do fluxo de pré-reserva | Futuro |
+
+## 7.5 Ajustes solicitados pelo cliente
+
+Durante a validação, deverão ser registrados eventuais ajustes solicitados pelo cliente.
+
+| Data | Requisito relacionado | Ajuste solicitado | Impacto no MVP | Responsável |
+|---|---|---|---|---|
+| A definir | A definir | A definir | A definir | A definir |
+
+Caso não sejam solicitados ajustes, registrar:
+
+> **Não foram solicitados ajustes pelo cliente durante a validação do MVP.**
+
+## 7.6 Decisões e divergências
+
+As decisões tomadas durante a validação deverão ser registradas para manter a rastreabilidade das alterações realizadas no escopo.
+
+| Data | Tema | Decisão / divergência | Participantes | Encaminhamento |
+|---|---|---|---|---|
+| A definir | A definir | A definir | A definir | A definir |
+
+Caso não existam divergências:
+
+> **Não foram registradas divergências quanto à composição do MVP durante a validação.**
+
+## 7.7 Resultado da validação
+
+Após a reunião com o cliente, o resultado final deverá ser registrado em uma das seguintes situações:
+
+- **MVP aprovado:** o cliente concordou com a composição dos RFs e RNFs apresentados;
+- **MVP aprovado com ajustes:** o cliente concordou com a proposta, condicionando a aprovação à realização dos ajustes registrados;
+- **MVP pendente de validação:** foram identificados pontos que precisam de nova discussão antes da aprovação;
+- **MVP revisado:** a validação resultou em alterações significativas na composição inicialmente proposta.
+
+### Registro final
+
+> **Resultado:** A definir.
+>
+> **Observações:** A definir.
+>
+> **Data de aprovação:** A definir.
+>
+> **Responsável pela validação:** A definir.
