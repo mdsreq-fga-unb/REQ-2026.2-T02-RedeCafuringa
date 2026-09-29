@@ -15,23 +15,26 @@ Após a apresentação da proposta de MVP ao cliente, deverão ser registrados o
 
 | Código | Requisito | Status da validação | Observação |
 |---|---|---|---|
-| RF01 | Cadastrar perfil de consumidor | A validar | — |
-| RF02 | Cadastrar perfil de produtor | A validar | — |
-| RF03 | Cadastrar usuário admin | A validar | — |
-| RF04 | Consultar usuários cadastrados | A validar | — |
-| RF09 | Autenticar usuário | A validar | — |
-| RF14 | Consultar perfil de produtor | A validar | — |
-| RF17 | Cadastrar produto | A validar | — |
-| RF21 | Consultar catálogo de produtos | A validar | — |
-| RF22 | Consultar detalhes do produto | A validar | — |
-| RF23 | Cadastrar experiência | A validar | — |
-| RF25 | Consultar experiência | A validar | — |
-| RF36 | Buscar ofertas | A validar | — |
-| RF39 | Disponibilizar contato direto | A validar | — |
-| RF44 | Solicitar pré-reserva de experiência | A validar | — |
-| RF45 | Consultar pré-reserva | A validar | — |
-| RF46 | Cancelar solicitação de pré-reserva | A validar | — |
-| RF47 | Responder pré-reserva de experiência | A validar | — |
+| RF01 | Cadastrar perfil de consumidor | Validado | Emplementar de forma à ficar mais simplificado possível, e ser possível cadastrar empresas e MEIs e permitir uma categorização melhor dos Produtores |
+| RF02 | Cadastrar perfil de produtor | Validado | — |
+| RF03 | Cadastrar usuário admin | Validado | — |
+| RF04 | Consultar usuários cadastrados | Validado | — |
+| RF09 | Autenticar usuário | Validado | — |
+| RF10 | Recuperar acesso à conta | Validado | — |
+| RF12 | Registrar trajetória do produtor | Validado | Simplificar esse requisito de apresentação |
+| RF14 | Consultar perfil de produtor | Validado | Não disponibilizar o CPF do produtor |
+| RF17 | Cadastrar produto | Validado | — |
+| RF21 | Consultar catálogo de produtos | Validado | — |
+| RF22 | Consultar detalhes do produto | Validado | — |
+| RF23 | Cadastrar experiência | Validado | — |
+| RF25 | Consultar experiência | Validado | — |
+| RF36 | Buscar ofertas | Validado | — |
+| RF39 | Disponibilizar contato direto | Validado | O chat direto por ser trocado por uma implementação utilizando o Whatsapp |
+| RF44 | Solicitar pré-reserva de experiência | Validado | — |
+| RF45 | Consultar pré-reserva | Validado | — |
+| RF46 | Cancelar solicitação de pré-reserva | Validado | — |
+| RF47 | Responder pré-reserva de experiência | Validado | — |
+| RF48 | Notificar alteração de pré-reserva | Validado | — |
 
 ## 7.3 RNFs aplicáveis ao MVP
 
@@ -73,9 +76,7 @@ Os requisitos que não fizerem parte do MVP deverão ser registrados para poster
 | RF06 | Consultar conteúdos cadastrados | Gestão complementar de conteúdo | Futuro |
 | RF07 | Remover conteúdo inadequado | Gestão complementar de conteúdo | Futuro |
 | RF08 | Atualizar informações institucionais | Funcionalidade complementar | Futuro |
-| RF10 | Recuperar acesso à conta | Não essencial para validação inicial | Futuro |
 | RF11 | Excluir conta | Não essencial para validação inicial | Futuro |
-| RF12 | Registrar trajetória do produtor | Complementa o perfil do produtor | Futuro |
 | RF13 | Atualizar perfil de produtor | Manutenção posterior dos dados | Futuro |
 | RF15 | Informar certificação | Baixo valor na primeira versão e maior esforço | Futuro |
 | RF16 | Preencher questionário do produtor | Complementar à caracterização do produtor | Futuro |
@@ -99,7 +100,7 @@ Os requisitos que não fizerem parte do MVP deverão ser registrados para poster
 | RF41 | Visualizar feedback | Depende da implementação de feedback | Futuro |
 | RF42 | Editar feedback | Depende da implementação de feedback | Futuro |
 | RF43 | Excluir feedback ao fornecedor | Depende da implementação de feedback | Futuro |
-| RF48 | Notificar alteração de pré-reserva | Aprimoramento do fluxo de pré-reserva | Futuro |
+
 
 ## 7.5 Ajustes solicitados pelo cliente
 
