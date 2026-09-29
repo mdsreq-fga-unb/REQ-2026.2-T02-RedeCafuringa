@@ -222,3 +222,12 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 **Propriedade ou restrição:** Portabilidade e forma de disponibilização da aplicação.
 
 **Critério verificável:** A aplicação deve possuir manifesto web válido e os recursos necessários para ser reconhecida como instalável em navegadores compatíveis, sem exigir obrigatoriamente sua distribuição por lojas de aplicativos.
+
+### RNF15 — Adequação ao ECA Digital
+**Descrição:**A aplicação deve assegurar a proteção integral de crianças e adolescentes no ambiente digital, garantindo que a exibição de conteúdos, as interações na plataforma e o tratamento de dados estejam em conformidade com as diretrizes do Estatuto da Criança e do Adolescente (ECA).
+
+**Classificação:**URPS+ — Restrição Legal / Sommerville — Requisito Externo.
+
+**Propriedade ou restrição:**Proteção de direitos, segurança de conteúdo e privacidade de menores de idade.
+
+**Critério verificável:**O sistema deve exigir a confirmação de maioridade durante o cadastro de usuários e, caso permita o acesso ou cadastro de menores de 18 anos, deve implementar a exigência de consentimento explícito de um responsável legal. Além disso, a plataforma deve garantir que nenhum dado pessoal de crianças ou adolescentes seja exposto publicamente nas interfaces de busca, perfis ou feedbacks.
