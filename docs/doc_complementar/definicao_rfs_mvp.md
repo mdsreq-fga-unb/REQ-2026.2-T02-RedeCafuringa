@@ -13,6 +13,8 @@ Dessa forma, foram priorizados os requisitos necessários para formar um fluxo m
 | **RF03** | Cadastrar usuário admin              |     4 |       1 | Permite estabelecer a gestão administrativa da plataforma desde a primeira versão.                                                                                                            |
 | **RF04** | Consultar usuários cadastrados       |     4 |       2 | Fornece ao administrador uma visão básica dos usuários e apoia a manutenção da plataforma.                                                                                                    |
 | **RF09** | Autenticar usuário                   |     4 |       2 | É uma dependência dos fluxos que exigem identificação do usuário e controle de acesso.                                                                                                        |
+| **RF10** | Recuperar acesso à conta             |     4 |       2 | Garante a continuidade de acesso à plataforma quando o usuário perde suas credenciais, evitando bloqueio dos fluxos autenticados do MVP.                                                     |
+| **RF12** | Registrar trajetória do produtor     |     4 |       1 | Registrar trajetória do produtor | 4 | 1 | Contribui para apresentar a identidade, a história e a experiência do produtor, fortalecendo sua valorização e contextualizando as ofertas disponibilizadas na plataforma.                                                                                                        |
 | **RF14** | Consultar perfil de produtor         |     4 |       2 | Permite conhecer os produtores e relacionar suas informações às ofertas disponíveis.                                                                                                          |
 | **RF17** | Cadastrar produto                    |     4 |       2 | É um dos principais mecanismos para disponibilizar a produção da agricultura familiar na plataforma.                                                                                          |
 | **RF21** | Consultar catálogo de produtos       |     4 |       2 | Permite aos consumidores conhecerem os produtos disponibilizados pelos produtores.                                                                                                            |
@@ -25,6 +27,7 @@ Dessa forma, foram priorizados os requisitos necessários para formar um fluxo m
 | **RF45** | Consultar pré-reserva                |     3 |       2 | É necessário para que os envolvidos acompanhem as solicitações realizadas.                                                                                                                    |
 | **RF46** | Cancelar solicitação de pré-reserva  |     4 |       2 | Completa o controle básico da solicitação por parte do visitante.                                                                                                                             |
 | **RF47** | Responder pré-reserva de experiência |     4 |       3 | Completa o fluxo de pré-reserva ao permitir que o responsável pela experiência aceite ou rejeite a solicitação.                                                                               |
+| **RF48** | Notificar alteração de pré-reserva   |     4 |       3 | Mantém visitante e responsável informados sobre mudanças no estado da pré-reserva, completando o fluxo básico de acompanhamento e reduzindo a necessidade de consultas manuais.                                                                               |
 
 ## 5.2 Fluxos contemplados pelo MVP
 
@@ -99,12 +102,11 @@ Os demais requisitos não foram descartados definitivamente. Eles foram classifi
 | Grupo                                | Requisitos                   | Motivo geral                                                                                                                             |
 | ------------------------------------ | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | **Manutenção e administração**       | RF05, RF06, RF07, RF08       | Podem complementar os mecanismos administrativos e de manutenção após a validação do núcleo da solução.                                  |
-| **Gestão de contas**                 | RF10, RF11                   | São importantes para uma versão mais completa, mas não são indispensáveis para validar os fluxos centrais.                               |
-| **Manutenção de produtor e ofertas** | RF12, RF13, RF18, RF19, RF20 | Permitem maior autonomia e manutenção dos dados após a disponibilização inicial.                                                         |
+| **Gestão de contas**                 | RF11                   | São importantes para uma versão mais completa, mas não são indispensáveis para validar os fluxos centrais.                               |
+| **Manutenção de produtor e ofertas** | RF13, RF18, RF19, RF20 | Permitem maior autonomia e manutenção dos dados após a disponibilização inicial.                                                         |
 | **Gestão de eventos**                | RF27, RF28, RF29, RF30       | O eixo de eventos amplia a plataforma, mas não é necessário para validar inicialmente os fluxos principais de produtos e experiências.   |
 | **Funcionalidades complementares**   | RF16, RF26, RF32, RF33, RF34 | Agregam informação, manutenção ou divulgação, mas não são essenciais para o primeiro fluxo funcional.                                    |
 | **Busca e interação avançada**       | RF38, RF40, RF41, RF42, RF43 | Podem aprimorar a descoberta, comunicação e avaliação das ofertas após a validação inicial.                                              |
-| **Notificações**                     | RF48                         | Pode ser incorporada posteriormente, pois o acompanhamento das solicitações pode inicialmente ocorrer por consulta direta na plataforma. |
 | **Funcionalidades de maior esforço** | RF15, RF31, RF35, RF37       | Apresentam menor valor de negócio na primeira versão ou esforço técnico elevado em relação à necessidade de validação inicial.           |
 
 ---
