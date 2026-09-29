@@ -2,31 +2,16 @@
 
 ## Elicitação e Descoberta 
 
-Investigação documental de regulamentações do turismo rural, LGPD e regras fiscais/municipais locais e reuniões em grupo com anfitriões para mapear processos de campo e restrições operacionais.
+??? info "Valor de Negócio e Esforço Técnico - Requisitos Funcionais"  
+    A escala de 1 a 4 apresentada em ferramentas de priorização e estimativa de requisitos costuma representar o grau de dificuldade, tempo de desenvolvimento ou incerteza técnica associada à entrega. Geralmente, os valores indicam:
 
-??? info "1 - Análise de Domínio e Pesquisa Normativa"
+    **1 - Muito Baixo:** tarefas simples que exigem até 2 horas de trabalho, soluções conhecidas e domínio pleno por parte da equipa.
 
-    Estas são as diretrizes legais e regulatórias externas que o sistema deve obrigatoriamente cumprir para operar. Em conjunto com as políticas internas que guiam o comportamento do sistema e as interações dos usuários, incluindo o tratamento acordado sobre a infraestrutura de rede.
+    **2 - Baixo:** trabalho moderado (2 a 6 horas), que exige alguma investigação ou integração, mas onde a equipa já possui conhecimento suficiente
 
-    - ![Pesquisa Normativa](../../img/aup-elaboracao/pesquisa_normativa.png)
+    **3 - Alto:** tarefas exigentes (6 a 12 horas), com várias incertezas técnicas e a necessidade de desenvolver novas competências.
 
-??? info "2 - Grupo Focal"
-
-    Relatório da reuniãos em grupo com anfitriões para mapear processos de campo e restrições operacionais.
-
-    <iframe src="https://docs.google.com/document/d/e/2PACX-1vRPewi-aDY6FvP46HDCdKXbBQbc03EjNIuG30FZyiXB3Ee3CuZAYOfpO1_7hBejX6Izpdqx2c46EkTP/pub?embedded=true"width="100%" height="500" frameborder="0"></iframe>
-
----
-
-## Declaração de Requisitos
-
-Estruturação das Características do Produto em Histórias de Usuário contendo critérios de aceite em linguagem estruturada e detalhamento de restrições de desempenho, usabilidade, operação offline e segurança.
-
-??? info "1 - Histórias de Usuário"
-
-    
-
-??? info "2 - Valor de Negócio e Esforço Técnico - Requisitos Funcionais"  
+    **4 - Muito Alto:** grande desafio (mais de 12 horas), caracterizado por elevada incerteza técnica, tecnologias não dominadas e a atual ausência de conhecimentos ou recursos para a sua execução.
 
     | Código | Requisito | Esforço | Complexidade | Capacidade | Esforço Técnico |
     |---|---|---:|---:|---:|---:|
@@ -79,8 +64,11 @@ Estruturação das Características do Produto em Histórias de Usuário contend
     | **RF47** | Responder pré-reserva de experiência | 3 | 3 | 3 | **3,0 → 3** |
     | **RF48** | Notificar alteração de pré-reserva | 3 | 4 | 3 | **3,3 → 3** |
 
-??? info "3 - Valor de Negócio e Esforço Técnico - Requisitos Não Funcionais"  
-    | Código | Requisito | E | C | L | ET |
+??? info "Valor de Negócio e Esforço Técnico - Requisitos Não Funcionais" 
+
+    O cálculo do Esforço Técnico final na tabela foi feito a partir da média aritmética simples das três variáveis avaliadas (Esforço, Complexidade e Capacidade). O resultado fracionado é então arredondado para o número inteiro mais próximo para definir a pontuação final do requisito.
+
+    | Código | Requisito | Esforço | Complexidade | Capacidade | Esforço Técnico |
     |---|---|---:|---:|---:|---:|
     | **RNF01** | Eficiência de navegação | 2 | 2 | 1 | **1,7 → 2** |
     | **RNF02** | Desempenho na execução de tarefas | 2 | 2 | 1 | **1,7 → 2** |
@@ -99,19 +87,28 @@ Estruturação das Características do Produto em Histórias de Usuário contend
         
 ---
 
+## Declaração de Requisitos
+
+??? info "Priorização MoScoW"
+    Reunião de negociação para classificar os requisitos do sistema em quatro níveis de criticidade (Must Have, Should Have, Could Have, Won't Have), visando alinhar as expectativas e definir o escopo do Produto Mínimo Viável.
+
+    - ![MoScoW](../../img/aup-elaboracao/moscow_final.png)
+
+??? info "Histórias de Usuário"
+    Tradução e escrita das necessidades elicitadas em formato narrativo sob a perspectiva do usuário final (focando em quem, o que e por que), incluindo a definição dos critérios de aceitação para cada funcionalidade.
+
+    - ![Histórias de Usuário](../../img/aup-elaboracao/historias_usuario.jpeg)
+
+---
+
 ## Análise e Consenso
 
-A priorização considera a contribuição dos requisitos para os objetivos do projeto, especialmente a divulgação dos produtores e de seus produtos, a valorização das experiências rurais e a aproximação entre produtores e consumidores. A complexidade técnica é estimada com base nas funcionalidades envolvidas, nas integrações e nas restrições de qualidade e infraestrutura descritas nos requisitos levantados.
+??? info "Matriz de Quadrantes (Valor de Negócio vs. Complexidade Técnica)"
+    
+    Ponderação entre o valor para os usuários e o esforço de engenharia para delimitar o escopo do MVP.
 
-??? info "Matriz e Quadrantes"
+    - ![Matriz de Quadrantes](../../img/aup-elaboracao/matriz_quadrantes.png)
 
-    | **Valor de negócio x Esforço técnico** | **Baixo** | **Moderado** | **Alto** | **Muito alto** |
-    | ---- | ---- | ---- | ---- | ---- |
-    | **Muito alto** | RF01 - Cadastrar perfil de consumidor<br>RF02 - Cadastrar perfil de produtor<br>RF03 - Cadastrar usuário admin | RF04 - Consultar usuários cadastrados<br>RF09 - Autenticar usuário<br>RF14 - Consultar perfil de produtor<br>RF17 - Cadastrar produto<br>RF21 - Consultar catálogo de produtos<br>RF22 - Consultar detalhes do produto<br>RF23 - Cadastrar experiência<br>RF25 - Consultar experiência | RF36 - Buscar ofertas<br>RF44 - Solicitar pré-reserva de experiência<br>RF46 - Cancelar solicitação de pré-reserva<br>RF47 - Responder pré-reserva de experiência | RF39 - Disponibilizar contato direto |
-    | **Alto** | RF05 - Desativar usuário<br>RF12 - Registrar trajetória do produtor<br>RF29 - Consultar evento | RF06 - Consultar conteúdos cadastrados<br>RF07 - Remover conteúdo inadequado<br>RF10 - Recuperar acesso à conta<br>RF11 - Excluir conta<br>RF13 - Atualizar perfil de produtor<br>RF18 - Atualizar produto<br>RF20 - Informar disponibilidade de produto<br>RF24 - Atualizar experiência<br>RF27 - Cadastrar evento<br>RF33 - Consultar guia de boas práticas<br>RF38 - Filtrar resultados de busca<br>RF41 - Visualizar feedback<br>RF45 - Consultar pré-reserva | RF16 - Preencher questionário do produtor<br>RF48 - Notificar alteração de pré-reserva | — |
-    | **Moderado** | RF08 - Atualizar informações institucionais<br>RF19 - Excluir produto<br>RF26 - Excluir experiência<br>RF32 - Apresentar informações da Cafuringa | RF28 - Atualizar evento | RF34 - Notificar eventos<br>RF40 - Enviar feedback ao fornecedor | — |
-    | **Baixo** | RF30 - Excluir evento<br>RF42 - Editar feedback | RF43 - Excluir feedback ao fornecedor | RF15 - Informar certificação<br>RF35 - Visualizar ofertas no mapa | RF31 - Auxiliar cadastro de atividade<br>RF37 - Buscar locais por proximidade |
-   
 ---
 
 ## Vídeos Comprobatórios
