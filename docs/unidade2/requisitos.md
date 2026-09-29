@@ -1,6 +1,8 @@
 <span class="version-badge">Unidade 02</span>
 
-## Requisitos Funcionais — RFs
+Abaixo, são apresentados os requisitos levantados para o desenvolvimento da plataforma da Rede Cafuringa. Este documento está estruturado em duas seções principais: a primeira aborda os Requisitos Funcionais, detalhando as ações e funcionalidades que o sistema deve oferecer para atender às necessidades de produtores, consumidores e administradores (como cadastros, consultas e gestão de reservas). A segunda seção lista os Requisitos Não Funcionais, estabelecendo os critérios de qualidade, segurança, desempenho e usabilidade da aplicação.
+
+## Requisitos Funcionais 
 
 | Código   | Nome                                     | Descrição                                                                                                                                                   | CP  |
 | -------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
@@ -53,9 +55,9 @@
 | **RF47** | **Responder pré-reserva de experiência** | O sistema deve permitir ao responsável aceitar ou rejeitar uma solicitação de pré-reserva recebida.                                                         | CP6 |
 | **RF48** | **Notificar alteração de pré-reserva**   | O sistema deve notificar os envolvidos quando houver alteração relevante no estado de uma solicitação de pré-reserva.                                       | CP6 |
 
-## Requisitos Não Funcionais — RNFs
+## Requisitos Não Funcionais 
 
-Os requisitos não funcionais definem propriedades de qualidade, restrições e condições que devem ser atendidas pela solução. Para sua classificação, são utilizados os modelos **URPS+** e **Sommerville**.
+Os requisitos não funcionais definem propriedades de qualidade, restrições e condições que devem ser atendidas pela solução. Para sua classificação, são utilizados os modelos URPS+ e Sommerville.
 
 ### RNF01 — Eficiência de Navegação
 
@@ -65,7 +67,7 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 
 **Propriedade ou restrição:** Limite de interações sistêmicas necessárias para que o usuário alcance seu objetivo.
 
-**Critério verificável:** O fluxo para consultar os detalhes de um produtor, localizar uma experiência ou visualizar um produto deve ser concluído em, no máximo, **5 cliques ou toques** a partir da tela inicial.
+**Critério verificável:** O fluxo para consultar os detalhes de um produtor, localizar uma experiência ou visualizar um produto deve ser concluído em, no máximo, 5 cliques ou toques a partir da tela inicial.
 
 ---
 
@@ -77,7 +79,7 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 
 **Propriedade ou restrição:** Tempo máximo aceitável para conclusão de uma tarefa de busca e consulta.
 
-**Critério verificável:** Em teste de usabilidade, um usuário em seu primeiro acesso deve ser capaz de buscar um produto ou experiência específica e acessar sua respectiva página de detalhes em até **60 segundos de navegação contínua**.
+**Critério verificável:** Em teste de usabilidade, um usuário em seu primeiro acesso deve ser capaz de buscar um produto ou experiência específica e acessar sua respectiva página de detalhes em até 60 segundos de navegação contínua.
 
 ---
 
@@ -89,7 +91,7 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 
 **Propriedade ou restrição:** Prevenção e recuperação de erros durante a interação do usuário com o sistema.
 
-**Critério verificável:** Durante a execução das funções de busca e consulta, a ocorrência de ações inválidas não deve ultrapassar **1 erro por tarefa**, e o sistema deve apresentar mensagens de validação ou orientação em **100% das ocorrências identificadas como inválidas**.
+**Critério verificável:** Durante a execução das funções de busca e consulta, a ocorrência de ações inválidas não deve ultrapassar 1 erro por tarefa, e o sistema deve apresentar mensagens de validação ou orientação em 100% das ocorrências identificadas como inválidas.
 
 ---
 
@@ -101,7 +103,7 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 
 **Propriedade ou restrição:** Acessibilidade da interface.
 
-**Critério verificável:** Os principais fluxos da aplicação devem atender às recomendações aplicáveis da **WCAG 2.1 nível AA**, contemplando, quando aplicável, contraste adequado, identificação dos campos de formulário, textos alternativos para imagens relevantes, indicação de foco e navegação por teclado.
+**Critério verificável:** Os principais fluxos da aplicação devem atender às recomendações aplicáveis da WCAG 2.1 nível AA, contemplando, quando aplicável, contraste adequado, identificação dos campos de formulário, textos alternativos para imagens relevantes, indicação de foco e navegação por teclado.
 
 ---
 
@@ -113,7 +115,7 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 
 **Propriedade ou restrição:** Adaptação da interface a diferentes dimensões de tela.
 
-**Critério verificável:** As funcionalidades principais devem permanecer utilizáveis em telas com largura entre **360 px e 1920 px**, sem sobreposição de componentes e sem necessidade de rolagem horizontal para utilização dos fluxos principais.
+**Critério verificável:** As funcionalidades principais devem permanecer utilizáveis em telas com largura entre 360 px e 1920 px, sem sobreposição de componentes e sem necessidade de rolagem horizontal para utilização dos fluxos principais.
 
 ---
 
@@ -125,7 +127,7 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 
 **Propriedade ou restrição:** Tempo de carregamento em condições de conectividade limitada.
 
-**Critério verificável:** As principais páginas públicas da aplicação devem apresentar seu conteúdo principal em até **5 segundos em pelo menos 90% das medições**, considerando conexão limitada a aproximadamente **1,5 Mbps** e latência de até **300 ms**.
+**Critério verificável:** As principais páginas públicas da aplicação devem apresentar seu conteúdo principal em até 5 segundos em pelo menos 90% das medições, considerando conexão limitada a aproximadamente 1,5 Mbps e latência de até 300 ms.
 
 ---
 
@@ -173,7 +175,7 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 
 **Propriedade ou restrição:** Transmissão segura dos dados.
 
-**Critério verificável:** Em ambiente de produção, todas as comunicações da aplicação devem utilizar **HTTPS**, e requisições realizadas por HTTP devem ser redirecionadas para HTTPS.
+**Critério verificável:** Em ambiente de produção, todas as comunicações da aplicação devem utilizar HTTPS, e requisições realizadas por HTTP devem ser redirecionadas para HTTPS.
 
 ---
 
@@ -197,7 +199,7 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 
 **Propriedade ou restrição:** Compatibilidade entre navegadores e plataformas.
 
-**Critério verificável:** Os principais fluxos da aplicação devem ser executados com sucesso nas versões estáveis utilizadas para teste do **Google Chrome, Mozilla Firefox e Microsoft Edge**, além do Google Chrome em dispositivo Android ou emulação equivalente.
+**Critério verificável:** Os principais fluxos da aplicação devem ser executados com sucesso nas versões estáveis utilizadas para teste do Google Chrome, Mozilla Firefox e Microsoft Edge, além do Google Chrome em dispositivo Android ou emulação equivalente.
 
 ---
 

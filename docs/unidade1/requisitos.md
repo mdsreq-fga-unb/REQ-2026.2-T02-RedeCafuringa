@@ -24,13 +24,6 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
     - **Saídas:** Mapa mental de funcionalidades potenciais.
     - **Participantes:** Equipe de Desenvolvimento.
 
-    #### Análise Documental
-
-    - **Descrição:** Estudo do template de entregas da disciplina, da bibliografia de Requisitos de Software e dos canais digitais ativos da Rede Cafuringa para embasar a visão inicial do produto.
-    - **Entradas:** Template de entregas, bibliografia e redes sociais ativas da Cafuringa.
-    - **Saídas:** Base de conhecimento para a redação do Documento de Visão.
-    - **Participantes:** Engenheiros de Requisitos.
-
 !!! info "Declaração de Requisitos"
 
     #### Redação Estruturada do Documento de Visão
@@ -58,13 +51,6 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
 !!! info "Verificação e Validação"
 
-    #### Inspeção por Pares
-
-    - **Descrição:** Leitura técnica do Documento de Visão entre os membros da equipe para identificar lacunas, ambiguidades e inconsistências.
-    - **Entradas:** Minuta do Documento de Visão.
-    - **Saídas:** Relatório de inconsistências sanadas.
-    - **Participantes:** Engenheiros de Requisitos.
-
     #### Reuniões de Revisão da Entrega
 
     - **Descrição:** Reuniões de revisão para confirmação dos objetivos geral e específicos e das decisões de abordagem, ciclo de vida e processo de software.
@@ -91,36 +77,29 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
 !!! info "Elicitação e Descoberta"
 
-    #### Análise de Domínio e Pesquisa Normativa
-
-    - **Descrição:** Investigação documental de regulamentações do turismo rural, LGPD e regras fiscais/municipais locais.
-    - **Entradas:** Legislação de turismo rural e requisitos preliminares.
-    - **Saídas:** Mapeamento de regras de negócio normativas e restrições legais.
-    - **Participantes:** Engenheiros de Requisitos e Consultores/Fontes Regulatórias.
-
-    #### Grupo Focal (Focus Group)
-
-    - **Descrição:** Reuniões em grupo com anfitriões para mapear processos de campo e restrições operacionais.
-    - **Entradas:** Roteiro de tópicos operacionais e mapa de processos locais.
-    - **Saídas:** Relatório de restrições operacionais e de conectividade.
-    - **Participantes:** Engenheiros de Requisitos, Amostra de Produtores Rurais e Anfitriões.
-
-!!! info "Declaração de Requisitos"
-
-    #### Decomposição Funcional em Histórias de Usuário
-
-    - **Descrição:** Estruturação das Características do Produto (CPs) em Histórias de Usuário (_User Stories_) contendo critérios de aceite em linguagem estruturada.
-    - **Entradas:** Relatório de restrições operacionais.
-    - **Saídas:** Backlog de histórias de usuário preliminares.
-    - **Participantes:** Engenheiros de Requisitos.
-
     #### Especificação de Requisitos Funcionais e Não Funcionais
 
     - **Descrição:** Detalhamento de restrições de desempenho, usabilidade, operação _offline_ e segurança.
     - **Entradas:** Relatório de restrições operacionais e arquitetura pretendida.
-    - **Saídas:** Especificação suplementar dos requisitos.
-    - **Participantes:** Engenheiros de Requisitos e Arquitetos de Software.
+    - **Saídas:** Especificação suplementar dos requisitos de acordo com complexidade, capacidade e esforço.
+    - **Participantes:** Engenheiros de Requisitos.
 
+!!! info "Declaração de Requisitos"
+
+    #### Priorização MoScoW
+
+    - **Descrição:** Reunião de negociação para classificar os requisitos do sistema em quatro níveis de criticidade (Must Have, Should Have, Could Have, Won't Have), visando alinhar as expectativas e definir o escopo do Produto Mínimo Viável.
+    - **Entradas:** Lista de requisitos elicitados, objetivos de negócio do projeto e restrições conhecidas.
+    - **Saídas:** Backlog de requisitos devidamente categorizado e priorizado e escopo de entrega.
+    - **Participantes:** Engenheiros de Requisitos.
+
+    #### Histórias de Usuário
+
+    - **Descrição:** Tradução e escrita das necessidades elicitadas em formato narrativo sob a perspectiva do usuário final (focando em quem, o que e por que), incluindo a definição dos critérios de aceitação para cada funcionalidade.
+    - **Entradas:** Requisitos brutos elicitados, perfis de usuários/personas (produtores, consumidores, admin) e o escopo priorizado (como o resultado do MoSCoW).
+    - **Saídas:** Backlog do produto contendo as Histórias de Usuário documentadas (no padrão "Como [ator], eu quero [ação] para que [valor]") e seus respectivos critérios de aceitação.
+    - **Participantes:** Engenheiros de Requisitos.
+        
 !!! info "Análise e Consenso"
 
     #### Matriz de Quadrantes (Valor de Negócio vs. Complexidade Técnica)
@@ -132,14 +111,21 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
 !!! info "Representação de Requisitos"
 
+    #### MVP Preliminar 
+
+    - **Descrição:** Estruturação da primeira versão reduzida e funcional do sistema, selecionando as funcionalidades essenciais para validar a proposta de valor junto ao cliente com o menor custo e tempo de desenvolvimento possíveis.
+    - **Entradas:** Matriz 4x4 (Valor/Impacto vs. Esforço/Custo) e Histórias de Usuário priorizadas.
+    - **Saídas:** Escopo fechado do MVP preliminar e plano inicial de validação no campo.
+    - **Participantes:** Engenheiros de Requisitos, Equipe Técnica (Desenvolvedores/Designers) e Stakeholders (Product Owner).
+
+!!! info "Verificação e Validação"
+
     #### Prototipagem Interativa Navegável
 
     - **Descrição:** Construção de telas e fluxos interativos no Figma para simular visualmente a navegação do produtor, visitante e administrador.
     - **Entradas:** User Stories do MVP e diretrizes de usabilidade.
-    - **Saídas:** Protótipo Navegável de Alta/Média Fidelidade (Artefato).
+    - **Saídas:** Protótipo Navegável de Alta/Média Fidelidade.
     - **Participantes:** Designers de UX/UI e Engenheiros de Requisitos.
-
-!!! info "Verificação e Validação"
 
     #### Testes de Usabilidade com Protótipo
 
@@ -148,28 +134,15 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
     - **Saídas:** Relatório de Usabilidade e Lista de Ajustes de Interface.
     - **Participantes:** Amostra de Produtores Rurais, Consumidores, Anfitriões e Designers de UX/UI.
 
-    #### Sessão de Homologação Regulatória e Negocial
-
-    - **Descrição:** Validação direta das regras jurídicas e de negócio do sistema com especialistas e a cliente.
-    - **Entradas:** Mapeamento de regras normativas e especificações das User Stories.
-    - **Saídas:** Termo de Aprovação Regulatória e Negocial.
-    - **Participantes:** Cliente, Fontes Competentes/Especialistas e Engenheiros de Requisitos.
-
 !!! info "Organização e Atualização"
 
-    #### Mapeamento de Rastreabilidade Bidirecional
+    #### MVP Totalmente Definido
 
-    - **Descrição:** Vinculação formal entre Necessidades, OEs, CPs, User Stories, RNFs e elementos do protótipo.
-    - **Entradas:** User Stories aprovadas, RNFs e Protótipo validado.
-    - **Saídas:** Matriz de Rastreabilidade - Versão Inicial (Artefato).
-    - **Participantes:** Engenheiros de Requisitos.
+    - **Descrição:** Consolidação e aprovação final do escopo da primeira versão do produto. Garante que as funcionalidades essenciais, o design de interface e os requisitos técnicos estejam alinhados, detalhados e prontos para o início do desenvolvimento.
+    - **Entradas:** Escopo do MVP Preliminar, Histórias de Usuário refinadas (com critérios de aceitação), Requisitos Não Funcionais (RNFs) estabelecidos e Protótipos validados.
+    - **Saídas:** Backlog do MVP finalizado e aprovado (pronto para desenvolvimento).
+    - **Participantes:** Engenheiros de Requisitos, Cliente e Equipe Técnica (Desenvolvedores e Designers).
 
-    #### Formalização de Baseline Arquitetural e Funcional
-
-    - **Descrição:** Congelamento do escopo e requisitos estruturantes aprovados para a fase de construção.
-    - **Entradas:** Matriz de Rastreabilidade e Termos de Aceite.
-    - **Saídas:** Baseline 1 - Requisitos e Arquitetura Congelados (Estado de controle).
-    - **Participantes:** Engenheiros de Requisitos (Gerência de Configuração).
 
 <p align="center">
   <img src="../../img/elaboracao.png" alt="Rede Cafuringa - Elaboração" width="90%" style="border-radius: 15px;">
@@ -181,54 +154,47 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
 !!! info "Elicitação e Descoberta"
 
-    #### Refinamento Iterativo de Backlog (_Backlog Refinement_)
+    #### Refinamento Iterativo de Requisitos
 
-    - **Descrição:** Análise técnica detalhada das User Stories prestes a entrar em desenvolvimento para esclarecimento de dúvidas e cenários de exceção.
-    - **Entradas:** User Stories da Baseline 1.
-    - **Saídas:** User Stories refinadas com detalhes operacionais.
-    - **Participantes:** Engenheiros de Requisitos, Desenvolvedores, Testadores e Amostra de Produtores Rurais/Usuários.
-
-!!! info "Declaração de Requisitos"
-
-    #### Detalhamento _Just-In-Time_ (JIT) de Critérios de Aceite
-
-    - **Descrição:** Redação de cenários de comportamento e dados de entrada nos cartões de tarefas do GitHub Projects.
-    - **Entradas:** User Stories refinadas.
-    - **Saídas:** Cartões de User Stories preenchidos com critérios de aceite completos (Atendimento ao DoR - _Definition of Ready_).
+    - **Descrição:** Revisão dos requisitos e User Stories selecionados para o próximo incremento, esclarecendo dúvidas, regras de negócio, dependências e cenários de exceção identificados durante o desenvolvimento.
+    - **Entradas:** Backlog do MVP, User Stories priorizadas e critérios de aceitação.
+    - **Saídas:** User Stories refinadas e esclarecidas para implementação.
     - **Participantes:** Engenheiros de Requisitos, Desenvolvedores e Testadores.
 
-!!! info "Análise e Consenso"
+!!! info "Implementação"
 
-    #### Repriorização Adaptativa de Fluxo
+    #### Desenvolvimento Incremental
 
-    - **Descrição:** Negociação de ajustes e trocas no backlog do produto (GitHub Projects) com base no aprendizado obtido nos incrementos já construídos.
-    - **Entradas:** Solicitações de mudança e feedback de entregas incrementais.
-    - **Saídas:** Backlog do produto (GitHub Projects) repriorizado.
-    - **Participantes:** Engenheiros de Requisitos, Cliente e Desenvolvedores.
+    - **Descrição:** Implementação das funcionalidades priorizadas para cada incremento, utilizando como referência os requisitos, critérios de aceitação e protótipos definidos nas fases anteriores.
+    - **Entradas:** User Stories refinadas, critérios de aceitação, protótipos e requisitos não funcionais.
+    - **Saídas:** Incrementos funcionais do sistema e código-fonte correspondente aos requisitos implementados.
+    - **Participantes:** Desenvolvedores, Engenheiros de Requisitos e Designers.
 
 !!! info "Verificação e Validação"
 
-    #### Verificação Técnica por Checklists (DoR/DoD)
+    #### Demonstração dos Incrementos
 
-    - **Descrição:** Avaliação de conformidade das histórias antes do desenvolvimento (_Definition of Ready_) e após a codificação (_Definition of Done_).
-    - **Entradas:** Código-fonte, suíte de testes e checklists DoR/DoD.
-    - **Saídas:** Checklist de verificação preenchido e aprovado.
-    - **Participantes:** Engenheiros de Requisitos, Desenvolvedores e Testadores.
+    - **Descrição:** Apresentação das funcionalidades implementadas para validação junto ao cliente e coleta de feedback sobre o incremento desenvolvido.
+    - **Entradas:** Incremento funcional e requisitos correspondentes.
+    - **Saídas:** Registro de feedback, aceite do incremento ou solicitações de ajustes.
+    - **Participantes:** Cliente, Desenvolvedores, Engenheiros de Requisitos e representantes dos usuários.
 
-    #### Demonstração do Incremental (_Sprint/Flow Demo_)
+!!! info "Análise e Consenso"
 
-    - **Descrição:** Apresentação prática das funcionalidades prontas no ambiente de desenvolvimento.
-    - **Entradas:** Software funcional testado.
-    - **Saídas:** Registro de Aceite Incremental e lista de melhorias.
-    - **Participantes:** Cliente, Amostra de Produtores Rurais, Consumidores, Desenvolvedores e Engenheiros de Requisitos.
+    #### Gerenciamento de Mudanças e Repriorização
+
+    - **Descrição:** Análise das solicitações de alteração identificadas durante o desenvolvimento e das novas necessidades observadas a partir dos incrementos entregues.
+    - **Entradas:** Feedback do cliente, resultados dos testes e solicitações de mudança.
+    - **Saídas:** Requisitos atualizados e backlog repriorizado.
+    - **Participantes:** Engenheiros de Requisitos, Cliente e Desenvolvedores.
 
 !!! info "Organização e Atualização"
 
-    #### Atualização Dinâmica de Rastreabilidade
+    #### Atualização da Rastreabilidade
 
-    - **Descrição:** Associação dos módulos de código, suítes de testes automatizados e commits às User Stories correspondentes.
-    - **Entradas:** User Stories concluídas (DoD atingido) e código aprovado.
-    - **Saídas:** Matriz de Rastreabilidade Atualizada (Artefato).
+    - **Descrição:** Atualização das relações entre requisitos, User Stories, funcionalidades implementadas, testes e alterações realizadas durante a construção.
+    - **Entradas:** Requisitos atualizados, código-fonte, resultados dos testes e registros de mudanças.
+    - **Saídas:** Matriz de Rastreabilidade atualizada.
     - **Participantes:** Engenheiros de Requisitos e Desenvolvedores.
 
 <p align="center">
@@ -241,21 +207,28 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
 !!! info "Verificação e Validação"
 
-    #### Testes de Aceitação de Usuário (TAU / Homologação Final)
+    #### Desenvolvimento Orientado a Testes (TDD)
 
-    - **Descrição:** Execução de roteiros práticos de teste em ambiente de homologação pelos usuários finais para validação do sistema completo.
-    - **Entradas:** Versão final do software (_Release Candidate_) e Roteiro de TAU.
-    - **Saídas:** Relatório de Homologação Final e Termo de Aceite do Produto (Artefato).
-    - **Participantes:** Cliente, Produtores Rurais, Consumidores, Anfitriões e Engenheiros de Requisitos.
+    - **Descrição:** Aplicação do ciclo de desenvolvimento orientado a testes para implementar e ajustar as funcionalidades da versão final, escrevendo os testes antes da implementação ou correção do código e verificando continuamente o comportamento esperado do sistema.
+    - **Entradas:** Requisitos aprovados, critérios de aceitação, casos de uso, cenários de teste e funcionalidades da versão candidata à entrega.
+    - **Saídas:** Suíte de testes automatizados, funcionalidades implementadas ou corrigidas e evidências de aprovação dos testes.
+    - **Participantes:** Desenvolvedores, Testadores e Engenheiros de Requisitos.
+
+    #### Testes de Aceitação de Usuário 
+
+    - **Descrição:** Execução de cenários de teste em ambiente de homologação para verificar se o produto atende aos requisitos e critérios de aceitação definidos para o MVP.
+    - **Entradas:** Versão candidata à entrega, requisitos aprovados, critérios de aceitação, roteiro de testes e resultados dos testes automatizados.
+    - **Saídas:** Relatório de Homologação Final, registro de não conformidades e Termo de Aceite do Produto, condicionado à aprovação da versão.
+    - **Participantes:** Cliente, Produtores Rurais, Consumidores, Anfitriões, Testadores e Engenheiros de Requisitos.
 
 !!! info "Organização e Atualização"
 
-    #### Consolidação de Documentação _As-Built_ e Baseline Final
+    #### Registro da Entrega e Encerramento dos Requisitos
 
-    - **Descrição:** Atualização final de todos os artefatos para refletir a versão exata do software em produção.
-    - **Entradas:** Termo de Aceite do Produto e Matriz de Rastreabilidade do GitHub Projects.
-    - **Saídas:** Baseline Final - _As-Built_ (Estado de controle) e Matriz de Rastreabilidade Consolidada (Artefato).
-    - **Participantes:** Engenheiros de Requisitos (Gerência de Configuração).
+    - **Descrição:** Registro da versão disponibilizada, do aceite do cliente e da situação final dos requisitos, incluindo eventuais limitações ou funcionalidades previstas para versões futuras.
+    - **Entradas:** Baseline Final, Termo de Aceite do Produto e registros de homologação.
+    - **Saídas:** Registro de Entrega do Produto, aceite final e backlog residual documentado.
+    - **Participantes:** Engenheiros de Requisitos, Desenvolvedores e Cliente.
 
 <p align="center">
   <img src="../../img/transicao.png" alt="Rede Cafuringa - Transição" width="90%" style="border-radius: 15px;">
@@ -267,32 +240,32 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
 A tabela a seguir sintetiza, para cada fase do AUP, como as atividades de Engenharia de Requisitos detalhadas na seção 5.1 se desdobram em prática, técnica/instrumento e resultado/artefato.
 
-| Fase           | Atividade de ER             | Prática/Operação                                                                                | Técnica/Instrumento                                                   | Resultado/Artefato                                                                                                |
-| :------------- | :-------------------------- | :---------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
-| **Concepção**  | Elicitação e Descoberta     | Capturar dores e necessidades do ecossistema local na reunião de contato inicial com o cliente. | Entrevista Semiestruturada com o Cliente                              | Registro da visão inicial e lista bruta de necessidades de negócio.                                               |
-|                | Elicitação e Descoberta     | Gerar e agrupar ideias sobre o catálogo de produtos e atrativos rurais.                         | Brainstorming Colaborativo                                            | Mapa mental de funcionalidades potenciais.                                                                        |
-|                | Elicitação e Descoberta     | Embasar a visão inicial do produto em fontes documentais.                                       | Análise Documental                                                    | Base de conhecimento para o Documento de Visão.                                                                   |
-|                | Declaração de Requisitos    | Sintetizar necessidades em Objetivo Geral, OEs e CPs.                                           | Redação Estruturada do Documento de Visão                             | Minuta do Documento de Visão (OEs e CPs).                                                                         |
-|                | Análise e Consenso          | Classificar colaborativamente as intenções de escopo.                                           | Priorização MoSCoW                                                    | Lista de escopo preliminar priorizada.                                                                            |
-|                | Análise e Consenso          | Validar escopo e documentações com o cliente.                                                   | Validação Assíncrona com o Cliente                                    | Concordância e aval do cliente para seguir com o escopo.                                                          |
-|                | Verificação e Validação     | Revisar tecnicamente o Documento de Visão e sanar lacunas, ambiguidades e inconsistências.      | Inspeção por Pares (Revisão Técnica Cruzada)                          | Relatório de inconsistências sanadas.                                                                             |
-|                | Verificação e Validação     | Confirmar objetivos e decisões de processo nas reuniões de revisão.                             | Reuniões de Revisão da Entrega                                        | Registro de Decisões e vídeos comprobatórios.                                                                     |
-|                | Organização e Atualização   | Indexar OEs e CPs, atribuir estado de aprovação e registrar no repositório oficial.             | Atribuição de Metadados & Versionamento                               | Baseline 0 - Escopo de Visão Inicial.                                                                             |
-| **Elaboração** | Elicitação e Descoberta     | Investigar regulamentações, LGPD e regras fiscais/municipais locais.                            | Análise de Domínio e Pesquisa Normativa                               | Mapeamento de regras de negócio normativas e restrições legais.                                                   |
-|                | Elicitação e Descoberta     | Mapear processos de campo e restrições operacionais, incluindo baixa conectividade.             | Grupo Focal (Focus Group)                                             | Relatório de restrições operacionais e de conectividade.                                                          |
-|                | Declaração de Requisitos    | Estruturar as Características do Produto em Histórias de Usuário com critérios de aceite.       | Decomposição Funcional das Características do Produto em User Stories | Backlog de User Stories preliminares.                                                                             |
-|                | Declaração de Requisitos    | Detalhar restrições de desempenho, usabilidade, operação offline e segurança.                   | Especificação de Requisitos Não Funcionais (RNFs)                     | Especificação Suplementar de RNFs.                                                                                |
-|                | Análise e Consenso          | Ponderar valor para os usuários e esforço de engenharia para delimitar o MVP.                   | Matriz de Quadrantes (Valor de Negócio vs. Complexidade Técnica)      | Backlog de MVP Priorizado.                                                                                        |
-|                | Representação de Requisitos | Simular visualmente a navegação de produtor, visitante e administrador.                         | Prototipagem Interativa Navegável                                     | Protótipo Navegável de Alta/Média Fidelidade.                                                                     |
-|                | Verificação e Validação     | Simular tarefas reais com usuários e avaliar a facilidade de uso.                               | Testes de Usabilidade com Protótipo                                   | Relatório de Usabilidade e Lista de Ajustes de Interface.                                                         |
-|                | Verificação e Validação     | Validar regras jurídicas e de negócio com especialistas e cliente.                              | Sessão de Homologação Regulatória e Negocial                          | Termo de Aprovação Regulatória e Negocial.                                                                        |
-|                | Organização e Atualização   | Vincular Necessidades, OEs, CPs, User Stories, RNFs e protótipo.                                | Mapeamento de Rastreabilidade Bidirecional                            | Matriz de Rastreabilidade - Versão Inicial.                                                                       |
-|                | Organização e Atualização   | Congelar escopo e requisitos estruturantes aprovados para a Construção.                         | Formalização de Baseline Arquitetural e Funcional                     | Baseline 1 - Requisitos e Arquitetura Congelados.                                                                 |
-| **Construção** | Elicitação e Descoberta     | Esclarecer dúvidas e cenários de exceção das histórias próximas do desenvolvimento.             | Refinamento Iterativo de Backlog (Backlog Refinement)                 | User Stories refinadas com detalhes operacionais.                                                                 |
-|                | Declaração de Requisitos    | Redigir cenários de comportamento e dados de entrada nos cartões de tarefas do GitHub Projects. | Detalhamento Just-In-Time (JIT) de Critérios de Aceite                | Cartões de User Stories preenchidos com critérios de aceite completos (Atendimento ao DoR - Definition of Ready). |
-|                | Análise e Consenso          | Negociar ajustes e trocas no backlog com base no aprendizado dos incrementos.                   | Repriorização Adaptativa de Fluxo                                     | Backlog do produto (GitHub Projects) repriorizado.                                                                |
-|                | Verificação e Validação     | Avaliar conformidade antes do desenvolvimento e após a codificação.                             | Verificação Técnica por Checklists (DoR/DoD)                          | Checklist de verificação preenchido e aprovado.                                                                   |
-|                | Verificação e Validação     | Apresentar funcionalidades prontas no ambiente de desenvolvimento.                              | Demonstração do Incremental (Sprint/Flow Demo)                        | Registro de Aceite Incremental e lista de melhorias.                                                              |
-|                | Organização e Atualização   | Associar módulos, testes automatizados e commits às User Stories.                               | Atualização Dinâmica de Rastreabilidade                               | Matriz de Rastreabilidade Atualizada.                                                                             |
-| **Transição**  | Verificação e Validação     | Executar roteiros práticos com usuários finais em ambiente de homologação.                      | Testes de Aceitação de Usuário (TAU / Homologação Final)              | Relatório de Homologação Final e Termo de Aceite do Produto.                                                      |
-|                | Organização e Atualização   | Atualizar artefatos para refletir a versão exata do software em produção.                       | Consolidação de Documentação As-Built e Baseline Final                | Baseline Final - As-Built e Matriz de Rastreabilidade Consolidada.                                                |
+| Fase | Atividade de ER | Prática/Operação | Técnica/Instrumento | Resultado/Artefato |
+| :--- | :--- | :--- | :--- | :--- |
+| **Concepção** | Elicitação e Descoberta | Capturar dores e necessidades do ecossistema local na reunião de contato inicial com o cliente. | Entrevista Semiestruturada com o Cliente | Registro da visão inicial e lista bruta de necessidades de negócio. |
+| | Elicitação e Descoberta | Gerar e agrupar ideias sobre o catálogo de produtos e atrativos rurais. | Brainstorming Colaborativo | Mapa mental de funcionalidades potenciais. |
+| | Elicitação e Descoberta | Embasar a visão inicial do produto em fontes documentais. | Análise Documental | Base de conhecimento para o Documento de Visão. |
+| | Declaração de Requisitos | Sintetizar necessidades em Objetivo Geral, OEs e CPs. | Redação Estruturada do Documento de Visão | Minuta do Documento de Visão (OEs e CPs). |
+| | Análise e Consenso | Classificar colaborativamente as intenções de escopo. | Priorização MoSCoW | Lista de escopo preliminar priorizada. |
+| | Análise e Consenso | Validar escopo e documentações com o cliente. | Validação Assíncrona com o Cliente | Concordância e aval do cliente para seguir com o escopo. |
+| | Verificação e Validação | Revisar tecnicamente o Documento de Visão e sanar lacunas, ambiguidades e inconsistências. | Inspeção por Pares (Revisão Técnica Cruzada) | Relatório de inconsistências sanadas. |
+| | Verificação e Validação | Confirmar objetivos e decisões de processo nas reuniões de revisão. | Reuniões de Revisão da Entrega | Registro de Decisões e vídeos comprobatórios. |
+| | Organização e Atualização | Indexar OEs e CPs, atribuir estado de aprovação e registrar no repositório oficial. | Atribuição de Metadados & Versionamento | Baseline 0 - Escopo de Visão Inicial. |
+| **Elaboração** | Elicitação e Descoberta | Investigar regulamentações, LGPD e regras fiscais/municipais locais. | Análise de Domínio e Pesquisa Normativa | Mapeamento de regras de negócio normativas e restrições legais. |
+| | Elicitação e Descoberta | Mapear processos de campo e restrições operacionais, incluindo baixa conectividade. | Grupo Focal (Focus Group) | Relatório de restrições operacionais e de conectividade. |
+| | Declaração de Requisitos | Estruturar as Características do Produto em Histórias de Usuário com critérios de aceite. | Decomposição Funcional das Características do Produto em User Stories | Backlog de User Stories preliminares. |
+| | Declaração de Requisitos | Detalhar restrições de desempenho, usabilidade, operação offline e segurança. | Especificação de Requisitos Não Funcionais (RNFs) | Especificação Suplementar de RNFs. |
+| | Análise e Consenso | Ponderar valor para os usuários e esforço de engenharia para delimitar o MVP. | Matriz de Quadrantes (Valor de Negócio vs. Complexidade Técnica) | Backlog de MVP Priorizado. |
+| | Representação de Requisitos | Simular visualmente a navegação de produtor, visitante e administrador. | Prototipagem Interativa Navegável | Protótipo Navegável de Alta/Média Fidelidade. |
+| | Verificação e Validação | Simular tarefas reais com usuários e avaliar a facilidade de uso. | Testes de Usabilidade com Protótipo | Relatório de Usabilidade e Lista de Ajustes de Interface. |
+| | Verificação e Validação | Validar regras jurídicas e de negócio com especialistas e cliente. | Sessão de Homologação Regulatória e Negocial | Termo de Aprovação Regulatória e Negocial. |
+| | Organização e Atualização | Vincular Necessidades, OEs, CPs, User Stories, RNFs e protótipo. | Mapeamento de Rastreabilidade Bidirecional | Matriz de Rastreabilidade - Versão Inicial. |
+| | Organização e Atualização | Congelar escopo e requisitos estruturantes aprovados para a Construção. | Formalização de Baseline Arquitetural e Funcional | Baseline 1 - Requisitos e Arquitetura Congelados. |
+| **Construção** | Elicitação e Descoberta | Revisar os requisitos e User Stories selecionados para o próximo incremento, esclarecendo dúvidas, regras de negócio, dependências e cenários de exceção. | Refinamento Iterativo de Requisitos | User Stories refinadas e esclarecidas para implementação. |
+| | Implementação | Implementar as funcionalidades priorizadas para cada incremento com base nos requisitos, critérios de aceitação, protótipos e requisitos não funcionais. | Desenvolvimento Incremental | Incrementos funcionais do sistema e código-fonte correspondente aos requisitos implementados. |
+| | Verificação e Validação | Apresentar as funcionalidades implementadas para validação junto ao cliente e coletar feedback sobre o incremento desenvolvido. | Demonstração dos Incrementos | Registro de feedback, aceite do incremento ou solicitações de ajustes. |
+| | Análise e Consenso | Analisar solicitações de alteração e novas necessidades identificadas durante o desenvolvimento e os incrementos entregues. | Gerenciamento de Mudanças e Repriorização | Requisitos atualizados e backlog repriorizado. |
+| | Organização e Atualização | Atualizar as relações entre requisitos, User Stories, funcionalidades implementadas, testes e alterações realizadas durante a construção. | Atualização da Rastreabilidade | Matriz de Rastreabilidade atualizada. |
+| **Transição** | Verificação e Validação | Aplicar o ciclo de desenvolvimento orientado a testes para implementar e ajustar funcionalidades da versão final, verificando continuamente o comportamento esperado do sistema. | Desenvolvimento Orientado a Testes (TDD) | Suíte de testes automatizados, funcionalidades implementadas ou corrigidas e evidências de aprovação dos testes. |
+| | Verificação e Validação | Executar cenários de teste em ambiente de homologação para verificar se o produto atende aos requisitos e critérios de aceitação definidos para o MVP. | Testes de Aceitação de Usuário (TAU / Homologação Final) | Relatório de Homologação Final, registro de não conformidades e Termo de Aceite do Produto. |
+| | Organização e Atualização | Registrar a versão disponibilizada, o aceite do cliente e a situação final dos requisitos, incluindo limitações ou funcionalidades previstas para versões futuras. | Registro da Entrega e Encerramento dos Requisitos | Registro de Entrega do Produto, aceite final e backlog residual documentado. |
