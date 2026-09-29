@@ -115,7 +115,7 @@ Durante a validação, deverão ser registrados eventuais ajustes solicitados pe
 | 28/09/2026 | Requisitos Não Funcionais | Criar uma RNF sobre o ECA Digital em relação ao banco de dados | Alto | Equipe Completa |
 | 28/09/2026 | Recuperar acesso à conta | Incluir RF10 (Recuperar acesso à conta) no escopo | Médio | Equipe Completa |
 | 28/09/2026 | Registrar trajetória do produtor | Incluir RF12 (Registrar trajetória do produtor) de forma simplificada (usar embed para vídeo do YouTube) | Médio | Equipe Completa |
-| 28/09/2026 | Comunicação / Chat | Substituir chat interno da plataforma por embed/redirecionamento do WhatsApp | Redução de escopo/Baixo | Equipe Completa |
+| 28/09/2026 | Comunicação / Chat | Substituir chat interno da plataforma por embed/redirecionamento do WhatsApp | Médio | Equipe Completa |
 | 28/09/2026 | Notificar alteração de pré-reserva | Incluir RF48 (Notificar alteração de pré-reserva) no escopo | Alto | Equipe Completa |
 | 28/09/2026 | Deploy / Geral | Lançamento da plataforma Cafuringa | Alto | Equipe completa |
 
