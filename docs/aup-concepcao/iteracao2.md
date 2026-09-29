@@ -2,30 +2,38 @@
 
 ## Análise e Consenso
 
-Leitura técnica do Documento de Visão entre os membros da equipe para identificar lacunas, ambiguidades e inconsistências e reuniões de revisão para confirmação dos objetivos geral e específicos e das decisões de abordagem, ciclo de vida e processo de software.
+??? info "Priorização MoSCoW"
 
-??? info "Inspeção por Pares (Revisão Técnica Cruzada)"
+    Classificação colaborativa das intenções de escopo nas categorias Must, Should, Could e Won't.
 
-    Relatório feito pelo grupo sobre as inconsistências sanadas no documento de Visão.
+    - ![Moscow](../../img/aup-concepcao/moscow.png)
 
-    <iframe src="https://docs.google.com/document/d/e/2PACX-1vSuB0hJGUM_tQqyeObhlf-DETNHDtAI037fsd8zz0pFC5TA33cBkRf6xGuogn0V_1Isj3fEmuzBOavZ/pub?embedded=true"width="100%" height="500" frameborder="0"></iframe>
+??? info "Validação Assíncrona com o Cliente"
 
-??? info "Reuniões de Revisão da Entrega"
+    Alinhamento, validação de escopo e aprovação das documentações da primeira entrega conduzidos de forma assíncrona por canal de mensagens instantâneas.
 
-    Prints comprobatórios de confirmação de revisão e aceitação por parte do cliente sobre as documnetações. Os vídeos comprobatórios constam logo abaixo na sessão de vídeos.
+    - ![Atualizações 1](../../img/aup-concepcao/prints_conversas/atualizacoes1.jpeg){ width="300" }
+    - ![Atualizações 2](../../img/aup-concepcao/prints_conversas/atualizacoes2.jpeg){ width="300" }
+    - ![Atualizações 3](../../img/aup-concepcao/prints_conversas/atualizacoes3.jpeg){ width="300" }
+    - ![Documentação](../../img/aup-concepcao/prints_conversas/documentacao.jpeg){ width="300" }
+    
+---
 
-    - ![Gitpage](../../img/aup-concepcao/prints_conversas/gitpage.jpeg){ width="300" }
+## Verificação e Validação
+
+??? info "Reuniões de Revisão de Entrega"
+    Para garantir a transparência e o registro formal das aprovações, todos os registros audiovisuais das validações realizadas com o cliente nesta etapa encontram-se documentados na seção 'Vídeos Comprobatórios'.
 
 ---
 
-## Análise e Consenso
+## Organização e Atualização
 
-Indexação de cada OE e CP com códigos identificadores únicos e atribuição de estado de aprovação, com migração das decisões consolidadas no documento compartilhado para o repositório oficial (GitPages).
+??? info "Atribuição de Metadados e Versionamento"
+    Para garantir transparência, organização e facilidade de acesso, toda a documentação gerada ao longo do projeto, desde os requisitos e histórias de usuário até manuais e decisões arquiteturais, é centralizada e rigorosamente versionada no repositório oficial da equipe.
 
-??? info "Atribuição de Metadados & Versionamento"
+    Em vez de arquivos dispersos ou desatualizados, esses artefatos são transformados em um site navegável e publicados no GitPages oficial do projeto.
 
-    Link do repositório oficial do github para comprovação e acompanhamento do projeto.
-    [Cafuringa - Requisitos de Software](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa)
+    Essa abordagem estabelece uma "fonte única de verdade" contínua. Assim, desenvolvedores, engenheiros de requisitos e stakeholders têm a garantia de acessar sempre a versão oficial, rastreável e mais recente do projeto, de forma colaborativa e diretamente pelo navegador.
 
 ---
 
@@ -34,6 +42,8 @@ Indexação de cada OE e CP com códigos identificadores únicos e atribuição 
 O vídeo abaixo registra uma das reuniões de revisão da entrega da unidade 1, contando com decisões acerca dos objetivos específicos, e objetivos gerais do projeto, realizado em 31/08/2026.
 
 <iframe width="800" height="450" src="https://www.youtube.com/embed/EB3D3KIuMGs" title="Vídeo do YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
 
 O vídeo abaixo registra decisões acerca da abordagem, ciclo de vida e processo de software, além de registros oficiais da documentação no pages do projeto, realizado em 03/09/2026.
 

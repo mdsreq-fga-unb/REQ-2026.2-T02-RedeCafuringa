@@ -2,31 +2,20 @@
 
 ## Elicitação e Descoberta 
 
-Aplicação de roteiro flexível de perguntas na reunião de primeiro contato com o representante da Rede Cafuringa para capturar dores e necessidades do ecossistema local. Reuniões internas da equipe para geração livre e agrupamento de ideias sobre o catálogo de produtos e atrativos rurais. Estudo do template de entregas da disciplina, da bibliografia de Requisitos de Software e dos canais digitais ativos da Rede Cafuringa para embasar a visão inicial do produto.
-
 ??? info "Entrevista Semiestruturada com o Cliente"
-
-    Esboço preliminar da entrevista semiestruturada de primeiro contato com o cliente.
+    Aplicação de roteiro flexível de perguntas na reunião de primeiro contato com o representante da Rede Cafuringa para capturar dores e necessidades do ecossistema local.
 
     <iframe src="https://docs.google.com/document/d/e/2PACX-1vSF8vmcZ9juMR85HEIJlfVyiSbRlb6bEb1Vn-3Ubt46kvFhTWpMyIHut7hzVBAhQZt6Orvpa0u9UBVV/pub?embedded=true"width="100%" height="500" frameborder="0"></iframe>
 
 
 ??? info "Brainstorming Colaborativo"
-    Brainstorming da equipe em forma de mapa mental para sintetizar a ideia da cafuringa.
+    Reuniões internas da equipe para geração livre e agrupamento de ideias sobre o catálogo de produtos e atrativos rurais.
 
     - ![Brainstorming](../../img/aup-concepcao/brainstorming.png)
-
-
-??? info "Análise Documental"
-    Primeiro documento de visão aprovado pelo cliente.
-
-    <iframe src="https://drive.google.com/file/d/1sYf5GHyqDElz1Hi3Rf8KLz57O5GMyexG/view?usp=sharing/preview" width="100%" height="500" frameborder="0"></iframe>
 
 ---
 
 ## Declaração de Requisitos
-
-Síntese e agrupamento das necessidades brutas em Objetivo Geral, Objetivos Específicos (OEs) e Características do Produto (CPs).
 
 ??? info "Redação Estruturada do Documento de Visão"
 
@@ -40,28 +29,12 @@ Síntese e agrupamento das necessidades brutas em Objetivo Geral, Objetivos Espe
 
 ---
 
-## Análise e Consenso
+## Vídeos Comprobatórios
 
-Classificação colaborativa das intenções de escopo nas categorias Must, Should, Could e Won't e alinhamento, validação de escopo e aprovação das documentações da primeira entrega conduzidos de forma assíncrona por canal de mensagens instantâneas.
+O vídeo abaixo registra a primeira reunião com os clientes do projeto, marco inicial realizado em 19/08/2026 para a plataforma da Cafuringa.
 
-??? info "Priorização MoSCoW"
+<iframe width="800" height="450" src="https://www.youtube.com/embed/8AxspPflXs8" title="Unidade 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-    A priorização MoSCoW foi utilizada para organizar as funcionalidades previstas para a plataforma Cafuringa de acordo com sua relevância para os objetivos de negócio e sua contribuição para a entrega do MVP. A classificação considera as necessidades centrais da Rede Cafuringa, priorizando a divulgação de produtores, produtos e atrativos rurais, bem como a conexão entre os participantes.
-
-    - ![Moscow](../../img/aup-concepcao/moscow.png)
-
-    A priorização resultou em uma lista preliminar de escopo organizada por níveis de importância, permitindo distinguir as capacidades indispensáveis ao MVP das melhorias desejáveis e das funcionalidades reservadas para versões futuras.
-
-    Essa classificação servirá como referência para o refinamento do backlog e para a definição incremental do escopo da plataforma, considerando as necessidades da Rede Cafuringa, as dependências entre funcionalidades e a capacidade de desenvolvimento da equipe.
-
-
-??? info "Validação com a Cliente"
-
-    - ![Atualizações 1](../../img/aup-concepcao/prints_conversas/atualizacoes1.jpeg){ width="300" }
-    - ![Atualizações 2](../../img/aup-concepcao/prints_conversas/atualizacoes2.jpeg){ width="300" }
-    - ![Atualizações 3](../../img/aup-concepcao/prints_conversas/atualizacoes3.jpeg){ width="300" }
-    - ![Documentação](../../img/aup-concepcao/prints_conversas/documentacao.jpeg){ width="300" }
-    
 ---
 
 ## Print do Histórico do Documento
@@ -71,14 +44,4 @@ Classificação colaborativa das intenções de escopo nas categorias Must, Shou
     - ![Histórico 1](../../img/aup-concepcao/prints_historico/historico1.png)
     - ![Histórico 2](../../img/aup-concepcao/prints_historico/historico2.png)
     - ![Histórico 3](../../img/aup-concepcao/prints_historico/historico3.png)
-
----
-
-## Vídeos Comprobatórios
-
-O vídeo abaixo registra a primeira reunião com os clientes do projeto, marco inicial realizado em 19/08/2026 para a plataforma da Cafuringa.
-
-<iframe width="800" height="450" src="https://www.youtube.com/embed/8AxspPflXs8" title="Unidade 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
 
