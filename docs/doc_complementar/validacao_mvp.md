@@ -108,11 +108,17 @@ Durante a validação, deverão ser registrados eventuais ajustes solicitados pe
 
 | Data | Requisito relacionado | Ajuste solicitado | Impacto no MVP | Responsável |
 |---|---|---|---|---|
-| A definir | A definir | A definir | A definir | A definir |
+| 28/09/2026 | Visualização de Perfil | Retirar CPF da visualização do produtor | Baixo | Equipe Completa |
+| 28/09/2026 | Geração de Contrato | Na hora do contrato, exibir o CPF/CNPJ do consumidor | Médio | Equipe Completa |
+| 28/09/2026 | Cadastro de Produtor | Adicionar opção de Pessoa Jurídica (Empresa, MEI) no cadastro | Médio | Equipe Completa |
+| 28/09/2026 | Catálogo / Filtros | Criar categorias de produtores (ex: alimentos, experiências, etc.) | Médio | Equipe Completa |
+| 28/09/2026 | Requisitos Não Funcionais | Criar uma RNF sobre o ECA Digital em relação ao banco de dados | Alto | Equipe Completa |
+| 28/09/2026 | Recuperar acesso à conta | Incluir RF10 (Recuperar acesso à conta) no escopo | Médio | Equipe Completa |
+| 28/09/2026 | Registrar trajetória do produtor | Incluir RF12 (Registrar trajetória do produtor) de forma simplificada (usar embed para vídeo do YouTube) | Médio | Equipe Completa |
+| 28/09/2026 | Comunicação / Chat | Substituir chat interno da plataforma por embed/redirecionamento do WhatsApp | Redução de escopo/Baixo | Equipe Completa |
+| 28/09/2026 | Notificar alteração de pré-reserva | Incluir RF48 (Notificar alteração de pré-reserva) no escopo | Alto | Equipe Completa |
+| 28/09/2026 | Deploy / Geral | Lançamento da plataforma Cafuringa | Alto | Equipe completa |
 
-Caso não sejam solicitados ajustes, registrar:
-
-> **Não foram solicitados ajustes pelo cliente durante a validação do MVP.**
 
 ## 7.6 Decisões e divergências
 
@@ -120,7 +126,7 @@ As decisões tomadas durante a validação deverão ser registradas para manter 
 
 | Data | Tema | Decisão / divergência | Participantes | Encaminhamento |
 |---|---|---|---|---|
-| A definir | A definir | A definir | A definir | A definir |
+| Equipe Completa | Equipe Completa | Equipe Completa | Equipe Completa | Equipe Completa |
 
 Caso não existam divergências:
 
@@ -137,10 +143,10 @@ Após a reunião com o cliente, o resultado final deverá ser registrado em uma 
 
 ### Registro final
 
-> **Resultado:** A definir.
+> **Resultado:** Validado
 >
-> **Observações:** A definir.
+> **Observações:** As observações podem ser visualizadas no topico 7.5, onde foram registradas as solicitações de ajustes feitas pelo cliente durante a validação do MVP.
 >
-> **Data de aprovação:** A definir.
+> **Data de aprovação:** 28/09/2026
 >
-> **Responsável pela validação:** A definir.
+> **Responsável pela validação:** Jefferson Somma
