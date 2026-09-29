@@ -149,4 +149,4 @@ Após a reunião com o cliente, o resultado final deverá ser registrado em uma 
 >
 > **Data de aprovação:** 28/09/2026
 >
-> **Responsável pela validação:** Jefferson Somma
+> **Responsável pela validação:** Jefferson Sooma
