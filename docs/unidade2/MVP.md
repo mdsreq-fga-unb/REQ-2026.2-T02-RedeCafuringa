@@ -13,13 +13,13 @@
 
 ---
 
-## 7.2 Requisitos Funcionaiss Aprovados ao MVP
+## 7.2 Requisitos Funcionais Aprovados ao MVP
 
 Após a apresentação da proposta de MVP ao cliente, deverão ser registrados os requisitos funcionais aprovados para compor a primeira versão da solução.
 
 | Código | Requisito | Status da validação | Observação |
 |---|---|---|---|
-| RF01 | Cadastrar perfil de consumidor | Validado | Emplementar de forma à ficar mais simplificado possível, e ser possível cadastrar empresas e MEIs e permitir uma categorização melhor dos Produtores |
+| RF01 | Cadastrar perfil de consumidor | Validado | Implementar de forma a ficar o mais simplificado possível, ser capaz de cadastrar empresas e MEIs, e permitir uma categorização melhor dos Produtores |
 | RF02 | Cadastrar perfil de produtor | Validado | — |
 | RF03 | Cadastrar usuário admin | Validado | — |
 | RF04 | Consultar usuários cadastrados | Validado | — |
@@ -69,7 +69,7 @@ Os seguintes requisitos não funcionais deverão ser considerados durante a impl
 
 ---
 
-## 7.4 Requisitos Destinados a Entregas Euturas
+## 7.4 Requisitos Destinados a Entregas Futuras
 
 Os requisitos que não fizerem parte do MVP deverão ser registrados para posterior planejamento e priorização.
 
@@ -105,7 +105,7 @@ Os requisitos que não fizerem parte do MVP deverão ser registrados para poster
 | RF43 | Excluir feedback ao fornecedor | Depende da implementação de feedback | Futuro |
 
 
-## 7.5 Ajustes Eolicitados Pelo Cliente
+## 7.5 Ajustes Solicitados Pelo Cliente
 
 Durante a validação, deverão ser registrados eventuais ajustes solicitados pelo cliente.
 
