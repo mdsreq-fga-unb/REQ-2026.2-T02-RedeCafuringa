@@ -71,14 +71,6 @@ nav:
     - Iteração 09: aup-transicao/iteracao9.md
     - Iteração 10: aup-transicao/iteracao10.md
 
-  - Documentação Complementar:
-    - Avaliação do Valor de Negócio: doc_complementar/avaliacao_valor_negocio.md
-    - Avaliação de Esforço Técnico: doc_complementar/avaliacao_esforco_tecnico.md
-    - Consolidação das Avaliações: doc_complementar/consolidacao_avaliacoes.md
-    - Construção da Matriz 4 × 4: doc_complementar/construcao_matriz.md
-    - Definição dos RFs do MVP: doc_complementar/definicao_rfs_mvp.md
-    - Tratamento dos RNFs: doc_complementar/tratamento_rnfs.md
-    - Validação do MVP: doc_complementar/validacao_mvp.md
 
 markdown_extensions:
   - attr_list
