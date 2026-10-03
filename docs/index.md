@@ -113,3 +113,4 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | 22/09/26 | 1.3 | Correção dos tópicos AUP - Concepção, AUP - Elaboração, AUP - Construção e AUP - Transição. Adição de todas as evidências das fases anteriores até hoje. Correção e atualização do tópico 5. Atualização da página inicial | Beatriz Lins |
 | 28/09/26 | 1.4 | Adição do tópico "Documentação Complementar" da ativiade 4 publicada no aprender (Valor de Negócio, Esforço Técnico, Consolidação das Atividades, Construção da Matriz 4x4, Definição dos RFs, Tratamento dos RNFs, Validação do MVP) | Beatriz Lins |
 | 29/09/26 | 1.5 | Organização de todos os tópicos da atividade 4 e geração de imagens complementares, correção de todo tópico 5 da entrega 1 conforme novas atualizações do projeto e adição das histórias de usuário e das evidências | Beatriz Lins |
+| 03/10/26 | 1.6 | Correção do Cronograma de acordo com a issue aberta pelo professor | Luccas Rodrigues |
