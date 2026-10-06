@@ -19,21 +19,21 @@ Após a apresentação da proposta de MVP ao cliente, deverão ser registrados o
 
 | Código | Requisito | Status da validação | Observação |
 |---|---|---|---|
-| RF01 | Cadastrar perfil de consumidor | Validado | Implementar de forma a ficar o mais simplificado possível, ser capaz de cadastrar empresas e MEIs, e permitir uma categorização melhor dos Produtores |
-| RF02 | Cadastrar perfil de produtor | Validado | — |
+| RF01 | Cadastrar perfil de consumidor | Validado | Implementar de forma a ficar o mais simplificado possível. |
+| RF02 | Cadastrar perfil de produtor | Validado | Ser capaz de cadastrar empresas e MEIs. |
 | RF03 | Cadastrar usuário admin | Validado | — |
-| RF04 | Consultar usuários cadastrados | Validado | — |
+| RF04 | Consultar usuários cadastrados | Validado | Somente para perfil admin. |
 | RF09 | Autenticar usuário | Validado | — |
-| RF10 | Recuperar acesso à conta | Validado | — |
-| RF12 | Registrar trajetória do produtor | Validado | Simplificar esse requisito de apresentação |
-| RF14 | Consultar perfil de produtor | Validado | Não disponibilizar o CPF do produtor |
+| RF10 | Recuperar acesso à conta | Validado | Através do e-mail. |
+| RF12 | Registrar trajetória do produtor | Validado | Simplificar esse requisito de apresentação. |
+| RF14 | Consultar perfil de produtor | Validado | Não disponibilizar o CPF do produtor para exibição. |
 | RF17 | Cadastrar produto | Validado | — |
 | RF21 | Consultar catálogo de produtos | Validado | — |
 | RF22 | Consultar detalhes do produto | Validado | — |
 | RF23 | Cadastrar experiência | Validado | — |
 | RF25 | Consultar experiência | Validado | — |
-| RF36 | Buscar ofertas | Validado | — |
-| RF39 | Disponibilizar contato direto | Validado | O chat direto por ser trocado por uma implementação utilizando o Whatsapp |
+| RF36 | Buscar ofertas | Validado | Através da lupá de buscas. |
+| RF39 | Disponibilizar contato direto | Validado | O chat direto por ser trocado por uma implementação utilizando o Whatsapp. |
 | RF44 | Solicitar pré-reserva de experiência | Validado | — |
 | RF45 | Consultar pré-reserva | Validado | — |
 | RF46 | Cancelar solicitação de pré-reserva | Validado | — |
