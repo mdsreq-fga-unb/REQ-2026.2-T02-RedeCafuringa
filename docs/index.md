@@ -1,6 +1,6 @@
 # Visão do Produto e Projeto
 
-<span class="version-badge">Versão 1.5</span>
+<span class="version-badge">Versão 1.7</span>
 
 Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado ao gerenciamento e à transparência das demandas do ecossistema local. Desenvolvido no âmbito da disciplina de Requisitos de Software, este espaço reúne todo o artefatiamento técnico, mapeamento de processos e especificações do sistema. 
 
@@ -114,3 +114,4 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | 28/09/26 | 1.4 | Adição do tópico "Documentação Complementar" da ativiade 4 publicada no aprender (Valor de Negócio, Esforço Técnico, Consolidação das Atividades, Construção da Matriz 4x4, Definição dos RFs, Tratamento dos RNFs, Validação do MVP) | Beatriz Lins |
 | 29/09/26 | 1.5 | Organização de todos os tópicos da atividade 4 e geração de imagens complementares, correção de todo tópico 5 da entrega 1 conforme novas atualizações do projeto e adição das histórias de usuário e das evidências | Beatriz Lins |
 | 03/10/26 | 1.6 | Correção do Cronograma de acordo com a issue aberta pelo professor | Luccas Rodrigues |
+| 07/10/26 | 1.7 | Adição dos requisitos de negócio, usuário e produto para cada fase do processo AUP (concepção, elaboração, construção e transição) | Beatriz Lins |
