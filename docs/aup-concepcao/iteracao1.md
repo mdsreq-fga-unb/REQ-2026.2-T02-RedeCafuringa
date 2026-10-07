@@ -17,15 +17,17 @@
 
 ## Declaração de Requisitos
 
-??? info "Redação Estruturada do Documento de Visão"
+### Requisito de Negócio - Narrativas Descritivas
+Essas narrativas são ideais para expressar e explorar os problemas centrais, as metas estratégicas e as restrições externas que justificam o projeto.
 
-    Na Iteração 1, a equipe iniciou a documentação em um arquivo compartilhado do Google Docs. A decisão funcionou para escrever em conjunto, mas foi um erro para rastrear o processo, pois a equipe ficou focada em definir corretamente os tópicos da primeira unidade (tópicos 1 e 2) e acabou perdendo parte das comprovações do caminho percorrido até chegar nas decisões finais. Reuniões de brainstorming iniciais e presenciais pós aula, por exemplo.
+??? info "Narrativas em Texto Livre"
+    <iframe src="https://docs.google.com/document/d/e/2PACX-1vT69mXgAy-mJQmvIL2-lPRW2GcgfRSiu19RMG1jaiiAOcC-Uwq2z73ebVURO8qHmzyNj7m31yc8wP8t/pub?embedded=true"width="100%" height="500" frameborder="0"></iframe>
 
-    O principal problema foi a falta de evidências do processo. O histórico de versões do documento é difícil de visualizar e consultar, a reunião de primeiro contato com a cliente contou somente com 2 membros do grupo pela dificuldade inicial de alinhamento de agendas e outras 2 reuniões dessa etapa inicial também não tiveram registro em vídeo. A partir do meio da Unidade 1, a equipe corrigiu esse ponto e passou a registrar melhor as atividades, validações e entregas.
+### Requisito de Usuário - Orientadas a Valor
+As histórias são mantidas em um nível mais alto, focando estritamente na necessidade e no impacto real para as pessoas envolvidas, sem entrar em detalhes de regras lógicas do sistema.
 
-    O brainstorming foi realizado durante as reuniões da equipe. As ideias finais foram consolidadas primeiro no documento compartilhado e, posteriormente, migradas para o GitPages.
-
-    A análise inicial usou como base o material de Requisitos de Software, tais como o Template das entregas, o livro "Requisitos de Software" do professor George Marsicano e as redes sociais ativas da Cafuringa.
+??? info "Histórias de Usuário (Preliminar)"
+    - ![História de Usuário](../../img/aup-concepcao/historia_usuario.jpeg)
 
 ---
 
