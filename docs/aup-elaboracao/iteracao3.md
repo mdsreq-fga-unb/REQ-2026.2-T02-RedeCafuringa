@@ -94,10 +94,45 @@
 
     - ![MoScoW](../../img/aup-elaboracao/moscow_final.png)
 
-??? info "Histórias de Usuário"
-    Tradução e escrita das necessidades elicitadas em formato narrativo sob a perspectiva do usuário final (focando em quem, o que e por que), incluindo a definição dos critérios de aceitação para cada funcionalidade.
+### Requisito de Negócio - Narrativas Descritivas
+O storyboard organiza a narrativa em passos sequenciais, ilustrando como o fluxo de valor do negócio é realizado e como as restrições ou metas estratégicas são atendidas, sem ainda detalhar telas ou cliques específicos de sistema.
+??? info "Storyboard"
+    - ![Storyboard](../../img/aup-elaboracao/storyboard.png)
 
+### Requisito de Usuário - Oriantadas a Valor
+As histórias de usuário são interessantes para o nível de Requisito de Usuário porque focam no "O Quê" (necessidades, expectativas e serviços esperados na interação), conectando diretamente a tecnologia ao valor percebido pelas pessoas.
+??? info "Histórias de Usuário"
     - ![Histórias de Usuário](../../img/aup-elaboracao/historias_usuario.jpeg)
+
+### Requisito de Produto - Declarações Estruturadas
+Os critérios de aceitação são a técnica ideal para o nível de Requisito de Produto porque têm a função principal de transformar intenções ou necessidades humanas num conjunto de condições objetivas, lógicas e estritamente verificáveis.
+??? info "Critérios de Aceitação"
+    | História de Usuário | Critérios de Aceitação |
+    |---|---|
+    | **US01** | - Permitir o cadastro de consumidor com os dados obrigatórios.<br>- Validar os campos preenchidos antes de concluir o cadastro.<br>- Impedir o cadastro de e-mail já utilizado.<br>- Exibir confirmação após o cadastro realizado com sucesso. |
+    | **US02** | - Permitir o cadastro de produtor com seus dados obrigatórios.<br>- Permitir informar os dados da propriedade vinculada ao produtor.<br>- Validar os campos obrigatórios.<br>- Exibir confirmação após o cadastro. |
+    | **US03** | - Permitir o cadastro de usuário administrativo.<br>- Restringir o acesso administrativo a usuários autorizados.<br>- Validar os dados obrigatórios do administrador.<br>- Confirmar a criação do usuário. |
+    | **US04** | - Permitir o cadastro de perfil coletivo, como associação ou ecovila.<br>- Permitir vincular propriedades e informações do grupo.<br>- Permitir informar os dados de identificação do coletivo.<br>- Exibir o perfil cadastrado corretamente. |
+    | **US05** | - Permitir que usuários cadastrados realizem login.<br>- Validar e-mail/usuário e senha.<br>- Informar quando as credenciais forem inválidas.<br>- Redirecionar o usuário para sua área correspondente após autenticação. |
+    | **US06** | - Permitir solicitar a recuperação de acesso.<br>- Validar a existência do usuário informado.<br>- Disponibilizar mecanismo para redefinição da senha.<br>- Permitir acesso novamente após a redefinição. |
+    | **US07** | - Permitir ao produtor cadastrar sua propriedade/negócio.<br>- Permitir informar nome, descrição, localização e demais dados necessários.<br>- Permitir editar as informações posteriormente.<br>- Exibir os dados cadastrados no perfil público. |
+    | **US08** | - Permitir consultar o perfil de um produtor.<br>- Exibir informações de identificação, localização e descrição.<br>- Exibir a situação de certificação informada.<br>- Permitir acessar os produtos e/ou experiências vinculados ao produtor. |
+    | **US09** | - Permitir ao produtor cadastrar produtos.<br>- Permitir informar nome, descrição, unidade, preço, disponibilidade e demais dados obrigatórios.<br>- Permitir adicionar imagem do produto.<br>- Validar os campos obrigatórios antes de salvar. |
+    | **US10** | - Permitir consultar os produtos cadastrados por um produtor.<br>- Exibir informações relevantes do produto, incluindo disponibilidade e preço.<br>- Permitir visualizar diferentes produtos do mesmo produtor.<br>- Não exibir produtos indisponíveis como disponíveis. |
+    | **US11** | - Permitir informar e visualizar a situação de certificação do produtor.<br>- Exibir de forma clara se o produtor é certificado, está em processo ou não possui certificação formal.<br>- Permitir informar o mecanismo de certificação quando aplicável.<br>- Exibir o número de cadastro quando houver. |
+    | **US12** | - Permitir cadastrar experiências/atividades oferecidas pelo produtor ou propriedade.<br>- Permitir informar descrição, localização, condições e disponibilidade.<br>- Permitir editar ou remover uma experiência cadastrada.<br>- Exibir a experiência no perfil da propriedade. |
+    | **US13** | - Permitir cadastrar uma propriedade com sua localização geográfica.<br>- Permitir informar descrição e características da propriedade.<br>- Permitir associar produtos, atrativos e experiências à propriedade.<br>- Exibir a propriedade corretamente no sistema. |
+    | **US14** | - Permitir realizar busca por produtores, produtos ou experiências.<br>- Permitir utilizar filtros disponíveis na plataforma.<br>- Retornar resultados compatíveis com os critérios informados.<br>- Informar quando não houver resultados. |
+    | **US15** | - Permitir ao consumidor visualizar os canais de contato disponibilizados pelo produtor após a conexão.<br>- Exibir os dados de contato somente conforme as regras de privacidade definidas.<br>- Permitir utilizar o canal de contato informado.<br>- Não cobrar comissão ou taxa pela conexão. |
+    | **US16** | - Permitir ao consumidor solicitar uma pré-reserva de produto, visita ou experiência.<br>- Exigir o preenchimento das informações necessárias para a solicitação.<br>- Registrar a solicitação com data e status.<br>- Informar ao consumidor que a solicitação foi enviada. |
+    | **US17** | - Permitir ao produtor visualizar as solicitações de pré-reserva recebidas.<br>- Exibir informações necessárias para análise da solicitação.<br>- Permitir aceitar ou recusar a solicitação.<br>- Atualizar o status da solicitação após a decisão. |
+    | **US18** | - Permitir ao produtor consultar e gerenciar suas pré-reservas.<br>- Exibir solicitações pendentes, aceitas e recusadas.<br>- Permitir identificar data, horário e tipo da solicitação.<br>- Manter o histórico das solicitações realizadas. |
+    | **US19** | - Permitir o acompanhamento do status de uma pré-reserva.<br>- Informar ao consumidor quando a solicitação estiver pendente, aceita ou recusada.<br>- Atualizar o status após a resposta do produtor.<br>- Manter o consumidor informado sobre alterações relevantes. |
+    | **US20** | - Permitir a conexão direta entre consumidor e produtor após a confirmação da solicitação.<br>- Liberar os dados de contato conforme as regras estabelecidas.<br>- Não inserir intermediários na comunicação entre as partes.<br>- Não cobrar taxas ou comissões pela conexão. |
+
+
+
+
 
 ---
 
