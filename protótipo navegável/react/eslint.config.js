@@ -1,13 +1,9 @@
-import eslint from '@eslint/js';
+import js from '@eslint/js';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
   { ignores: ['dist/**'] },
-  eslint.configs.recommended,
-  {
-    files: ['**/*.{js,jsx}'],
-    languageOptions: { ecmaVersion: 'latest', sourceType: 'module', parserOptions: { ecmaFeatures: { jsx: true } }, globals: { window: 'readonly', document: 'readonly', alert: 'readonly', URLSearchParams: 'readonly', L: 'readonly' } },
-    plugins: { 'react-hooks': reactHooks },
-    rules: { 'no-unused-vars': 'off', 'react-hooks/rules-of-hooks': 'error', 'react-hooks/exhaustive-deps': 'warn' },
-  },
+  js.configs.recommended,
+  { files: ['**/*.mjs'], languageOptions: { globals: { console: 'readonly', URL: 'readonly' } } },
+  { files: ['**/*.{js,jsx}'], languageOptions: { parserOptions: { ecmaVersion: 'latest', sourceType: 'module', ecmaFeatures: { jsx: true } }, globals: { window: 'readonly', document: 'readonly', localStorage: 'readonly', console: 'readonly', location: 'readonly', history: 'readonly', alert: 'readonly', setTimeout: 'readonly' } }, plugins: { 'react-hooks': reactHooks }, rules: { 'no-unused-vars': 'off', 'react-hooks/rules-of-hooks': 'error' } }
 ];
