@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { canAccess, transitionReservation, formatDate, formatTime } from '../src/flow-model.js';
+
+const entrypoint = await readFile(new URL('../src/main.jsx', import.meta.url), 'utf8');
+const styles = await readFile(new URL('../src/styles.css', import.meta.url), 'utf8');
+const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+
+assert.equal(canAccess('consumidor', 'reserve'), true);
+assert.equal(canAccess('consumidor', 'producer'), false);
+assert.equal(canAccess('produtor', 'users'), false);
+assert.equal(canAccess('admin', 'users'), true);
+assert.equal(transitionReservation('pending', 'cancel'), 'cancelled');
+assert.equal(transitionReservation('pending', 'reject'), 'rejected');
+assert.equal(transitionReservation('pending', 'accept'), 'accepted');
+assert.equal(transitionReservation('cancelled', 'accept'), 'cancelled');
+assert.equal(transitionReservation('accepted', 'cancelByProducer'), 'cancelled');
+assert.equal(transitionReservation('accepted', 'cancelByConsumer'), 'cancelled');
+assert.equal(formatDate('2026-10-17'), '17/10/2026');
+assert.equal(formatTime('09:00'), '09h00');
+assert.match(entrypoint, /createRoot\(document\.getElementById\('root'\)\)/);
+assert.match(entrypoint, /import React, \{ useEffect, useState \} from 'react';/);
+assert.match(entrypoint, /className="header-profile"/);
+assert.match(entrypoint, /className="profile-avatar"/);
+assert.match(entrypoint, /aria-label=\{`Abrir perfil de \$\{me\.name\}`\}/);
+assert.match(entrypoint, /header-login/);
+assert.match(entrypoint, /to="\/entrar"/);
+assert.match(entrypoint, /Resposta enviada/);
+assert.match(entrypoint, /O status da solicitação foi atualizado/);
+assert.match(entrypoint, /cancelOrigin:'producer'/);
+assert.match(entrypoint, /CANCELADO PELO PRODUTOR/);
+assert.match(entrypoint, /navigate\(-1\)|nav\(-1\)/);
+assert.match(styles, /\.profile-copy strong\{[^}]*text-overflow:ellipsis/);
+assert.doesNotMatch(entrypoint, /from ['"]leaflet['"]/);
+assert.match(html, /<div id="root"><\/div>/);
+assert.match(html, /<script type="module" src="\/src\/main\.jsx"><\/script>/);
+console.log('flow-model: 19 assertions passed');
