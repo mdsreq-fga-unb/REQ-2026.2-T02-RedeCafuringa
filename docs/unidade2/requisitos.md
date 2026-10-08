@@ -1,4 +1,12 @@
 <span class="version-badge">Unidade 02</span>
+## Formas de Declaração de Requisitos
+
+| Tipo de Requisito | Concepção | Elaboração | Construção | Transição |
+|---|---|---|---|---|
+| **Requisitos de Negócio** | Narrativas Descritivas (Narrativas em Texto Livre) | Narrativas Descritivas (Storyboards Descritivos) | Catálogos e Artefatos Técnicos (Catálogo de Metas) | Catálogos e Artefatos Técnicos (Catálogo de Metas) |
+| **Requisitos de Usuário** | Orientadas a Valor (Histórias de Usuário preliminar) | Orientadas a Valor (Histórias de Usuário) | Orientadas a Valor (Checklist Estruturados RFs e RNFs) | Orientadas a Valor (Checklist Estruturados RNFs) |
+| **Requisitos de Produto** | **Não realizado nessa fase** | Declarações Estruturadas (Critérios de Aceitação) | Declarações Estruturadas (Given/When/Then) | Declarações Estruturadas (Critérios de Aceitação) |
+
 
 Abaixo, são apresentados os requisitos levantados para o desenvolvimento da plataforma da Rede Cafuringa. Este documento está estruturado em duas seções principais: a primeira aborda os Requisitos Funcionais, detalhando as ações e funcionalidades que o sistema deve oferecer para atender às necessidades de produtores, consumidores e administradores (como cadastros, consultas e gestão de reservas). A segunda seção lista os Requisitos Não Funcionais, estabelecendo os critérios de qualidade, segurança, desempenho e usabilidade da aplicação.
 
