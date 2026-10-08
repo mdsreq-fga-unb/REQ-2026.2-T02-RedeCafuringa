@@ -1,49 +1,32 @@
-# Protótipo navegável React — Rede Cafuringa
+# Protótipo navegável React
 
-Implementação demonstrativa do fluxo expandido **Território Vivo**, sem backend e sem integração financeira real.
-
-## Executar localmente
-
-Requisitos: Node.js 18+ e npm.
+## Executar
 
 ```bash
 npm install
 npm run dev
 ```
 
-Abra a URL exibida pelo Vite (normalmente `http://localhost:5173`). Para validar a build:
+Verificações:
 
 ```bash
+npm run lint
+npm run test
 npm run build
 ```
 
-## Rotas de demonstração
+## Demonstração
 
-A navegação usa hash e pode ser acessada diretamente:
+- `welcome`: escolha consumidor, produtor ou admin.
+- Consumidor: login → explorar → detalhe de experiência → pré-reserva → minhas pré-reservas.
+- Produtor: login → painel → cadastrar oferta ou responder pré-reserva.
+- Produtor: aceitar ou recusar uma pré-reserva → confirmação “Resposta enviada”; após o aceite também é possível cancelar por imprevisto, com motivo obrigatório e notificação ao consumidor.
+- Cancelamento pelo produtor exige justificativa não vazia (mínimo de 10 caracteres), preservada no estado em memória e exibida apenas ao consumidor relacionado; reservas canceladas não aceitam novas ações.
+- Admin: `#admin-select` → login admin → usuários cadastrados.
+- Acesso direto a uma área incompatível mostra `Acesso restrito`.
 
-- `#home` — landing page
-- `#about` — missão e contexto da Rede Cafuringa
-- `#how` — como funciona: descoberta até feedback
-- `#explore` — busca, filtros, lista e mapa
-- `#explore?kind=produto` — catálogo filtrado de produtos
-- `#experiences` / `#experiences?kind=experiencia` — curadoria de experiências
-- `#experiences?kind=workshop` — workshops filtrados
-- `#detail-trilha`, `#detail-pousada`, `#detail-workshop`, `#detail-cesta` — detalhes por tipo
-- `#reserve-trilha`, `#reserve-pousada`, `#reserve-workshop` — pré-reserva parametrizada + Pix simulado
-- `#producer-profile-veredas`, `#producer-profile-ipe`, `#producer-profile-raizes`, `#producer-profile-cerrado` — perfis dos anfitriões
-- `#contact-veredas` — contato demonstrativo com anfitrião
-- `#assistant` — assistente determinístico de descoberta
-- `#account`, `#requests`, `#notifications`, `#feedback` — conta, solicitações, avisos e feedback privado
-- `#producer`, `#producer-request`, `#new-experience` — área do produtor, solicitação e cadastro com assistente mockado
-- `#admin` — painel administrativo demonstrativo
-- `#login`, `#forgot-password` — acesso e recuperação simulados
-- Qualquer hash não reconhecido — tela 404 com links para início e exploração
+Rotas de demonstração adicionais: `#admin-select`, `#forgot`, `#sent`, `#products`, `#experiences`, `#detail-mel`, `#detail-sabores`, `#detail-trilha`, `#reserve-sabores`, `#producer-profile`, `#contact`, `#user-producer` e `#user-consumer`.
 
-## Decisões de protótipo
+Todos os dados são locais e simulados. Não há backend, autenticação real, e-mail real, WhatsApp externo, Pix, pagamentos, mapa operacional ou persistência remota. A pré-reserva é sempre distinta de uma reserva confirmada; aceite e cancelamento do produtor são simulados localmente e sincronizados entre as telas dos dois perfis durante a sessão.
 
-- Tokens são reutilizados diretamente de `../assets/design-tokens.css`.
-- Ícones são SVG inline acessíveis; não há emojis estruturais.
-- Leaflet + OpenStreetMap é usado no mapa. Se os tiles falharem, o mapa mantém uma camada visual de fallback e pins aproximados.
-- Localização exata, disponibilidade confirmada, certificações e valores não são inventados.
-- Pix, respostas do anfitrião e estados de conta são simulados localmente.
-- Os arquivos do protótipo standalone não são modificados pela versão React; os tokens compartilhados ficam em `protótipo navegável/assets/`.
+Limitações conhecidas: validação de credenciais, logout, recuperação de nova senha e comparação visual com o Figma ainda dependem da próxima rodada de inspeção.
