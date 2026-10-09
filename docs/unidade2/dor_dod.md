@@ -26,7 +26,6 @@ O DoR é um acordo entre a equipe Bytelab e o cliente, que atua como Dono do Pro
 
 * **O requisito está implementado no protótipo e validado?** Os requisitos devem ser sempre inseridos e adequados aos protóptipos e devem ser validados com o cliente após sua inclusão.
 
----
 
 ## 9.2 Definition of Done (DoD)
 
@@ -55,3 +54,41 @@ O DoD é um acordo que demonstra a qualidade da US produzida, indicando que *"Do
 * **Está livre de defeitos críticos?** Não deve haver defeitos conhecidos de severidade alta ou crítica associados à US.
 
 * **Está documentado?** O status da US no backlog, a matriz de rastreabilidade e as evidências da iteração no GitPages devem estar atualizados.
+
+## Modelos de aplicação DoR e DoD
+
+### Checklist do DoR
+
+| Check | Pergunta |
+| :---: | :--- |
+| ☐ | A US possui definição clara e informação necessária para ser trabalhada? |
+| ☐ | O requisito está representado por uma história de usuário? |
+| ☐ | A US está rastreada aos requisitos de origem? |
+| ☐ | A US faz parte do escopo do MVP? |
+| ☐ | A US está coberta por critérios de aceite? |
+| ☐ | Os RNFs e as restrições legais aplicáveis estão identificados? |
+| ☐ | A US está mapeada para uma interface (quando necessário)? |
+| ☐ | A US cabe em uma iteração? |
+| ☐ | As dependências estão mapeadas? |
+| ☐ | Os responsáveis estão definidos? |
+| ☐ | O requisito está implementado no protótipo e validado? |
+
+---
+
+
+### Checklist do DoD
+
+| Check | Pergunta |
+| :---: | :--- |
+| ☐ | Entrega um incremento do produto? |
+| ☐ | Contempla os critérios de aceite estabelecidos? |
+| ☐ | O desenvolvimento foi concluído integralmente? |
+| ☐ | Os testes foram executados e aprovados? |
+| ☐ | Está aderente aos padrões de codificação? |
+| ☐ | A funcionalidade foi revisada pela equipe? |
+| ☐ | Mantém os índices de performance do produto? |
+| ☐ | Atende aos requisitos de acessibilidade e responsividade? |
+| ☐ | Preserva a segurança e a privacidade dos dados? |
+| ☐ | Trata os erros do usuário? |
+| ☐ | Está livre de defeitos críticos? |
+| ☐ | Está documentado? |
