@@ -12,7 +12,7 @@ O DoR é um acordo entre a equipe Bytelab e o cliente, que atua como Dono do Pro
 
 * **A US faz parte do escopo do MVP?** A US deve compor os [requisitos aprovados para o MVP](MVP.md) ou ter sido formalmente repriorizada com o cliente.
 
-* **A US está coberta por critérios de aceite e BDD?** Critérios de aceitação objetivos e especificações no formato *Behavior Driven Development* (BDD — *Dado / Quando / Então*) devem estar presentes, servindo de base para os testes escritos no TDD.
+* **A US está coberta por critérios de aceite?** Critérios de aceitação objetivos e verificáveis devem estar presentes, servindo de base para os testes escritos no TDD.
 
 * **Os RNFs e as restrições legais aplicáveis estão identificados?** Os Requisitos Não Funcionais que restringem a US (ex.: RNF04 — Acessibilidade, RNF05 — Responsividade, RNF08 — Controle de acesso, RNF11 — Proteção de dados), as regras da LGPD e do ECA Digital e os [ajustes solicitados pelo cliente](MVP.md#75-ajustes-solicitados-pelo-cliente) que impactam a US devem estar registrados.
 
@@ -24,6 +24,8 @@ O DoR é um acordo entre a equipe Bytelab e o cliente, que atua como Dono do Pro
 
 * **Os responsáveis estão definidos?** A US deve possuir ao menos um responsável pela implementação e um revisor designados no GitHub Projects.
 
+* **O requisito está implementado no protótipo e validado?** Os requisitos devem ser sempre inseridos e adequados aos protóptipos e devem ser validados com o cliente após sua inclusão.
+
 ---
 
 ## 9.2 Definition of Done (DoD)
@@ -32,7 +34,7 @@ O DoD é um acordo que demonstra a qualidade da US produzida, indicando que *"Do
 
 * **Entrega um incremento do produto?** A funcionalidade desenvolvida deve estar integrada à branch principal, com o *build* aprovado no pipeline de CI, e disponível em ambiente de homologação, resultando em um incremento utilizável.
 
-* **Contempla os critérios de aceite estabelecidos?** Todos os critérios de aceitação definidos no DoR devem ser cumpridos, com a execução dos cenários *Dado / Quando / Então* comprovando o comportamento esperado.
+* **Contempla os critérios de aceite estabelecidos?** Todos os critérios de aceitação definidos no DoR devem ser cumpridos, garantindo que o comportamento esperado da US foi atingido.
 
 * **O desenvolvimento foi concluído integralmente?** A funcionalidade deve estar implementada de acordo com os requisitos estabelecidos e em conformidade com o protótipo navegável.
 
