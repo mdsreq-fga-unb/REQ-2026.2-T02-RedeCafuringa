@@ -1,4 +1,9 @@
 <span class="version-badge">Unidade 02</span>
+## 10 Backlog do Produto
+
+Todas as histórias de usuários relacionadas, a seguir, são derivadas da lista de requisitos
+funcionais apresentados, anteriormente, nesta documentação. Esta lista pode sofrer ajustes
+sempre que necessário, durante o desenvolvimento do produto da Rede Cafuringa.
 
 ## 10.1 Backlog Geral da Rede Cafuringa
 
@@ -68,3 +73,85 @@ A tabela registra **relações diretas**, para não repetir em cada linha requis
 | **RNF12 — Compatibilidade entre Navegadores** | Todos os principais fluxos e interfaces nos navegadores e ambientes de teste especificados. |
 | **RNF13 — Baixo Custo Operacional** | Restrição organizacional sobre a arquitetura e **todas as funcionalidades essenciais do MVP**; não impõe automaticamente gratuidade a funcionalidades posteriores ao MVP. |
 | **RNF14 — Aplicação Web Progressiva** | Propriedade de disponibilização e instalabilidade da aplicação como um todo, quando suportada pelo navegador. |
+
+
+## 10.2 Backlog Priorizado — MVP da Rede Cafuringa
+## Critérios de Priorização do Backlog
+
+Para a priorização do backlog, foram utilizados os seguintes critérios:
+
+- **VN = Valor de Negócio:** escala de 1 a 4, derivada do Método MoSCoW.
+- **ES = Esforço:** escala de 1 a 4.
+- **CX = Complexidade:** escala de 1 a 4.
+- **CP = Capacidade:** escala de 1 a 4.
+
+- **Prioridade: Alta (Média ≥ 3,00), Média (2,50 ≤ Média < 3,00), Baixa (Média < 2,50).
+### 1. Pontuação Técnica (Esforço Técnico)
+
+Para representar o "custo técnico" da História de Usuário (US), foi calculada a média simples das variáveis técnicas:
+
+**Fórmula:**
+
+`ET = (ES + CX + CP) / 3`
+
+Assim, a pontuação técnica (**Esforço Técnico — ET**) se mantém na escala de 1 a 4.
+
+### 2. Índice de Prioridade (Média Geral)
+
+Para definir a prioridade combinando o valor entregue ao usuário com o esforço de construção, utilizou-se a média simples:
+
+**Fórmula:**
+
+`Média = (VN + ET) / 2`
+
+Quanto maior a Média, maior a prioridade no backlog.
+
+### 3. Interpretação dos Resultados
+
+- **Média alta:** Requisito crítico para o negócio (*Must/Should Have*), com alto impacto imediato no MVP.
+
+- **Média média:** Funcionalidade de alto valor, mas que apresenta um equilíbrio razoável e menor urgência técnica relativa.
+
+- **Média baixa:** Funcionalidade importante, mas com o menor impacto comparativo dentro do escopo fechado do MVP.
+
+### 4. Faixas de Decisão
+
+Para refletir adequadamente a concentração de notas altas inerentes a um MVP, a régua de corte foi ajustada da seguinte maneira:
+
+| Média | Classificação |
+|---|---|
+| Média ≥ 3,00 | **Alta prioridade** |
+| 2,50 ≤ Média < 3,00 | **Média prioridade** |
+| Média < 2,50 | **Baixa prioridade** |
+
+A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**, considerando os critérios e fórmulas apresentados e suas relações com as História de Usuário.
+## Tabela de backlog priorizado
+| US | Descrição da US | VN | ES | CX | CP | ET | Média (VN e ET) | Quadrante | Prioridade escolhida |
+|:---:|---|:---:|:---:|:---:|:---:|:---:|:---:|---|:---:|
+| **US15** | Disponibilizar contato direto | 4 | 4 | 4 | 4 | 4,00 | **4,00** | Q2 — Alto valor / Alta carga técnica | **Alta** |
+| **US04** | Consultar usuários cadastrados | 4 | 2 | 2 | 2 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
+| **US05** | Autenticar usuário | 4 | 2 | 3 | 1 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
+| **US08** | Consultar perfil do produtor | 4 | 2 | 2 | 2 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
+| **US09** | Cadastrar produto | 4 | 2 | 2 | 2 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
+| **US10** | Consultar catálogo de produtos | 4 | 2 | 3 | 1 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
+| **US11** | Consultar detalhes do produto | 4 | 2 | 2 | 2 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
+| **US12** | Cadastrar experiência | 4 | 2 | 3 | 1 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
+| **US13** | Consultar experiência | 4 | 2 | 2 | 2 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
+| **US14** | Buscar ofertas | 3 | 3 | 4 | 2 | 3,00 | **3,00** | Q2 — Alto valor / Alta carga técnica | **Alta** |
+| **US16** | Solicitar pré-reserva de experiência | 3 | 3 | 3 | 3 | 3,00 | **3,00** | Q2 — Alto valor / Alta carga técnica | **Alta** |
+| **US19** | Responder solicitação de pré-reserva | 3 | 3 | 3 | 3 | 3,00 | **3,00** | Q2 — Alto valor / Alta carga técnica | **Alta** |
+| **US20** | Notificar alteração de pré-reserva | 3 | 3 | 4 | 2 | 3,00 | **3,00** | Q2 — Alto valor / Alta carga técnica | **Alta** |
+| **US01** | Cadastrar perfil de consumidor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
+| **US02** | Cadastrar perfil de produtor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
+| **US03** | Cadastrar usuário administrador | 4 | 1 | 1 | 1 | 1,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
+| **US06** | Recuperar acesso à conta | 3 | 2 | 3 | 1 | 2,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
+| **US17** | Consultar pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
+| **US18** | Cancelar solicitação de pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
+| **US07** | Registrar trajetória do produtor | 3 | 1 | 1 | 1 | 1,00 | **2,00** | Q1 — Alto valor / Baixa carga técnica | **Baixa** |
+
+## Resultado da priorização
+
+- **Alta prioridade:** 13 histórias.
+- **Média prioridade:** 6 histórias.
+- **Baixa prioridade:** 1 história.
+- **Total do MVP:** 20 histórias.
