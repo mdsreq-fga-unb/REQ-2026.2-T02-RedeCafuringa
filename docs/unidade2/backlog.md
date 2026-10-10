@@ -126,28 +126,28 @@ Para refletir adequadamente a concentração de notas altas inerentes a um MVP, 
 
 A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**, considerando os critérios e fórmulas apresentados e suas relações com as História de Usuário.
 ## Tabela de backlog priorizado
-| US | Descrição da US | VN | ES | CX | CP | ET | Média (VN e ET) | Quadrante | Prioridade escolhida |
-|:---:|---|:---:|:---:|:---:|:---:|:---:|:---:|---|:---:|
-| **US15** | Disponibilizar contato direto | 4 | 4 | 4 | 4 | 4,00 | **4,00** | Q2 — Alto valor / Alta carga técnica | **Alta** |
-| **US04** | Consultar usuários cadastrados | 4 | 2 | 2 | 2 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
-| **US05** | Autenticar usuário | 4 | 2 | 3 | 1 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
-| **US08** | Consultar perfil do produtor | 4 | 2 | 2 | 2 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
-| **US09** | Cadastrar produto | 4 | 2 | 2 | 2 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
-| **US10** | Consultar catálogo de produtos | 4 | 2 | 3 | 1 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
-| **US11** | Consultar detalhes do produto | 4 | 2 | 2 | 2 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
-| **US12** | Cadastrar experiência | 4 | 2 | 3 | 1 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
-| **US13** | Consultar experiência | 4 | 2 | 2 | 2 | 2,00 | **3,00** | Q1 — Alto valor / Baixa carga técnica | **Alta** |
-| **US14** | Buscar ofertas | 3 | 3 | 4 | 2 | 3,00 | **3,00** | Q2 — Alto valor / Alta carga técnica | **Alta** |
-| **US16** | Solicitar pré-reserva de experiência | 3 | 3 | 3 | 3 | 3,00 | **3,00** | Q2 — Alto valor / Alta carga técnica | **Alta** |
-| **US19** | Responder solicitação de pré-reserva | 3 | 3 | 3 | 3 | 3,00 | **3,00** | Q2 — Alto valor / Alta carga técnica | **Alta** |
-| **US20** | Notificar alteração de pré-reserva | 3 | 3 | 4 | 2 | 3,00 | **3,00** | Q2 — Alto valor / Alta carga técnica | **Alta** |
-| **US01** | Cadastrar perfil de consumidor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
-| **US02** | Cadastrar perfil de produtor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
-| **US03** | Cadastrar usuário administrador | 4 | 1 | 1 | 1 | 1,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
-| **US06** | Recuperar acesso à conta | 3 | 2 | 3 | 1 | 2,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
-| **US17** | Consultar pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
-| **US18** | Cancelar solicitação de pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | Q1 — Alto valor / Baixa carga técnica | **Média** |
-| **US07** | Registrar trajetória do produtor | 3 | 1 | 1 | 1 | 1,00 | **2,00** | Q1 — Alto valor / Baixa carga técnica | **Baixa** |
+| US | Descrição da US | VN | ES | CX | CP | ET | Média (VN e ET) | Prioridade escolhida |
+|:---:|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **US15** | Disponibilizar contato direto | 4 | 4 | 4 | 4 | 4,00 | **4,00** | **Alta** |
+| **US04** | Consultar usuários cadastrados | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **US05** | Autenticar usuário | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
+| **US08** | Consultar perfil do produtor | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **US09** | Cadastrar produto | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **US10** | Consultar catálogo de produtos | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
+| **US11** | Consultar detalhes do produto | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **US12** | Cadastrar experiência | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
+| **US13** | Consultar experiência | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **US14** | Buscar ofertas | 3 | 3 | 4 | 2 | 3,00 | **3,00** | **Alta** |
+| **US16** | Solicitar pré-reserva de experiência | 3 | 3 | 3 | 3 | 3,00 | **3,00** | **Alta** |
+| **US19** | Responder solicitação de pré-reserva | 3 | 3 | 3 | 3 | 3,00 | **3,00** | **Alta** |
+| **US20** | Notificar alteração de pré-reserva | 3 | 3 | 4 | 2 | 3,00 | **3,00** | **Alta** |
+| **US01** | Cadastrar perfil de consumidor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
+| **US02** | Cadastrar perfil de produtor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
+| **US03** | Cadastrar usuário administrador | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
+| **US06** | Recuperar acesso à conta | 3 | 2 | 3 | 1 | 2,00 | **2,50** | **Média** |
+| **US17** | Consultar pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
+| **US18** | Cancelar solicitação de pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
+| **US07** | Registrar trajetória do produtor | 3 | 1 | 1 | 1 | 1,00 | **2,00** | **Baixa** |
 
 ## Resultado da priorização
 
