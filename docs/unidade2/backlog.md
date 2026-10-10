@@ -1,5 +1,4 @@
 <span class="version-badge">Unidade 02</span>
-## 10 Backlog do Produto
 
 Todas as histórias de usuários relacionadas, a seguir, são derivadas da lista de requisitos
 funcionais apresentados, anteriormente, nesta documentação. Esta lista pode sofrer ajustes
