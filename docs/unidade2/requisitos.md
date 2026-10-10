@@ -233,6 +233,8 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 
 **Critério verificável:** A aplicação deve possuir manifesto web válido e os recursos necessários para ser reconhecida como instalável em navegadores compatíveis, sem exigir obrigatoriamente sua distribuição por lojas de aplicativos.
 
+---
+
 ### RNF15 — Adequação ao ECA Digital
 **Descrição:**A aplicação deve assegurar a proteção integral de crianças e adolescentes no ambiente digital, garantindo que a exibição de conteúdos, as interações na plataforma e o tratamento de dados estejam em conformidade com as diretrizes do Estatuto da Criança e do Adolescente (ECA).
 
@@ -241,3 +243,18 @@ Os requisitos não funcionais definem propriedades de qualidade, restrições e 
 **Propriedade ou restrição:**Proteção de direitos, segurança de conteúdo e privacidade de menores de idade.
 
 **Critério verificável:**O sistema deve exigir a confirmação de maioridade durante o cadastro de usuários e, caso permita o acesso ou cadastro de menores de 18 anos, deve implementar a exigência de consentimento explícito de um responsável legal. Além disso, a plataforma deve garantir que nenhum dado pessoal de crianças ou adolescentes seja exposto publicamente nas interfaces de busca, perfis ou feedbacks.
+
+---
+
+## Matriz-síntese de Rastreabilidade
+
+A matriz, a seguir, representa a rastreabilidade entre objetivos específicos (OE), características de produto (CP), requisitos funcionais (RFs) e não funcionais (RNFs). 
+
+| **Contribuição principal** | **Contribuição secundária** | **CP** | **RFs relacionados** | **RNFs relacionados** |
+|:---|:---|:---:|:---|:---|
+| OE2 | OE1 | CP1 | RF01, RF02, RF03, RF04, RF05, RF06, RF07, RF08, RF09, RF10, RF11, RF12, RF13, RF14, RF15, RF16 | RNF03, RNF07, RNF08, RNF11, RNF15 |
+| OE2 | OE1, OE3 | CP2 | RF17, RF18, RF19, RF20, RF21, RF22 | RNF01, RNF02, RNF06 |
+| OE2 | OE1, OE3 | CP3 | RF23, RF24, RF25, RF26, RF27, RF28, RF29, RF30, RF31, RF32, RF33, RF34 | RNF01, RNF02, RNF06 |
+| OE2 | OE1, OE3 | CP4 | RF35, RF36, RF37, RF38 | RNF02, RNF03 |
+| OE3 | OE1 | CP5 | RF39, RF40, RF41, RF42, RF43 | RNF08, RNF09, RNF10, RNF11 |
+| OE3 | OE1 | CP6 | RF44, RF45, RF46, RF47, RF48 | RNF03, RNF07, RNF08, RNF11 |
