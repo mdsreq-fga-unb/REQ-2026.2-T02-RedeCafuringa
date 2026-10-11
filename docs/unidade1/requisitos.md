@@ -184,36 +184,19 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 
 !!! info "Declaração de Requisitos"
 
-    #### Catálogo de Metas
+    #### Histórias de Usuário
 
-    - **Descrição:** Detalha os objetivos de negócio que orientam a construção do produto.
-    - **Entradas:** User Stories refinadas, critérios de aceitação, protótipos e requisitos não funcionais.
-    - **Saídas:** Catálogo em forma de tabela com o código, a meta de negócio, a descrição e a relação com o MVP de forma organizada e padronizada.
-    - **Participantes:** Desenvolvedores, Engenheiros de Requisitos e Designers.
-
-    #### Checklist Estruturado
-
-    - **Descrição:** Organiza e verifica as necessidades e condições esperadas pelos usuários de forma sistemática, auxiliando a equipe a garantir que os principais aspectos das interações e expectativas dos usuários sejam contemplados durante a construção.
-    - **Entradas:** User Stories refinadas, critérios de aceitação, protótipos e requisitos não funcionais e MVP oficial.
-    - **Saídas:** Tabelas de requisitos funcionais e não funcionais definidos no MVP com espaço para check das funcionalidades que foram implementadas.
+    - **Descrição:** Tradução e escrita das necessidades elicitadas em formato narrativo sob a perspectiva do usuário final (focando em quem, o que e por que), incluindo a definição dos critérios de aceitação para cada funcionalidade.
+    - **Entradas:** Requisitos brutos elicitados, perfis de usuários/personas (produtores, consumidores, admin) e o escopo priorizado (como o resultado do MoSCoW).
+    - **Saídas:** Backlog do produto contendo as Histórias de Usuário documentadas (no padrão "Como [ator], eu quero [ação] para que [valor]") e seus respectivos critérios de aceitação.
     - **Participantes:** Engenheiros de Requisitos.
 
-    #### Given/When/Then
+    #### Critérios de Aceitação
 
-    - **Descrição:** Permite representar, de maneira padronizada, o contexto inicial, a ação realizada pelo usuário e o comportamento esperado do sistema. Dessa forma, as declarações estruturadas apoiam a implementação e a posterior verificação dos comportamentos previstos para cada requisito.
-    - **Entradas:** Critérios de aceitação, protótipos e requisitos gerais e MVP oficial.
-    - **Saídas:** Documento formatado no padrão (dado/quando/então) de acordo com as funcionalidades do projeto.
-    - **Participantes:** Desenvolvedores e Engenheiros de Requisitos.
-
-
-!!! info "Análise e Consenso"
-
-    #### Gerenciamento de Mudanças e Repriorização
-
-    - **Descrição:** Análise das solicitações de alteração identificadas durante o desenvolvimento e das novas necessidades observadas a partir dos incrementos entregues.
-    - **Entradas:** Feedback do cliente, resultados dos testes e solicitações de mudança.
-    - **Saídas:** Requisitos atualizados e backlog repriorizado.
-    - **Participantes:** Engenheiros de Requisitos, Cliente e Desenvolvedores.
+    - **Descrição:** Transforma intenções ou necessidades humanas num conjunto de condições objetivas, lógicas e estritamente verificáveis.
+    - **Entradas:** Histórias de usuário.
+    - **Saídas:** Quadro com os critérios de aceitação das histórias de usuário previamente definidas.
+    - **Participantes:** Engenheiros de Requisitos.
 
 !!! info "Verificação e Validação"
 
