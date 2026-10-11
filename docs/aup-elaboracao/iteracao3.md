@@ -97,7 +97,13 @@
 ### Requisito de Negócio - Narrativas Descritivas
 O storyboard organiza a narrativa em passos sequenciais, ilustrando como o fluxo de valor do negócio é realizado e como as restrições ou metas estratégicas são atendidas, sem ainda detalhar telas ou cliques específicos de sistema.
 ??? info "Storyboard"
-    - ![Storyboard](../../img/aup-elaboracao/storyboard.png)
+    **Quadro 1 (O Contexto e a Demanda):** Uma família residente em Brasília busca opções de lazer na natureza para o final de semana. Eles valorizam o contato com produtores locais, mas precisam de garantia de que o local possui estrutura disponível para recebê-los, evitando viagens perdidas.
+
+    **Quadro 2 (A Descoberta e a Restrição de Negócio):** Através do diretório da Rede Cafuringa, a família descobre uma ecovila que oferece trilhas guiadas. O painel informa claramente a regra de negócio da APA: a visitação só ocorre mediante pré-agendamento aprovado, respeitando o limite máximo de visitantes por dia para proteção ambiental.
+
+    **Quadro 3 (A Conexão Direta e Transparente):** A família submete uma intenção de visita com a data e o número de pessoas. A solicitação é enviada diretamente ao produtor rural anfitrião, sem a cobrança de taxas de corretagem ou comissões por agências terceirizadas.
+
+    **Quadro 4 (A Realização do Valor Estratégico):** O anfitrião rural avalia a disponibilidade e aprova a solicitação. O acordo é fechado diretamente entre as partes. A Rede Cafuringa atinge seu objetivo institucional: conectou a demanda urbana à oferta rural, gerou renda integral para o produtor e manteve o fluxo turístico dentro dos limites de sustentabilidade ambiental.
 
 ### Requisito de Usuário - Oriantadas a Valor
 As histórias de usuário são interessantes para o nível de Requisito de Usuário porque focam no "O Quê" (necessidades, expectativas e serviços esperados na interação), conectando diretamente a tecnologia ao valor percebido pelas pessoas.
@@ -129,10 +135,6 @@ Os critérios de aceitação são a técnica ideal para o nível de Requisito de
     | **US18** | - Permitir ao produtor consultar e gerenciar suas pré-reservas.<br>- Exibir solicitações pendentes, aceitas e recusadas.<br>- Permitir identificar data, horário e tipo da solicitação.<br>- Manter o histórico das solicitações realizadas. |
     | **US19** | - Permitir o acompanhamento do status de uma pré-reserva.<br>- Informar ao consumidor quando a solicitação estiver pendente, aceita ou recusada.<br>- Atualizar o status após a resposta do produtor.<br>- Manter o consumidor informado sobre alterações relevantes. |
     | **US20** | - Permitir a conexão direta entre consumidor e produtor após a confirmação da solicitação.<br>- Liberar os dados de contato conforme as regras estabelecidas.<br>- Não inserir intermediários na comunicação entre as partes.<br>- Não cobrar taxas ou comissões pela conexão. |
-
-
-
-
 
 ---
 
