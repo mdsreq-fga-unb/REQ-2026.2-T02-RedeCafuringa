@@ -53,7 +53,8 @@
 ??? info "Prototipagem Interativa Navegável"
     Construção de telas e fluxos interativos no Figma para simular visualmente a navegação do produtor, visitante e administrador.
 
-    <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/O9biBXXgG3EQNpEbh4VDzC/Rede-Cafuringa-%E2%80%94-Prot%C3%B3tipos-Iniciais?node-id=17-2&embed-host=share" allowfullscreen></iframe>
+    <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/oBDkQHMsaFJiU97kxFL58w/Rede-Cafuringa-%E2%80%A2-MVP-mobile?node-id=0-1&m=dev&t=92FuBPjtkTss9O9e-1&embed-host=share" allowfullscreen></iframe>
+
 
 ??? info "Testes de Usabilidade com Protótipo"
 
