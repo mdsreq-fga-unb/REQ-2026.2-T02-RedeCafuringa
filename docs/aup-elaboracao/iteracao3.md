@@ -155,3 +155,48 @@ O vídeo abaixo registra a primeira visita presencial na Cafuringa, experiência
 <video width="100%" controls>
     <source src="../../img/aup-elaboracao/visitacao.mp4" type="video/mp4">
 </video>
+
+ #Vídeos das Reuniões da Iteração 3
+
+A reunião do dia 14/09 tratou da análise de feedbacks do professor, estruturação das "Lições Aprendidas" no GitHub Pages e atribuição de tarefas com prazos internos. A equipe também estabeleceu um fluxo de comunicação quinzenal e assíncrono com o cliente e alinhou a leitura obrigatória para a aula seguinte.
+
+<video width="100%" controls>
+    <source src="https://youtu.be/mUdEDCeGR3I" type="video/mp4">
+</video>
+
+A primeira reunião do dia 17/09 focou no feedback do cliente, que elogiou a organização lógica do projeto e recomendou embasar os requisitos em fontes de dados governamentais e científicas. Foi agendada uma visita imersiva à comunidade para a próxima segunda-feira com o intuito de vivenciar a realidade local e aprimorar a coleta de requisitos.
+
+<video width="100%" controls>
+    <source src="https://youtu.be/u3eJDboLs5Y" type="video/mp4">
+</video>
+
+A segunda reunião do dia 17/09 abordou o planejamento da visita à Cafuringa, incluindo transporte, horários e materiais necessários. A visita terá como foco a elicitação de requisitos por meio de uma conversa com o cliente Jefferson, além da definição de uma validação contínua do produto e de testes de usabilidade com outros stakeholders.
+
+<video width="100%" controls>
+    <source src="https://youtu.be/jTixlIvh25s" type="video/mp4">
+</video>
+
+Após visita técnica, no dia 22/09 foi feita a sintese das informações e lista primaria de Requisitos:
+Refatoração de Requisitos e Escopo: O grupo reviu e ajustou em tempo real os Objetivos Específicos, as Características de Produto, os Requisitos Funcionais (RFs) e Não Funcionais (RNFs).   
+
+<video width="100%" controls>
+    <source src="https://youtu.be/qyUcVkX_vVA" type="video/mp4">
+</video>
+
+A reunião do dia 26/09 teve como objetivo principal rever, corrigir e ajustar os Requisitos Funcionais (RF) e Requisitos Não Funcionais (RNF) do projeto, tendo como base o feedback recebido de outro grupo (o grupo "Gollhorse").   
+
+<video width="100%" controls>
+    <source src="https://youtu.be/m3EmETUI4fg" type="video/mp4">
+</video>
+
+A equipe esteve reunida no dia 27/09 durante 3 horas e 28 minutos com o foco de discutir e classificar os requisitos de um projeto de software e realizar a priorização.
+
+<video width="100%" controls>
+    <source src="https://youtu.be/ONDMaovegGc" type="video/mp4">
+</video>
+
+A reunião de equipe do dia 28/09 focada na Avaliação do Valor de Negócio e na definição do MVP (Produto Mínimo Viável) para uma plataforma chamada "Rede Cafunaga" juntamente com o Cliente. A equipa passa em revista um documento detalhado que classifica os requisitos do sistema.
+
+<video width="100%" controls>
+    <source src="https://youtu.be/1u7z0z3EA-Q" type="video/mp4">
+</video>
