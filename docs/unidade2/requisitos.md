@@ -4,7 +4,7 @@
 | Tipo de Requisito | Concepção | Elaboração | Construção | Transição |
 |---|---|---|---|---|
 | **Requisitos de Negócio** | Narrativas Descritivas (Narrativas em Texto Livre) | Narrativas Descritivas (Storyboards Descritivos) | **---------**| **---------** |
-| **Requisitos de Usuário** | Orientadas a Valor (Histórias de Usuário preliminar) | Orientadas a Valor (Histórias de Usuário) | Declarações Estruturadas (Critérios de Aceitação) | **---------** |
+| **Requisitos de Usuário** | Orientadas a Valor (Histórias de Usuário preliminar) | Orientadas a Valor (Histórias de Usuário) | Orientadas a Valor (Histórias de Usuário) | **---------** |
 | **Requisitos de Produto** | **---------** | Declarações Estruturadas (Critérios de Aceitação) | Declarações Estruturadas (Critérios de Aceitação) | **---------** |
 
 
