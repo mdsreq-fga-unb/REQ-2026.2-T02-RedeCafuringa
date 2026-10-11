@@ -29,6 +29,9 @@ As histórias são mantidas em um nível mais alto, focando estritamente na nece
 ??? info "Histórias de Usuário (Preliminar)"
     - ![História de Usuário](../../img/aup-concepcao/historia_usuario.jpeg)
 
+### Requisito de Produto 
+Não houve declaração de requisitos de produto nesta etapa do projeto.
+
 ---
 
 ## Vídeos Comprobatórios
