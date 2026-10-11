@@ -71,7 +71,16 @@
     - ![MVP Oficial](../../img/aup-elaboracao/mvp_visual.jpeg)
 
 ---
-
 ## Vídeos Comprobatórios
+
+ 
+A equipe ByteLab reuniu-se a 1 de outubro de 2026 para debater atualizações no cronograma, processos de desenvolvimento e validação de requisitos.
+
+<iframe width="800" height="450" src="https://youtu.be/yy58nDU2hmQ" title="Vídeo do YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+A equipe ByteLab reuniu-se a 8 de outubro de 2026 para definir os critérios de Definition of Ready (DoR) e Definition of Done (DoD) do projeto. Decidiram simplificar a documentação, removendo descrições extensas e adotando um formato de checklist baseado num modelo fornecido pelo professor.
+
+<iframe width="800" height="450" src="https://youtu.be/31ZtccoYXtQ" title="Vídeo do YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 
 
