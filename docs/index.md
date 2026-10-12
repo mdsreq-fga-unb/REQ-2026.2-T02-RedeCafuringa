@@ -115,4 +115,35 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 | 29/09/26 | 1.5 | Organização de todos os tópicos da atividade 4 e geração de imagens complementares, correção de todo tópico 5 da entrega 1 conforme novas atualizações do projeto e adição das histórias de usuário e das evidências | Beatriz Lins |
 | 03/10/26 | 1.6 | Correção do Cronograma de acordo com a issue aberta pelo professor | Luccas Rodrigues |
 | 07/10/26 | 1.7 | Adição dos requisitos de negócio, usuário e produto para cada fase do processo AUP (concepção, elaboração, construção e transição) | Beatriz Lins |
-| 11/10/26 | 1.8 | Correção dos requisitos de negócio, usuário e produto para cada fase do processo AUP (concepção, elaboração, construção e transição) de acordo com feedback do professor | Beatriz Lins |
+| 11/10/26 | 1.8 | Correção dos requisitos de negócio, usuário e produto para cada fase do processo AUP (concepção, elaboração, construção e transição) de acordo com feedback do professor |
+Beatriz Lins |
+| 26/09/26 | 1.9 | Revisão dos requisitos a partir do feedback de outra equipe e correções documentais relacionadas à issue 61. | Equipe ByteLab |
+| 27/09/26 | 2.0 | Ampliação dos requisitos de gerenciamento de usuários e administração, com revisão dos requisitos funcionais. | PauloF, Italo Alves |
+| 27/09/26 | 2.1 | Inclusão da priorização MoSCoW e consolidação das avaliações de requisitos funcionais e não funcionais no documento do MVP. | Equipe ByteLab |
+| 27/09/26 | 2.2 | Ajustes de estrutura e apresentação do MVP, correções na navegação da Unidade 2 e nos cards da página principal. | Equipe ByteLab  |
+| 28/09/26 | 2.3 | Expansão dos critérios de avaliação do MVP, atualização dos status de validação e correções no documento. | PauloF |
+| 28/09/26 | 2.4 | Registro de decisões da validação do MVP e ajuste da prioridade do contato via WhatsApp. | Lucas Gabriel Gomes Aguiar |
+| 28/09/26 | 2.5 | Inclusão de requisitos após validação com o cliente. |  Equipe ByteLab  |
+| 28/09/26 | 2.6 | Inclusão do RNF15 na documentação de requisitos. |  Equipe ByteLab  |
+| 28/09/26 | 2.7 | Reorganização de documentos complementares e atualização da iteração 3, da página inicial e da configuração do MkDocs. | Beatriz Lins |
+| 28/09/26 | 2.8 | Correção ortográfica na configuração de navegação do MkDocs. | PauloF |
+| 29/09/26 | 2.9 | Revisão das iterações de concepção e elaboração do AUP e atualização das imagens e evidências visuais. | Beatriz Lins |
+| 29/09/26 | 3.0 | Atualização dos documentos de requisitos e MVP e remoção de documentos complementares obsoletos. | Beatriz Lins |
+| 29/09/26 | 3.1 | Revisão da avaliação da experiência do usuário e correção da identificação do responsável pela validação. | Lucas Gabriel Gomes Aguiar |
+| 30/09/26 | 3.2 | Correções gramaticais na documentação do MVP. | Luccas Rodrigues dos Santos |
+| 30/09/26 | 3.3 | Retirada da seção de documentação complementar da navegação do MkDocs. | Pedro Augusto |
+| 03/10/26 | 3.4 | Atualização do cronograma na página principal e na documentação da Unidade 1. | Luccas Rodrigues dos Santos |
+| 06/10/26 | 3.5 | Atualização da documentação de Definition of Ready (DoR) e Definition of Done (DoD). | Pedro Luiz |
+| 06/10/26 | 3.6 | Correção das observações dos requisitos do MVP. | Beatriz Lins |
+| 07/10/26 | 3.7 | Inclusão e revisão da tabela de formas de declaração de requisitos. | Paulo |
+| 07/10/26 | 3.8 | Atualização das iterações do AUP e inclusão de storyboard, histórias de usuário e imagens da fase de construção. |  Equipe ByteLab  |
+| 07/10/26 | 3.9 | Atualização da página inicial e da documentação de requisitos da Unidade 1. | Beatriz Lins |
+| 08/10/26 | 4.0 | Refinamento da documentação DoR/DoD, adequação ao layout, retirada de menções a BDD e inclusão de modelos de aplicação. | Pedro Luiz |
+| 10/10/26 | 4.1 | Inclusão e aprimoramento do backlog geral e priorizado, com revisão das especificações e retirada da coluna de quadrantes. | PauloF |
+| 10/10/26 | 4.2 | Correção da tabela de formas de declaração de requisitos. | Paulo|
+| 10/10/26 | 4.3 | Reorganização da navegação da Unidade 2 e exclusão do documento separado do MVP. | Paulo|
+| 10/10/26 | 4.4 | Inclusão da matriz-síntese de rastreabilidade na documentação de requisitos. | Equipe ByteLab |
+| 11/10/26 | 4.5 | Atualização das atividades documentadas nas fases de concepção, elaboração e construção do AUP. | Beatriz Lins |
+| 11/10/26 | 4.6 | Revisão da documentação de requisitos das Unidades 1 e 2 e atualização da página inicial. |  Equipe ByteLab  |
+| 11/10/26 | 4.7 | Inclusão dos vídeos das iterações 3 e 4 da elaboração e correção de suas incorporações. | Paulo Ferreira |
+| 12/10/26 | 4.8 | Atualização do documento de lições aprendidas da Unidade 2. | Pedro Augusto |
