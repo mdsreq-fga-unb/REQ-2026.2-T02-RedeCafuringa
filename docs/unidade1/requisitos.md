@@ -207,6 +207,13 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
     - **Saídas:** Registro de feedback, aceite do incremento ou solicitações de ajustes.
     - **Participantes:** Cliente, Desenvolvedores, Engenheiros de Requisitos e representantes dos usuários.
 
+    #### DoR e DoD
+
+    - **Descrição:** Apresentação e validação das funcionalidades implementadas junto ao cliente, garantindo que os itens atendam aos critérios de prontidão antes do desenvolvimento e aos critérios de conclusão antes da entrega final.
+    - **Entradas:** Incremento funcional, backlog priorizado e requisitos correspondentes.
+    - **Saídas:** Registro de feedback, aceite do incremento, histórico de itens prontos para desenvolvimento e solicitações de ajustes.
+    - **Participantes:** Cliente, Desenvolvedores e Engenheiros de RequisitoS.
+
 !!! info "Organização e Atualização"
 
     #### Atualização da Rastreabilidade
