@@ -29,6 +29,7 @@
     | **RF47** | Responder pré-reserva de experiência | Completa o fluxo de pré-reserva ao permitir que o responsável pela experiência aceite ou rejeite a solicitação. |
     | **RF48** | Notificar alteração de pré-reserva | Mantém visitante e responsável informados sobre mudanças no estado da pré-reserva, completando o fluxo básico de acompanhamento e reduzindo a necessidade de consultas manuais. |
 
+
 ??? info "MVP Preliminar - Requisitos Não Funcionais"
     Estruturação da primeira versão reduzida e funcional do sistema, selecionando as funcionalidades essenciais para validar a proposta de valor junto ao cliente com o menor custo e tempo de desenvolvimento possíveis.
 
@@ -55,7 +56,7 @@
     HU15
     Como consumidor ou visitante, quero entrar em contato diretamente com o responsável, para tirar dúvidas antes de comprar ou solicitar experiência.
     | Check | Pergunta |
-    | :---: | :--- |
+    | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
     | x | A US está rastreada aos requisitos de origem? |
@@ -71,7 +72,7 @@
     HU04
     Como administrador, quero consultar os usuários cadastrados, para acompanhar e administrar os perfis existentes.
     | Check | Pergunta |
-    | :---: | :--- |
+    | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
     | x | A US está rastreada aos requisitos de origem? |
@@ -89,7 +90,7 @@
     HU05
     Como usuário cadastrado, quero realizar login, para acessar funcionalidades do meu perfil.
     | Check | Pergunta |
-    | :---: | :--- |
+    | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
     | x | A US está rastreada aos requisitos de origem? |
@@ -105,7 +106,7 @@
     HU08
     Como consumidor ou visitante, quero consultar o perfil de um produtor, para conhecer sua trajetória e atuação antes de comprar ou solicitar experiência.
     | Check | Pergunta |
-    | :---: | :--- |
+    | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
     | x | A US está rastreada aos requisitos de origem? |
@@ -121,7 +122,7 @@
     HU09
     Como produtor cadastrado, quero cadastrar meus produtos, para divulgar minha produção e permitir consulta dos consumidores.
     | Check | Pergunta |
-    | :---: | :--- |
+    | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
     | x | A US está rastreada aos requisitos de origem? |
@@ -137,7 +138,7 @@
     HU10
     Como consumidor ou visitante, quero consultar o catálogo de produtos, para encontrar alimentos e outros produtos oferecidos.
     | Check | Pergunta |
-    | :---: | :--- |
+    | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
     | x | A US está rastreada aos requisitos de origem? |
