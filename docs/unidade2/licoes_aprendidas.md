@@ -11,5 +11,3 @@ Na Unidade 1, a equipe compreendeu a importância de escolher conscientemente um
 Na Unidade 2, observamos um maior comprometimento e engajamento da equipe com o desenvolvimento do projeto. As visitas à Cafuringa contribuíram para fortalecer nossa conexão com a cliente e compreender melhor suas necessidades e expectativas. Além disso, conseguimos corrigir as falhas identificadas na Unidade 1, especialmente em relação à comunicação e à distribuição de responsabilidades, o que proporcionou uma evolução significativa no andamento do trabalho.
 
 Essa experiência reforçou a importância de manter uma comunicação clara e constante, tanto entre os integrantes da equipe quanto com a cliente, garantindo um maior alinhamento ao longo do projeto. Também compreendemos que a colaboração, a proatividade e a participação equilibrada de todos os membros são fundamentais para alcançar os objetivos estabelecidos e garantir a qualidade dos resultados.
-
-...
