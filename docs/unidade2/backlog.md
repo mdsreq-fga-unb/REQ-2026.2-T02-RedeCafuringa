@@ -1,15 +1,15 @@
 <span class="version-badge">Unidade 02</span>
 
-Todas as histórias de usuários relacionadas, a seguir, são derivadas da lista de requisitos
-funcionais apresentados, anteriormente, nesta documentação. Esta lista pode sofrer ajustes
+Todas as Histórias de Usuários relacionadas, a seguir, são derivadas da lista de Requisitos
+Funcionais apresentados, anteriormente, nesta documentação. Esta lista pode sofrer ajustes
 sempre que necessário, durante o desenvolvimento do produto da Rede Cafuringa.
 
 ## 9.1 Backlog Geral da Rede Cafuringa
 
-A tabela, a seguir, apresenta cada um dos requisitos funcionais (RFs) declarados utilizando a técnica de user story
-(US), assim como a rastreabilidade com os requisitos não funcionais (RNFs), características do produto (CPs) e classificação quanto ao escopo.
+A tabela, a seguir, apresenta cada um dos Requisitos Funcionais (RFs) declarados utilizando a técnica de História de Usuário
+(HU), assim como a rastreabilidade com os Requisitos Não Funcionais (RNFs), Características do Produto (CPs) e classificação quanto ao escopo.
 
-| Requisito funcional | CP | História de usuário derivada | Escopo | RNFs relacionados |
+| Requisito Funcional | CP | História de Usuário derivada | Escopo | RNFs relacionados |
 |---|:---:|---|:---:|:---:|
 | **RF01 — Cadastrar perfil de consumidor** | CP1 | **HU01** — Como consumidor ou visitante, quero cadastrar meu perfil na plataforma, para acessar funcionalidades e interagir com produtores e experiências. | MVP | RNF03, RNF04, RNF07, RNF08, RNF11, RNF15 |
 | **RF02 — Cadastrar perfil de produtor** | CP1 | **HU02** — Como produtor ou responsável por uma iniciativa, quero cadastrar meu perfil de produtor, para divulgar produção, produtos e experiências. | MVP | RNF03, RNF04, RNF07, RNF08, RNF11, RNF15 |
