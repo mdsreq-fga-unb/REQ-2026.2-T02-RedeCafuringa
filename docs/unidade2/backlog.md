@@ -4,7 +4,7 @@ Todas as histórias de usuários relacionadas, a seguir, são derivadas da lista
 funcionais apresentados, anteriormente, nesta documentação. Esta lista pode sofrer ajustes
 sempre que necessário, durante o desenvolvimento do produto da Rede Cafuringa.
 
-## 10.1 Backlog Geral da Rede Cafuringa
+## 9.1 Backlog Geral da Rede Cafuringa
 
 A tabela, a seguir, apresenta cada um dos requisitos funcionais (RFs) declarados utilizando a técnica de user story
 (US), assim como a rastreabilidade com os requisitos não funcionais (RNFs), características do produto (CPs) e classificação quanto ao escopo.
@@ -74,7 +74,7 @@ A tabela registra **relações diretas**, para não repetir em cada linha requis
 | **RNF14 — Aplicação Web Progressiva** | Propriedade de disponibilização e instalabilidade da aplicação como um todo, quando suportada pelo navegador. |
 
 
-## 10.2 Backlog Priorizado — MVP da Rede Cafuringa
+## 9.2 Backlog Priorizado — MVP da Rede Cafuringa
 ## Critérios de Priorização do Backlog
 
 Para a priorização do backlog, foram utilizados os seguintes critérios:
