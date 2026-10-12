@@ -1,12 +1,4 @@
 <span class="version-badge">Unidade 02</span>
-## Formas de Declaração de Requisitos
-
-| Tipo de Requisito | Concepção | Elaboração | Construção | Transição |
-|---|---|---|---|---|
-| **Requisitos de Negócio** | Narrativas Descritivas (Narrativas em Texto Livre) | Narrativas Descritivas (Storyboards Descritivos) | **---------**| **---------** |
-| **Requisitos de Usuário** | Orientadas a Valor (Histórias de Usuário preliminar) | Orientadas a Valor (Histórias de Usuário) | Orientadas a Valor (Histórias de Usuário) | **---------** |
-| **Requisitos de Produto** | **---------** | Declarações Estruturadas (Critérios de Aceitação) | Declarações Estruturadas (Critérios de Aceitação) | **---------** |
-
 
 Abaixo, são apresentados os requisitos levantados para o desenvolvimento da plataforma da Rede Cafuringa. Este documento está estruturado em duas seções principais: a primeira aborda os Requisitos Funcionais, detalhando as ações e funcionalidades que o sistema deve oferecer para atender às necessidades de produtores, consumidores e administradores (como cadastros, consultas e gestão de reservas). A segunda seção lista os Requisitos Não Funcionais, estabelecendo os critérios de qualidade, segurança, desempenho e usabilidade da aplicação.
 
@@ -258,3 +250,13 @@ A matriz, a seguir, representa a rastreabilidade entre objetivos específicos (O
 | OE2 | OE1, OE3 | CP4 | RF35, RF36, RF37, RF38 | RNF02, RNF03 |
 | OE3 | OE1 | CP5 | RF39, RF40, RF41, RF42, RF43 | RNF08, RNF09, RNF10, RNF11 |
 | OE3 | OE1 | CP6 | RF44, RF45, RF46, RF47, RF48 | RNF03, RNF07, RNF08, RNF11 |
+
+---
+
+## Formas de Declaração de Requisitos
+
+| Tipo de Requisito | Concepção | Elaboração | Construção | Transição |
+|---|---|---|---|---|
+| **Requisitos de Negócio** | Narrativas Descritivas (Narrativas em Texto Livre) | Narrativas Descritivas (Storyboards Descritivos) | **---------**| **---------** |
+| **Requisitos de Usuário** | Orientadas a Valor (Histórias de Usuário preliminar) | Orientadas a Valor (Histórias de Usuário) | Orientadas a Valor (Histórias de Usuário) | **---------** |
+| **Requisitos de Produto** | **---------** | Declarações Estruturadas (Critérios de Aceitação) | Declarações Estruturadas (Critérios de Aceitação) | **---------** |
