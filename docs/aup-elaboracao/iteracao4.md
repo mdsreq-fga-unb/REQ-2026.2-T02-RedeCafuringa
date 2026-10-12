@@ -73,9 +73,9 @@
 </iframe>
 
 ---
+
 ## Vídeos Comprobatórios
 
- 
 A equipe ByteLab reuniu-se a 1 de outubro de 2026 para debater atualizações no cronograma, processos de desenvolvimento e validação de requisitos.
 
 <iframe width="800" height="450" src="https://www.youtube.com/embed/yy58nDU2hmQ" title="Vídeo do YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
