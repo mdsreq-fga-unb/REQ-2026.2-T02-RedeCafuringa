@@ -127,26 +127,26 @@ A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**
 ## Tabela de backlog priorizado
 | US | Descrição da US | VN | ES | CX | CP | ET | Média (VN e ET) | Prioridade escolhida |
 |:---:|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **US15** | Disponibilizar contato direto | 4 | 4 | 4 | 4 | 4,00 | **4,00** | **Alta** |
-| **US04** | Consultar usuários cadastrados | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **US05** | Autenticar usuário | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
-| **US08** | Consultar perfil do produtor | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **US09** | Cadastrar produto | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **US10** | Consultar catálogo de produtos | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
-| **US11** | Consultar detalhes do produto | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **US12** | Cadastrar experiência | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
-| **US13** | Consultar experiência | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **US14** | Buscar ofertas | 3 | 3 | 4 | 2 | 3,00 | **3,00** | **Alta** |
-| **US16** | Solicitar pré-reserva de experiência | 3 | 3 | 3 | 3 | 3,00 | **3,00** | **Alta** |
-| **US19** | Responder solicitação de pré-reserva | 3 | 3 | 3 | 3 | 3,00 | **3,00** | **Alta** |
-| **US20** | Notificar alteração de pré-reserva | 3 | 3 | 4 | 2 | 3,00 | **3,00** | **Alta** |
-| **US01** | Cadastrar perfil de consumidor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
-| **US02** | Cadastrar perfil de produtor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
-| **US03** | Cadastrar usuário administrador | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
-| **US06** | Recuperar acesso à conta | 3 | 2 | 3 | 1 | 2,00 | **2,50** | **Média** |
-| **US17** | Consultar pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
-| **US18** | Cancelar solicitação de pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
-| **US07** | Registrar trajetória do produtor | 3 | 1 | 1 | 1 | 1,00 | **2,00** | **Baixa** |
+| **HU15** | Disponibilizar contato direto | 4 | 4 | 4 | 4 | 4,00 | **4,00** | **Alta** |
+| **HU04** | Consultar usuários cadastrados | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU05** | Autenticar usuário | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
+| **HU08** | Consultar perfil do produtor | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU09** | Cadastrar produto | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU10** | Consultar catálogo de produtos | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
+| **HU11** | Consultar detalhes do produto | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU12** | Cadastrar experiência | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
+| **HU13** | Consultar experiência | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU14** | Buscar ofertas | 3 | 3 | 4 | 2 | 3,00 | **3,00** | **Alta** |
+| **HU16** | Solicitar pré-reserva de experiência | 3 | 3 | 3 | 3 | 3,00 | **3,00** | **Alta** |
+| **HU19** | Responder solicitação de pré-reserva | 3 | 3 | 3 | 3 | 3,00 | **3,00** | **Alta** |
+| **HU20** | Notificar alteração de pré-reserva | 3 | 3 | 4 | 2 | 3,00 | **3,00** | **Alta** |
+| **HU01** | Cadastrar perfil de consumidor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
+| **HU02** | Cadastrar perfil de produtor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
+| **HU03** | Cadastrar usuário administrador | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
+| **HU06** | Recuperar acesso à conta | 3 | 2 | 3 | 1 | 2,00 | **2,50** | **Média** |
+| **HU17** | Consultar pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
+| **HU18** | Cancelar solicitação de pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
+| **HU07** | Registrar trajetória do produtor | 3 | 1 | 1 | 1 | 1,00 | **2,00** | **Baixa** |
 
 ## Resultado da priorização
 
