@@ -66,9 +66,11 @@
 
     Consolidação e aprovação final do escopo da primeira versão do produto. Garante que as funcionalidades essenciais, o design de interface e os requisitos técnicos estejam alinhados, detalhados e prontos para o início do desenvolvimento.
 
-    - ![MVP Oficial](../../img/aup-elaboracao/mvp_lista.jpeg)
+    - ![MVP Oficial](../../img/aup-elaboracao/mvp_lista_backlog.jpg)
 
-    - ![MVP Oficial](../../img/aup-elaboracao/mvp_visual.jpeg)
+    <iframe src="https://drive.google.com/file/d/1uDSVJwRtif8PLpXKppl8obVBYwDrsSQJ/preview" width="100%" height="600px" style="border: none;">
+    
+</iframe>
 
 ---
 ## Vídeos Comprobatórios
