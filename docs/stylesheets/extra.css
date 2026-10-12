@@ -460,6 +460,10 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   text-align: center;
 }
 
+.md-typeset table:not([class]) th strong {
+  color: var(--nativo-cream) !important;
+}
+
 .md-typeset table:not([class]) td {
   padding: 0.65rem 1rem;
   border-bottom: 1px solid rgba(145, 153, 107, 0.2);
