@@ -830,32 +830,47 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   color: var(--nativo-cream);
 }
 
+
+/* Status da tabela de cronograma */
 .schedule-status {
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  background-color: rgba(212, 160, 23, 0.2);
-  color: #e5b83b;
-  display: inline-block;
-  text-align: center;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
 }
 
+/* Executado — Verde */
 .schedule-status--executed {
-  background-color: rgba(198, 93, 30, 0.2);
-  color: #c65d1e;
+    background-color: rgba(47, 125, 72, 0.15);
+    color: #2f7d48;
 }
 
+/* Em andamento — Azul */
 .schedule-status--in-progress {
-  background-color: rgba(47, 125, 72, 0.2);
-  color: #2f7d48;
+    background-color: rgba(43, 108, 176, 0.15);
+    color: #2b6cb0;
 }
 
-.schedule-activity {
-  color: inherit;
-  text-decoration: none;
+/* Planejado — Amarelo */
+.schedule-status--planned {
+    background-color: rgba(212, 160, 23, 0.2);
+    color: #946c00;
 }
 
-.schedule-activity:hover {
-  text-decoration: underline;
+/* Ajustes para o modo escuro */
+[data-md-color-scheme="slate"] .schedule-status--executed {
+    background-color: rgba(72, 187, 120, 0.2);
+    color: #81d99b;
+}
+
+[data-md-color-scheme="slate"] .schedule-status--in-progress {
+    background-color: rgba(66, 153, 225, 0.2);
+    color: #90c5ff;
+}
+
+[data-md-color-scheme="slate"] .schedule-status--planned {
+    background-color: rgba(236, 201, 75, 0.2);
+    color: #f6d76f;
 }
