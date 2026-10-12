@@ -48,11 +48,19 @@
     | **RNF13** | Baixo custo operacional | Está relacionado à sustentabilidade da solução e à capacidade da Rede Cafuringa de manter a plataforma sem custos recorrentes incompatíveis com seu contexto. |
 
 ---
+
 ## Verificação e Validação
+
+??? info "Prototipagem Interativa Navegável"
+    Construção de telas e fluxos interativos no Figma para simular visualmente a navegação do produtor, visitante e administrador.
+
+    <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/oBDkQHMsaFJiU97kxFL58w/Rede-Cafuringa-%E2%80%A2-MVP-mobile?node-id=0-1&m=dev&t=92FuBPjtkTss9O9e-1&embed-host=share" allowfullscreen></iframe>
+
+??? info "Testes de Usabilidade com Protótipo"
 
 ??? info "DoR - Iteração 5"
 
-    HU15 - Como consumidor ou visitante, quero entrar em contato diretamente com o responsável, para tirar dúvidas antes de comprar ou solicitar experiência.
+    **HU15 -** Como consumidor ou visitante, quero entrar em contato diretamente com o responsável, para tirar dúvidas antes de comprar ou solicitar experiência.
 
     | Check | Pergunta |
     | :---: | :---: |
@@ -68,8 +76,7 @@
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
 
-    **HU04**  
-    Como administrador, quero consultar os usuários cadastrados, para acompanhar e administrar os perfis existentes.
+    **HU04 -** Como administrador, quero consultar os usuários cadastrados, para acompanhar e administrar os perfis existentes.
 
     | Check | Pergunta |
     | :---: | :---: |
@@ -87,8 +94,7 @@
 
     *Não há um critério de aceitação coerente com a história de usuário.*
 
-    **HU05**  
-    Como usuário cadastrado, quero realizar login, para acessar funcionalidades do meu perfil.
+    **HU05 -** Como usuário cadastrado, quero realizar login, para acessar funcionalidades do meu perfil.
 
     | Check | Pergunta |
     | :---: | :---: |
@@ -104,8 +110,7 @@
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
 
-    **HU08**  
-    Como consumidor ou visitante, quero consultar o perfil de um produtor, para conhecer sua trajetória e atuação antes de comprar ou solicitar experiência.
+    **HU08 -** Como consumidor ou visitante, quero consultar o perfil de um produtor, para conhecer sua trajetória e atuação antes de comprar ou solicitar experiência.
 
     | Check | Pergunta |
     | :---: | :---: |
@@ -121,8 +126,7 @@
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
 
-    **HU09**  
-    Como produtor cadastrado, quero cadastrar meus produtos, para divulgar minha produção e permitir consulta dos consumidores.
+    **HU09 -** Como produtor cadastrado, quero cadastrar meus produtos, para divulgar minha produção e permitir consulta dos consumidores.
 
     | Check | Pergunta |
     | :---: | :---: |
@@ -138,8 +142,7 @@
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
 
-    **HU10**  
-    Como consumidor ou visitante, quero consultar o catálogo de produtos, para encontrar alimentos e outros produtos oferecidos.
+    **HU10 -** Como consumidor ou visitante, quero consultar o catálogo de produtos, para encontrar alimentos e outros produtos oferecidos.
 
     | Check | Pergunta |
     | :---: | :---: |
@@ -154,14 +157,6 @@
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
-
-??? info "Prototipagem Interativa Navegável"
-    Construção de telas e fluxos interativos no Figma para simular visualmente a navegação do produtor, visitante e administrador.
-
-    <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/oBDkQHMsaFJiU97kxFL58w/Rede-Cafuringa-%E2%80%A2-MVP-mobile?node-id=0-1&m=dev&t=92FuBPjtkTss9O9e-1&embed-host=share" allowfullscreen></iframe>
-
-
-??? info "Testes de Usabilidade com Protótipo"
 
 ---
 
