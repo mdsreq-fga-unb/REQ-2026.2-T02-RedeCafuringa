@@ -64,14 +64,14 @@
 
     | Check | Pergunta |
     | :---: | :---: |
-    | x | A US possui definição clara e informação necessária para ser trabalhada? |
+    | x | A HU possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
-    | x | A US está rastreada aos requisitos de origem? |
-    | x | A US faz parte do escopo do MVP? |
-    | x | A US está coberta por critérios de aceite? |
+    | x | A HU está rastreada aos requisitos de origem? |
+    | x | A HU faz parte do escopo do MVP? |
+    | x | A HU está coberta por critérios de aceite? |
     | x | Os RNFs e as restrições legais aplicáveis estão identificados? |
-    | x | A US está mapeada para uma interface (quando necessário)? |
-    | x | A US cabe em uma iteração? |
+    | x | A HU está mapeada para uma interface (quando necessário)? |
+    | x | A HU cabe em uma iteração? |
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
@@ -80,14 +80,14 @@
 
     | Check | Pergunta |
     | :---: | :---: |
-    | x | A US possui definição clara e informação necessária para ser trabalhada? |
+    | x | A HU possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
-    | x | A US está rastreada aos requisitos de origem? |
-    | x | A US faz parte do escopo do MVP? |
-    | x | A US está coberta por critérios de aceite? |
+    | x | A HU está rastreada aos requisitos de origem? |
+    | x | A HU faz parte do escopo do MVP? |
+    | x | A HU está coberta por critérios de aceite? |
     | x | Os RNFs e as restrições legais aplicáveis estão identificados? |
-    | x | A US está mapeada para uma interface (quando necessário)? |
-    | x | A US cabe em uma iteração? |
+    | x | A HU está mapeada para uma interface (quando necessário)? |
+    | x | A HU cabe em uma iteração? |
     |   | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
@@ -98,14 +98,14 @@
 
     | Check | Pergunta |
     | :---: | :---: |
-    | x | A US possui definição clara e informação necessária para ser trabalhada? |
+    | x | A HU possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
-    | x | A US está rastreada aos requisitos de origem? |
-    | x | A US faz parte do escopo do MVP? |
-    | x | A US está coberta por critérios de aceite? |
+    | x | A HU está rastreada aos requisitos de origem? |
+    | x | A HU faz parte do escopo do MVP? |
+    | x | A HU está coberta por critérios de aceite? |
     | x | Os RNFs e as restrições legais aplicáveis estão identificados? |
-    | x | A US está mapeada para uma interface (quando necessário)? |
-    | x | A US cabe em uma iteração? |
+    | x | A HU está mapeada para uma interface (quando necessário)? |
+    | x | A HU cabe em uma iteração? |
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
@@ -114,14 +114,14 @@
 
     | Check | Pergunta |
     | :---: | :---: |
-    | x | A US possui definição clara e informação necessária para ser trabalhada? |
+    | x | A HU possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
-    | x | A US está rastreada aos requisitos de origem? |
-    | x | A US faz parte do escopo do MVP? |
-    | x | A US está coberta por critérios de aceite? |
+    | x | A HU está rastreada aos requisitos de origem? |
+    | x | A HU faz parte do escopo do MVP? |
+    | x | A HU está coberta por critérios de aceite? |
     | x | Os RNFs e as restrições legais aplicáveis estão identificados? |
-    | x | A US está mapeada para uma interface (quando necessário)? |
-    | x | A US cabe em uma iteração? |
+    | x | A HU está mapeada para uma interface (quando necessário)? |
+    | x | A HU cabe em uma iteração? |
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
@@ -130,14 +130,14 @@
 
     | Check | Pergunta |
     | :---: | :---: |
-    | x | A US possui definição clara e informação necessária para ser trabalhada? |
+    | x | A HU possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
-    | x | A US está rastreada aos requisitos de origem? |
-    | x | A US faz parte do escopo do MVP? |
-    | x | A US está coberta por critérios de aceite? |
+    | x | A HU está rastreada aos requisitos de origem? |
+    | x | A HU faz parte do escopo do MVP? |
+    | x | A HU está coberta por critérios de aceite? |
     | x | Os RNFs e as restrições legais aplicáveis estão identificados? |
-    | x | A US está mapeada para uma interface (quando necessário)? |
-    | x | A US cabe em uma iteração? |
+    | x | A HU está mapeada para uma interface (quando necessário)? |
+    | x | A HU cabe em uma iteração? |
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
@@ -146,14 +146,14 @@
 
     | Check | Pergunta |
     | :---: | :---: |
-    | x | A US possui definição clara e informação necessária para ser trabalhada? |
+    | x | A HU possui definição clara e informação necessária para ser trabalhada? |
     | x | O requisito está representado por uma história de usuário? |
-    | x | A US está rastreada aos requisitos de origem? |
-    | x | A US faz parte do escopo do MVP? |
-    | x | A US está coberta por critérios de aceite? |
+    | x | A HU está rastreada aos requisitos de origem? |
+    | x | A HU faz parte do escopo do MVP? |
+    | x | A HU está coberta por critérios de aceite? |
     | x | Os RNFs e as restrições legais aplicáveis estão identificados? |
-    | x | A US está mapeada para uma interface (quando necessário)? |
-    | x | A US cabe em uma iteração? |
+    | x | A HU está mapeada para uma interface (quando necessário)? |
+    | x | A HU cabe em uma iteração? |
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |

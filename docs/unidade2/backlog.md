@@ -125,7 +125,7 @@ Para refletir adequadamente a concentração de notas altas inerentes a um MVP, 
 
 A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**, considerando os critérios e fórmulas apresentados e suas relações com as História de Usuário.
 ## Tabela de backlog priorizado
-| US | Descrição da US | VN | ES | CX | CP | ET | Média (VN e ET) | Prioridade escolhida |
+| HU | Descrição da HU | VN | ES | CX | CP | ET | Média (VN e ET) | Prioridade escolhida |
 |:---:|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **HU15** | Disponibilizar contato direto | 4 | 4 | 4 | 4 | 4,00 | **4,00** | **Alta** |
 | **HU04** | Consultar usuários cadastrados | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
