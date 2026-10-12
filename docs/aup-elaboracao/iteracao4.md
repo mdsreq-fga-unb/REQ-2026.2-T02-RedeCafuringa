@@ -68,9 +68,7 @@
 
     ![MVP Oficial](../../img/aup-elaboracao/mvp_lista_backlog.jpg)
 
-    <iframe src="https://drive.google.com/file/d/1uDSVJwRtif8PLpXKppl8obVBYwDrsSQJ/preview" width="100%" height="600px" style="border: none;">
-    
-</iframe>
+    <iframe src="https://drive.google.com/file/d/1uDSVJwRtif8PLpXKppl8obVBYwDrsSQJ/preview" width="100%" height="600px" style="border: none;"></iframe>
 
 ---
 

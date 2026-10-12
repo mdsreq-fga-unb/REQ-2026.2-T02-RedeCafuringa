@@ -156,8 +156,6 @@ O vídeo abaixo registra a primeira visita presencial na Cafuringa, experiência
     <source src="../../img/aup-elaboracao/visitacao.mp4" type="video/mp4">
 </video>
 
- #Vídeos das Reuniões da Iteração 3
-
 A reunião do dia 14/09 tratou da análise de feedbacks do professor, estruturação das "Lições Aprendidas" no GitHub Pages e atribuição de tarefas com prazos internos. A equipe também estabeleceu um fluxo de comunicação quinzenal e assíncrono com o cliente e alinhou a leitura obrigatória para a aula seguinte.
 
 <iframe width="800" height="450" src="https://www.youtube.com/embed/mUdEDCeGR3I" title="Vídeo do YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
