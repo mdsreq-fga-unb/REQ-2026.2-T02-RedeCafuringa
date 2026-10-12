@@ -48,13 +48,12 @@
     | **RNF13** | Baixo custo operacional | Está relacionado à sustentabilidade da solução e à capacidade da Rede Cafuringa de manter a plataforma sem custos recorrentes incompatíveis com seu contexto. |
 
 ---
-
 ## Verificação e Validação
 
-??? info "DoR da interação 5"
+??? info "DoR - Iteração 5"
 
-    HU15
-    Como consumidor ou visitante, quero entrar em contato diretamente com o responsável, para tirar dúvidas antes de comprar ou solicitar experiência.
+    HU15 - Como consumidor ou visitante, quero entrar em contato diretamente com o responsável, para tirar dúvidas antes de comprar ou solicitar experiência.
+
     | Check | Pergunta |
     | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
@@ -68,9 +67,10 @@
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
-    
-    HU04
+
+    **HU04**  
     Como administrador, quero consultar os usuários cadastrados, para acompanhar e administrar os perfis existentes.
+
     | Check | Pergunta |
     | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
@@ -81,14 +81,15 @@
     | x | Os RNFs e as restrições legais aplicáveis estão identificados? |
     | x | A US está mapeada para uma interface (quando necessário)? |
     | x | A US cabe em uma iteração? |
-    |  | As dependências estão mapeadas? |
+    |   | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
-    
-    Não há um critérios de aceitação coerente com a história de usuário
-    
-    HU05
+
+    *Não há um critério de aceitação coerente com a história de usuário.*
+
+    **HU05**  
     Como usuário cadastrado, quero realizar login, para acessar funcionalidades do meu perfil.
+
     | Check | Pergunta |
     | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
@@ -102,9 +103,10 @@
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
-    
-    HU08
+
+    **HU08**  
     Como consumidor ou visitante, quero consultar o perfil de um produtor, para conhecer sua trajetória e atuação antes de comprar ou solicitar experiência.
+
     | Check | Pergunta |
     | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
@@ -118,9 +120,10 @@
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
-    
-    HU09
+
+    **HU09**  
     Como produtor cadastrado, quero cadastrar meus produtos, para divulgar minha produção e permitir consulta dos consumidores.
+
     | Check | Pergunta |
     | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
@@ -134,9 +137,10 @@
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
-    
-    HU10
+
+    **HU10**  
     Como consumidor ou visitante, quero consultar o catálogo de produtos, para encontrar alimentos e outros produtos oferecidos.
+
     | Check | Pergunta |
     | :---: | :---: |
     | x | A US possui definição clara e informação necessária para ser trabalhada? |
@@ -150,7 +154,6 @@
     | x | As dependências estão mapeadas? |
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
-    
 
 ??? info "Prototipagem Interativa Navegável"
     Construção de telas e fluxos interativos no Figma para simular visualmente a navegação do produtor, visitante e administrador.
