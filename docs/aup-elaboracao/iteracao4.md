@@ -56,7 +56,12 @@
 
     <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/oBDkQHMsaFJiU97kxFL58w/Rede-Cafuringa-%E2%80%A2-MVP-mobile?node-id=0-1&m=dev&t=92FuBPjtkTss9O9e-1&embed-host=share" allowfullscreen></iframe>
 
-??? info "Testes de Usabilidade com Protótipo"
+??? info "Apresentação do Protótipo"
+     O vídeo abaixo explica o nosso Protótipo do MVP da Rede Cafuringa
+
+    <iframe width="800" height="450" src="https://www.youtube.com/embed/DCNR_vjC-uk" title="Vídeo de apresentação do Protótipo do MVP" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+    
 
 ??? info "DoR - Iteração 5"
 
