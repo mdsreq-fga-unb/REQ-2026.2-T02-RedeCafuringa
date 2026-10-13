@@ -148,3 +148,4 @@ Beatriz Lins |
 | 11/10/26 | 4.7 | Inclusão dos vídeos das iterações 3 e 4 da elaboração e correção de suas incorporações. | Paulo Ferreira |
 | 12/10/26 | 4.8 | Atualização do documento de lições aprendidas da Unidade 2. | Pedro Augusto |
 | 12/10/26 | 4.9 | Correção do cronograma na unidade 2 e adição de dor e dod para todas as iterações da fase de construção | Beatriz Lins |
+| 12/10/26 | 5.0 | Validação e realização de pequenos ajustes na unidade 2, deixando a entrega totalmente revisada | Equipe ByteLab |
