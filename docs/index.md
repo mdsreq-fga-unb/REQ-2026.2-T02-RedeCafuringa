@@ -87,7 +87,7 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 
 -   [**Pedro Macedo**](https://github.com/macedoPedro20){ target="_blank" }
 
-    ![Pedro Macedo](https://github.com/macedoPedro20.png?size=120){ width="100" align=left }
+    ![Pedro Augusto](https://github.com/macedoPedro20.png?size=120){ width="100" align=left }
     Membro da equipe com preferências por frontend e backend.
 
 </div>
