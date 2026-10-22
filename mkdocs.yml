@@ -34,23 +34,25 @@ extra_javascript:
 nav:
   - Início: index.md
 
-  - Unidade 1 - Concepção do Projeto: 
-    - 1. Cenário Atual do Cliente e do Negócio: unidade1/cenario.md
-    - 2. Solução Proposta: unidade1/solucao.md
-    - 3. Intervenção Social: unidade1/intervencao.md
-    - 4. Estratégias de Engenharia de Software: unidade1/estrategias.md
-    - 5. Engenharia de Requisitos: unidade1/requisitos.md
-    - 6. Interação Entre Equipe e Cliente: unidade1/interacao.md
-    - Vídeo de Apresentação: unidade1/video1.md
+  - Visão do Projeto:
+    - 1. Cenário Atual do Cliente e do Negócio: visao/cenario.md
+    - 2. Solução Proposta: visao/solucao.md
+    - 3. Intervenção Social: visao/intervencao.md
+    - 4. Estratégias de Engenharia de Software: visao/estrategias.md
+    - 5. Engenharia de Requisitos: visao/engenharia_requisitos.md
+    - 6. Interação Entre Equipe e Cliente: visao/interacao.md
+    - 7. Requisitos de Software: visao/requisitos_software.md
+    - 8. DoR e DoD: visao/dor_dod.md
+    - 9. Backlog do Produto: visao/backlog.md
+    - 10. Cronograma: visao/cronograma.md
+    - 11. Lições Aprendidas: visao/licoes_aprendidas.md
+    - 12. Referências Bibliográficas: visao/referencias.md
+    - 13. Vídeo de Apresentação: visao/videos.md
 
-  - Unidade 2 - Requisitos de Software:
-    - 7. Requisitos de Software: unidade2/requisitos.md
-    - 8. DoR e DoD: unidade2/dor_dod.md
-    - 9. Backlog do Produto: unidade2/backlog.md
-    - 10. Cronograma: unidade2/cronograma2.md
-    - 11. Lições Aprendidas: unidade2/licoes_aprendidas.md
-    - 12. Referências Bibliográficas: unidade2/referencias.md
-    - Vídeo de Apresentação: unidade2/video2.md
+  - Documentação Complementar: 
+    - 1. Regras de Negócio: doc_complementar/regras_negocio.md 
+    - 2. Declaração de Requisitos: doc_complementar/declaracao_requisitos.md 
+    - 3. Critérios de Aceitação: doc_complementar/criterios_aceitacao.md
 
   - AUP - Concepção:
     - Iteração 01: aup-concepcao/iteracao1.md
