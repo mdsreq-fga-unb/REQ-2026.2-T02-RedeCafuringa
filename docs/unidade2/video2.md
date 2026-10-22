@@ -1,7 +1,0 @@
-<span class="version-badge">Unidade 02</span>
-
-## Vídeo da Unidade 2
-
-<div style="display: flex; justify-content: center; margin: 20px 0;">
-  <iframe width="800" height="450" src="https://www.youtube.com/embed/nm9l7u-xJ2w" title="Unidade 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
