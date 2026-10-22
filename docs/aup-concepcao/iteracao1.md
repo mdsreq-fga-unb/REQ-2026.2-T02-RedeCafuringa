@@ -18,21 +18,19 @@
 ## Declaração de Requisitos
 
 ### Requisito de Negócio - Narrativas Descritivas
-Essas narrativas são ideais para expressar e explorar os problemas centrais, as metas estratégicas e as restrições externas que justificam o projeto.
 
 ??? info "Narrativas em Texto Livre"
     <iframe src="https://docs.google.com/document/d/e/2PACX-1vT69mXgAy-mJQmvIL2-lPRW2GcgfRSiu19RMG1jaiiAOcC-Uwq2z73ebVURO8qHmzyNj7m31yc8wP8t/pub?embedded=true"width="100%" height="500" frameborder="0"></iframe>
 
 ### Requisito de Usuário - Orientadas a Valor
-As histórias são mantidas em um nível mais alto, focando estritamente na necessidade e no impacto real para as pessoas envolvidas, sem entrar em detalhes de regras lógicas do sistema.
 
 ??? info "Histórias de Usuário (Preliminar)"
     - ![História de Usuário](../../img/aup-concepcao/historia_usuario.jpeg)
 
 ### Requisito de Produto 
-Não houve declaração de requisitos de produto nesta etapa do projeto.
 
----
+A fase de concepção ainda não conta com declaração de requisitos na perspectiva de produto.
+
 
 ## Vídeos Comprobatórios
 
