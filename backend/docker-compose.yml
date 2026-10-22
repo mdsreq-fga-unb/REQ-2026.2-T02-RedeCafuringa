@@ -1,0 +1,26 @@
+# Ambiente de desenvolvimento local.
+#   docker compose up -d mongo      -> só o banco (API roda com `npm run start:dev`)
+#   docker compose up -d --build    -> banco + API em container
+services:
+  mongo:
+    image: mongo:8
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+  api:
+    build: .
+    depends_on:
+      - mongo
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      MONGODB_URI: mongodb://mongo:27017/cafuringa
+      CORS_ORIGINS: http://localhost:5173
+    ports:
+      - '3000:3000'
+
+volumes:
+  mongo-data:

@@ -1,0 +1,6 @@
+# Caddy emite e renova o certificado TLS automaticamente (Let's Encrypt)
+# e redireciona HTTP -> HTTPS por padrão (RNF10).
+{$API_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy api:3000
+}
