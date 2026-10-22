@@ -86,56 +86,10 @@
     | **RNF14** | Disponibilização como aplicação web progressiva | 3 | 3 | 2 | **2,7 → 3** |
         
 ---
-
-## Declaração de Requisitos
-
 ??? info "Priorização MoScoW"
     Reunião de negociação para classificar os requisitos do sistema em quatro níveis de criticidade (Must Have, Should Have, Could Have, Won't Have), visando alinhar as expectativas e definir o escopo do Produto Mínimo Viável.
 
     - ![MoScoW](../../img/aup-elaboracao/moscow_final.png)
-
-### Requisito de Negócio - Narrativas Descritivas
-O storyboard organiza a narrativa em passos sequenciais, ilustrando como o fluxo de valor do negócio é realizado e como as restrições ou metas estratégicas são atendidas, sem ainda detalhar telas ou cliques específicos de sistema.
-??? info "Storyboard"
-    **Quadro 1 (O Contexto e a Demanda):** Uma família residente em Brasília busca opções de lazer na natureza para o final de semana. Eles valorizam o contato com produtores locais, mas precisam de garantia de que o local possui estrutura disponível para recebê-los, evitando viagens perdidas.
-
-    **Quadro 2 (A Descoberta e a Restrição de Negócio):** Através do diretório da Rede Cafuringa, a família descobre uma ecovila que oferece trilhas guiadas. O painel informa claramente a regra de negócio da APA: a visitação só ocorre mediante pré-agendamento aprovado, respeitando o limite máximo de visitantes por dia para proteção ambiental.
-
-    **Quadro 3 (A Conexão Direta e Transparente):** A família submete uma intenção de visita com a data e o número de pessoas. A solicitação é enviada diretamente ao produtor rural anfitrião, sem a cobrança de taxas de corretagem ou comissões por agências terceirizadas.
-
-    **Quadro 4 (A Realização do Valor Estratégico):** O anfitrião rural avalia a disponibilidade e aprova a solicitação. O acordo é fechado diretamente entre as partes. A Rede Cafuringa atinge seu objetivo institucional: conectou a demanda urbana à oferta rural, gerou renda integral para o produtor e manteve o fluxo turístico dentro dos limites de sustentabilidade ambiental.
-
-### Requisito de Usuário - Oriantadas a Valor
-As histórias de usuário são interessantes para o nível de Requisito de Usuário porque focam no "O Quê" (necessidades, expectativas e serviços esperados na interação), conectando diretamente a tecnologia ao valor percebido pelas pessoas.
-??? info "Histórias de Usuário"
-    - ![Histórias de Usuário](../../img/aup-elaboracao/historias_usuario.jpeg)
-
-### Requisito de Produto - Declarações Estruturadas
-Os critérios de aceitação são a técnica ideal para o nível de Requisito de Produto porque têm a função principal de transformar intenções ou necessidades humanas num conjunto de condições objetivas, lógicas e estritamente verificáveis.
-??? info "Critérios de Aceitação"
-    | História de Usuário | Critérios de Aceitação |
-    |---|---|
-    | **HU01** | - Permitir o cadastro de consumidor com os dados obrigatórios.<br>- Validar os campos preenchidos antes de concluir o cadastro.<br>- Impedir o cadastro de e-mail já utilizado.<br>- Exibir confirmação após o cadastro realizado com sucesso. |
-    | **HU02** | - Permitir o cadastro de produtor com seus dados obrigatórios.<br>- Permitir informar os dados da propriedade vinculada ao produtor.<br>- Validar os campos obrigatórios.<br>- Exibir confirmação após o cadastro. |
-    | **HU03** | - Permitir o cadastro de usuário administrativo.<br>- Restringir o acesso administrativo a usuários autorizados.<br>- Validar os dados obrigatórios do administrador.<br>- Confirmar a criação do usuário. |
-    | **HU04** | - Permitir o cadastro de perfil coletivo, como associação ou ecovila.<br>- Permitir vincular propriedades e informações do grupo.<br>- Permitir informar os dados de identificação do coletivo.<br>- Exibir o perfil cadastrado corretamente. |
-    | **HU05** | - Permitir que usuários cadastrados realizem login.<br>- Validar e-mail/usuário e senha.<br>- Informar quando as credenciais forem inválidas.<br>- Redirecionar o usuário para sua área correspondente após autenticação. |
-    | **HU06** | - Permitir solicitar a recuperação de acesso.<br>- Validar a existência do usuário informado.<br>- Disponibilizar mecanismo para redefinição da senha.<br>- Permitir acesso novamente após a redefinição. |
-    | **HU07** | - Permitir ao produtor cadastrar sua propriedade/negócio.<br>- Permitir informar nome, descrição, localização e demais dados necessários.<br>- Permitir editar as informações posteriormente.<br>- Exibir os dados cadastrados no perfil público. |
-    | **HU08** | - Permitir consultar o perfil de um produtor.<br>- Exibir informações de identificação, localização e descrição.<br>- Exibir a situação de certificação informada.<br>- Permitir acessar os produtos e/ou experiências vinculados ao produtor. |
-    | **HU09** | - Permitir ao produtor cadastrar produtos.<br>- Permitir informar nome, descrição, unidade, preço, disponibilidade e demais dados obrigatórios.<br>- Permitir adicionar imagem do produto.<br>- Validar os campos obrigatórios antes de salvar. |
-    | **HU10** | - Permitir consultar os produtos cadastrados por um produtor.<br>- Exibir informações relevantes do produto, incluindo disponibilidade e preço.<br>- Permitir visualizar diferentes produtos do mesmo produtor.<br>- Não exibir produtos indisponíveis como disponíveis. |
-    | **HU11** | - Permitir informar e visualizar a situação de certificação do produtor.<br>- Exibir de forma clara se o produtor é certificado, está em processo ou não possui certificação formal.<br>- Permitir informar o mecanismo de certificação quando aplicável.<br>- Exibir o número de cadastro quando houver. |
-    | **HU12** | - Permitir cadastrar experiências/atividades oferecidas pelo produtor ou propriedade.<br>- Permitir informar descrição, localização, condições e disponibilidade.<br>- Permitir editar ou remover uma experiência cadastrada.<br>- Exibir a experiência no perfil da propriedade. |
-    | **HU13** | - Permitir cadastrar uma propriedade com sua localização geográfica.<br>- Permitir informar descrição e características da propriedade.<br>- Permitir associar produtos, atrativos e experiências à propriedade.<br>- Exibir a propriedade corretamente no sistema. |
-    | **HU14** | - Permitir realizar busca por produtores, produtos ou experiências.<br>- Permitir utilizar filtros disponíveis na plataforma.<br>- Retornar resultados compatíveis com os critérios informados.<br>- Informar quando não houver resultados. |
-    | **HU15** | - Permitir ao consumidor visualizar os canais de contato disponibilizados pelo produtor após a conexão.<br>- Exibir os dados de contato somente conforme as regras de privacidade definidas.<br>- Permitir utilizar o canal de contato informado.<br>- Não cobrar comissão ou taxa pela conexão. |
-    | **HU16** | - Permitir ao consumidor solicitar uma pré-reserva de produto, visita ou experiência.<br>- Exigir o preenchimento das informações necessárias para a solicitação.<br>- Registrar a solicitação com data e status.<br>- Informar ao consumidor que a solicitação foi enviada. |
-    | **HU17** | - Permitir ao produtor visualizar as solicitações de pré-reserva recebidas.<br>- Exibir informações necessárias para análise da solicitação.<br>- Permitir aceitar ou recusar a solicitação.<br>- Atualizar o status da solicitação após a decisão. |
-    | **HU18** | - Permitir ao produtor consultar e gerenciar suas pré-reservas.<br>- Exibir solicitações pendentes, aceitas e recusadas.<br>- Permitir identificar data, horário e tipo da solicitação.<br>- Manter o histórico das solicitações realizadas. |
-    | **HU19** | - Permitir o acompanhamento do status de uma pré-reserva.<br>- Informar ao consumidor quando a solicitação estiver pendente, aceita ou recusada.<br>- Atualizar o status após a resposta do produtor.<br>- Manter o consumidor informado sobre alterações relevantes. |
-    | **HU20** | - Permitir a conexão direta entre consumidor e produtor após a confirmação da solicitação.<br>- Liberar os dados de contato conforme as regras estabelecidas.<br>- Não inserir intermediários na comunicação entre as partes.<br>- Não cobrar taxas ou comissões pela conexão. |
-
 ---
 
 ## Análise e Consenso
