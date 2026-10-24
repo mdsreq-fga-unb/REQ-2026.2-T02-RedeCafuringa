@@ -30,10 +30,11 @@ jobs:
         run: |
           set -euo pipefail
           base="https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}"
-          curl -fsSLo actionlint.tar.gz "${base}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          archive="actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          curl -fsSLo "${archive}" "${base}/${archive}"
           curl -fsSLo checksums.txt "${base}/actionlint_${ACTIONLINT_VERSION}_checksums.txt"
-          grep "actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" checksums.txt | sha256sum -c -
-          tar xzf actionlint.tar.gz actionlint
+          grep "  ${archive}$" checksums.txt | sha256sum -c -
+          tar xzf "${archive}" actionlint
 
       - name: Run actionlint
         run: ./actionlint -color
