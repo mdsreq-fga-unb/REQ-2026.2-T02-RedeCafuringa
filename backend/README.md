@@ -18,20 +18,22 @@ Operação, backup e incidentes estão em [operação e infraestrutura](../docs/
 
 ```bash
 cp .env.example .env
-docker compose up -d          # Mongo healthy; a API do compose só sobe depois
-npm install
+docker compose up -d mongo    # só o banco; a API roda local com hot reload
+npm ci
 npm run start:dev
 ```
+
+> Para rodar a API **em container**: `docker compose up -d --build` e **não** rode
+> `npm run start:dev` ao mesmo tempo (os dois disputam a porta 3000). O compose
+> aplica read-only rootfs, `cap_drop: ALL`, limites de memória/pids, healthchecks
+> e rotação de logs.
+> O guia completo de onboarding/TDD está em [`docs/backend/guia-estrutura-e-tdd.md`](../docs/backend/guia-estrutura-e-tdd.md).
 
 - API: http://localhost:3000/api/v1
 - Health liveness: http://localhost:3000/api/v1/health/live
 - Health readiness: http://localhost:3000/api/v1/health/ready
 - Métricas: http://localhost:3000/api/v1/metrics
 - Swagger: http://localhost:3000/api/v1/docs (fora de produção)
-
-> Para rodar a API dentro do container: `docker compose up -d --build`.
-> O compose aplica read-only rootfs, `cap_drop: ALL`, limites de memória/pids,
-> healthchecks e rotação de logs.
 
 ## Scripts
 

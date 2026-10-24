@@ -16,13 +16,23 @@
 ### Primeiro uso
 
 ```bash
-nvm use                 # lê o .nvmrc (Node 24)
+nvm use                       # lê o .nvmrc (Node 24.22.1)
 cd backend
-npm install
-npm run test:watch      # deixe rodando enquanto desenvolve
+cp .env.example .env
+docker compose up -d mongo    # só o banco; a API roda local com hot reload
+npm ci
+npm run start:dev             # API em http://localhost:3000/api/v1
+
+# em outro terminal, durante o desenvolvimento:
+npm run test:watch
 ```
 
-Na primeira execução do `npm run test:e2e`, o `mongodb-memory-server` baixa o binário do MongoDB (cerca de 1 minuto). Depois disso, fica em cache.
+> Para rodar a API **em container**, use `docker compose up -d --build` e **não**
+> rode `npm run start:dev` ao mesmo tempo (os dois disputam a porta 3000).
+>
+> Na primeira execução do `npm run test:e2e`, o `mongodb-memory-server` baixa o
+> binário do MongoDB (cerca de 1 minuto). Depois disso, fica em cache. O e2e
+> **não precisa** do Docker.
 
 ---
 
@@ -32,24 +42,26 @@ Na primeira execução do `npm run test:e2e`, o `mongodb-memory-server` baixa o 
 backend/
 ├── src/
 │   ├── main.ts                 # bootstrap da aplicação
-│   ├── app.module.ts           # módulo raiz: config + Mongo + módulos de domínio
-│   ├── app.setup.ts            # config global (prefixo, CORS, validação, Swagger)
+│   ├── app.module.ts           # config + Mongo + logger + throttler + módulos
+│   ├── app.setup.ts            # config global: trust proxy, CORS, métricas, Swagger
 │   │                           #   usada no main.ts E nos testes e2e
 │   ├── config/
-│   │   └── env.validation.ts   # variáveis de ambiente obrigatórias
+│   │   ├── env.validation.ts   # variáveis de ambiente obrigatórias
+│   │   └── mongo-uri.ts        # monta a URI a partir dos componentes
 │   ├── common/                 # código transversal, sem regra de domínio específica
 │   │   └── validators/         # ex.: CPF/CNPJ (+ seus .spec.ts)
 │   └── modules/                # UM módulo por característica do produto
-│       └── health/
+│       ├── health/             # live/ready
+│       └── metrics/            # Prometheus
 ├── test/
 │   ├── setup/                  # infraestrutura dos e2e (Mongo em memória)
 │   ├── utils/test-app.ts       # createTestApp(): sobe a API para os e2e
 │   ├── factories/              # geradores de dados de teste (makeCpf, makeProduto...)
 │   └── *.e2e-spec.ts           # testes e2e, um arquivo por módulo/história
-├── deploy/                     # produção na OCI: compose + Caddy (HTTPS)
-├── docs/                       # este guia
+├── deploy/                     # produção: compose, Caddy, init do Mongo, backup
+├── ../docs/backend/            # POC, este guia, operação e segurança (MkDocs)
 ├── Dockerfile                  # imagem da API
-└── docker-compose.yml          # MongoDB local para desenvolvimento
+└── docker-compose.yml          # MongoDB local + API opcional em container
 ```
 
 ### Anatomia de um módulo (modelo a seguir)
@@ -251,11 +263,15 @@ E exporte em `test/factories/index.ts`.
 
 | Comando | Quando usar |
 |---|---|
+| `npm run start:dev` | API local com hot reload (exige `docker compose up -d mongo`) |
 | `npm run test:watch` | **Durante o desenvolvimento**: reexecuta a cada arquivo salvo |
 | `npm test` | Rodar todos os unitários uma vez |
 | `npm run test:cov` | Antes do PR: confere a cobertura mínima (relatório HTML em `coverage/`) |
-| `npm run test:e2e` | Antes do PR: testes da API com banco |
+| `npm run test:e2e` | Antes do PR: testes da API com Mongo em memória |
 | `npm run lint` | Antes do PR |
+| `npm run format:check` | Antes do PR: valida a formatação sem alterar arquivos |
+| `npm run typecheck` | Antes do PR: `tsc --noEmit` em `src` + `test` |
+| `npm run build` | Antes do PR: compila para `dist/` |
 
 ---
 
@@ -272,7 +288,19 @@ E exporte em `test/factories/index.ts`.
 
 - [ ] Testes escritos antes da implementação (commits `test:` → `feat:`)
 - [ ] Nomes dos testes citam HU/CA/RN/RNF
-- [ ] `npm run lint`, `npm run test:cov` e `npm run test:e2e` passando localmente
+- [ ] `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm run test:cov`, `npm run test:e2e` e `npm run build` passando localmente
 - [ ] Fábrica criada para entidades novas
 - [ ] DTO de resposta não expõe dados privados (CPF, senha, e-mail de terceiros)
 - [ ] Rota aparece corretamente no Swagger
+
+## 7. Problemas comuns no primeiro uso
+
+| Sintoma | Causa provável | Solução |
+|---|---|---|
+| `EADDRINUSE:3000` | API do Compose e `npm run start:dev` rodando juntos | use `docker compose up -d mongo` para o fluxo local, ou `docker compose up -d --build` sem `start:dev` |
+| `MongoServerError`/`ECONNREFUSED` | Mongo não está de pé | `docker compose up -d mongo` e confira `docker compose ps` |
+| `featureCompatibilityVersion 8.3` | volume criado por Mongo 8.3, imagem atual é 8.0 LTS | recrie o volume de dev ou faça dump/restore (ver [operação](operacao.md#75-volume-criado-por-mongo-83)) |
+| `vitest: command not found` | `node_modules` ausente/incompleto | `npm ci` na pasta `backend/` |
+| primeiro `test:e2e` demora | `mongodb-memory-server` baixando o binário | aguarde; depois fica em cache |
+| `docker` não mostra os containers no WSL | contexto diferente do Docker Desktop | use o PowerShell/Docker Desktop para o Docker do projeto |
+| `npm ci` falha por versão do Node | Node diferente do `.nvmrc` | `nvm use` (24.22.1) |
