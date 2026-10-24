@@ -33,6 +33,8 @@ export async function createTestApp(
 ): Promise<TestApp> {
   process.env.NODE_ENV = 'test';
   process.env.MONGODB_URI = `${inject('mongoUri')}cafuringa-${randomUUID()}`;
+  process.env.TRUST_PROXY = '0';
+  process.env.LOG_LEVEL = 'silent';
 
   const { AppModule } = await import('../../src/app.module.js');
   const { configureApp } = await import('../../src/app.setup.js');
@@ -41,7 +43,9 @@ export async function createTestApp(
     Test.createTestingModule({ imports: [AppModule] }),
   ).compile();
 
-  const app = moduleRef.createNestApplication<INestApplication<App>>();
+  const app = moduleRef.createNestApplication<INestApplication<App>>({
+    bufferLogs: true,
+  });
   configureApp(app);
   await app.init();
 
