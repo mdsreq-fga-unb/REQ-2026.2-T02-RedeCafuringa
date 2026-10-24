@@ -4,3 +4,6 @@ coverage
 .env
 test
 *.md
+deploy/backups
+*.age
+*.sha256
