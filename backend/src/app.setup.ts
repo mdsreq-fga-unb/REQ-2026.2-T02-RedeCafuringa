@@ -2,6 +2,8 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
+import { Logger } from 'nestjs-pino';
+import { MetricsRegistry } from './modules/metrics/metrics.registry.js';
 
 export const API_PREFIX = 'api/v1';
 
@@ -11,7 +13,17 @@ export const API_PREFIX = 'api/v1';
  */
 export function configureApp(app: INestApplication): void {
   const config = app.get(ConfigService);
+  const httpAdapter = app.getHttpAdapter().getInstance();
 
+  // Atrás do Caddy, confiar em 1 proxy faz req.ip/req.protocol refletirem o
+  // cliente real. Sem isso, rate limit e logs enxergam o IP do proxy.
+  const trustProxy = config.get<boolean | number>('TRUST_PROXY', false);
+  if (trustProxy !== false && trustProxy !== 0) {
+    httpAdapter.set('trust proxy', trustProxy === true ? 1 : trustProxy);
+  }
+
+  app.useLogger(app.get(Logger));
+  app.use(app.get(MetricsRegistry).middleware());
   app.use(helmet());
   app.setGlobalPrefix(API_PREFIX);
   app.enableCors({
@@ -20,6 +32,7 @@ export function configureApp(app: INestApplication): void {
       .split(',')
       .map((origin) => origin.trim())
       .filter(Boolean),
+    maxAge: 600,
   });
   app.useGlobalPipes(
     new ValidationPipe({
@@ -40,6 +53,7 @@ export function configureApp(app: INestApplication): void {
         .addBearerAuth()
         .build(),
     );
+
     SwaggerModule.setup(`${API_PREFIX}/docs`, app, document);
   }
 }
