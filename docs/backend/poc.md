@@ -15,7 +15,7 @@ O que esta PoC **comprova com código executável** (branch `develop-backend`):
 | NestJS 12 + TypeScript sobe e roda no Node 24 LTS com ESM | `npm run build` / `npm run start:dev` |
 | Conexão com MongoDB via Mongoose e verificação de saúde | `GET /api/v1/health` → `{ status: "ok", mongodb: "up" }` |
 | Documentação da API gerada automaticamente | Swagger em `/api/v1/docs` (fora de produção) |
-| TDD viável no fluxo do AUP | Vitest (unitário, cobertura mínima por arquivo) + Supertest + `mongodb-memory-server` (e2e sem Docker), `createTestApp()` e fábricas de dados — ver [guia](docs/guia-estrutura-e-tdd.md) |
+| TDD viável no fluxo do AUP | Vitest (unitário, cobertura mínima por arquivo) + Supertest + `mongodb-memory-server` (e2e sem Docker), `createTestApp()` e fábricas de dados — ver [guia de estrutura e TDD](guia-estrutura-e-tdd.md) |
 | Validação de identificação (RN02, RN03, RN08) | Validador de CPF e CNPJ **alfanumérico** com 22 testes |
 | Esteira de CI gratuita | `.github/workflows/backend-ci.yml` (lint, build, testes) |
 | Implantação conteinerizada com TLS automático | `Dockerfile`, `deploy/docker-compose.prod.yml`, `deploy/Caddyfile` |
@@ -49,7 +49,7 @@ O que esta PoC **comprova com código executável** (branch `develop-backend`):
 | Testes | `vitest`, `supertest`, `mongodb-memory-server` | TDD (AUP) |
 | Lint / formatação | `oxlint`, `prettier` | Padrão do template Nest 12 |
 | **A adicionar** — autenticação | `@nestjs/jwt` + `@nestjs/passport` + `argon2` | RF09, RNF08 |
-| **A adicionar** — rate limit | `@nestjs/throttler` | Proteção do login e da recuperação de senha |
+| **Implementado (2026-10-24)** - rate limit | `@nestjs/throttler` | Proteção do login e da recuperação de senha |
 | **A adicionar** — e-mail | `nodemailer` + SMTP gratuito (ex.: Brevo, 300/dia) | RF10, RF34, RF48 |
 | **A adicionar** — tarefas agendadas | `@nestjs/schedule` | Fila de e-mails sem Redis (RNF13) |
 | **A adicionar** — imagens | OCI Object Storage (20 GB grátis) + `sharp` | Fotos de produtos e experiências |

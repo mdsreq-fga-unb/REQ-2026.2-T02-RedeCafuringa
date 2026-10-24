@@ -1,7 +1,7 @@
 # Guia do Backend — Estrutura de pastas e TDD
 
 > Leitura obrigatória antes do primeiro PR no backend.
-> Decisões de arquitetura e desafios técnicos: [POC.md](../POC.md).
+> Decisões de arquitetura e desafios técnicos: [POC](poc.md).
 
 ---
 

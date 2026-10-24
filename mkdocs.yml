@@ -54,6 +54,12 @@ nav:
     - 2. Declaração de Requisitos: doc_complementar/declaracao_requisitos.md 
     - 3. Critérios de Aceitação: doc_complementar/criterios_aceitacao.md
 
+  - Backend:
+    - POC: backend/poc.md
+    - Guia de estrutura e TDD: backend/guia-estrutura-e-tdd.md
+    - Operação e infraestrutura: backend/operacao.md
+    - Segurança e auditoria: backend/seguranca.md
+
   - AUP - Concepção:
     - Iteração 01: aup-concepcao/iteracao1.md
     - Iteração 02: aup-concepcao/iteracao2.md
