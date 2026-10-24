@@ -113,34 +113,6 @@ Para refletir adequadamente a concentração de notas altas inerentes a um MVP, 
 A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**, considerando os critérios e fórmulas apresentados e suas relações com as História de Usuário.
 
 ---
-
-## 9.5 Tabela de Priorização
-
-| HU | Descrição da HU | VN | ES | CX | CP | ET | Média (VN e ET) | Prioridade escolhida |
-|:---:|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **HU01** | Cadastrar perfil de consumidor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
-| **HU02** | Cadastrar perfil de produtor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
-| **HU03** | Cadastrar usuário administrador | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
-| **HU04** | Consultar usuários cadastrados | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **HU09** | Cadastrar produtos | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **HU10** | Consultar catálogo de produtos | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
-| **HU12** | Registrar trajetória do produtor | 3 | 1 | 1 | 1 | 1,00 | **2,00** | **Baixa** |
-| **HU14** | Buscar produtos e experiências | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **HU17** | Consultar status da pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
-| **HU21** | Desativar conta de usuário | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **HU22** | Consultar produtos, experiências e eventos | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **HU23** | Remover conteúdos inadequados | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
-| **HU25** | Excluir própria conta | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
-| **HU36** | Consultar eventos cadastrados | 3 | 3 | 4 | 2 | 3,00 | **3,00** | **Alta** |
-| **HU39** | Conhecer a história e pontos de interesse da Cafuringa | 3 | 3 | 4 | 2 | 3,00 | **3,00** | **Alta** |
-| **HU44** | Filtrar resultados da busca | 3 | 3 | 3 | 3 | 3,00 | **3,00** | **Alta** |
-| **HU45** | Enviar feedback ao fornecedor | 3 | 3 | 3 | 3 | 3,00 | **3,00** | **Alta** |
-| **HU46** | Visualizar feedbacks relacionados | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
-| **HU47** | Editar feedback enviado | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
-| **HU48** | Excluir feedback enviado | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
-
----
-
 ## 9.3 Requisitos do MVP
 
 | **RF** | **Requisito Funcional** | **História de Usuário relacionada** | **CP** | **Requisitos Não Funcionais relacionados** |
@@ -166,3 +138,31 @@ A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**
 | **RF47** | Responder pré-reserva de experiência | [**HU47 — Como usuário, quero editar um feedback que enviei, para corrigir ou atualizar as informações da minha manifestação.**](../doc_complementar/historias_usuario.md#hu47) | CP6 | RNF03, RNF04, RNF08, RNF11, RNF15 |
 | **RF48** | Notificar alteração de pré-reserva | [**HU48 — Como usuário, quero excluir um feedback que enviei ao fornecedor, para retirar uma manifestação que não desejo mais manter.**](../doc_complementar/historias_usuario.md#hu48) | CP6 | RNF08, RNF11, RNF15 |
 
+---
+
+## 9.4 Tabela de Priorização
+
+| HU | Descrição da HU | VN | ES | CX | CP | ET | Média (VN e ET) | Prioridade escolhida |
+|:---:|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **HU01** | Cadastrar perfil de consumidor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
+| **HU02** | Cadastrar perfil de produtor | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
+| **HU03** | Cadastrar usuário administrador | 4 | 1 | 1 | 1 | 1,00 | **2,50** | **Média** |
+| **HU04** | Consultar usuários cadastrados | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU09** | Cadastrar produtos | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU10** | Consultar catálogo de produtos | 4 | 2 | 3 | 1 | 2,00 | **3,00** | **Alta** |
+| **HU12** | Registrar trajetória do produtor | 3 | 1 | 1 | 1 | 1,00 | **2,00** | **Baixa** |
+| **HU14** | Buscar produtos e experiências | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU17** | Consultar status da pré-reserva | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
+| **HU21** | Desativar conta de usuário | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU22** | Consultar produtos, experiências e eventos | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU23** | Remover conteúdos inadequados | 4 | 2 | 2 | 2 | 2,00 | **3,00** | **Alta** |
+| **HU25** | Excluir própria conta | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
+| **HU36** | Consultar eventos cadastrados | 3 | 3 | 4 | 2 | 3,00 | **3,00** | **Alta** |
+| **HU39** | Conhecer a história e pontos de interesse da Cafuringa | 3 | 3 | 4 | 2 | 3,00 | **3,00** | **Alta** |
+| **HU44** | Filtrar resultados da busca | 3 | 3 | 3 | 3 | 3,00 | **3,00** | **Alta** |
+| **HU45** | Enviar feedback ao fornecedor | 3 | 3 | 3 | 3 | 3,00 | **3,00** | **Alta** |
+| **HU46** | Visualizar feedbacks relacionados | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
+| **HU47** | Editar feedback enviado | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
+| **HU48** | Excluir feedback enviado | 3 | 2 | 2 | 2 | 2,00 | **2,50** | **Média** |
+
+---
