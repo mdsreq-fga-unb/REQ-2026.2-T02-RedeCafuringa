@@ -65,7 +65,7 @@
 
 ??? info "DoR - Iteração 5"
 
-    **HU15 -** Como consumidor ou visitante, quero entrar em contato diretamente com o responsável, para tirar dúvidas antes de comprar ou solicitar experiência.
+    **HU39 -** Como consumidor ou visitante, quero entrar em contato diretamente com o responsável, para tirar dúvidas antes de comprar ou solicitar experiência.
 
     | Check | Pergunta |
     | :---: | :---: |
@@ -99,7 +99,7 @@
 
     *Não há um critério de aceitação coerente com a história de usuário.*
 
-    **HU05 -** Como usuário cadastrado, quero realizar login, para acessar funcionalidades do meu perfil.
+    **HU09 -** Como usuário cadastrado, quero realizar login, para acessar funcionalidades do meu perfil.
 
     | Check | Pergunta |
     | :---: | :---: |
@@ -115,7 +115,7 @@
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
 
-    **HU08 -** Como consumidor ou visitante, quero consultar o perfil de um produtor, para conhecer sua trajetória e atuação antes de comprar ou solicitar experiência.
+    **HU14 -** Como consumidor ou visitante, quero consultar o perfil de um produtor, para conhecer sua trajetória e atuação antes de comprar ou solicitar experiência.
 
     | Check | Pergunta |
     | :---: | :---: |
@@ -131,7 +131,7 @@
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
 
-    **HU09 -** Como produtor cadastrado, quero cadastrar meus produtos, para divulgar minha produção e permitir consulta dos consumidores.
+    **HU17 -** Como produtor cadastrado, quero cadastrar meus produtos, para divulgar minha produção e permitir consulta dos consumidores.
 
     | Check | Pergunta |
     | :---: | :---: |
@@ -147,7 +147,7 @@
     | x | Os responsáveis estão definidos? |
     | x | O requisito está implementado no protótipo e validado? |
 
-    **HU10 -** Como consumidor ou visitante, quero consultar o catálogo de produtos, para encontrar alimentos e outros produtos oferecidos.
+    **HU21 -** Como consumidor ou visitante, quero consultar o catálogo de produtos, para encontrar alimentos e outros produtos oferecidos.
 
     | Check | Pergunta |
     | :---: | :---: |
