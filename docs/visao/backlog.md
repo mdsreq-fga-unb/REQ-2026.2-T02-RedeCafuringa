@@ -59,33 +59,6 @@ A tabela, a seguir, apresenta cada um dos Requisitos Funcionais (RFs) declarados
 
 ---
 ## 9.2 Backlog Priorizado — MVP
-## 9.3 Requisitos do MVP
-
-| **RF** | **Requisito Funcional** | **História de Usuário relacionada** | **CP** | **Requisitos Não Funcionais relacionados** |
-| :----- | :---------------------- | :---------------------------------- | :----: | :----------------------------------------- |
-| **RF01** | Cadastrar perfil de consumidor | [**HU01 — Como consumidor ou visitante, quero cadastrar meu perfil na plataforma, para acessar funcionalidades e interagir com produtores e experiências.**](../doc_complementar/historias_usuario.md#hu01) | CP1 | RNF03, RNF04, RNF07, RNF08, RNF11, RNF15 |
-| **RF02** | Cadastrar perfil de produtor | [**HU02 — Como produtor ou responsável por uma iniciativa, quero cadastrar meu perfil de produtor, para divulgar produção, produtos e experiências.**](../doc_complementar/historias_usuario.md#hu02) | CP1 | RNF03, RNF04, RNF07, RNF08, RNF11, RNF15 |
-| **RF03** | Cadastrar usuário admin | [**HU03 — Como responsável pela administração, quero cadastrar usuários administradores, para permitir apoio no gerenciamento da plataforma.**](../doc_complementar/historias_usuario.md#hu03) | CP1 | RNF03, RNF07, RNF08, RNF11 |
-| **RF04** | Consultar usuários cadastrados | [**HU04 — Como administrador, quero consultar os usuários cadastrados, para acompanhar e administrar os perfis existentes.**](../doc_complementar/historias_usuario.md#hu04) | CP1 | RNF03, RNF08, RNF11 |
-| **RF09** | Autenticar usuário | [**HU09 — Como produtor cadastrado, quero cadastrar meus produtos, para divulgar minha produção e permitir consulta dos consumidores.**](../doc_complementar/historias_usuario.md#hu09) | CP1 | RNF03, RNF04, RNF08, RNF11 |
-| **RF10** | Recuperar acesso à conta | [**HU10 — Como consumidor ou visitante, quero consultar o catálogo de produtos, para encontrar alimentos e outros produtos oferecidos.**](../doc_complementar/historias_usuario.md#hu10) | CP1 | RNF03, RNF04, RNF07, RNF11 |
-| **RF12** | Registrar trajetória do produtor | [**HU12 — Como produtor cadastrado, quero registrar minha trajetória e atuação, para que consumidores conheçam minha história e forma de trabalho.**](../doc_complementar/historias_usuario.md#hu12) | CP1 | RNF03, RNF04, RNF07, RNF08, RNF11, RNF15 |
-| **RF14** | Consultar perfil de produtor | [**HU14 — Como consumidor ou visitante, quero buscar produtos e experiências, para encontrar ofertas com mais rapidez.**](../doc_complementar/historias_usuario.md#hu14) | CP1 | RNF01, RNF02, RNF03, RNF04, RNF06, RNF11, RNF15 |
-| **RF17** | Cadastrar produto | [**HU17 — Como consumidor ou visitante, quero consultar o status da minha pré-reserva, para acompanhar se foi recebida, respondida ou alterada.**](../doc_complementar/historias_usuario.md#hu17) | CP2 | RNF03, RNF04, RNF07, RNF08, RNF15 |
-| **RF21** | Consultar catálogo de produtos | [**HU21 — Como administrador, quero desativar a conta de um usuário quando necessário, para impedir seu acesso em casos administrativos ou de descumprimento das regras da plataforma.**](../doc_complementar/historias_usuario.md#hu21) | CP2 | RNF01, RNF02, RNF03, RNF04, RNF06, RNF15 |
-| **RF22** | Consultar detalhes do produto | [**HU22 — Como administrador, quero consultar os produtos, experiências e eventos cadastrados, para acompanhar os conteúdos publicados pelos produtores.**](../doc_complementar/historias_usuario.md#hu22) | CP2 | RNF01, RNF02, RNF03, RNF04, RNF06, RNF11, RNF15 |
-| **RF23** | Cadastrar experiência | [**HU23 — Como administrador, quero remover conteúdos que violem as regras da plataforma, para manter as ofertas e informações adequadas aos usuários.**](../doc_complementar/historias_usuario.md#hu23) | CP3 | RNF03, RNF04, RNF07, RNF08, RNF15 |
-| **RF25** | Consultar experiência | [**HU25 — Como usuário cadastrado, quero excluir minha própria conta, para deixar de utilizar a plataforma quando desejar.**](../doc_complementar/historias_usuario.md#hu25) | CP3 | RNF01, RNF02, RNF03, RNF04, RNF06, RNF15 |
-| **RF36** | Buscar ofertas | [**HU36 — Como consumidor ou visitante, quero consultar os eventos cadastrados, para conhecer sua descrição, local e período de realização.**](../doc_complementar/historias_usuario.md#hu36) | CP4 | RNF01, RNF02, RNF03, RNF04, RNF06, RNF11, RNF15 |
-| **RF39** | Disponibilizar contato direto | [**HU39 — Como consumidor ou visitante, quero conhecer a história e os principais pontos de interesse da Cafuringa, para compreender melhor a região.**](../doc_complementar/historias_usuario.md#hu39) | CP5 | RNF03, RNF04, RNF08, RNF11, RNF15 |
-| **RF44** | Solicitar pré-reserva de experiência | [**HU44 — Como consumidor ou visitante, quero filtrar os resultados da busca por produto, experiência, atividade, perfil ou outra categoria disponível, para encontrar ofertas relevantes.**](../doc_complementar/historias_usuario.md#hu44) | CP6 | RNF03, RNF04, RNF07, RNF08, RNF11, RNF15 |
-| **RF45** | Consultar pré-reserva | [**HU45 — Como consumidor ou visitante, quero enviar feedback diretamente ao fornecedor sobre uma oferta ou experiência, para compartilhar minha opinião com o responsável.**](../doc_complementar/historias_usuario.md#hu45) | CP6 | RNF03, RNF04, RNF08, RNF11, RNF15 |
-| **RF46** | Cancelar solicitação de pré-reserva | [**HU46 — Como usuário ou produtor envolvido, quero visualizar feedback de produtos, experiências ou eventos relacionados a mim, para acompanhar os comentários registrados.**](../doc_complementar/historias_usuario.md#hu46) | CP6 | RNF03, RNF08, RNF11, RNF15 |
-| **RF47** | Responder pré-reserva de experiência | [**HU47 — Como usuário, quero editar um feedback que enviei, para corrigir ou atualizar as informações da minha manifestação.**](../doc_complementar/historias_usuario.md#hu47) | CP6 | RNF03, RNF04, RNF08, RNF11, RNF15 |
-| **RF48** | Notificar alteração de pré-reserva | [**HU48 — Como usuário, quero excluir um feedback que enviei ao fornecedor, para retirar uma manifestação que não desejo mais manter.**](../doc_complementar/historias_usuario.md#hu48) | CP6 | RNF08, RNF11, RNF15 |
-
----
-
 ## Critérios de Priorização do Backlog
 
 Para a priorização do backlog, foram utilizados os seguintes critérios:
@@ -136,6 +109,33 @@ Para refletir adequadamente a concentração de notas altas inerentes a um MVP, 
 | Média < 2,50 | **Baixa prioridade** |
 
 A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**, considerando os critérios e fórmulas apresentados e suas relações com as História de Usuário.
+
+---
+
+## 9.3 Requisitos do MVP
+
+| **RF** | **Requisito Funcional** | **História de Usuário relacionada** | **CP** | **Requisitos Não Funcionais relacionados** |
+| :----- | :---------------------- | :---------------------------------- | :----: | :----------------------------------------- |
+| **RF01** | Cadastrar perfil de consumidor | [**HU01 — Como consumidor ou visitante, quero cadastrar meu perfil na plataforma, para acessar funcionalidades e interagir com produtores e experiências.**](../doc_complementar/historias_usuario.md#hu01) | CP1 | RNF03, RNF04, RNF07, RNF08, RNF11, RNF15 |
+| **RF02** | Cadastrar perfil de produtor | [**HU02 — Como produtor ou responsável por uma iniciativa, quero cadastrar meu perfil de produtor, para divulgar produção, produtos e experiências.**](../doc_complementar/historias_usuario.md#hu02) | CP1 | RNF03, RNF04, RNF07, RNF08, RNF11, RNF15 |
+| **RF03** | Cadastrar usuário admin | [**HU03 — Como responsável pela administração, quero cadastrar usuários administradores, para permitir apoio no gerenciamento da plataforma.**](../doc_complementar/historias_usuario.md#hu03) | CP1 | RNF03, RNF07, RNF08, RNF11 |
+| **RF04** | Consultar usuários cadastrados | [**HU04 — Como administrador, quero consultar os usuários cadastrados, para acompanhar e administrar os perfis existentes.**](../doc_complementar/historias_usuario.md#hu04) | CP1 | RNF03, RNF08, RNF11 |
+| **RF09** | Autenticar usuário | [**HU09 — Como produtor cadastrado, quero cadastrar meus produtos, para divulgar minha produção e permitir consulta dos consumidores.**](../doc_complementar/historias_usuario.md#hu09) | CP1 | RNF03, RNF04, RNF08, RNF11 |
+| **RF10** | Recuperar acesso à conta | [**HU10 — Como consumidor ou visitante, quero consultar o catálogo de produtos, para encontrar alimentos e outros produtos oferecidos.**](../doc_complementar/historias_usuario.md#hu10) | CP1 | RNF03, RNF04, RNF07, RNF11 |
+| **RF12** | Registrar trajetória do produtor | [**HU12 — Como produtor cadastrado, quero registrar minha trajetória e atuação, para que consumidores conheçam minha história e forma de trabalho.**](../doc_complementar/historias_usuario.md#hu12) | CP1 | RNF03, RNF04, RNF07, RNF08, RNF11, RNF15 |
+| **RF14** | Consultar perfil de produtor | [**HU14 — Como consumidor ou visitante, quero buscar produtos e experiências, para encontrar ofertas com mais rapidez.**](../doc_complementar/historias_usuario.md#hu14) | CP1 | RNF01, RNF02, RNF03, RNF04, RNF06, RNF11, RNF15 |
+| **RF17** | Cadastrar produto | [**HU17 — Como consumidor ou visitante, quero consultar o status da minha pré-reserva, para acompanhar se foi recebida, respondida ou alterada.**](../doc_complementar/historias_usuario.md#hu17) | CP2 | RNF03, RNF04, RNF07, RNF08, RNF15 |
+| **RF21** | Consultar catálogo de produtos | [**HU21 — Como administrador, quero desativar a conta de um usuário quando necessário, para impedir seu acesso em casos administrativos ou de descumprimento das regras da plataforma.**](../doc_complementar/historias_usuario.md#hu21) | CP2 | RNF01, RNF02, RNF03, RNF04, RNF06, RNF15 |
+| **RF22** | Consultar detalhes do produto | [**HU22 — Como administrador, quero consultar os produtos, experiências e eventos cadastrados, para acompanhar os conteúdos publicados pelos produtores.**](../doc_complementar/historias_usuario.md#hu22) | CP2 | RNF01, RNF02, RNF03, RNF04, RNF06, RNF11, RNF15 |
+| **RF23** | Cadastrar experiência | [**HU23 — Como administrador, quero remover conteúdos que violem as regras da plataforma, para manter as ofertas e informações adequadas aos usuários.**](../doc_complementar/historias_usuario.md#hu23) | CP3 | RNF03, RNF04, RNF07, RNF08, RNF15 |
+| **RF25** | Consultar experiência | [**HU25 — Como usuário cadastrado, quero excluir minha própria conta, para deixar de utilizar a plataforma quando desejar.**](../doc_complementar/historias_usuario.md#hu25) | CP3 | RNF01, RNF02, RNF03, RNF04, RNF06, RNF15 |
+| **RF36** | Buscar ofertas | [**HU36 — Como consumidor ou visitante, quero consultar os eventos cadastrados, para conhecer sua descrição, local e período de realização.**](../doc_complementar/historias_usuario.md#hu36) | CP4 | RNF01, RNF02, RNF03, RNF04, RNF06, RNF11, RNF15 |
+| **RF39** | Disponibilizar contato direto | [**HU39 — Como consumidor ou visitante, quero conhecer a história e os principais pontos de interesse da Cafuringa, para compreender melhor a região.**](../doc_complementar/historias_usuario.md#hu39) | CP5 | RNF03, RNF04, RNF08, RNF11, RNF15 |
+| **RF44** | Solicitar pré-reserva de experiência | [**HU44 — Como consumidor ou visitante, quero filtrar os resultados da busca por produto, experiência, atividade, perfil ou outra categoria disponível, para encontrar ofertas relevantes.**](../doc_complementar/historias_usuario.md#hu44) | CP6 | RNF03, RNF04, RNF07, RNF08, RNF11, RNF15 |
+| **RF45** | Consultar pré-reserva | [**HU45 — Como consumidor ou visitante, quero enviar feedback diretamente ao fornecedor sobre uma oferta ou experiência, para compartilhar minha opinião com o responsável.**](../doc_complementar/historias_usuario.md#hu45) | CP6 | RNF03, RNF04, RNF08, RNF11, RNF15 |
+| **RF46** | Cancelar solicitação de pré-reserva | [**HU46 — Como usuário ou produtor envolvido, quero visualizar feedback de produtos, experiências ou eventos relacionados a mim, para acompanhar os comentários registrados.**](../doc_complementar/historias_usuario.md#hu46) | CP6 | RNF03, RNF08, RNF11, RNF15 |
+| **RF47** | Responder pré-reserva de experiência | [**HU47 — Como usuário, quero editar um feedback que enviei, para corrigir ou atualizar as informações da minha manifestação.**](../doc_complementar/historias_usuario.md#hu47) | CP6 | RNF03, RNF04, RNF08, RNF11, RNF15 |
+| **RF48** | Notificar alteração de pré-reserva | [**HU48 — Como usuário, quero excluir um feedback que enviei ao fornecedor, para retirar uma manifestação que não desejo mais manter.**](../doc_complementar/historias_usuario.md#hu48) | CP6 | RNF08, RNF11, RNF15 |
 
 ---
 
