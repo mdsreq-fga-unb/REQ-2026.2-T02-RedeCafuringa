@@ -14,3 +14,14 @@ export type ContactSettings = {
     whatsappNumber: string;
     authorized: boolean;
 };
+
+export type AuthUser = {
+    id: number;
+    name: string;
+    role: Role;
+};
+
+export type AuthResult = {
+    token: string;
+    user: AuthUser;
+};
