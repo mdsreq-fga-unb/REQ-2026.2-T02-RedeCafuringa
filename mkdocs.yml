@@ -43,16 +43,12 @@ nav:
     - 6. Interação Entre Equipe e Cliente: visao/interacao.md
     - 7. Requisitos de Software: visao/requisitos_software.md
     - 8. DoR e DoD: visao/dor_dod.md
-    - 9. Backlog do Produto: visao/backlog.md
-    - 10. Cronograma: visao/cronograma.md
-    - 11. Lições Aprendidas: visao/licoes_aprendidas.md
-    - 12. Referências Bibliográficas: visao/referencias.md
-    - 13. Vídeo de Apresentação: visao/videos.md
-
-  - Documentação Complementar: 
-    - 1. Regras de Negócio: doc_complementar/regras_negocio.md 
-    - 2. Declaração de Requisitos: doc_complementar/declaracao_requisitos.md 
-    - 3. Critérios de Aceitação: doc_complementar/criterios_aceitacao.md
+    - 9. Histórias de Usuário: visao/historias_usuario.md
+    - 10. Backlog do Produto: visao/backlog.md
+    - 11. Cronograma: visao/cronograma.md
+    - 12. Lições Aprendidas: visao/licoes_aprendidas.md
+    - 13. Referências Bibliográficas: visao/referencias.md
+    - 14. Vídeo de Apresentação: visao/videos.md
 
   - AUP - Concepção:
     - Iteração 01: aup-concepcao/iteracao1.md

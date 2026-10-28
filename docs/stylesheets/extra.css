@@ -1,15 +1,4 @@
-/* =====================================================
-   NATIVO — DESIGN SYSTEM
-   Paleta oficial:
-     Shadow Black     #171918
-     Evergreen Shadow #043222
-     Olive Sage       #91996B
-     Almond Cream     #F6E9D9
-     Light Cinnamon   #B67150
-     Soft Ivory       #F6F3F4
-   ===================================================== */
 
-/* ---------- TIPOGRAFIA ---------- */
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -27,7 +16,7 @@
 
 body, .md-typeset {
   font-family: var(--nativo-font-body) !important;
-  font-size: 0.92rem;
+  font-size: 0.82rem;
   line-height: 1.75;
 }
 
@@ -250,10 +239,9 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 /* ── Todos os links da sidebar ── */
 .md-nav__link {
   font-family: var(--nativo-font-body);
-  font-size: 0.8rem;           /* base; sobrescrita por regras de nível 1 e 2 */
+  font-size: 0.7rem;           
   font-weight: 400;
   border-radius: 6px;
-  /* padding vertical generoso para "centralizar" na altura */
   padding: 0.55rem 0.75rem;
   min-height: 2.4rem;
   display: flex;
@@ -315,7 +303,7 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 
 /* ── Subtópicos (nível 2) ── */
 .md-nav__item .md-nav .md-nav__link {
-  font-size: 0.77rem;
+  font-size: 0.70rem;
   padding: 0.45rem 0.75rem 0.45rem 1.2rem;
   min-height: 2.1rem;
   color: rgba(23, 25, 24, 0.72);
@@ -444,7 +432,7 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   overflow: hidden;
   border: 1px solid rgba(145, 153, 107, 0.35);
   box-shadow: 0 2px 12px rgba(4, 50, 34, 0.07);
-  font-size: 0.84rem;
+  font-size: 0.6rem;
   width: 100%;
 }
 
@@ -455,8 +443,8 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  font-size: 0.75rem;
-  padding: 0.8rem 1rem;
+  font-size: 0.65rem;
+  padding: 0.3rem 1rem;
   text-align: center;
 }
 
@@ -724,7 +712,7 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
    ÍNDICE TOC (lateral direito)
    ===================================================== */
 .md-nav--secondary .md-nav__link {
-  font-size: 0.79rem;
+  font-size: 0.70rem;
 }
 
 .md-nav--secondary .md-nav__link--active {
@@ -815,7 +803,7 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 
 /* Ajusta a largura máxima do container principal do site */
 .md-grid {
-  max-width: 1400px !important;
+  max-width: 2000px !important;
 }
 
 /* Transforma a tabela em linhas estilo cards */
@@ -878,3 +866,4 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
     background-color: rgba(236, 201, 75, 0.2);
     color: #f6d76f;
 }
+
