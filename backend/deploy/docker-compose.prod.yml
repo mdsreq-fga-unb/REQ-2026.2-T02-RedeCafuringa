@@ -81,6 +81,11 @@ services:
       THROTTLE_TTL: ${THROTTLE_TTL:-60}
       THROTTLE_LIMIT: ${THROTTLE_LIMIT:-100}
       METRICS_TOKEN: ${METRICS_TOKEN:-}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET é obrigatório}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-900}
+      AUTH_THROTTLE_LIMIT: ${AUTH_THROTTLE_LIMIT:-5}
+      PII_HMAC_SECRET: ${PII_HMAC_SECRET:?PII_HMAC_SECRET é obrigatório}
+      PII_ENCRYPTION_KEY: ${PII_ENCRYPTION_KEY:?PII_ENCRYPTION_KEY é obrigatório}
     networks:
       - edge
       - internal

@@ -2,3 +2,4 @@
 //   import { makeCpf } from '@test/factories';
 // Cada nova entidade ganha um arquivo <entidade>.factory.ts exportado aqui.
 export * from './documento.factory.js';
+export * from './user.factory.js';
