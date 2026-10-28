@@ -96,8 +96,27 @@ export const envValidationSchema = Joi.object({
   THROTTLE_TTL: Joi.number().integer().min(1).default(60),
   THROTTLE_LIMIT: Joi.number().integer().min(1).default(100),
   METRICS_TOKEN: Joi.string().min(16).allow('').optional(),
+
+  // Autenticação (RF09, RNF08). Gere cada segredo com: openssl rand -hex 32
+  JWT_SECRET: Joi.string().min(32).required(),
+  // Validade do token de acesso, em segundos (padrão 15 min, máximo 24 h).
+  JWT_EXPIRES_IN: Joi.number().integer().min(60).max(86_400).default(900),
+  // Tentativas de login/cadastro por IP a cada THROTTLE_TTL segundos.
+  AUTH_THROTTLE_LIMIT: Joi.number().integer().min(1).default(5),
+
+  // Dados pessoais pesquisáveis (D1, RNF11): blind index e cifra do CPF.
+  // Trocar qualquer um deles invalida os CPFs já gravados.
+  PII_HMAC_SECRET: Joi.string().min(32).required(),
+  PII_ENCRYPTION_KEY: Joi.string()
+    .pattern(/^[0-9a-fA-F]{64}$/)
+    .required(),
 }).custom((value: Record<string, unknown>, helpers: Joi.CustomHelpers) => {
   if (!value.MONGODB_URI && (!value.MONGODB_USER || !value.MONGODB_PASSWORD)) {
+    return helpers.error('any.invalid');
+  }
+
+  // Segredos com finalidades diferentes não podem ser reaproveitados.
+  if (value.JWT_SECRET === value.PII_HMAC_SECRET) {
     return helpers.error('any.invalid');
   }
 

@@ -8,8 +8,16 @@ import { randomUUID } from 'node:crypto';
 import pino from 'pino';
 import { envValidationSchema } from './config/env.validation.js';
 import { resolveMongoUri } from './config/mongo-uri.js';
+import { AuthModule } from './modules/auth/auth.module.js';
+import {
+  AUTH_THROTTLER,
+  isNotAuthThrottled,
+} from './modules/auth/decorators/auth-throttle.decorator.js';
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard.js';
+import { RolesGuard } from './modules/auth/guards/roles.guard.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { MetricsModule } from './modules/metrics/metrics.module.js';
+import { UsersModule } from './modules/users/users.module.js';
 
 @Module({
   imports: [
@@ -99,6 +107,13 @@ import { MetricsModule } from './modules/metrics/metrics.module.js';
             ttl: config.get<number>('THROTTLE_TTL', 60) * 1000,
             limit: config.get<number>('THROTTLE_LIMIT', 100),
           },
+          {
+            // Limite extra, mais restrito, só nas rotas com @AuthThrottle().
+            name: AUTH_THROTTLER,
+            ttl: config.get<number>('THROTTLE_TTL', 60) * 1000,
+            limit: config.get<number>('AUTH_THROTTLE_LIMIT', 5),
+            skipIf: isNotAuthThrottled,
+          },
         ],
       }),
     }),
@@ -119,11 +134,23 @@ import { MetricsModule } from './modules/metrics/metrics.module.js';
 
     HealthModule,
     MetricsModule,
+    UsersModule,
+    AuthModule,
   ],
+  // A ordem importa: rate limit antes da autenticação (força bruta de token
+  // também é limitada) e autenticação antes do papel.
   providers: [
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useExisting: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useExisting: RolesGuard,
     },
   ],
 })

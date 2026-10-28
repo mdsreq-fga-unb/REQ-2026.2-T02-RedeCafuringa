@@ -51,3 +51,13 @@ export function isValidCnpj(value: string): boolean {
   }
   return cnpjCheckDigits(cnpj.slice(0, 12)) === cnpj.slice(12);
 }
+
+/**
+ * Mascara o CPF para exibição ao titular (RNF11): só os 6 dígitos centrais
+ * ficam visíveis. Valores que não são CPF viram máscara completa.
+ */
+export function maskCpf(value: string): string {
+  const cpf = onlyDocumentChars(value);
+  if (!/^\d{11}$/.test(cpf)) return '***.***.***-**';
+  return `***.${cpf.slice(3, 6)}.${cpf.slice(6, 9)}-**`;
+}

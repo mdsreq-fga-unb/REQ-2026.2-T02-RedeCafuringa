@@ -65,6 +65,12 @@ services:
       LOG_LEVEL: debug
       THROTTLE_TTL: '60'
       THROTTLE_LIMIT: '100'
+      # Segredos lidos do .env (copiado de .env.example).
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-900}
+      AUTH_THROTTLE_LIMIT: ${AUTH_THROTTLE_LIMIT:-5}
+      PII_HMAC_SECRET: ${PII_HMAC_SECRET:?defina PII_HMAC_SECRET no .env}
+      PII_ENCRYPTION_KEY: ${PII_ENCRYPTION_KEY:?defina PII_ENCRYPTION_KEY no .env}
     ports:
       - '127.0.0.1:3000:3000'
     logging:
