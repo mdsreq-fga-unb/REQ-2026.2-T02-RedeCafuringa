@@ -1,6 +1,5 @@
 import { useState } from "react";
-import type { Role } from "../../shared/types";
-import { producerName } from "../offers/offerData";
+import type { AuthResult, Role } from "../../shared/types";
 
 const readRole = (): Role | null => {
     const saved = localStorage.getItem("cafuringa-role");
@@ -12,19 +11,13 @@ export function useDemoSession() {
     const [consumerName, setConsumerName] = useState(
         () => localStorage.getItem("cafuringa-name") || "",
     );
-    const [loginName, setLoginName] = useState(
-        () => localStorage.getItem("cafuringa-name") || "Visitante Cafuringa",
-    );
 
-    const signIn = (nextRole: Role) => {
-        const name =
-            nextRole === "producer"
-                ? producerName
-                : loginName.trim() || "Visitante Cafuringa";
-        setRole(nextRole);
-        setConsumerName(name);
-        localStorage.setItem("cafuringa-role", nextRole);
-        localStorage.setItem("cafuringa-name", name);
+    const signIn = ({ token, user }: AuthResult) => {
+        setRole(user.role);
+        setConsumerName(user.name);
+        localStorage.setItem("cafuringa-role", user.role);
+        localStorage.setItem("cafuringa-name", user.name);
+        localStorage.setItem("cafuringa-token", token);
     };
 
     const signOut = () => {
@@ -32,7 +25,8 @@ export function useDemoSession() {
         setConsumerName("");
         localStorage.removeItem("cafuringa-role");
         localStorage.removeItem("cafuringa-name");
+        localStorage.removeItem("cafuringa-token");
     };
 
-    return { role, consumerName, loginName, setLoginName, signIn, signOut };
+    return { role, consumerName, signIn, signOut };
 }
