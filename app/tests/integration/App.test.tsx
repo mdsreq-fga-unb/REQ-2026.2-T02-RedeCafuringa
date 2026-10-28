@@ -5,10 +5,25 @@ import {
     screen,
     waitFor,
 } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
+import { login } from "@/features/auth/authService";
+
+vi.mock("@/features/auth/authService");
+
+async function signInAsConsumer() {
+    const user = userEvent.setup();
+    await user.type(await screen.findByLabelText("CPF"), "52998224725");
+    await user.type(screen.getByLabelText("Senha"), "senha123");
+    await user.click(screen.getByRole("button", { name: "Entrar" }));
+}
 
 beforeEach(() => {
+    vi.mocked(login).mockResolvedValue({
+        token: "token-falso",
+        user: { id: 1, name: "Gabriela", role: "consumer" },
+    });
     localStorage.clear();
     window.location.hash = "#/perfil";
 });
@@ -59,11 +74,7 @@ describe("fluxo de contato da aplicação", () => {
         fireEvent.click(
             screen.getByRole("button", { name: "Conversar pelo WhatsApp" }),
         );
-        fireEvent.click(
-            await screen.findByRole("button", {
-                name: "Entrar como consumidor",
-            }),
-        );
+        await signInAsConsumer();
 
         await waitFor(() => expect(openWhatsApp).toHaveBeenCalledOnce());
         expect(openWhatsApp).toHaveBeenCalledWith(
@@ -105,11 +116,7 @@ describe("fluxo de contato da aplicação", () => {
             fireEvent.click(
                 screen.getByRole("button", { name: "Conversar pelo WhatsApp" }),
             );
-            fireEvent.click(
-                await screen.findByRole("button", {
-                    name: "Entrar como consumidor",
-                }),
-            );
+            await signInAsConsumer();
 
             await waitFor(() => expect(openWhatsApp).toHaveBeenCalledOnce());
             const contactUrl = new URL(String(openWhatsApp.mock.calls[0][0]));

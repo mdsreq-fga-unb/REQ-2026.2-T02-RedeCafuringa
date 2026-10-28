@@ -10,17 +10,22 @@ import {
 } from "@/features/contact";
 import { CatalogPage, offers, OfferDetailsPage } from "@/features/offers";
 import { ProfilePage } from "@/features/profile";
+import type { AuthResult } from "@/shared/types";
 import { useHashRoute } from "./useHashRoute";
 import "../App.css";
 
 export function App() {
     const { route, navigate } = useHashRoute();
-    const { role, consumerName, loginName, setLoginName, signIn, signOut } =
-        useDemoSession();
+    const { role, consumerName, signIn, signOut } = useDemoSession();
     const { settings, draft, setDraft, saved, setSaved, save } =
         useContactSettings();
 
     const path = route.split("?")[0];
+    const fromContact = new URLSearchParams(route.split("?")[1] || "").has(
+        "contato",
+    );
+    // Áreas de usuário logado: quem não está autenticado vê a tela de entrar.
+    const screenPath = path === "/conta" && role === null ? "/entrar" : path;
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
         : undefined;
@@ -51,11 +56,12 @@ export function App() {
         );
     };
 
-    const handleSignIn = (nextRole: "consumer" | "producer") => {
+    const handleSignIn = (auth: AuthResult) => {
+        const nextRole = auth.user.role;
         const subjectId = new URLSearchParams(route.split("?")[1] || "").get(
             "contato",
         );
-        signIn(nextRole);
+        signIn(auth);
 
         if (
             nextRole === "consumer" &&
@@ -80,7 +86,7 @@ export function App() {
             return;
         }
 
-        navigate(nextRole === "producer" ? "/conta" : "/perfil");
+        navigate("/conta");
     };
 
     return (
@@ -109,15 +115,14 @@ export function App() {
                         }
                     />
                 )}
-                {path === "/entrar" && (
+                {screenPath === "/entrar" && (
                     <LoginPage
-                        loginName={loginName}
-                        onLoginNameChange={setLoginName}
+                        fromContact={fromContact}
                         onNavigate={navigate}
                         onSignIn={handleSignIn}
                     />
                 )}
-                {path === "/conta" && (
+                {screenPath === "/conta" && (
                     <AccountPage
                         role={role}
                         consumerName={consumerName}
