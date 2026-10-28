@@ -10,29 +10,24 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 
 ## Atalhos
 <div class="section-cards">
-  <a class="section-card" href="aup-concepcao/iteracao1">
-    <h3>Concepção</h3>
-    <p>Navegue pelas iterações da fase de concepção do nosso projeto.</p>
+  <a class="section-card" href="visao/cenario/">
+    <h3>Cenário Atual</h3>
+    <p>Navegue pelo contexto da Cafuringa sob uma perspectiva atual de mercado.</p>
   </a>
-  <a class="section-card" href="aup-elaboracao/iteracao3">
-    <h3>Elaboração</h3>
-    <p>Navegue pelas iterações da fase de elaboração do nosso projeto.</p>
+
+  <a class="section-card" href="visao/solucao/">
+    <h3>Solução Proposta</h3>
+    <p>Conheça nossa proposta e o que queremos alcançar com esse projeto.</p>
   </a>
-  <a class="section-card" href="aup-construcao/iteracao5">
-    <h3>Construção</h3>
-    <p>Navegue pelas iterações da fase de construção do nosso projeto.</p>
+
+  <a class="section-card" href="visao/mvp/">
+    <h3>MVP</h3>
+    <p>Navegue pela nossa lista de requisitos priorizados (MVP) que serão implementados prioritariamente.</p>
   </a>
-  <a class="section-card" href="aup-transicao/iteracao9">
-    <h3>Transição</h3>
-    <p>Navegue pelas iterações da fase de transição do nosso projeto.</p>
-  </a>
-  <a class="section-card" href="unidade1/cenario">
-    <h3>Visão Geral do Projeto</h3>
-    <p>Navegue pela visão geral do cliente e do produto.</p>
-  </a>
-  <a class="section-card" href="unidade2/requisitos">
-    <h3>Requisitos do Sistema</h3>
-    <p>Navegue pelo backlog do sistema e dos requisitos.</p>
+
+  <a class="section-card" href="visao/cronograma/">
+    <h3>Cronograma</h3>
+    <p>Veja como nos organizamos para entregar nosso produto.</p>
   </a>
 </div>
 

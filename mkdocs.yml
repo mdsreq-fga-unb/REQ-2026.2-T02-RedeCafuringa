@@ -34,40 +34,21 @@ extra_javascript:
 nav:
   - Início: index.md
 
-  - Visão do Projeto:
-    - 1. Cenário Atual do Cliente e do Negócio: visao/cenario.md
-    - 2. Solução Proposta: visao/solucao.md
-    - 3. Intervenção Social: visao/intervencao.md
-    - 4. Estratégias de Engenharia de Software: visao/estrategias.md
-    - 5. Engenharia de Requisitos: visao/engenharia_requisitos.md
-    - 6. Interação Entre Equipe e Cliente: visao/interacao.md
-    - 7. Requisitos de Software: visao/requisitos_software.md
-    - 8. DoR e DoD: visao/dor_dod.md
-    - 9. Histórias de Usuário: visao/historias_usuario.md
-    - 10. Backlog do Produto: visao/backlog.md
-    - 11. Cronograma: visao/cronograma.md
-    - 12. Lições Aprendidas: visao/licoes_aprendidas.md
-    - 13. Referências Bibliográficas: visao/referencias.md
-    - 14. Vídeo de Apresentação: visao/videos.md
 
-  - AUP - Concepção:
-    - Iteração 01: aup-concepcao/iteracao1.md
-    - Iteração 02: aup-concepcao/iteracao2.md
-
-  - AUP - Elaboração:
-    - Iteração 03: aup-elaboracao/iteracao3.md
-    - Iteração 04: aup-elaboracao/iteracao4.md
-
-  - AUP - Construção:
-    - Iteração 05: aup-construcao/iteracao5.md
-    - Iteração 06: aup-construcao/iteracao6.md
-    - Iteração 07: aup-construcao/iteracao7.md
-    - Iteração 08: aup-construcao/iteracao8.md
-
-  - AUP - Transição:
-    - Iteração 09: aup-transicao/iteracao9.md
-    - Iteração 10: aup-transicao/iteracao10.md
-
+  - 1. Cenário Atual do Cliente e do Negócio: visao/cenario.md
+  - 2. Solução Proposta: visao/solucao.md
+  - 3. Intervenção Social: visao/intervencao.md
+  - 4. Estratégias de Engenharia de Software: visao/estrategias.md
+  - 5. Engenharia de Requisitos: visao/engenharia_requisitos.md
+  - 6. Interação Entre Equipe e Cliente: visao/interacao.md
+  - 7. Requisitos de Software: visao/requisitos_software.md
+  - 8. DoR e DoD: visao/dor_dod.md
+  - 9. Histórias de Usuário: visao/historias_usuario.md
+  - 10. MVP: visao/mvp.md
+  - 11. Cronograma: visao/cronograma.md
+  - 12. Lições Aprendidas: visao/licoes_aprendidas.md
+  - 13. Referências Bibliográficas: visao/referencias.md
+  - 14. Vídeo de Apresentação: visao/videos.md
 
 markdown_extensions:
   - attr_list
