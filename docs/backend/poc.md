@@ -48,7 +48,7 @@ O que esta PoC **comprova com código executável** (branch `develop-backend`):
 | Cabeçalhos de segurança | `helmet` | RNF10, RNF11 |
 | Testes | `vitest`, `supertest`, `mongodb-memory-server` | TDD (AUP) |
 | Lint / formatação | `oxlint`, `prettier` | Padrão do template Nest 12 |
-| **A adicionar** — autenticação | `@nestjs/jwt` + `@nestjs/passport` + `argon2` | RF09, RNF08 |
+| **Implementado (2026-10-28)** — autenticação | `@nestjs/jwt` + `argon2` (guards próprios, sem Passport) | RF09, RNF08 |
 | **Implementado (2026-10-24)** - rate limit | `@nestjs/throttler` | Proteção do login e da recuperação de senha |
 | **A adicionar** — e-mail | `nodemailer` + SMTP gratuito (ex.: Brevo, 300/dia) | RF10, RF34, RF48 |
 | **A adicionar** — tarefas agendadas | `@nestjs/schedule` | Fila de e-mails sem Redis (RNF13) |

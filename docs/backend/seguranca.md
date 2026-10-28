@@ -46,6 +46,13 @@ O time responde em até 5 dias úteis.
 | CI com lint, format, typecheck, audit, testes, Docker build, hadolint | `.github/workflows/backend-ci.yml` |
 | Actionlint com checksum | `.github/workflows/actionlint.yml` |
 | Imagens pinadas por digest | `Dockerfile`, compose de prod |
+| Autenticação JWT HS256 (15 min), algoritmo fixo na verificação | `backend/src/modules/auth` |
+| Negação por padrão (`JwtAuthGuard` global + `@Public()`) e RBAC (`RolesGuard` + `@Roles()`) | `backend/src/modules/auth/guards` |
+| Senhas com argon2id; política mínima (8–128, letra e número) | `backend/src/common/crypto/password-hasher.ts` |
+| CPF como *blind index* HMAC-SHA256 + cifra AES-256-GCM (D1) | `backend/src/common/crypto/pii-cipher.ts` |
+| Login sem enumeração (mensagem e custo iguais para CPF inexistente) | `backend/src/modules/auth/auth.service.ts` |
+| Rate limit dedicado a login/cadastro (`AUTH_THROTTLE_LIMIT`) | `@AuthThrottle()` |
+| Bloqueio de cadastro de menores de 18 anos (RN15, RNF15) | `backend/src/modules/users/domain/age.ts` |
 
 ## 4. Auditoria de 2026-10-24 — o que foi encontrado e corrigido
 
@@ -88,7 +95,15 @@ Compose de dev/prod healthy; restore de 1 documento validado; app user negado no
 6. **`docker compose down`** deixa volumes anônimos (`/data/configdb`, testes com
    `docker run`). Nunca usar `down -v` em produção; limpar órfãos com `docker volume prune`.
 7. **Métricas:** o Caddy bloqueia `/metrics` publicamente; o scrape precisa ser interno.
-8. **Docs:** `mkdocs build` tem warnings de links quebrados pré-existentes; não
+8. **Autenticação (incremento 1, parcial):**
+   - Não há refresh token nem revogação: o token vale até expirar (15 min). Desativar
+     uma conta bloqueia novos logins e o `/auth/me`, mas tokens já emitidos seguem
+     válidos nas demais rotas até o `exp`.
+   - O índice único de `cpfHash` só é criado automaticamente fora de produção
+     (`autoIndex`). Em produção, criá-lo por migração **antes** do primeiro cadastro.
+   - `PII_HMAC_SECRET` e `PII_ENCRYPTION_KEY` não têm rotação: perdê-los torna os
+     CPFs ilegíveis/inacessíveis. Guardar junto da chave de backup.
+9. **Docs:** `mkdocs build` tem warnings de links quebrados pré-existentes; não
    bloqueiam o build, mas devem ser corrigidos à parte.
 
 ## 6. Checklist antes de publicar/entregar

@@ -1,11 +1,19 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ModuleMetadata } from '@nestjs/common';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
 import { Connection } from 'mongoose';
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import request from 'supertest';
 import { App } from 'supertest/types.js';
 import { inject } from 'vitest';
+
+/** Segredo JWT da app de teste, para forjar tokens nos cenários negativos. */
+export const TEST_JWT_SECRET = randomBytes(32).toString('hex');
+
+export interface TestAppOptions {
+  /** Módulos extras, por exemplo controllers de sondagem usados só no teste. */
+  imports?: ModuleMetadata['imports'];
+}
 
 export interface TestApp {
   app: INestApplication<App>;
@@ -27,20 +35,25 @@ export interface TestApp {
  *
  * @param customize permite substituir providers, por exemplo um serviço de e-mail falso:
  *   `(builder) => builder.overrideProvider(MailService).useValue(fakeMail)`
+ * @param options.imports módulos extras, como o `RolesProbeModule` dos testes de RBAC
  */
 export async function createTestApp(
   customize: (builder: TestingModuleBuilder) => TestingModuleBuilder = (b) => b,
+  { imports = [] }: TestAppOptions = {},
 ): Promise<TestApp> {
   process.env.NODE_ENV = 'test';
   process.env.MONGODB_URI = `${inject('mongoUri')}cafuringa-${randomUUID()}`;
   process.env.TRUST_PROXY = '0';
   process.env.LOG_LEVEL = 'silent';
+  process.env.JWT_SECRET = TEST_JWT_SECRET;
+  process.env.PII_HMAC_SECRET = randomBytes(32).toString('hex');
+  process.env.PII_ENCRYPTION_KEY = randomBytes(32).toString('hex');
 
   const { AppModule } = await import('../../src/app.module.js');
   const { configureApp } = await import('../../src/app.setup.js');
 
   const moduleRef = await customize(
-    Test.createTestingModule({ imports: [AppModule] }),
+    Test.createTestingModule({ imports: [AppModule, ...imports] }),
   ).compile();
 
   const app = moduleRef.createNestApplication<INestApplication<App>>({

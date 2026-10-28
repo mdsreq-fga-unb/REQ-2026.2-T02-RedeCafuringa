@@ -4,6 +4,7 @@ import {
   cpfCheckDigits,
   isValidCnpj,
   isValidCpf,
+  maskCpf,
   onlyDocumentChars,
 } from './documento.js';
 
@@ -70,6 +71,17 @@ describe('isValidCnpj', () => {
 describe('onlyDocumentChars', () => {
   it('remove pontuação e normaliza para maiúsculas', () => {
     expect(onlyDocumentChars('12.abc.345/01de-35')).toBe('12ABC34501DE35');
+  });
+});
+
+describe('maskCpf (RNF11)', () => {
+  it('exibe apenas os 6 dígitos centrais do CPF', () => {
+    expect(maskCpf('52998224725')).toBe('***.982.247-**');
+    expect(maskCpf('529.982.247-25')).toBe('***.982.247-**');
+  });
+
+  it('não devolve nada legível para valor que não é CPF', () => {
+    expect(maskCpf('123')).toBe('***.***.***-**');
   });
 });
 

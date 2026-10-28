@@ -9,9 +9,12 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { ApiExcludeController } from '@nestjs/swagger';
 import type { Response } from 'express';
+import { Public } from '../auth/decorators/public.decorator.js';
 import { MetricsRegistry } from './metrics.registry.js';
 
+// Fora do JWT: em produção o acesso é controlado por METRICS_TOKEN (abaixo).
 @ApiExcludeController()
+@Public()
 @Controller('metrics')
 export class MetricsController {
   constructor(
