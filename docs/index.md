@@ -8,7 +8,7 @@ Bem-vindo à documentação oficial do projeto **Cafuringa**, um website voltado
 
 ---
 
-## Navegue pelo AUP
+## Atalhos
 <div class="section-cards">
   <a class="section-card" href="aup-concepcao/iteracao1">
     <h3>Concepção</h3>
