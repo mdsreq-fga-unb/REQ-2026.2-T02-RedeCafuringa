@@ -56,6 +56,13 @@ nav:
     - Operação e infraestrutura: backend/operacao.md
     - Segurança e auditoria: backend/seguranca.md
 
+  - Frontend:
+    - Operação: frontend/operacao.md
+
+  - Contrato da API:
+    - Referência da API: shared/api.md
+    - Versionamento e contrato: shared/contratos.md
+
 markdown_extensions:
   - attr_list
   - md_in_html

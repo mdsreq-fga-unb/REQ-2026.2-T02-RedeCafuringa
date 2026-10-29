@@ -42,6 +42,7 @@ Qualidade (os mesmos passos do CI)
   smoke                    Smoke test da imagem do app (rode "images" antes)
 
 Docs e git
+  contract                 Regenera o contrato OpenAPI, os tipos do front e a referência da API
   docs [serve|build]       MkDocs (ambiente Python isolado fora do repositório)
   branch <tipo>/<nome>     Cria branch a partir de origin/dev. Tipos: feat fix docs chore refactor test ci style perf
   clean [--deps] [--docker] [-y]   Remove artefatos de build (--deps: node_modules; --docker: containers e volumes)
@@ -206,6 +207,18 @@ cmd_build() {
   done
 }
 
+cmd_contract() {
+  ensure_deps backend
+  ensure_deps app
+  info "Contrato OpenAPI (backend)"
+  (cd "$ROOT/backend" && npm run --silent openapi:export)
+  info "Tipos do front (app)"
+  (cd "$ROOT/app" && npm run --silent api:types)
+  info "Referência da API (docs/shared/api.md)"
+  node scripts/gen-api-docs.mjs
+  ok "contrato regenerado; commite shared/, app/src/shared/api/schema.ts e docs/shared/api.md"
+}
+
 cmd_images() {
   need docker "Instale o Docker."
   info "Imagem da API"
@@ -320,6 +333,7 @@ main() {
     build) cmd_build "$@" ;;
     images) cmd_images ;;
     smoke) cmd_smoke ;;
+    contract) cmd_contract ;;
     docs) cmd_docs "$@" ;;
     branch) cmd_branch "$@" ;;
     clean) cmd_clean "$@" ;;
