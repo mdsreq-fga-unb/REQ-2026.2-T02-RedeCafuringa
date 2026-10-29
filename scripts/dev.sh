@@ -118,6 +118,12 @@ cmd_setup() {
   done
 
   if [ -f backend/.env ]; then ok "backend/.env já existe"; else ensure_env; fi
+  if [ -f app/.env.local ]; then
+    ok "app/.env.local já existe"
+  else
+    cp app/.env.example app/.env.local
+    ok "app/.env.local criado a partir do .env.example (variáveis públicas, só para desenvolvimento)"
+  fi
 
   cat <<'EOF'
 
@@ -167,7 +173,7 @@ cmd_check() {
     ensure_deps "$app"
     case "$app" in
       backend) for script in lint format:check typecheck build test; do run_npm backend "$script"; done ;;
-      app) for script in lint build test; do run_npm app "$script"; done ;;
+      app) for script in lint format:check typecheck build test:coverage; do run_npm app "$script"; done ;;
     esac
   done
   ok "check concluído (não inclui E2E, npm audit nem build das imagens Docker)"

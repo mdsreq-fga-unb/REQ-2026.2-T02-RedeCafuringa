@@ -85,7 +85,9 @@ export function LoginPage({
                     value={cpf}
                     onChange={(event) => setCpf(formatCpf(event.target.value))}
                     aria-invalid={Boolean(errors.cpf)}
-                    aria-describedby={errors.cpf ? "login-cpf-error" : undefined}
+                    aria-describedby={
+                        errors.cpf ? "login-cpf-error" : undefined
+                    }
                 />
                 {errors.cpf && (
                     <p id="login-cpf-error" className="field-error">
