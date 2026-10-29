@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - 'backend/**'
+      - 'shared/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
     branches:
@@ -14,6 +15,7 @@ on:
       - main
     paths:
       - 'backend/**'
+      - 'shared/**'
       - '.github/workflows/backend-ci.yml'
 
 permissions:
@@ -58,6 +60,14 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Contract drift (shared/openapi.json)
+        run: |
+          npm run openapi:export
+          git diff --exit-code -- ../shared/openapi.json || {
+            echo '::error::shared/openapi.json está desatualizado. Rode npm run openapi:export no backend e commite o resultado.'
+            exit 1
+          }
 
       - name: Dependency audit
         run: npm audit --audit-level=high
