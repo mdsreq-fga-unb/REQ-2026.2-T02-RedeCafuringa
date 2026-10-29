@@ -12,6 +12,20 @@ export default defineConfig({
     test: {
         environment: "jsdom",
         include: ["tests/**/*.test.{ts,tsx}"],
+        coverage: {
+            provider: "v8",
+            reporter: ["text-summary", "lcov"],
+            include: ["src/**/*.{ts,tsx}"],
+            exclude: ["src/**/*.d.ts", "src/**/index.ts", "src/main.tsx"],
+            // Piso logo abaixo da cobertura atual (81,9% / 85,9% / 66,2% / 81,7%):
+            // impede regressão sem travar o time. Suba aos poucos.
+            thresholds: {
+                statements: 75,
+                branches: 80,
+                functions: 60,
+                lines: 75,
+            },
+        },
     },
     plugins: [
         react(),
