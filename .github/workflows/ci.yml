@@ -6,6 +6,7 @@ on:
       - main
   pull_request:
     branches:
+      - dev
       - main
   workflow_dispatch:
 
@@ -18,6 +19,7 @@ concurrency:
 
 jobs:
   build:
+    name: docs-build
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -49,6 +51,7 @@ jobs:
           path: site
 
   deploy:
+    name: docs-deploy
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
