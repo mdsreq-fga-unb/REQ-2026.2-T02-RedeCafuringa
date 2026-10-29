@@ -4,7 +4,8 @@
 #   target prod -> arquivos estáticos servidos por nginx sem privilégios
 # Mesma base de Node do backend (versão e digest), build reprodutível e multi-arch (amd64/arm64).
 ARG NODE_IMAGE=node:24.22-alpine3.24@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
-ARG NGINX_IMAGE=nginxinc/nginx-unprivileged:1.29-alpine@sha256:0c79d56aee561a1d81c63f00eee5fb5fe29279560cdc55e91425133104c7fbe6
+# Variante slim: sem os módulos de imagem/XSLT (libxml2, tiff...) que o app não usa.
+ARG NGINX_IMAGE=nginxinc/nginx-unprivileged:1.30-alpine-slim@sha256:5d8bb9437d74a600ec5dbf90c035451c724dc33eac8d3a71078f6f8612c345f6
 
 # hadolint ignore=DL3006
 FROM ${NODE_IMAGE} AS deps
