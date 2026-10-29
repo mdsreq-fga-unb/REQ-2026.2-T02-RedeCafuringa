@@ -7,8 +7,8 @@
         "dev": "vite",
         "build": "tsc -b && vite build",
         "lint": "eslint .",
-        "format": "prettier --write \"src/**/*.{ts,tsx,js,css}\" \"tests/**/*.{ts,tsx}\"",
-        "format:check": "prettier --check \"src/**/*.{ts,tsx,js,css}\" \"tests/**/*.{ts,tsx}\"",
+        "format": "prettier --write \"src/**/*.{ts,tsx,js,css}\" \"tests/**/*.{ts,tsx}\" \"nginx/*.ts\"",
+        "format:check": "prettier --check \"src/**/*.{ts,tsx,js,css}\" \"tests/**/*.{ts,tsx}\" \"nginx/*.ts\"",
         "typecheck": "tsc -b",
         "pwa:icons": "pwa-assets-generator",
         "test": "vitest run",
@@ -17,6 +17,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@fontsource/dm-sans": "^5.3.0",
+        "@fontsource/manrope": "^5.3.0",
         "react": "^19.3.1",
         "react-dom": "^19.3.1"
     },
