@@ -16,7 +16,8 @@ export type ContactSettings = {
 };
 
 export type AuthUser = {
-    id: number;
+    // O backend usa string; o login falso de desenvolvimento usa número.
+    id: string | number;
     name: string;
     role: Role;
 };
