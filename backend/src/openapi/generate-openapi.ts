@@ -12,8 +12,8 @@ const PLACEHOLDER_ENV: Record<string, string> = {
   PII_HMAC_SECRET: 'openapi-export-placeholder-pii-hmac-secret-0',
   PII_ENCRYPTION_KEY: '0'.repeat(64),
   MONGODB_URI: 'mongodb://localhost:27017/openapi-export',
-  // Obrigatória quando NODE_ENV=production (como na imagem Docker).
-  CORS_ORIGINS: 'http://localhost:5173',
+  // Obrigatória, e só aceita https, quando NODE_ENV=production (como na imagem Docker).
+  CORS_ORIGINS: 'https://openapi-export.example.com',
 };
 
 /** Gera o documento OpenAPI sem banco de dados e sem subir servidor. */
