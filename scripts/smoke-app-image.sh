@@ -55,6 +55,21 @@ expect /manifest.webmanifest content-type application/manifest+json
   || fail "rota /conta/perfil não caiu no index.html"
 echo "ok  /conta/perfil  fallback de SPA"
 
+# PWA: manifesto da marca e ícones realmente servidos como PNG
+index="$(curl -fsS "${BASE}/")"
+grep -q '<html lang="pt-BR"' <<<"$index" || fail 'index.html sem lang="pt-BR"'
+grep -q '<title>Rede Cafuringa</title>' <<<"$index" || fail "index.html sem o título Rede Cafuringa"
+echo "ok  index.html  lang e título"
+
+manifest="$(curl -fsS "${BASE}/manifest.webmanifest")"
+grep -q '"name":"Rede Cafuringa"' <<<"$manifest" || fail "manifest sem o nome Rede Cafuringa"
+grep -q '"purpose":"maskable"' <<<"$manifest" || fail "manifest sem ícone maskable"
+icons="$(grep -oE '"src":"[^"]+"' <<<"$manifest" | cut -d'"' -f4)"
+[ -n "$icons" ] || fail "manifest sem ícones"
+for icon in $icons; do
+  expect "/${icon}" content-type image/png
+done
+
 # Asset com hash: cache longo e imutável
 asset="$(curl -fsS "${BASE}/" | grep -oE '/assets/[^"]+\.js' | head -1)"
 [ -n "$asset" ] || fail "nenhum /assets/*.js referenciado no index.html"
