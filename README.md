@@ -42,6 +42,18 @@ A plataforma busca aproximar **produtores e comunidade**, valorizando a produç�
 
 ---
 
+## Backend e infraestrutura
+
+O código da API (NestJS + MongoDB) fica em [`backend/`](backend/).
+Para rodar, testar, fazer deploy e operar:
+
+- [`backend/README.md`](backend/README.md) — setup, scripts e deploy.
+- [`docs/backend/operacao.md`](docs/backend/operacao.md) — deploy, health, logs, métricas, backup, incidentes.
+- [`docs/backend/seguranca.md`](docs/backend/seguranca.md) — reporte, controles, auditoria e riscos residuais.
+- [`docs/backend/poc.md`](docs/backend/poc.md) e [`docs/backend/guia-estrutura-e-tdd.md`](docs/backend/guia-estrutura-e-tdd.md) — decisões técnicas e TDD.
+
+---
+
 ## Como começar
 
 Para executar a documentação localmente, instale as dependências do projeto:
