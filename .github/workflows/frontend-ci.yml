@@ -52,11 +52,17 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Format check
+        run: npm run format:check
+
+      - name: Type check
+        run: npm run typecheck
+
       - name: Build (tsc + vite + PWA)
         run: npm run build
 
-      - name: Tests
-        run: npm test
+      - name: Tests + coverage
+        run: npm run test:coverage
 
       - name: Dependency audit
         run: npm audit --audit-level=high
