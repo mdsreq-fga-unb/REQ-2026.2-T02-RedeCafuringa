@@ -64,4 +64,4 @@ O workflow `Docker CI` valida as imagens em todo PR (hadolint, Trivy, smoke test
 
 ## Fora de escopo (por enquanto)
 
-Deploy (Cloudflare Pages, CORS de produção e rollback) e *required status checks* do GitHub ainda não foram configurados.
+Deploy (Cloudflare Pages, CORS de produção e rollback) ainda não foi configurado.
