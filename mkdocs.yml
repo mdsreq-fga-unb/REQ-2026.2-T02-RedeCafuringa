@@ -59,6 +59,10 @@ nav:
   - Frontend:
     - Operação: frontend/operacao.md
 
+  - Engenharia:
+    - Como contribuir: contribuindo.md
+    - Infraestrutura: infra/visao-geral.md
+
   - Contrato da API:
     - Referência da API: shared/api.md
     - Versionamento e contrato: shared/contratos.md

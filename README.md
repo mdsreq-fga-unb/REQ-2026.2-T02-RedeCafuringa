@@ -51,6 +51,9 @@ Para rodar, testar, fazer deploy e operar:
 - [`docs/backend/operacao.md`](docs/backend/operacao.md) — deploy, health, logs, métricas, backup, incidentes.
 - [`docs/backend/seguranca.md`](docs/backend/seguranca.md) — reporte, controles, auditoria e riscos residuais.
 - [`docs/backend/poc.md`](docs/backend/poc.md) e [`docs/backend/guia-estrutura-e-tdd.md`](docs/backend/guia-estrutura-e-tdd.md) — decisões técnicas e TDD.
+- [`app/`](app/README.md) — frontend (PWA); [`docs/frontend/operacao.md`](docs/frontend/operacao.md) — operação, variáveis, imagens e segurança.
+- [`docs/shared/contratos.md`](docs/shared/contratos.md) — contrato OpenAPI entre backend e frontend; [`docs/shared/api.md`](docs/shared/api.md) — referência dos endpoints.
+- [`docs/infra/visao-geral.md`](docs/infra/visao-geral.md) — CI/CD, imagens e registro de decisões; [`docs/contribuindo.md`](docs/contribuindo.md) — fluxo de branches e PRs.
 
 ---
 

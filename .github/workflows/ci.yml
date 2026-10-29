@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches:
+      - dev
       - main
   pull_request:
     branches:
@@ -52,8 +53,12 @@ jobs:
 
   deploy:
     name: docs-deploy
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev')
     needs: build
+    # Um deploy por vez, sem cancelar o que está em andamento (dev e main publicam o mesmo site).
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

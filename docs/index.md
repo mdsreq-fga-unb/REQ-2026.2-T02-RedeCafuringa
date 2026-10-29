@@ -144,3 +144,12 @@ Beatriz Lins |
 | 12/10/26 | 4.8 | Atualização do documento de lições aprendidas da Unidade 2. | Pedro Augusto |
 | 12/10/26 | 4.9 | Correção do cronograma na unidade 2 e adição de dor e dod para todas as iterações da fase de construção | Beatriz Lins |
 | 12/10/26 | 5.0 | Validação e realização de pequenos ajustes na unidade 2, deixando a entrega totalmente revisada | Equipe ByteLab |
+
+---
+
+## Documentação técnica
+
+- [Como contribuir](contribuindo.md): fluxo de branches, PRs e checks.
+- [Infraestrutura: visão geral](infra/visao-geral.md): CI/CD, imagens e registro de decisões.
+- [Backend](backend/operacao.md) e [Frontend](frontend/operacao.md): operação.
+- [Referência da API](shared/api.md) e [contrato](shared/contratos.md).

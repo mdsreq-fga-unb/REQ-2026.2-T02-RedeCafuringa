@@ -8,7 +8,7 @@
 
 ## 1. Escopo da PoC
 
-O que esta PoC **comprova com código executável** (branch `develop-backend`):
+O que esta PoC **comprova com código executável** (código em `backend/`, na `dev`):
 
 | Hipótese | Evidência |
 |---|---|
