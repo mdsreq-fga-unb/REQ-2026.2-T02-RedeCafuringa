@@ -60,7 +60,8 @@ services:
       NODE_ENV: development
       PORT: 3000
       MONGODB_URI: mongodb://mongo:27017/cafuringa
-      CORS_ORIGINS: http://localhost:5173
+      # 5173 = front em modo dev (Vite); 8080 = front como em produção (perfil prod da raiz).
+      CORS_ORIGINS: http://localhost:5173,http://localhost:8080
       TRUST_PROXY: '0'
       LOG_LEVEL: debug
       THROTTLE_TTL: '60'
