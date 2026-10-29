@@ -333,7 +333,7 @@ create(@CurrentUser() user: AuthenticatedUser, @Body() dto: CreateProdutoDto) {
 3. **Toda rota protegida tem teste e2e negativo** (401 sem login, 403 com perfil errado).
 4. **Nada de `it.skip` ou `it.only` no PR.** O `it.only` já é barrado automaticamente no CI.
 5. **Bug encontrado vira teste.** Primeiro reproduza com um teste que falha, depois corrija (`fix:`).
-6. **Branch e PR:** crie `feat/<descricao>` a partir de `develop-backend` e abra o PR para `develop-backend`. O PR só é integrado com o CI verde.
+6. **Branch e PR:** crie `feat/<descricao>` a partir da `dev` (`./scripts/dev.sh branch feat/<descricao>`) e abra o PR para a `dev`; veja [Como contribuir](../contribuindo.md). O PR só é integrado com o CI verde.
 
 ### Checklist do PR
 
