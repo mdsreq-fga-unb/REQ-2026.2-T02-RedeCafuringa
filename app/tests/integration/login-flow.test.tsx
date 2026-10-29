@@ -71,7 +71,9 @@ describe("HU09 — fluxo de autenticação no app", () => {
 
         await submitLogin(userEvent.setup());
 
-        await screen.findByRole("heading", { name: "Gabriela Pereira da Silva" });
+        await screen.findByRole("heading", {
+            name: "Gabriela Pereira da Silva",
+        });
         expect(
             screen.queryByRole("heading", { name: "Contato público" }),
         ).toBeNull();
@@ -109,12 +111,16 @@ describe("HU09 — fluxo de autenticação no app", () => {
 
         await userEvent
             .setup()
-            .click(screen.getByRole("button", { name: "Sair da demonstração" }));
+            .click(
+                screen.getByRole("button", { name: "Sair da demonstração" }),
+            );
 
         await waitFor(() => expect(window.location.hash).toBe("#/perfil"));
         await waitFor(() =>
             expect(
-                screen.queryByRole("heading", { name: "Que bom ter você aqui" }),
+                screen.queryByRole("heading", {
+                    name: "Que bom ter você aqui",
+                }),
             ).toBeNull(),
         );
     });

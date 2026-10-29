@@ -3,8 +3,8 @@ import { formatCpf, isValidCpf, onlyDigits } from "@/features/auth/cpf";
 
 describe("onlydigits", () => {
     it("remove tudo que não é dígito", () => {
-        expect(onlyDigits("529.982.247-25")).toBe("52998224725")
-    })
+        expect(onlyDigits("529.982.247-25")).toBe("52998224725");
+    });
 });
 
 describe("formatcpf", () => {
@@ -18,7 +18,7 @@ describe("formatcpf", () => {
     it("ignora letras e dígitos além de 11", () => {
         expect(formatCpf("529a982b247c25999")).toBe("529.982.247-25");
     });
-})
+});
 
 describe("isValidCpf", () => {
     it("aceita CPF válido com ou sem máscara", () => {

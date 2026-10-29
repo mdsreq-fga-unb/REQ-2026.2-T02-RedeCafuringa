@@ -52,7 +52,9 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
 
         await fillAndSubmit(user, { cpf: validCpf, password: "senha123" });
 
-        await waitFor(() => expect(onSignIn).toHaveBeenCalledWith(producerAuth));
+        await waitFor(() =>
+            expect(onSignIn).toHaveBeenCalledWith(producerAuth),
+        );
         expect(login).toHaveBeenCalledWith({
             cpf: validCpf,
             password: "senha123",
