@@ -1,0 +1,24 @@
+# https://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Markdown usa dois espaços no fim da linha como quebra
+[*.md]
+trim_trailing_whitespace = false
+
+# O frontend já usa 4 espaços; mantém o estilo existente em vez de reformatar o app.
+[app/**.{ts,tsx,js,jsx,css,json,html}]
+indent_size = 4
+
+[*.sh]
+indent_size = 2
+
+[Dockerfile]
+indent_size = 4

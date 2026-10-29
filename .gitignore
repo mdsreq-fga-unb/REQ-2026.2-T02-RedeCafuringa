@@ -1,4 +1,26 @@
+# Python / MkDocs
 .venv/
-site/
+.venv-*/
 venv/
+site/
+
+# Node
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Segredos e ambiente local (os .env.example continuam versionados)
+.env
+.env.*
+!.env.example
+
+# Editores e sistema operacional
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Ferramentas locais
 .opencode
