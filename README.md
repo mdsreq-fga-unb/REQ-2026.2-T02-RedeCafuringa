@@ -76,9 +76,23 @@ http://localhost:8000
 
 ---
 
+## Ambiente de desenvolvimento
+
+Pré-requisitos: Git (com Git Bash no Windows), Node (versão do [`.nvmrc`](.nvmrc)) e Docker. Os comandos de rotina ficam em `scripts/dev.sh`:
+
+```bash
+./scripts/dev.sh setup     # confere pré-requisitos, instala dependências, cria backend/.env
+./scripts/dev.sh up        # mongo + api + app  ->  app em http://localhost:5173, api em http://localhost:3000
+./scripts/dev.sh check     # os mesmos passos do CI, antes de abrir o PR
+./scripts/dev.sh docs      # documentação em http://localhost:8000
+./scripts/dev.sh help      # todos os comandos
+```
+
+---
+
 ## Padrões de contribuição
 
-**Branches** — crie a partir da `main`, no formato `<tipo>/<descricao>`:
+**Branches** — crie a partir da `dev` (`./scripts/dev.sh branch feat/cadastro-produtor`), no formato `<tipo>/<descricao>`, e abra o PR para a `dev`:
 
 ```text
 docs/atualiza-requisitos
