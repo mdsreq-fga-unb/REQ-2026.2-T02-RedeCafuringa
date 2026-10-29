@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   HealthCheck,
   HealthCheckService,
@@ -7,6 +7,7 @@ import {
 } from '@nestjs/terminus';
 import { Public } from '../auth/decorators/public.decorator.js';
 
+// As respostas 200 e 503 (e seus schemas) vêm do próprio @HealthCheck() do Terminus.
 @ApiTags('health')
 @Public()
 @Controller('health')
@@ -22,12 +23,21 @@ export class HealthController {
    */
   @Get()
   @HealthCheck()
+  @ApiOperation({
+    summary: 'Prontidão (alias de /health/ready)',
+    description: 'Responde 200 só quando o MongoDB está acessível.',
+  })
   ready() {
     return this.health.check([() => this.mongoose.pingCheck('mongodb')]);
   }
 
   @Get('ready')
   @HealthCheck()
+  @ApiOperation({
+    summary: 'Prontidão',
+    description:
+      'Responde 200 só quando o MongoDB está acessível. Usado pelo proxy (tráfego) e por monitores externos.',
+  })
   readyAlias() {
     return this.health.check([() => this.mongoose.pingCheck('mongodb')]);
   }
@@ -38,6 +48,11 @@ export class HealthController {
    */
   @Get('live')
   @HealthCheck()
+  @ApiOperation({
+    summary: 'Vivacidade',
+    description:
+      'Responde 200 enquanto o processo está de pé, sem consultar o banco. Usado pelo HEALTHCHECK do Docker.',
+  })
   live() {
     return this.health.check([]);
   }
