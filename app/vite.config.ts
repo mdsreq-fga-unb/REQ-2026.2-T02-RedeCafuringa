@@ -32,7 +32,11 @@ export default defineConfig(({ mode }) => {
                 provider: "v8",
                 reporter: ["text-summary", "lcov"],
                 include: ["src/**/*.{ts,tsx}"],
-                exclude: ["src/**/*.d.ts", "src/**/index.ts"],
+                exclude: [
+                    "src/**/*.d.ts",
+                    "src/**/index.ts",
+                    "src/shared/api/schema.ts", // gerado: npm run api:types
+                ],
                 // Piso ~5 pontos abaixo da cobertura atual
                 // (88,1% / 89,3% / 73,9% / 88,8%): impede regressão sem travar o time.
                 // Suba aos poucos, nunca abaixe para fazer um PR passar.

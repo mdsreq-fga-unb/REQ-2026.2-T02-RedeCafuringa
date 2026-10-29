@@ -1,0 +1,2 @@
+# Gerado por npm run api:types a partir de ../shared/openapi.json
+src/shared/api/schema.ts
