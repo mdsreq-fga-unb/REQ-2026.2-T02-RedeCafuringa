@@ -1,8 +1,8 @@
-export function onlyDigits(value: ""): string { 
+export function onlyDigits(value: string): string {
     return String(value).replace(/\D/g, "");
 }
 
-export function formatCpf(value: ""): string {
+export function formatCpf(value: string): string {
     const digits = onlyDigits(value).slice(0, 11);
     const part1 = digits.slice(0, 3);
     const part2 = digits.slice(3, 6);
