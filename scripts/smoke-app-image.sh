@@ -50,6 +50,16 @@ expect / cache-control no-cache
 expect /sw.js cache-control no-cache
 expect /manifest.webmanifest content-type application/manifest+json
 
+# Content-Security-Policy restritiva, também no service worker
+for path in / /sw.js; do
+  csp="$(header "$path" content-security-policy)"
+  [ -n "$csp" ] || fail "$path sem Content-Security-Policy"
+  grep -q "default-src 'self'" <<<"$csp" || fail "$path: CSP sem default-src 'self'"
+  grep -q "frame-ancestors 'none'" <<<"$csp" || fail "$path: CSP sem frame-ancestors 'none'"
+  if grep -qE "unsafe-inline|unsafe-eval" <<<"$csp"; then fail "$path: CSP permite unsafe-inline/unsafe-eval"; fi
+  echo "ok  $path  Content-Security-Policy restritiva"
+done
+
 # Rota do SPA devolve o mesmo index.html
 [ "$(curl -fsS "${BASE}/conta/perfil" | sha256sum)" = "$(curl -fsS "${BASE}/" | sha256sum)" ] \
   || fail "rota /conta/perfil não caiu no index.html"
