@@ -38,6 +38,10 @@ services:
     environment:
       # Polling é necessário para o hot reload funcionar com bind mount no Windows/macOS.
       CHOKIDAR_USEPOLLING: 'true'
+      # Públicas (VITE_*): URL da API no navegador do desenvolvedor e login falso enquanto o
+      # login real não está integrado. Sobrescreva exportando as variáveis antes do "up".
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api/v1}
+      VITE_USE_MOCK_AUTH: ${VITE_USE_MOCK_AUTH:-true}
     ports:
       - '127.0.0.1:5173:5173'
     volumes:
@@ -54,14 +58,16 @@ services:
         max-file: '3'
 
   # Build de produção servido por nginx, para validar o que será publicado.
-  # A API precisa aceitar a origem http://localhost:8080 em CORS_ORIGINS.
+  # A API do compose de dev já aceita a origem http://localhost:8080 (CORS_ORIGINS).
+  # Como em produção, o login falso fica desligado por padrão.
   app-prod:
     profiles: [prod]
     build:
       context: app
       target: prod
       args:
-        VITE_API_URL: http://localhost:3000
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api/v1}
+        VITE_USE_MOCK_AUTH: ${VITE_USE_MOCK_AUTH_PROD:-false}
     image: rede-cafuringa-app:local
     restart: unless-stopped
     init: true

@@ -25,9 +25,11 @@ CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
 
 FROM deps AS build
 COPY --chown=node:node . .
-# URL da API embutida no bundle em tempo de build (nunca coloque segredo aqui: VITE_* é público).
+# Variáveis embutidas no bundle em tempo de build (nunca coloque segredo aqui: VITE_* é público).
 ARG VITE_API_URL=""
-ENV VITE_API_URL=${VITE_API_URL}
+ARG VITE_USE_MOCK_AUTH="false"
+ENV VITE_API_URL=${VITE_API_URL} \
+    VITE_USE_MOCK_AUTH=${VITE_USE_MOCK_AUTH}
 RUN npm run build
 
 # hadolint ignore=DL3006
