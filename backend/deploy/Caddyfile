@@ -1,0 +1,48 @@
+# Caddy emite e renova o certificado TLS automaticamente (Let's Encrypt)
+# e redireciona HTTP -> HTTPS por padrão (RNF10).
+{
+	admin off
+
+	servers {
+		timeouts {
+			read_body 10s
+			read_body_idle 30s
+			read_header 10s
+			write 30s
+			write_idle 30s
+			idle 120s
+		}
+	}
+}
+
+{$API_DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
+	}
+
+	request_body {
+		max_size 1MB
+	}
+
+	log {
+		output stdout
+		format json
+	}
+
+	# Métricas são internas. O acesso público fica bloqueado; o scrape deve
+	# ser feito na rede interna (ou por um sidecar autorizado).
+	@metrics path /api/v1/metrics
+	respond @metrics 404
+
+	reverse_proxy api:3000 {
+		health_uri /api/v1/health/ready
+		health_interval 15s
+		health_timeout 3s
+	}
+}

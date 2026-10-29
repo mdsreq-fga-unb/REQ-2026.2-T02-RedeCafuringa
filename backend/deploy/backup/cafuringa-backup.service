@@ -1,0 +1,17 @@
+[Unit]
+Description=Backup MongoDB da Rede Cafuringa
+Documentation=file:///opt/rede-cafuringa/backend/deploy/backup/README.md
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/rede-cafuringa/backend
+EnvironmentFile=/opt/rede-cafuringa/backend/deploy/.env
+ExecStart=/opt/rede-cafuringa/backend/deploy/backup/backup.sh
+Nice=10
+IOSchedulingClass=best-effort
+
+[Install]
+WantedBy=multi-user.target

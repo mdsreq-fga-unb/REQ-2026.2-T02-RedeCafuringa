@@ -1,0 +1,94 @@
+# Ambiente de desenvolvimento local.
+#   docker compose up -d mongo      -> só o banco (API roda com `npm run start:dev`)
+#   docker compose up -d --build    -> banco + API em container
+services:
+  mongo:
+    image: mongo:8.0.34@sha256:4a4ab5d4834207389e0d7270fac988e21ffedccecba77991a552f755df229907
+    restart: unless-stopped
+    command: ['mongod', '--wiredTigerCacheSizeGB', '0.5']
+    ports:
+      # Expõe apenas para o host local (evita acesso pela rede da máquina).
+      - '127.0.0.1:27017:27017'
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+    tmpfs:
+      - /tmp:size=64m
+    read_only: true
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 512
+    mem_limit: 1g
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - --eval
+        - "db.adminCommand('ping').ok"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  api:
+    build: .
+    image: rede-cafuringa-api:dev
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 512m
+    stop_grace_period: 20s
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      MONGODB_URI: mongodb://mongo:27017/cafuringa
+      CORS_ORIGINS: http://localhost:5173
+      TRUST_PROXY: '0'
+      LOG_LEVEL: debug
+      THROTTLE_TTL: '60'
+      THROTTLE_LIMIT: '100'
+      # Segredos lidos do .env (copiado de .env.example).
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-900}
+      AUTH_THROTTLE_LIMIT: ${AUTH_THROTTLE_LIMIT:-5}
+      PII_HMAC_SECRET: ${PII_HMAC_SECRET:?defina PII_HMAC_SECRET no .env}
+      PII_ENCRYPTION_KEY: ${PII_ENCRYPTION_KEY:?defina PII_ENCRYPTION_KEY no .env}
+    ports:
+      - '127.0.0.1:3000:3000'
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+    healthcheck:
+      test:
+        - CMD
+        - sh
+        - -c
+        - "wget -qO- \"http://127.0.0.1:$${PORT:-3000}/api/v1/health/live\" || exit 1"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  mongo-data:
+  mongo-config:
