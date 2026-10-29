@@ -11,7 +11,7 @@
 ??? info "Brainstorming Colaborativo"
     Reuniões internas da equipe para geração livre e agrupamento de ideias sobre o catálogo de produtos e atrativos rurais.
 
-    - ![Brainstorming](../../img/aup-concepcao/brainstorming.png)
+    - ![Brainstorming](../img/aup-concepcao/brainstorming.png)
 
 ---
 
@@ -25,7 +25,7 @@
 ### Requisito de Usuário - Orientadas a Valor
 
 ??? info "Histórias de Usuário (Preliminar)"
-    - ![História de Usuário](../../img/aup-concepcao/historia_usuario.jpeg)
+    - ![História de Usuário](../img/aup-concepcao/historia_usuario.jpeg)
 
 ### Requisito de Produto 
 
@@ -44,7 +44,7 @@ O vídeo abaixo registra a primeira reunião com os clientes do projeto, marco i
 
 ??? info "Google Docs"
 
-    - ![Histórico 1](../../img/aup-concepcao/prints_historico/historico1.png)
-    - ![Histórico 2](../../img/aup-concepcao/prints_historico/historico2.png)
-    - ![Histórico 3](../../img/aup-concepcao/prints_historico/historico3.png)
+    - ![Histórico 1](../img/aup-concepcao/prints_historico/historico1.png)
+    - ![Histórico 2](../img/aup-concepcao/prints_historico/historico2.png)
+    - ![Histórico 3](../img/aup-concepcao/prints_historico/historico3.png)
 

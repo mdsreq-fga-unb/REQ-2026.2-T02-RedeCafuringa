@@ -6,16 +6,16 @@
 
     Classificação colaborativa das intenções de escopo nas categorias Must, Should, Could e Won't.
 
-    - ![Moscow](../../img/aup-concepcao/moscow.png)
+    - ![Moscow](../img/aup-concepcao/moscow.png)
 
 ??? info "Validação Assíncrona com o Cliente"
 
     Alinhamento, validação de escopo e aprovação das documentações da primeira entrega conduzidos de forma assíncrona por canal de mensagens instantâneas.
 
-    - ![Atualizações 1](../../img/aup-concepcao/prints_conversas/atualizacoes1.jpeg){ width="300" }
-    - ![Atualizações 2](../../img/aup-concepcao/prints_conversas/atualizacoes2.jpeg){ width="300" }
-    - ![Atualizações 3](../../img/aup-concepcao/prints_conversas/atualizacoes3.jpeg){ width="300" }
-    - ![Documentação](../../img/aup-concepcao/prints_conversas/documentacao.jpeg){ width="300" }
+    - ![Atualizações 1](../img/aup-concepcao/prints_conversas/atualizacoes1.jpeg){ width="300" }
+    - ![Atualizações 2](../img/aup-concepcao/prints_conversas/atualizacoes2.jpeg){ width="300" }
+    - ![Atualizações 3](../img/aup-concepcao/prints_conversas/atualizacoes3.jpeg){ width="300" }
+    - ![Documentação](../img/aup-concepcao/prints_conversas/documentacao.jpeg){ width="300" }
     
 ---
 
