@@ -23,13 +23,14 @@ export default defineConfig({
             reporter: ["text-summary", "lcov"],
             include: ["src/**/*.{ts,tsx}"],
             exclude: ["src/**/*.d.ts", "src/**/index.ts"],
-            // Piso logo abaixo da cobertura atual (81,9% / 85,9% / 66,2% / 81,7%):
-            // impede regressão sem travar o time. Suba aos poucos.
+            // Piso ~5 pontos abaixo da cobertura atual
+            // (88,1% / 89,3% / 73,9% / 88,8%): impede regressão sem travar o time.
+            // Suba aos poucos, nunca abaixe para fazer um PR passar.
             thresholds: {
-                statements: 75,
-                branches: 80,
-                functions: 60,
-                lines: 75,
+                statements: 83,
+                branches: 85,
+                functions: 68,
+                lines: 83,
             },
         },
     },
