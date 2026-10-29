@@ -14,18 +14,18 @@ git push -u origin feat/cadastro-produtor        # abra o PR para a dev
 1. **Branch curta** a partir da `dev`, no formato `<tipo>/<descricao>` em minúsculas. Tipos: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `ci`, `style`, `perf`.
 2. **Commits pequenos e atômicos**, um assunto por commit, listando os arquivos (nada de `git add -A`). Mensagens no padrão Conventional Commits, em português: `<tipo>(escopo): descrição`.
 3. **PR para a `dev`** com título no mesmo padrão. A descrição diz o que muda, por quê, como foi verificado e o que fica de fora.
-4. **Checks verdes** antes de integrar (tabela abaixo). Integre com **merge commit**, que preserva os commits e a autoria. A branch é apagada sozinha depois do merge.
+4. **Checks verdes**: o GitHub **bloqueia o merge** enquanto os 7 checks da tabela abaixo não passarem. Integre com **merge commit**, que preserva os commits e a autoria. A branch é apagada sozinha depois do merge.
 5. A `main` recebe a `dev` por PR, quando houver entrega.
 
 ## Checks do PR
 
-| Check | O que roda | Dispara quando muda |
-|---|---|---|
-| `docs-build` | `mkdocs build` | qualquer PR |
-| `backend` | lint, format, typecheck, build, **contrato OpenAPI e referência da API em dia**, audit, testes, E2E, build e hadolint da imagem | `backend/`, `shared/` |
-| `frontend` | **tipos do contrato em dia**, lint, format, typecheck, build, testes com cobertura mínima, audit | `app/`, `shared/` |
-| `docker-build (api\|app)` | build das imagens, Trivy (HIGH/CRITICAL), smoke test do app | `backend/`, `app/` |
-| `actionlint`, `shellcheck` | workflows e scripts | `.github/workflows/`, `scripts/` |
+| Check | O que roda |
+|---|---|
+| `docs-build` | `mkdocs build` |
+| `backend` | lint, format, typecheck, build, **contrato OpenAPI e referência da API em dia**, audit, testes, E2E, build e hadolint da imagem |
+| `frontend` | **tipos do contrato em dia**, lint, format, typecheck, build, testes com cobertura mínima, audit |
+| `docker-build (api\|app)` | build das imagens, Trivy (HIGH/CRITICAL), smoke test do app |
+| `actionlint`, `shellcheck` | workflows e scripts |
 
 Mudou um endpoint? Rode `./scripts/dev.sh contract` e commite os arquivos gerados; o CI reprova se faltar. Detalhes em [Contrato da API](shared/contratos.md).
 

@@ -24,7 +24,7 @@ Branches permanentes: `main`, `dev` (tronco) e `gh-pages` (site gerado). O resto
 | `docker-ci.yml` | `docker-build`, `docker-publish`, `docker-manifest` | só build, scan e smoke | publica no GHCR (`dev`, `main`, tags `v*`) |
 | `actionlint.yml`, `shellcheck.yml` | `actionlint`, `shellcheck` | sim | `dev`, `main` |
 
-Todas as actions são fixadas por SHA de commit, com permissões mínimas (`contents: read`; `packages: write` só em quem publica; `pages`/`id-token` só no deploy das docs).
+Todos os workflows de verificação rodam em **todo** PR (sem filtro de pastas), porque um check obrigatório que não dispara trava o PR. Todas as actions são fixadas por SHA de commit, com permissões mínimas (`contents: read`; `packages: write` só em quem publica; `pages`/`id-token` só no deploy das docs).
 
 ## Imagens (GHCR)
 
@@ -32,7 +32,7 @@ Todas as actions são fixadas por SHA de commit, com permissões mínimas (`cont
 
 ## Proteção do repositório
 
-Ruleset nas branches `main` e `dev`: exige PR, bloqueia force-push e exclusão. **Ainda não há *required status checks*** nem aprovações obrigatórias (0). O GitHub Actions roda com permissão padrão `read`. Branches são apagadas após o merge.
+Ruleset nas branches `main` e `dev`: exige PR, bloqueia force-push e exclusão e **exige os 7 checks verdes** (`docs-build`, `backend`, `frontend`, `docker-build (api)`, `docker-build (app)`, `actionlint`, `shellcheck`). Sem exceção para administradores. Não exige aprovação de revisor (0) nem branch atualizada com a base. O GitHub Actions roda com permissão padrão `read`. Branches são apagadas após o merge.
 
 ## Registro de decisões
 
@@ -52,4 +52,4 @@ Ruleset nas branches `main` e `dev`: exige PR, bloqueia force-push e exclusão. 
 
 ## Fora de escopo por enquanto
 
-Deploy do app e da API em produção (Cloudflare Pages, CORS de produção, rollback), *required status checks*, E2E em navegador no CI, Lighthouse e detecção automática de breaking changes (oasdiff).
+Deploy do app e da API em produção (Cloudflare Pages, CORS de produção, rollback), E2E em navegador no CI, Lighthouse e detecção automática de breaking changes (oasdiff).
