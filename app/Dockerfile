@@ -30,7 +30,8 @@ ARG VITE_API_URL=""
 ARG VITE_USE_MOCK_AUTH="false"
 ENV VITE_API_URL=${VITE_API_URL} \
     VITE_USE_MOCK_AUTH=${VITE_USE_MOCK_AUTH}
-RUN npm run build
+# A CSP depende da origem da API (VITE_API_URL), por isso é gerada aqui, no build.
+RUN npm run build && node nginx/gen-csp.ts > /app/csp.conf
 
 # hadolint ignore=DL3006
 FROM ${NGINX_IMAGE} AS prod
@@ -42,6 +43,7 @@ LABEL org.opencontainers.image.title="Rede Cafuringa App" \
 
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY nginx/security-headers.conf /etc/nginx/snippets/security-headers.conf
+COPY --from=build /app/csp.conf /etc/nginx/snippets/csp.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 8080

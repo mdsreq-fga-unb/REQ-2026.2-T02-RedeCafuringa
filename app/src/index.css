@@ -1,4 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap");
+/* Fontes self-hosted (subconjunto latino: cobre os acentos do português).
+   Nenhuma requisição ao Google Fonts: sem envio de IP/user-agent a terceiros (LGPD)
+   e compatível com a CSP (font-src 'self'). */
+@import "@fontsource/dm-sans/latin-400.css";
+@import "@fontsource/dm-sans/latin-500.css";
+@import "@fontsource/dm-sans/latin-600.css";
+@import "@fontsource/dm-sans/latin-700.css";
+@import "@fontsource/manrope/latin-500.css";
+@import "@fontsource/manrope/latin-600.css";
+@import "@fontsource/manrope/latin-700.css";
+@import "@fontsource/manrope/latin-800.css";
 
 :root {
     font-family: "DM Sans", sans-serif;
