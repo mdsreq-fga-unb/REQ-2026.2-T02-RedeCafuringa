@@ -1,0 +1,41 @@
+name: Shell lint
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/shellcheck.yml'
+  pull_request:
+    branches:
+      - dev
+      - main
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/shellcheck.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: shellcheck-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      # ShellCheck 0.11.0 por digest.
+      - name: Run shellcheck
+        run: |
+          docker run --rm -v "$PWD:/mnt:ro" -w /mnt \
+            koalaman/shellcheck@sha256:61862eba1fcf09a484ebcc6feea46f1782532571a34ed51fedf90dd25f925a8d \
+            scripts/*.sh
