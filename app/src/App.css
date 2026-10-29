@@ -3,6 +3,12 @@
     --ink: #1c332b;
     --muted: #5f716b;
     --orange: #ff8d28;
+    /* WCAG 2.1 AA: a laranja da marca dá só 2,2:1 como texto sobre o fundo claro.
+       --orange-text mantém o matiz e passa (4,6:1 sobre --paper, 4,8:1 sobre o card);
+       --orange-text-strong é o estado ativo (7,1:1). Use --orange para fundos e logo,
+       e --ink como cor do texto sobre fundo laranja ou verde (5,8:1 e 4,9:1). */
+    --orange-text: #b85600;
+    --orange-text-strong: #8a4000;
     --green: #0ab512;
     --line: #d8ded8;
     min-height: 100vh;
@@ -49,7 +55,7 @@ button {
     align-items: center;
     gap: 12px;
     padding: 0;
-    color: var(--orange);
+    color: var(--orange-text);
     font-size: 19px;
     font-weight: 700;
 }
@@ -107,7 +113,7 @@ h2 {
 
 .eyebrow {
     margin-bottom: 8px;
-    color: var(--orange);
+    color: var(--orange-text);
     font-size: 15px;
     line-height: 1.45;
 }
@@ -179,12 +185,12 @@ h2 {
 
 .button-orange {
     background: var(--orange);
-    color: white;
+    color: var(--ink);
 }
 
 .button-green {
     background: var(--green);
-    color: white;
+    color: var(--ink);
 }
 
 .button-green-soft {
@@ -242,7 +248,7 @@ h2 {
 
 .offer-card-copy,
 .offer-card-copy small {
-    color: var(--orange);
+    color: var(--orange-text);
     font-size: 12px;
 }
 
@@ -255,7 +261,7 @@ h2 {
 
 .card-arrow {
     margin-left: auto;
-    color: var(--orange);
+    color: var(--orange-text);
     font-size: 19px;
 }
 
@@ -323,7 +329,7 @@ h2 {
     padding: 10px 12px;
     border: 1px solid var(--line);
     border-radius: 8px;
-    outline-color: var(--orange);
+    outline-color: var(--orange-text);
     background: #fffefa;
     color: var(--ink);
 }
@@ -398,7 +404,7 @@ h2 {
     align-items: center;
     justify-content: center;
     gap: 3px;
-    color: var(--orange);
+    color: var(--orange-text);
     font-size: 11px;
 }
 
@@ -417,7 +423,8 @@ h2 {
 }
 
 .bottom-nav button.active {
-    color: #d96c0c;
+    color: var(--orange-text-strong);
+    font-weight: 700;
 }
 
 @media (min-width: 700px) {
