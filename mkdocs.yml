@@ -50,6 +50,12 @@ nav:
   - 13. Referências Bibliográficas: visao/referencias.md
   - 14. Vídeo de Apresentação: visao/videos.md
 
+  - Backend:
+    - POC: backend/poc.md
+    - Guia de estrutura e TDD: backend/guia-estrutura-e-tdd.md
+    - Operação e infraestrutura: backend/operacao.md
+    - Segurança e auditoria: backend/seguranca.md
+
 markdown_extensions:
   - attr_list
   - md_in_html
