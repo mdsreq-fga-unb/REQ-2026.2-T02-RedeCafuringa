@@ -12,11 +12,17 @@ export default defineConfig({
     test: {
         environment: "jsdom",
         include: ["tests/**/*.test.{ts,tsx}"],
+        // Testes herméticos: ignoram .env.local (que o ./scripts/dev.sh setup cria
+        // com o login falso ligado). Cada teste que precisa de outro valor usa vi.stubEnv.
+        env: {
+            VITE_API_URL: "",
+            VITE_USE_MOCK_AUTH: "false",
+        },
         coverage: {
             provider: "v8",
             reporter: ["text-summary", "lcov"],
             include: ["src/**/*.{ts,tsx}"],
-            exclude: ["src/**/*.d.ts", "src/**/index.ts", "src/main.tsx"],
+            exclude: ["src/**/*.d.ts", "src/**/index.ts"],
             // Piso logo abaixo da cobertura atual (81,9% / 85,9% / 66,2% / 81,7%):
             // impede regressão sem travar o time. Suba aos poucos.
             thresholds: {
