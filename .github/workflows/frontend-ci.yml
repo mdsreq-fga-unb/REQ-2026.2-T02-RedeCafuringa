@@ -8,6 +8,7 @@ on:
     paths:
       - 'app/**'
       - '.nvmrc'
+      - 'shared/**'
       - '.github/workflows/frontend-ci.yml'
   pull_request:
     branches:
@@ -16,6 +17,7 @@ on:
     paths:
       - 'app/**'
       - '.nvmrc'
+      - 'shared/**'
       - '.github/workflows/frontend-ci.yml'
 
 permissions:
@@ -48,6 +50,14 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Contract types drift (src/shared/api/schema.ts)
+        run: |
+          npm run api:types
+          git diff --exit-code -- src/shared/api/schema.ts || {
+            echo '::error::schema.ts está desatualizado em relação a shared/openapi.json. Rode npm run api:types no app e commite o resultado.'
+            exit 1
+          }
 
       - name: Lint
         run: npm run lint
