@@ -2,9 +2,15 @@ name: Workflow lint
 
 on:
   push:
+    branches:
+      - dev
+      - main
     paths:
       - '.github/workflows/**'
   pull_request:
+    branches:
+      - dev
+      - main
     paths:
       - '.github/workflows/**'
 
