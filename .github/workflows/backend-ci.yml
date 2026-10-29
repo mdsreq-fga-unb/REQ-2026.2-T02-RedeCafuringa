@@ -69,6 +69,15 @@ jobs:
             exit 1
           }
 
+      - name: Referência da API (docs/shared/api.md)
+        working-directory: .
+        run: |
+          node scripts/gen-api-docs.mjs
+          git diff --exit-code -- docs/shared/api.md || {
+            echo '::error::docs/shared/api.md está desatualizado. Rode ./scripts/dev.sh contract e commite o resultado.'
+            exit 1
+          }
+
       - name: Dependency audit
         run: npm audit --audit-level=high
 
