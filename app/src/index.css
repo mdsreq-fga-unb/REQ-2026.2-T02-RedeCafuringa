@@ -1,0 +1,61 @@
+/* Fontes self-hosted (subconjunto latino: cobre os acentos do português).
+   Nenhuma requisição ao Google Fonts: sem envio de IP/user-agent a terceiros (LGPD)
+   e compatível com a CSP (font-src 'self'). */
+@import "@fontsource/dm-sans/latin-400.css";
+@import "@fontsource/dm-sans/latin-500.css";
+@import "@fontsource/dm-sans/latin-600.css";
+@import "@fontsource/dm-sans/latin-700.css";
+@import "@fontsource/manrope/latin-500.css";
+@import "@fontsource/manrope/latin-600.css";
+@import "@fontsource/manrope/latin-700.css";
+@import "@fontsource/manrope/latin-800.css";
+
+:root {
+    font-family: "DM Sans", sans-serif;
+    color: #1c332b;
+    background: #faf9f4;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-width: 320px;
+    min-height: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+}
+
+button {
+    font-family: inherit;
+}
+
+h1,
+h2,
+strong {
+    font-family: "Manrope", "DM Sans", sans-serif;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #ff851b;
+    outline-offset: 3px;
+}
+
+::selection {
+    background: #ffdfbd;
+    color: #1c332b;
+}

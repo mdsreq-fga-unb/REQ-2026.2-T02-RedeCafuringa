@@ -89,7 +89,7 @@
 ??? info "Priorização MoScoW"
     Reunião de negociação para classificar os requisitos do sistema em quatro níveis de criticidade (Must Have, Should Have, Could Have, Won't Have), visando alinhar as expectativas e definir o escopo do Produto Mínimo Viável.
 
-    - ![MoScoW](../../img/aup-elaboracao/moscow_final.png)
+    - ![MoScoW](../img/aup-elaboracao/moscow_final.png)
 ---
 
 ## Análise e Consenso
@@ -98,7 +98,7 @@
     
     Ponderação entre o valor para os usuários e o esforço de engenharia para delimitar o escopo do MVP.
 
-    - ![Matriz de Quadrantes](../../img/aup-elaboracao/matriz_quadrantes.png)
+    - ![Matriz de Quadrantes](../img/aup-elaboracao/matriz_quadrantes.png)
 
 ---
 
@@ -107,7 +107,7 @@
 O vídeo abaixo registra a primeira visita presencial na Cafuringa, experiência realizada em 21/09/2026 com objetivo de conhecer o lugar, o próprio Jefferson Sooma e discutir os requisitos do projeto.
 
 <video width="100%" controls>
-    <source src="../../img/aup-elaboracao/visitacao.mp4" type="video/mp4">
+    <source src="../img/aup-elaboracao/visitacao.mp4" type="video/mp4">
 </video>
 
 A reunião do dia 14/09 tratou da análise de feedbacks do professor, estruturação das "Lições Aprendidas" no GitHub Pages e atribuição de tarefas com prazos internos. A equipe também estabeleceu um fluxo de comunicação quinzenal e assíncrono com o cliente e alinhou a leitura obrigatória para a aula seguinte.

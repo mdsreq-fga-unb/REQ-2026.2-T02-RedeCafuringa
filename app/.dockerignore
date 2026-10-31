@@ -1,0 +1,13 @@
+node_modules
+dist
+dist-ssr
+coverage
+.env
+.env.*
+!.env.example
+*.local
+.vscode
+.idea
+Dockerfile
+.dockerignore
+*.md

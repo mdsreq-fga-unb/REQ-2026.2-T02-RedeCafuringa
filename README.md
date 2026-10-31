@@ -42,6 +42,21 @@ A plataforma busca aproximar **produtores e comunidade**, valorizando a produç�
 
 ---
 
+## Backend e infraestrutura
+
+O código da API (NestJS + MongoDB) fica em [`backend/`](backend/).
+Para rodar, testar, fazer deploy e operar:
+
+- [`backend/README.md`](backend/README.md) — setup, scripts e deploy.
+- [`docs/backend/operacao.md`](docs/backend/operacao.md) — deploy, health, logs, métricas, backup, incidentes.
+- [`docs/backend/seguranca.md`](docs/backend/seguranca.md) — reporte, controles, auditoria e riscos residuais.
+- [`docs/backend/poc.md`](docs/backend/poc.md) e [`docs/backend/guia-estrutura-e-tdd.md`](docs/backend/guia-estrutura-e-tdd.md) — decisões técnicas e TDD.
+- [`app/`](app/README.md) — frontend (PWA); [`docs/frontend/operacao.md`](docs/frontend/operacao.md) — operação, variáveis, imagens e segurança.
+- [`docs/shared/contratos.md`](docs/shared/contratos.md) — contrato OpenAPI entre backend e frontend; [`docs/shared/api.md`](docs/shared/api.md) — referência dos endpoints.
+- [`docs/infra/visao-geral.md`](docs/infra/visao-geral.md) — CI/CD, imagens e registro de decisões; [`docs/contribuindo.md`](docs/contribuindo.md) — fluxo de branches e PRs.
+
+---
+
 ## Como começar
 
 Para executar a documentação localmente, instale as dependências do projeto:
@@ -64,9 +79,23 @@ http://localhost:8000
 
 ---
 
+## Ambiente de desenvolvimento
+
+Pré-requisitos: Git (com Git Bash no Windows), Node (versão do [`.nvmrc`](.nvmrc)) e Docker. Os comandos de rotina ficam em `scripts/dev.sh`:
+
+```bash
+./scripts/dev.sh setup     # confere pré-requisitos, instala dependências, cria backend/.env
+./scripts/dev.sh up        # mongo + api + app  ->  app em http://localhost:5173, api em http://localhost:3000
+./scripts/dev.sh check     # os mesmos passos do CI, antes de abrir o PR
+./scripts/dev.sh docs      # documentação em http://localhost:8000
+./scripts/dev.sh help      # todos os comandos
+```
+
+---
+
 ## Padrões de contribuição
 
-**Branches** — crie a partir da `main`, no formato `<tipo>/<descricao>`:
+**Branches** — crie a partir da `dev` (`./scripts/dev.sh branch feat/cadastro-produtor`), no formato `<tipo>/<descricao>`, e abra o PR para a `dev`:
 
 ```text
 docs/atualiza-requisitos

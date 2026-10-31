@@ -1,0 +1,87 @@
+# Ambiente completo de desenvolvimento: mongo + api + app.
+#
+# Primeira vez:
+#   cp backend/.env.example backend/.env
+#
+# Uso:
+#   docker compose up -d --build              -> mongo + api + app (Vite com hot reload)
+#   docker compose --profile prod up -d --build app-prod
+#                                             -> front como em produção (nginx), em :8080
+#   docker compose down                       -> derruba (volumes são mantidos)
+#
+# Portas (apenas em 127.0.0.1): app 5173, api 3000, mongo 27017, app-prod 8080.
+#
+# mongo e api vêm de backend/docker-compose.yml, que continua funcionando sozinho.
+# Atenção: neste modo o projeto se chama "rede-cafuringa", então os volumes do mongo
+# são diferentes dos criados ao rodar o compose do backend isolado (projeto "backend").
+name: rede-cafuringa
+
+include:
+  - path: backend/docker-compose.yml
+    project_directory: backend
+    env_file: backend/.env
+
+services:
+  app:
+    build:
+      context: app
+      target: dev
+    image: rede-cafuringa-app:dev
+    restart: unless-stopped
+    init: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 512
+    mem_limit: 1g
+    environment:
+      # Polling é necessário para o hot reload funcionar com bind mount no Windows/macOS.
+      CHOKIDAR_USEPOLLING: 'true'
+      # Públicas (VITE_*): URL da API no navegador do desenvolvedor e login falso enquanto o
+      # login real não está integrado. Sobrescreva exportando as variáveis antes do "up".
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api/v1}
+      VITE_USE_MOCK_AUTH: ${VITE_USE_MOCK_AUTH:-true}
+    ports:
+      - '127.0.0.1:5173:5173'
+    volumes:
+      - ./app:/app
+      # Mantém o node_modules instalado na imagem (o bind mount do código não o esconde).
+      - app-node-modules:/app/node_modules
+    depends_on:
+      api:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  # Build de produção servido por nginx, para validar o que será publicado.
+  # A API do compose de dev já aceita a origem http://localhost:8080 (CORS_ORIGINS).
+  # Como em produção, o login falso fica desligado por padrão.
+  app-prod:
+    profiles: [prod]
+    build:
+      context: app
+      target: prod
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api/v1}
+        VITE_USE_MOCK_AUTH: ${VITE_USE_MOCK_AUTH_PROD:-false}
+    image: rede-cafuringa-app:local
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 128m
+    ports:
+      - '127.0.0.1:8080:8080'
+
+volumes:
+  app-node-modules:
