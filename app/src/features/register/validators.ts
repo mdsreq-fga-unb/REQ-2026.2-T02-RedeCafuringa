@@ -1,4 +1,4 @@
-const onlyDigits = (value: string) => value.replace(/\D/g, '');
+import { onlyDigits } from '@/features/auth/cpf';
 
 function checkDigit(digits: number[], weights: number[]): number {
   const sum = digits.reduce((acc, d, i) => acc + d * weights[i], 0);
