@@ -57,3 +57,11 @@ export function formatPhone(value: string): string {
 export function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
+
+export function isValidPassword(value: string): boolean {
+  return value.length >= 8;
+}
+
+export function passwordsMatch(password: string, confirmation: string): boolean {
+  return password === confirmation;
+}

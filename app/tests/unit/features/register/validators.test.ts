@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCnpj, isValidCnpj, isValidPhone, formatPhone, isValidEmail } from '@/features/register/validators';
+import { formatCnpj, isValidCnpj, isValidPhone, formatPhone, isValidEmail, isValidPassword, passwordsMatch } from '@/features/register/validators';
 
 describe('formatCnpj', () => {
   it('aplica a máscara 00.000.000/0000-00', () => {
@@ -93,3 +93,25 @@ describe('isValidEmail', () => {
   });
 });
 
+describe('isValidPassword', () => {
+  it('aceita senha com 8 ou mais caracteres', () => {
+    expect(isValidPassword('12345678')).toBe(true);
+    expect(isValidPassword('uma-senha-bem-longa')).toBe(true);
+  });
+
+  it('rejeita senha com menos de 8 caracteres', () => {
+    expect(isValidPassword('1234567')).toBe(false);
+    expect(isValidPassword('')).toBe(false);
+  });
+});
+
+describe('passwordsMatch', () => {
+  it('aceita quando a confirmação é idêntica à senha', () => {
+    expect(passwordsMatch('senha-segura-1', 'senha-segura-1')).toBe(true);
+  });
+
+  it('rejeita confirmação diferente, inclusive só na caixa das letras', () => {
+    expect(passwordsMatch('senha-segura-1', 'senha-segura-2')).toBe(false);
+    expect(passwordsMatch('Senha-Segura', 'senha-segura')).toBe(false);
+  });
+});
