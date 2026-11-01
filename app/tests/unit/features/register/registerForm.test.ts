@@ -4,6 +4,7 @@ import {
   type RegisterFormValues,
 } from '@/features/register/registerForm';
 
+
 const validForm: RegisterFormValues = {
   nature: 'producer',
   documentType: 'cpf',
@@ -61,4 +62,49 @@ describe('validateRegisterForm: campos obrigatórios', () => {
       address: 'Informe o endereço.',
     });
   });
+
+  describe('validateRegisterForm: formato e regras', () => {
+  it('rejeita CPF inválido', () => {
+    const errors = validateRegisterForm({ ...validForm, document: '529.982.247-24' });
+    expect(errors.document).toBe('CPF inválido.');
+  });
+
+  it('valida o documento conforme o tipo escolhido (CNPJ)', () => {
+    const cnpj = { ...validForm, documentType: 'cnpj' as const };
+
+    expect(validateRegisterForm({ ...cnpj, document: '11.222.333/0001-81' }).document).toBeUndefined();
+    expect(validateRegisterForm({ ...cnpj, document: '11.222.333/0001-82' }).document).toBe('CNPJ inválido.');
+    expect(validateRegisterForm({ ...cnpj, document: '529.982.247-25' }).document).toBe('CNPJ inválido.');
+  });
+
+  it('rejeita telefone fora do padrão', () => {
+    const errors = validateRegisterForm({ ...validForm, phone: '(61) 3333-444' });
+    expect(errors.phone).toBe('Telefone inválido. Informe o DDD e o número.');
+  });
+
+  it('rejeita e-mail com formato inválido', () => {
+    const errors = validateRegisterForm({ ...validForm, email: 'maria@exemplo' });
+    expect(errors.email).toBe('E-mail inválido.');
+  });
+
+  it('ignora espaços nas pontas do e-mail', () => {
+    const errors = validateRegisterForm({ ...validForm, email: '  maria@exemplo.com  ' });
+    expect(errors.email).toBeUndefined();
+  });
+
+  it('rejeita senha com menos de 8 caracteres', () => {
+    const errors = validateRegisterForm({
+      ...validForm,
+      password: 'curta12',
+      confirmPassword: 'curta12',
+    });
+    expect(errors.password).toBe('A senha deve ter no mínimo 8 caracteres.');
+    expect(errors.confirmPassword).toBeUndefined();
+  });
+
+  it('rejeita confirmação diferente da senha', () => {
+    const errors = validateRegisterForm({ ...validForm, confirmPassword: 'senha-segura-2' });
+    expect(errors.confirmPassword).toBe('As senhas não conferem.');
+  });
+});
 });
