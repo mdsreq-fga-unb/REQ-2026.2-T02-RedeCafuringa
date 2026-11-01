@@ -4,7 +4,7 @@ import type { ConsumerSignupData } from "@/features/auth/registrationService";
 const API = "http://api.test/api/v1";
 const consumer: ConsumerSignupData = {
     nome: " Gabriela Pereira da Silva ",
-    cpf: "529.982.247-25",
+    cpf: "168.995.350-09",
     email: " Gabriela@Exemplo.com ",
     senha: "SenhaForte123",
 };
@@ -28,6 +28,7 @@ beforeEach(() => {
 afterEach(() => {
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
+    localStorage.clear();
 });
 
 describe("registrationService.registerConsumer", () => {
@@ -45,7 +46,7 @@ describe("registrationService.registerConsumer", () => {
         expect(init?.method).toBe("POST");
         expect(JSON.parse(String(init?.body))).toEqual({
             nome: "Gabriela Pereira da Silva",
-            cpf: "52998224725",
+            cpf: "16899535009",
             email: "gabriela@exemplo.com",
             senha: "SenhaForte123",
         });
@@ -76,6 +77,62 @@ describe("registrationService.registerConsumer", () => {
             await expect(registerConsumer(consumer)).rejects.toMatchObject({
                 message: expectedMessage,
             });
+        },
+    );
+
+    it("persiste cadastro mockado e permite entrar com a conta criada", async () => {
+        vi.stubEnv("VITE_USE_MOCK_AUTH", "true");
+        const fetchMock = vi.fn<typeof fetch>();
+        vi.stubGlobal("fetch", fetchMock);
+        const { registerConsumer } = await load();
+
+        await registerConsumer(consumer);
+
+        const savedUsers = JSON.parse(
+            localStorage.getItem("cafuringa-mock-users") || "[]",
+        );
+        expect(savedUsers).toHaveLength(1);
+        expect(savedUsers[0]).toMatchObject({
+            cpf: "16899535009",
+            email: "gabriela@exemplo.com",
+            user: {
+                name: "Gabriela Pereira da Silva",
+                role: "consumer",
+            },
+        });
+        expect(fetchMock).not.toHaveBeenCalled();
+
+        const { login } = await import("@/features/auth/authService");
+        await expect(
+            login({ cpf: "16899535009", password: "SenhaForte123" }),
+        ).resolves.toMatchObject({
+            user: {
+                name: "Gabriela Pereira da Silva",
+                role: "consumer",
+            },
+        });
+    });
+
+    it.each([
+        { data: consumer, message: "CPF" },
+        {
+            data: {
+                ...consumer,
+                cpf: "123.456.789-09",
+                email: "GABRIELA@EXEMPLO.COM",
+            },
+            message: "E-mail",
+        },
+    ])(
+        "rejeita $message duplicado no cadastro mockado",
+        async ({ data, message }) => {
+            vi.stubEnv("VITE_USE_MOCK_AUTH", "true");
+            const { registerConsumer } = await load();
+            await registerConsumer(consumer);
+
+            await expect(registerConsumer(data)).rejects.toThrow(
+                `${message} já cadastrado`,
+            );
         },
     );
 });

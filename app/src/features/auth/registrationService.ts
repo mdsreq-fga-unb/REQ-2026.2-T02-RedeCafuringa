@@ -1,4 +1,6 @@
 import { ApiHttpError, getApiClient } from "../../shared/api";
+import { isMockAuthEnabled } from "./authMode";
+import { registerMockConsumer } from "./mockAuth";
 
 export type ConsumerSignupData = {
     nome: string;
@@ -10,6 +12,11 @@ export type ConsumerSignupData = {
 export async function registerConsumer(
     data: ConsumerSignupData,
 ): Promise<void> {
+    if (isMockAuthEnabled) {
+        await registerMockConsumer(data);
+        return;
+    }
+
     try {
         await getApiClient().post<unknown>(
             "/users/consumers",
