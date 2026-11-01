@@ -53,3 +53,7 @@ export function formatPhone(value: string): string {
   if (last) formatted += `-${last}`;
   return formatted;
 }
+
+export function isValidEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}

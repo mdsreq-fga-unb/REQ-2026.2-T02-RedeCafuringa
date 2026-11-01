@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCnpj, isValidCnpj, isValidPhone, formatPhone } from '@/features/register/validators';
+import { formatCnpj, isValidCnpj, isValidPhone, formatPhone, isValidEmail } from '@/features/register/validators';
 
 describe('formatCnpj', () => {
   it('aplica a máscara 00.000.000/0000-00', () => {
@@ -72,6 +72,24 @@ describe('formatPhone', () => {
 
   it('ignora o que não é dígito e corta acima de 11 dígitos', () => {
     expect(formatPhone('(61) 91234-5678 99')).toBe('(61) 91234-5678');
+  });
+});
+
+describe('isValidEmail', () => {
+  it('aceita e-mails com formato válido', () => {
+    expect(isValidEmail('raizes@exemplo.com')).toBe(true);
+    expect(isValidEmail('ana.silva+loja@dominio.com.br')).toBe(true);
+  });
+    it('rejeita e-mail sem @, sem usuário ou sem domínio', () => {
+    expect(isValidEmail('raizes.exemplo.com')).toBe(false);
+    expect(isValidEmail('@exemplo.com')).toBe(false);
+    expect(isValidEmail('raizes@')).toBe(false);
+  });
+
+  it('rejeita e-mail sem ponto no domínio ou com espaços', () => {
+    expect(isValidEmail('raizes@exemplo')).toBe(false);
+    expect(isValidEmail('raizes@exemplo.')).toBe(false);
+    expect(isValidEmail('rai zes@exemplo.com')).toBe(false);
   });
 });
 
