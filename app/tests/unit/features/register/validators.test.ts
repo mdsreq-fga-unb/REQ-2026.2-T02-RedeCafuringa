@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCnpj, isValidCnpj } from '@/features/register/validators';
+import { formatCnpj, isValidCnpj, isValidPhone} from '@/features/register/validators';
 
 describe('formatCnpj', () => {
   it('aplica a máscara 00.000.000/0000-00', () => {
@@ -32,4 +32,25 @@ it('rejeita CNPJ com todos os dígitos iguais', () => {
 it('rejeita CNPJ com mais de 14 dígitos', () => {
   expect(isValidCnpj('11.222.333/0001-81 9')).toBe(false);
 });
+});
+
+describe('isValidPhone', () => {
+  it('aceita celular (11 dígitos) e fixo (10 dígitos) com DDD, com ou sem máscara', () => {
+    expect(isValidPhone('(61) 91234-5678')).toBe(true);
+    expect(isValidPhone('61912345678')).toBe(true);
+    expect(isValidPhone('(61) 3333-4444')).toBe(true);
+  });
+    it('rejeita telefone com menos de 10 ou mais de 11 dígitos', () => {
+    expect(isValidPhone('(61) 3333-444')).toBe(false);
+    expect(isValidPhone('619123456789')).toBe(false);
+  });
+
+  it('rejeita DDD inválido', () => {
+    expect(isValidPhone('(05) 91234-5678')).toBe(false);
+    expect(isValidPhone('(10) 3333-4444')).toBe(false);
+  });
+
+  it('rejeita celular de 11 dígitos que não começa com 9 depois do DDD', () => {
+    expect(isValidPhone('(61) 81234-5678')).toBe(false);
+  });
 });

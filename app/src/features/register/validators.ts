@@ -31,3 +31,11 @@ export function formatCnpj(value: string): string {
   if (part5) formatted += `-${part5}`;
   return formatted;
 }
+
+export function isValidPhone(value: string): boolean {
+  const digits = onlyDigits(value);
+  if (digits.length !== 10 && digits.length !== 11) return false;
+  if (Number(digits.slice(0, 2)) < 11) return false;
+  if (digits.length === 11 && digits[2] !== '9') return false;
+  return true;
+}
