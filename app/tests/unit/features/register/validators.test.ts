@@ -10,4 +10,12 @@ describe('isValidCnpj', () => {
   it('rejeita CNPJ com dígito verificador errado', () => {
   expect(isValidCnpj('11.222.333/0001-82')).toBe(false);
 });
+
+it('rejeita CNPJ com todos os dígitos iguais', () => {
+  expect(isValidCnpj('00.000.000/0000-00')).toBe(false);
+});
+
+it('rejeita CNPJ com mais de 14 dígitos', () => {
+  expect(isValidCnpj('11.222.333/0001-81 9')).toBe(false);
+});
 });
