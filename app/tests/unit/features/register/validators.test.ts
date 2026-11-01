@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCnpj, isValidCnpj, isValidPhone} from '@/features/register/validators';
+import { formatCnpj, isValidCnpj, isValidPhone, formatPhone } from '@/features/register/validators';
 
 describe('formatCnpj', () => {
   it('aplica a máscara 00.000.000/0000-00', () => {
@@ -54,3 +54,24 @@ describe('isValidPhone', () => {
     expect(isValidPhone('(61) 81234-5678')).toBe(false);
   });
 });
+
+describe('formatPhone', () => {
+  it('formata fixo (10 dígitos) como (00) 0000-0000', () => {
+    expect(formatPhone('6133334444')).toBe('(61) 3333-4444');
+  });
+
+  it('formata celular (11 dígitos) como (00) 00000-0000', () => {
+    expect(formatPhone('61912345678')).toBe('(61) 91234-5678');
+  });
+
+  it('formata progressivamente enquanto o usuário digita', () => {
+    expect(formatPhone('6')).toBe('(6');
+    expect(formatPhone('61')).toBe('(61');
+    expect(formatPhone('619')).toBe('(61) 9');
+  });
+
+  it('ignora o que não é dígito e corta acima de 11 dígitos', () => {
+    expect(formatPhone('(61) 91234-5678 99')).toBe('(61) 91234-5678');
+  });
+});
+

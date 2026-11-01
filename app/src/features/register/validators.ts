@@ -39,3 +39,17 @@ export function isValidPhone(value: string): boolean {
   if (digits.length === 11 && digits[2] !== '9') return false;
   return true;
 }
+
+export function formatPhone(value: string): string {
+  const digits = onlyDigits(value).slice(0, 11);
+  const ddd = digits.slice(0, 2);
+  const rest = digits.slice(2);
+  const splitAt = digits.length > 10 ? 5 : 4;
+  const first = rest.slice(0, splitAt);
+  const last = rest.slice(splitAt);
+
+  let formatted = ddd ? `(${ddd}` : '';
+  if (first) formatted += `) ${first}`;
+  if (last) formatted += `-${last}`;
+  return formatted;
+}
