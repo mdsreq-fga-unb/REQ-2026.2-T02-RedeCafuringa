@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildRegisterPayload,
   validateRegisterForm,
   type RegisterFormValues,
 } from '@/features/register/registerForm';
@@ -17,6 +18,43 @@ const validForm: RegisterFormValues = {
   confirmPassword: 'senha-segura-1',
   isAdult: true,
 };
+
+describe('buildRegisterPayload', () => {
+  it('normaliza os campos para o formato enviado à API', () => {
+    const payload = buildRegisterPayload({
+      ...validForm,
+      name: '  Maria da Silva  ',
+      document: '529.982.247-25',
+      phone: '(61) 91234-5678',
+      email: '  Maria@Exemplo.COM ',
+      address: '  Chácara 12, Núcleo Rural  ',
+    });
+
+    expect(payload).toEqual({
+      nature: 'producer',
+      name: 'Maria da Silva',
+      document: '52998224725',
+      phone: '61912345678',
+      email: 'maria@exemplo.com',
+      address: 'Chácara 12, Núcleo Rural',
+      password: 'senha-segura-1',
+      isAdult: true,
+    });
+  });
+
+  it('usa só dígitos no CNPJ e preserva a senha exatamente como digitada', () => {
+    const payload = buildRegisterPayload({
+      ...validForm,
+      documentType: 'cnpj',
+      document: '11.222.333/0001-81',
+      password: ' senha com espaço ',
+      confirmPassword: ' senha com espaço ',
+    });
+
+    expect(payload.document).toBe('11222333000181');
+    expect(payload.password).toBe(' senha com espaço ');
+  });
+});
 
 describe('validateRegisterForm: campos obrigatórios', () => {
   it('não retorna erros para um formulário válido', () => {

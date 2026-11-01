@@ -1,3 +1,4 @@
+import { onlyDigits } from '@/features/auth/cpf';
 import { isValidCpf } from '@/features/auth/cpf';
 import {
   isValidCnpj,
@@ -62,4 +63,28 @@ export function validateRegisterForm(values: RegisterFormValues): RegisterFormEr
   if (!values.isAdult) errors.isAdult = 'Confirme que você é maior de 18 anos.';
 
   return errors;
+}
+
+export interface RegisterPayload {
+  nature: RegisterNature;
+  name: string;
+  document: string;
+  phone: string;
+  email: string;
+  address: string;
+  password: string;
+  isAdult: true;
+}
+
+export function buildRegisterPayload(values: RegisterFormValues): RegisterPayload {
+  return {
+    nature: values.nature as RegisterNature,
+    name: values.name.trim(),
+    document: onlyDigits(values.document),
+    phone: onlyDigits(values.phone),
+    email: values.email.trim().toLowerCase(),
+    address: values.address.trim(),
+    password: values.password,
+    isAdult: true,
+  };
 }
