@@ -15,3 +15,19 @@ export function isValidCnpj(value: string): boolean {
   const d2 = checkDigit(nums.slice(0, 13), [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
   return d1 === nums[12] && d2 === nums[13];
 }
+
+export function formatCnpj(value: string): string {
+  const digits = onlyDigits(value).slice(0, 14);
+  const part1 = digits.slice(0, 2);
+  const part2 = digits.slice(2, 5);
+  const part3 = digits.slice(5, 8);
+  const part4 = digits.slice(8, 12);
+  const part5 = digits.slice(12, 14);
+
+  let formatted = part1;
+  if (part2) formatted += `.${part2}`;
+  if (part3) formatted += `.${part3}`;
+  if (part4) formatted += `/${part4}`;
+  if (part5) formatted += `-${part5}`;
+  return formatted;
+}
