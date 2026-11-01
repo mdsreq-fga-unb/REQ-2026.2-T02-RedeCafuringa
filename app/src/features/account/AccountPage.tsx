@@ -111,7 +111,7 @@ export function AccountPage(props: AccountPageProps) {
             )}
             <ActionButton
                 variant="outline"
-                onClick={() => onNavigate("/entrar")}
+                onClick={() => onNavigate("/escolher-perfil")}
             >
                 Trocar perfil de demonstração
             </ActionButton>

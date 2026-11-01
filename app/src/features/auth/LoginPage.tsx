@@ -53,7 +53,12 @@ export function LoginPage({
 
     return (
         <section className="login-page">
-            <BackButton label="Voltar" onClick={() => onNavigate("/perfil")} />
+            <BackButton
+                label="Voltar"
+                onClick={() =>
+                    onNavigate(fromContact ? "/perfil" : "/escolher-perfil")
+                }
+            />
             <h1>
                 {fromContact
                     ? "Entre para falar com o responsável"
@@ -126,6 +131,17 @@ export function LoginPage({
                     </ActionButton>
                 </div>
             </form>
+
+            <a
+                className="button button-outline login-signup-link"
+                href="#/cadastro/consumidor"
+                onClick={(event) => {
+                    event.preventDefault();
+                    onNavigate("/cadastro/consumidor");
+                }}
+            >
+                Criar uma conta
+            </a>
 
             {isMockAuthEnabled && <p className="demo-note">{demoHint}</p>}
         </section>

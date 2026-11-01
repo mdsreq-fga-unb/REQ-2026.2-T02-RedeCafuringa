@@ -128,3 +128,44 @@ describe("fluxo de contato da aplicação", () => {
         },
     );
 });
+
+describe("entrada e acesso público", () => {
+    it("abre a seleção de perfil primeiro e permite navegar como visitante", async () => {
+        const user = userEvent.setup();
+        window.location.hash = "";
+        render(<App />);
+
+        expect(
+            await screen.findByRole("heading", { name: "Entre em sua conta" }),
+        ).toBeTruthy();
+
+        await user.click(
+            screen.getByRole("button", { name: "Cafuringa, início" }),
+        );
+        expect(
+            await screen.findByRole("heading", { name: "Dona Maria" }),
+        ).toBeTruthy();
+        await user.click(
+            screen.getByRole("button", { name: "Ver catálogo desse perfil" }),
+        );
+        expect(
+            await screen.findByRole("heading", { name: "Catálogo do perfil" }),
+        ).toBeTruthy();
+    });
+
+    it.each(["Notificações", "Pré-reservas"])(
+        "pede seleção de perfil ao visitante que abre %s",
+        async (tab) => {
+            const user = userEvent.setup();
+            render(<App />);
+
+            await user.click(screen.getByRole("button", { name: tab }));
+
+            expect(
+                await screen.findByRole("heading", {
+                    name: "Entre em sua conta",
+                }),
+            ).toBeTruthy();
+        },
+    );
+});

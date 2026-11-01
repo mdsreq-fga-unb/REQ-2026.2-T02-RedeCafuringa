@@ -1,6 +1,13 @@
 import { BrandHeader, BottomNavigation } from "@/components";
 import { AccountPage } from "@/features/account";
-import { LoginPage, useDemoSession } from "@/features/auth";
+import {
+    ConsumerProfileSelectionPage,
+    ConsumerSignupPage,
+    ConsumerSignupSuccessPage,
+    LoginPage,
+    registerConsumer,
+    useDemoSession,
+} from "@/features/auth";
 import {
     canStartWhatsAppContact,
     createWhatsAppUrl,
@@ -24,8 +31,18 @@ export function App() {
     const fromContact = new URLSearchParams(route.split("?")[1] || "").has(
         "contato",
     );
-    // Áreas de usuário logado: quem não está autenticado vê a tela de entrar.
-    const screenPath = path === "/conta" && role === null ? "/entrar" : path;
+    const needsProfileSelection =
+        role === null &&
+        ["/conta", "/notificacoes", "/reservas"].includes(path);
+    const screenPath = needsProfileSelection ? "/escolher-perfil" : path;
+    const showProfileSelection = screenPath === "/escolher-perfil";
+    const showLogin =
+        screenPath === "/entrar" || path.startsWith("/login/") || fromContact;
+    const isAuthFlow =
+        showProfileSelection ||
+        showLogin ||
+        path === "/cadastro/consumidor" ||
+        path === "/conta-criada/consumer";
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
         : undefined;
@@ -90,7 +107,7 @@ export function App() {
     };
 
     return (
-        <div className="app-shell">
+        <div className={`app-shell ${isAuthFlow ? "auth-shell" : ""}`}>
             <BrandHeader onHome={() => navigate("/perfil")} />
             <main className="main-content">
                 {path === "/perfil" && (
@@ -115,12 +132,24 @@ export function App() {
                         }
                     />
                 )}
-                {screenPath === "/entrar" && (
+                {showProfileSelection && (
+                    <ConsumerProfileSelectionPage onNavigate={navigate} />
+                )}
+                {showLogin && (
                     <LoginPage
                         fromContact={fromContact}
                         onNavigate={navigate}
                         onSignIn={handleSignIn}
                     />
+                )}
+                {path === "/cadastro/consumidor" && (
+                    <ConsumerSignupPage
+                        createAccount={registerConsumer}
+                        onNavigate={navigate}
+                    />
+                )}
+                {path === "/conta-criada/consumer" && (
+                    <ConsumerSignupSuccessPage onNavigate={navigate} />
                 )}
                 {screenPath === "/conta" && (
                     <AccountPage
@@ -135,12 +164,18 @@ export function App() {
                         onNavigate={navigate}
                         onSignOut={() => {
                             signOut();
-                            navigate("/perfil");
+                            navigate("/escolher-perfil");
                         }}
                     />
                 )}
             </main>
-            <BottomNavigation path={path} role={role} onNavigate={navigate} />
+            {!isAuthFlow && (
+                <BottomNavigation
+                    path={path}
+                    role={role}
+                    onNavigate={navigate}
+                />
+            )}
         </div>
     );
 }

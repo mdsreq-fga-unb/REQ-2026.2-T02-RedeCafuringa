@@ -51,7 +51,12 @@ describe("Fluxo de cadastro de consumidor — HU01", () => {
         const continueButton = screen.getByRole("button", {
             name: "Continuar",
         }) as HTMLButtonElement;
-        expect(continueButton.disabled).toBe(true);
+        expect(continueButton.disabled).toBe(false);
+        expect(
+            screen
+                .getByRole("button", { name: /Sou consumidor/ })
+                .getAttribute("aria-pressed"),
+        ).toBe("true");
 
         await user.click(
             screen.getByRole("button", { name: /Sou consumidor/ }),
@@ -112,15 +117,20 @@ describe("Fluxo de cadastro de consumidor — HU01", () => {
         expect(createAccount).not.toHaveBeenCalled();
     });
 
-    it("CA02: rejeita senha menor que o mínimo de seis caracteres do protótipo", async () => {
-        const { createAccount, user } = renderSignup();
-        await fillSignup(user, { senha: "Ab123", confirm: "Ab123" });
+    it.each(["Ab12345", "SomenteLetras", "12345678"])(
+        "CA02: rejeita senha que não atende à política da conta (%s)",
+        async (senha) => {
+            const { createAccount, user } = renderSignup();
+            await fillSignup(user, { senha, confirm: senha });
 
-        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+            await user.click(
+                screen.getByRole("button", { name: "Criar conta" }),
+            );
 
-        expect(await screen.findByRole("alert")).toBeTruthy();
-        expect(createAccount).not.toHaveBeenCalled();
-    });
+            expect(await screen.findByRole("alert")).toBeTruthy();
+            expect(createAccount).not.toHaveBeenCalled();
+        },
+    );
 
     it("CA01/CA05: envia dados válidos e abre a confirmação de cadastro", async () => {
         const { createAccount, onNavigate, user } = renderSignup();
