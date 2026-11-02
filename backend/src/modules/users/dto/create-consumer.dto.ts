@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsDateString,
   IsEmail,
@@ -15,8 +16,9 @@ import {
 } from '../../../common/validators/is-cpf.decorator.js';
 
 /**
- * RF01: nome completo, CPF, e-mail e senha. Telefone e data de nascimento são
- * opcionais (fora do formulário do protótipo); se vierem, são validados.
+ * RF01: nome completo, CPF, e-mail e senha. O telefone é opcional (fora do
+ * formulário do protótipo); a data de nascimento segue obrigatória porque é
+ * ela que afere a maioridade (RNF15).
  */
 export class CreateConsumerDto {
   @ApiProperty({ example: 'Maria das Graças' })
@@ -31,6 +33,10 @@ export class CreateConsumerDto {
   cpf: string;
 
   @ApiPropertyOptional({ example: '61999990000', description: 'DDD + número' })
+  // Formulário que envia o campo em branco equivale a não informar.
+  @Transform(({ value }: { value: unknown }) =>
+    value === '' ? undefined : value,
+  )
   @IsOptional()
   @Matches(/^\d{10,11}$/, {
     message: 'Telefone deve ter DDD e número, apenas dígitos (10 ou 11)',
@@ -42,16 +48,15 @@ export class CreateConsumerDto {
   @MaxLength(254, { message: 'E-mail deve ter no máximo 254 caracteres' })
   email: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     example: '1990-05-10',
-    description: 'AAAA-MM-DD. Se informada, exige 18 anos ou mais',
+    description: 'AAAA-MM-DD. Exige 18 anos ou mais',
   })
-  @IsOptional()
   @IsDateString(
     { strict: true },
     { message: 'Data de nascimento deve estar no formato AAAA-MM-DD' },
   )
-  dataNascimento?: string;
+  dataNascimento: string;
 
   @ApiProperty({
     example: 'SenhaForte123',

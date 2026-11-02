@@ -29,7 +29,7 @@ export class UsersController {
   @ApiOperation({
     summary: 'Cadastrar consumidor',
     description:
-      'Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Telefone e data de nascimento são opcionais; se a data vier, exige 18 anos ou mais. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.',
+      'Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Data de nascimento é obrigatória e exige 18 anos ou mais (RNF15); telefone é opcional. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.',
   })
   @ApiCreatedResponse({ type: UserResponse, description: 'Consumidor criado' })
   @ApiBadRequestResponse({

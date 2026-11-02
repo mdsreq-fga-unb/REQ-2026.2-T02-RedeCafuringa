@@ -24,8 +24,8 @@ export class User {
   @Prop()
   telefone?: string;
 
-  @Prop()
-  dataNascimento?: Date;
+  @Prop({ required: true })
+  dataNascimento: Date;
 
   @Prop({ required: true })
   senhaHash: string;

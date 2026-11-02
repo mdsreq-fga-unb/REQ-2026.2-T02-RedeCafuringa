@@ -79,7 +79,7 @@ describe('UsersService', () => {
       expect(model.create.mock.calls[0][0].email).toBe('maria@exemplo.com');
     });
 
-    it('RN15: recusa cadastro de menor de 18 anos', async () => {
+    it('RNF15: recusa cadastro de menor de 18 anos', async () => {
       const { service, model } = setup();
       const seventeenYearsAgo = new Date().getUTCFullYear() - 17;
 
@@ -91,15 +91,25 @@ describe('UsersService', () => {
       expect(model.create).not.toHaveBeenCalled();
     });
 
-    it('RF01: cadastra sem telefone e data de nascimento', async () => {
+    it('RF01: cadastra sem telefone', async () => {
       const { service, model } = setup();
-      const { nome, cpf, email, senha } = makeConsumer();
+      const { nome, cpf, email, senha, dataNascimento } = makeConsumer();
 
-      await service.createConsumer({ nome, cpf, email, senha });
+      await service.createConsumer({ nome, cpf, email, senha, dataNascimento });
 
       const saved = model.create.mock.calls[0][0];
       expect(saved.telefone).toBeUndefined();
-      expect(saved.dataNascimento).toBeUndefined();
+      expect(saved.dataNascimento).toBeInstanceOf(Date);
+    });
+
+    it('RNF15: recusa cadastro sem data de nascimento', async () => {
+      const { service, model } = setup();
+      const { nome, cpf, email, senha } = makeConsumer();
+
+      await expect(
+        service.createConsumer({ nome, cpf, email, senha } as never),
+      ).rejects.toThrow(BadRequestException);
+      expect(model.create).not.toHaveBeenCalled();
     });
 
     it('recusa CPF já cadastrado com 409', async () => {
