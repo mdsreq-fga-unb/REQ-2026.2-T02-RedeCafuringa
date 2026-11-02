@@ -51,13 +51,13 @@ Devolve o perfil de quem é dono do token. CPF sempre mascarado.
 
 ## users
 
-Cadastro de usuários (RN02, RN15)
+Cadastro de usuários (RN02, RNF15)
 
 ### `POST /api/v1/users/consumers`
 
 **Cadastrar consumidor** · `operationId: usersCreateConsumer` · pública
 
-Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Telefone e data de nascimento são opcionais; se a data vier, exige 18 anos ou mais. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.
+Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Data de nascimento é obrigatória e exige 18 anos ou mais (RNF15); telefone é opcional. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.
 
 **Corpo da requisição:** [CreateConsumerDto](#createconsumerdto)
 
@@ -115,7 +115,7 @@ Responde 200 enquanto o processo está de pé, sem consultar o banco. Usado pelo
 | `cpf` | string | sim | Com ou sem máscara Ex.: `"529.982.247-25"`. |
 | `telefone` | string | não | DDD + número Ex.: `"61999990000"`. |
 | `email` | string | sim |  Ex.: `"maria@exemplo.com"`. |
-| `dataNascimento` | string | não | AAAA-MM-DD. Se informada, exige 18 anos ou mais Ex.: `"1990-05-10"`. |
+| `dataNascimento` | string | sim | AAAA-MM-DD. Exige 18 anos ou mais Ex.: `"1990-05-10"`. |
 | `senha` | string | sim | 8 a 128 caracteres, com pelo menos uma letra e um número Ex.: `"SenhaForte123"`. |
 
 ### UserResponse

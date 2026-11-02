@@ -717,7 +717,7 @@
     },
     "/api/v1/users/consumers": {
       "post": {
-        "description": "Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Telefone e data de nascimento são opcionais; se a data vier, exige 18 anos ou mais. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.",
+        "description": "Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Data de nascimento é obrigatória e exige 18 anos ou mais (RNF15); telefone é opcional. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.",
         "operationId": "usersCreateConsumer",
         "parameters": [],
         "requestBody": {
@@ -925,7 +925,7 @@
     },
     {
       "name": "users",
-      "description": "Cadastro de usuários (RN02, RN15)"
+      "description": "Cadastro de usuários (RN02, RNF15)"
     },
     {
       "name": "health",
@@ -972,7 +972,7 @@
           "dataNascimento": {
             "type": "string",
             "example": "1990-05-10",
-            "description": "AAAA-MM-DD. Se informada, exige 18 anos ou mais"
+            "description": "AAAA-MM-DD. Exige 18 anos ou mais"
           },
           "senha": {
             "type": "string",
@@ -984,6 +984,7 @@
           "nome",
           "cpf",
           "email",
+          "dataNascimento",
           "senha"
         ]
       },
