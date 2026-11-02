@@ -40,6 +40,14 @@
 	@metrics path /api/v1/metrics
 	respond @metrics 404
 
+	# Swagger UI (só existe se a API subir com SWAGGER_ENABLED=true). Sempre atrás
+	# de basic auth. O docker-compose.prod.yml define, quando o hash não é informado, um
+	# hash de senha descartada: ninguém entra (falha fechada).
+	@swagger path /api/v1/docs /api/v1/docs/*
+	basic_auth @swagger {
+		{$SWAGGER_USER} {$SWAGGER_PASSWORD_HASH}
+	}
+
 	reverse_proxy api:3000 {
 		health_uri /api/v1/health/ready
 		health_interval 15s
