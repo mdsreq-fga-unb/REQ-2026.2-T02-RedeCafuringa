@@ -50,9 +50,13 @@ export function validateRegisterForm(values: RegisterFormValues): RegisterFormEr
 
   if (!values.address.trim()) errors.address = 'Informe o endereço.';
 
-  if (!values.password) errors.password = 'Informe a senha.';
-  else if (!isValidPassword(values.password)) {
+    if (!values.password) errors.password = 'Informe a senha.';
+  else if (values.password.length < 8) {
     errors.password = 'A senha deve ter no mínimo 8 caracteres.';
+  } else if (values.password.length > 128) {
+    errors.password = 'A senha deve ter no máximo 128 caracteres.';
+  } else if (!isValidPassword(values.password)) {
+    errors.password = 'A senha deve ter letras e números.';
   }
 
   if (!values.confirmPassword) errors.confirmPassword = 'Confirme a senha.';

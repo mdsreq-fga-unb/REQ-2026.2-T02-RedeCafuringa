@@ -94,13 +94,23 @@ describe('isValidEmail', () => {
 });
 
 describe('isValidPassword', () => {
-  it('aceita senha com 8 ou mais caracteres', () => {
-    expect(isValidPassword('12345678')).toBe(true);
-    expect(isValidPassword('uma-senha-bem-longa')).toBe(true);
+    it('aceita senha de 8 a 128 caracteres com letra e número', () => {
+    expect(isValidPassword('senha123')).toBe(true);
+    expect(isValidPassword('uma-senha-bem-longa-1')).toBe(true);
+    expect(isValidPassword(`a1${'x'.repeat(126)}`)).toBe(true);
   });
 
-  it('rejeita senha com menos de 8 caracteres', () => {
-    expect(isValidPassword('1234567')).toBe(false);
+  it('rejeita senha só com números ou só com letras', () => {
+    expect(isValidPassword('12345678')).toBe(false);
+    expect(isValidPassword('somenteletras')).toBe(false);
+  });
+
+  it('rejeita senha com mais de 128 caracteres', () => {
+    expect(isValidPassword(`a1${'x'.repeat(127)}`)).toBe(false);
+  });
+
+    it('rejeita senha com menos de 8 caracteres', () => {
+    expect(isValidPassword('abc1234')).toBe(false);
     expect(isValidPassword('')).toBe(false);
   });
 });

@@ -86,6 +86,29 @@ describe('validateRegisterForm: campos obrigatórios', () => {
       confirmPassword: 'Confirme a senha.',
       isAdult: 'Confirme que você é maior de 18 anos.',
     });
+
+      it('rejeita senha sem letra ou sem número', () => {
+    const onlyNumbers = validateRegisterForm({
+      ...validForm,
+      password: '12345678',
+      confirmPassword: '12345678',
+    });
+    const onlyLetters = validateRegisterForm({
+      ...validForm,
+      password: 'somenteletras',
+      confirmPassword: 'somenteletras',
+    });
+
+    expect(onlyNumbers.password).toBe('A senha deve ter letras e números.');
+    expect(onlyLetters.password).toBe('A senha deve ter letras e números.');
+  });
+
+  it('rejeita senha com mais de 128 caracteres', () => {
+    const long = `a1${'x'.repeat(127)}`;
+    const errors = validateRegisterForm({ ...validForm, password: long, confirmPassword: long });
+
+    expect(errors.password).toBe('A senha deve ter no máximo 128 caracteres.');
+  });
   });
 
   it('pede CNPJ quando o tipo de documento escolhido é CNPJ', () => {

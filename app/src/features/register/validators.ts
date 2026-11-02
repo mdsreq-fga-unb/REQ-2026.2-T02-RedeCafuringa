@@ -59,7 +59,12 @@ export function isValidEmail(value: string): boolean {
 }
 
 export function isValidPassword(value: string): boolean {
-  return value.length >= 8;
+  return (
+    value.length >= 8 &&
+    value.length <= 128 &&
+    /\p{L}/u.test(value) &&
+    /\d/.test(value)
+  );
 }
 
 export function passwordsMatch(password: string, confirmation: string): boolean {
