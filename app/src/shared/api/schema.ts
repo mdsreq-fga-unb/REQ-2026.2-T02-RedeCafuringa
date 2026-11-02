@@ -75,7 +75,7 @@ export interface paths {
         put?: never;
         /**
          * Cadastrar consumidor
-         * @description Cadastro público (HU01): dados obrigatórios (RN02), maioridade (RN15) e senha. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.
+         * @description Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Telefone e data de nascimento são opcionais; se a data vier, exige 18 anos ou mais. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.
          */
         post: operations["usersCreateConsumer"];
         delete?: never;
@@ -140,14 +140,14 @@ export interface components {
              * @description DDD + número
              * @example 61999990000
              */
-            telefone: string;
+            telefone?: string;
             /** @example maria@exemplo.com */
             email: string;
             /**
-             * @description AAAA-MM-DD
+             * @description AAAA-MM-DD. Se informada, exige 18 anos ou mais
              * @example 1990-05-10
              */
-            dataNascimento: string;
+            dataNascimento?: string;
             /**
              * @description 8 a 128 caracteres, com pelo menos uma letra e um número
              * @example SenhaForte123
@@ -158,7 +158,7 @@ export interface components {
             id: string;
             nome: string;
             email: string;
-            telefone: string;
+            telefone?: string;
             /** @enum {string} */
             perfil: "CONSUMIDOR" | "PRODUTOR" | "ADMINISTRADOR";
             /**

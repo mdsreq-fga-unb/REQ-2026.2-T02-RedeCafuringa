@@ -57,7 +57,7 @@ Cadastro de usuários (RN02, RN15)
 
 **Cadastrar consumidor** · `operationId: usersCreateConsumer` · pública
 
-Cadastro público (HU01): dados obrigatórios (RN02), maioridade (RN15) e senha. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.
+Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Telefone e data de nascimento são opcionais; se a data vier, exige 18 anos ou mais. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.
 
 **Corpo da requisição:** [CreateConsumerDto](#createconsumerdto)
 
@@ -113,9 +113,9 @@ Responde 200 enquanto o processo está de pé, sem consultar o banco. Usado pelo
 |---|---|---|---|
 | `nome` | string | sim |  Ex.: `"Maria das Graças"`. |
 | `cpf` | string | sim | Com ou sem máscara Ex.: `"529.982.247-25"`. |
-| `telefone` | string | sim | DDD + número Ex.: `"61999990000"`. |
+| `telefone` | string | não | DDD + número Ex.: `"61999990000"`. |
 | `email` | string | sim |  Ex.: `"maria@exemplo.com"`. |
-| `dataNascimento` | string | sim | AAAA-MM-DD Ex.: `"1990-05-10"`. |
+| `dataNascimento` | string | não | AAAA-MM-DD. Se informada, exige 18 anos ou mais Ex.: `"1990-05-10"`. |
 | `senha` | string | sim | 8 a 128 caracteres, com pelo menos uma letra e um número Ex.: `"SenhaForte123"`. |
 
 ### UserResponse
@@ -125,7 +125,7 @@ Responde 200 enquanto o processo está de pé, sem consultar o banco. Usado pelo
 | `id` | string | sim |  |
 | `nome` | string | sim |  |
 | `email` | string | sim |  |
-| `telefone` | string | sim |  |
+| `telefone` | string | não |  |
 | `perfil` | `CONSUMIDOR` \| `PRODUTOR` \| `ADMINISTRADOR` | sim |  |
 | `cpf` | string | sim | CPF mascarado Ex.: `"***.982.247-**"`. |
 

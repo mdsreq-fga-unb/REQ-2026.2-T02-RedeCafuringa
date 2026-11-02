@@ -91,6 +91,17 @@ describe('UsersService', () => {
       expect(model.create).not.toHaveBeenCalled();
     });
 
+    it('RF01: cadastra sem telefone e data de nascimento', async () => {
+      const { service, model } = setup();
+      const { nome, cpf, email, senha } = makeConsumer();
+
+      await service.createConsumer({ nome, cpf, email, senha });
+
+      const saved = model.create.mock.calls[0][0];
+      expect(saved.telefone).toBeUndefined();
+      expect(saved.dataNascimento).toBeUndefined();
+    });
+
     it('recusa CPF já cadastrado com 409', async () => {
       const { service, model } = setup();
       model.exists.mockReturnValue(query({ _id: 'existente' }));

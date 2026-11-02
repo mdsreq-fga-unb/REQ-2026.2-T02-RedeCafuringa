@@ -36,6 +36,18 @@ describe('HU01 — Cadastrar perfil de consumidor (e2e)', () => {
     });
   });
 
+  it('RF01: aceita o payload do protótipo (sem telefone e data de nascimento)', async () => {
+    const { nome, cpf, email, senha } = makeConsumer();
+
+    const response = await t
+      .request()
+      .post(REGISTER)
+      .send({ nome, cpf, email, senha })
+      .expect(201);
+
+    expect(response.body).not.toHaveProperty('telefone');
+  });
+
   it('aceita CPF com máscara', async () => {
     await t
       .request()
@@ -78,8 +90,8 @@ describe('HU01 — Cadastrar perfil de consumidor (e2e)', () => {
       );
     });
 
-    it('400 quando falta campo obrigatório (RN02)', async () => {
-      const { telefone: _telefone, ...dto } = makeConsumer();
+    it('400 quando falta campo obrigatório (RF01)', async () => {
+      const { email: _email, ...dto } = makeConsumer();
 
       await t.request().post(REGISTER).send(dto).expect(400);
     });

@@ -34,7 +34,8 @@ export class UsersService {
    * PRODUTOR/ADMINISTRADOR: esses fluxos chegam com as HU02 e HU03.
    */
   async create(dto: CreateConsumerDto, perfil: Role): Promise<UserDocument> {
-    if (!isAdult(new Date(dto.dataNascimento))) {
+    // RNF15: a data de nascimento é opcional (RF01); se informada, exige maioridade.
+    if (dto.dataNascimento && !isAdult(new Date(dto.dataNascimento))) {
       throw new BadRequestException(
         'É necessário ter 18 anos ou mais para se cadastrar',
       );
@@ -50,7 +51,9 @@ export class UsersService {
         nome: dto.nome,
         email: dto.email.toLowerCase(),
         telefone: dto.telefone,
-        dataNascimento: new Date(dto.dataNascimento),
+        dataNascimento: dto.dataNascimento
+          ? new Date(dto.dataNascimento)
+          : undefined,
         perfil,
         cpfHash,
         cpfCifrado: this.cipher.encrypt(dto.cpf),

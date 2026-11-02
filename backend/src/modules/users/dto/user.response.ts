@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '../domain/role.js';
 
 /** Perfil exposto ao próprio titular: nada de hash, cifra ou CPF completo. */
@@ -12,8 +12,8 @@ export class UserResponse {
   @ApiProperty()
   email: string;
 
-  @ApiProperty()
-  telefone: string;
+  @ApiPropertyOptional()
+  telefone?: string;
 
   @ApiProperty({ enum: Role })
   perfil: Role;
