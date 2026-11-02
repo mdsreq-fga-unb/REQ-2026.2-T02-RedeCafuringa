@@ -1,7 +1,16 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { RegisterPage } from '@/features/register/RegisterPage';
+import { registerProducer } from '@/features/register/registerService';
+import type { RegisterResult } from '@/features/register/registerService';
+
+vi.mock('@/features/register/registerService');
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  vi.mocked(registerProducer).mockResolvedValue({ ok: true });
+});
 
 function renderRegister() {
   const onNavigate = vi.fn();
@@ -12,6 +21,47 @@ function renderRegister() {
 afterEach(() => {
   cleanup();
 });
+
+type User = ReturnType<typeof userEvent.setup>;
+
+type FormInput = {
+  documentLabel?: string;
+  name?: string;
+  document?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  password?: string;
+  confirmPassword?: string;
+};
+
+async function fillForm(user: User, input: FormInput = {}) {
+  const values = {
+    documentLabel: 'CPF',
+    name: 'Maria da Silva',
+    document: '52998224725',
+    phone: '61912345678',
+    email: 'maria@exemplo.com',
+    address: 'Chácara 12, Núcleo Rural, Brasília - DF',
+    password: 'senha-segura-1',
+    confirmPassword: 'senha-segura-1',
+    ...input,
+  };
+
+  await user.click(screen.getByRole('radio', { name: 'Produtor' }));
+  await user.type(screen.getByLabelText('Nome'), values.name);
+  await user.type(screen.getByLabelText(values.documentLabel), values.document);
+  await user.type(screen.getByLabelText('Telefone'), values.phone);
+  await user.type(screen.getByLabelText('E-mail'), values.email);
+  await user.type(screen.getByLabelText('Endereço'), values.address);
+  await user.type(screen.getByLabelText('Senha'), values.password);
+  await user.type(screen.getByLabelText('Confirmar senha'), values.confirmPassword);
+  await user.click(screen.getByRole('checkbox', { name: 'Declaro que sou maior de 18 anos' }));
+}
+
+async function submit(user: User) {
+  await user.click(screen.getByRole('button', { name: 'Criar conta' }));
+}
 
 describe('RegisterPage — HU02 Cadastrar perfil de produtor', () => {
   it('mostra o título e leva de volta ao login pelo botão Voltar', async () => {
@@ -104,5 +154,141 @@ describe('RegisterPage — HU02 Cadastrar perfil de produtor', () => {
     await user.type(screen.getByLabelText('Telefone'), '61912345678');
 
     expect((screen.getByLabelText('Telefone') as HTMLInputElement).value).toBe('(61) 91234-5678');
+  });
+
+    // CA06 e CA07
+  it('sinaliza os campos obrigatórios vazios e a maioridade não confirmada', async () => {
+    const { user } = renderRegister();
+
+    await submit(user);
+
+    for (const message of [
+      'Escolha a natureza do cadastro.',
+      'Informe o nome.',
+      'Informe o CPF.',
+      'Informe o telefone.',
+      'Informe o e-mail.',
+      'Informe o endereço.',
+      'Informe a senha.',
+      'Confirme a senha.',
+      'Confirme que você é maior de 18 anos.',
+    ]) {
+      expect(screen.getByText(message)).toBeTruthy();
+    }
+  });
+
+  it('liga o erro ao campo com aria-invalid e aria-describedby', async () => {
+    const { user } = renderRegister();
+
+    await submit(user);
+
+    const name = screen.getByLabelText('Nome');
+    expect(name.getAttribute('aria-invalid')).toBe('true');
+    const errorId = name.getAttribute('aria-describedby') ?? '';
+    expect(document.getElementById(errorId)?.textContent).toBe('Informe o nome.');
+  });
+
+  // CA05
+  it('rejeita CPF, telefone e e-mail com formato inválido, com o erro no campo', async () => {
+    const { user } = renderRegister();
+
+    await fillForm(user, { document: '52998224724', phone: '6133334', email: 'maria@exemplo' });
+    await submit(user);
+
+    expect(screen.getByText('CPF inválido.')).toBeTruthy();
+    expect(screen.getByText('Telefone inválido. Informe o DDD e o número.')).toBeTruthy();
+    expect(screen.getByText('E-mail inválido.')).toBeTruthy();
+  });
+
+  it('rejeita CNPJ inválido quando o tipo de documento é CNPJ', async () => {
+    const { user } = renderRegister();
+
+    await user.click(screen.getByRole('radio', { name: 'Pessoa jurídica (CNPJ)' }));
+    await fillForm(user, { documentLabel: 'CNPJ', document: '11222333000182' });
+    await submit(user);
+
+    expect(screen.getByText('CNPJ inválido.')).toBeTruthy();
+  });
+
+  // CA04
+  it('rejeita senha com menos de 8 caracteres', async () => {
+    const { user } = renderRegister();
+
+    await fillForm(user, { password: 'curta12', confirmPassword: 'curta12' });
+    await submit(user);
+
+    expect(screen.getByText('A senha deve ter no mínimo 8 caracteres.')).toBeTruthy();
+  });
+
+  it('rejeita confirmação de senha diferente da senha', async () => {
+    const { user } = renderRegister();
+
+    await fillForm(user, { confirmPassword: 'senha-segura-2' });
+    await submit(user);
+
+    expect(screen.getByText('As senhas não conferem.')).toBeTruthy();
+  });
+
+  it('não mostra erros quando o formulário está válido, e limpa os erros anteriores', async () => {
+    const { user } = renderRegister();
+
+    await submit(user);
+    expect(screen.getByText('Informe o nome.')).toBeTruthy();
+
+    await fillForm(user);
+    await submit(user);
+
+    expect(document.querySelector('.field-error')).toBeNull();
+  });
+
+    // CA09
+  it('envia o cadastro normalizado ao serviço e vai para o login com aviso de sucesso', async () => {
+    const { onNavigate, user } = renderRegister();
+
+    await fillForm(user);
+    await submit(user);
+
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith('/entrar?cadastro=ok'));
+    expect(registerProducer).toHaveBeenCalledWith({
+      nature: 'producer',
+      name: 'Maria da Silva',
+      document: '52998224725',
+      phone: '61912345678',
+      email: 'maria@exemplo.com',
+      address: 'Chácara 12, Núcleo Rural, Brasília - DF',
+      password: 'senha-segura-1',
+      isAdult: true,
+    });
+  });
+
+  it('não chama o serviço nem navega quando o formulário é inválido', async () => {
+    const { onNavigate, user } = renderRegister();
+
+    await submit(user);
+
+    expect(registerProducer).not.toHaveBeenCalled();
+    expect(onNavigate).not.toHaveBeenCalled();
+  });
+
+  it('desabilita o botão e mostra o andamento enquanto o cadastro é enviado', async () => {
+    let finish: (result: RegisterResult) => void = () => {};
+    vi.mocked(registerProducer).mockReturnValue(
+      new Promise<RegisterResult>((resolve) => {
+        finish = resolve;
+      }),
+    );
+    const { onNavigate, user } = renderRegister();
+
+    await fillForm(user);
+    await submit(user);
+
+    const button = await screen.findByRole('button', { name: 'Criando conta…' });
+    expect((button as HTMLButtonElement).disabled).toBe(true);
+    await user.click(button);
+    expect(registerProducer).toHaveBeenCalledTimes(1);
+    expect(onNavigate).not.toHaveBeenCalled();
+
+    finish({ ok: true });
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith('/entrar?cadastro=ok'));
   });
 });

@@ -1,9 +1,17 @@
 import { useState } from 'react';
+import type { FormEvent, InputHTMLAttributes } from 'react';
 import { formatCpf } from '@/features/auth/cpf';
-import { formatCnpj, formatPhone } from './validators';
 import { BackButton } from '../../components/navigation/BackButton';
 import { ActionButton } from '../../components/ui/ActionButton';
-import type { DocumentType, RegisterNature } from './registerForm';
+import { buildRegisterPayload, validateRegisterForm } from './registerForm';
+import { registerProducer } from './registerService';
+import type {
+  DocumentType,
+  RegisterFormErrors,
+  RegisterFormValues,
+  RegisterNature,
+} from './registerForm';
+import { formatCnpj, formatPhone } from './validators';
 
 type RegisterPageProps = {
   onNavigate: (path: string) => void;
@@ -16,16 +24,84 @@ const NATURES: { value: RegisterNature; label: string }[] = [
   { value: 'community', label: 'Comunidade' },
 ];
 
-export function RegisterPage({ onNavigate }: RegisterPageProps) {
-  const [documentType, setDocumentType] = useState<DocumentType>('cpf');
-  const documentLabel = documentType === 'cnpj' ? 'CNPJ' : 'CPF';
-    const [documentValue, setDocumentValue] = useState('');
-  const [phone, setPhone] = useState('');
-  const formatDocument = documentType === 'cnpj' ? formatCnpj : formatCpf;
+const INITIAL_VALUES: RegisterFormValues = {
+  nature: '',
+  documentType: 'cpf',
+  name: '',
+  document: '',
+  phone: '',
+  email: '',
+  address: '',
+  password: '',
+  confirmPassword: '',
+  isAdult: false,
+};
 
-  const changeDocumentType = (type: DocumentType) => {
-    setDocumentType(type);
-    setDocumentValue('');
+type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'value' | 'onChange'> & {
+  id: string;
+  label: string;
+  value: string;
+  error?: string;
+  onChange: (value: string) => void;
+};
+
+function TextField({ id, label, value, error, onChange, ...inputProps }: TextFieldProps) {
+  return (
+    <>
+      <label className="field-label" htmlFor={id}>
+        {label}
+      </label>
+      <input
+        {...inputProps}
+        id={id}
+        className="text-input"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-error` : undefined}
+      />
+      {error && (
+        <p id={`${id}-error`} className="field-error">
+          {error}
+        </p>
+      )}
+    </>
+  );
+}
+
+export function RegisterPage({ onNavigate }: RegisterPageProps) {
+  const [values, setValues] = useState<RegisterFormValues>(INITIAL_VALUES);
+  const [errors, setErrors] = useState<RegisterFormErrors>({});
+  const [loading, setLoading] = useState(false);
+
+  const isCnpj = values.documentType === 'cnpj';
+  const formatDocument = isCnpj ? formatCnpj : formatCpf;
+
+  const setField = <K extends keyof RegisterFormValues>(
+    field: K,
+    value: RegisterFormValues[K],
+  ) => setValues((current) => ({ ...current, [field]: value }));
+
+  const changeDocumentType = (type: DocumentType) =>
+    setValues((current) => ({ ...current, documentType: type, document: '' }));
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const validationErrors = validateRegisterForm(values);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) return;
+
+    setLoading(true);
+    const result = await registerProducer(buildRegisterPayload(values));
+
+    if (result.ok) {
+      onNavigate('/entrar?cadastro=ok');
+      return;
+    }
+
+    // Falhas do serviço (duplicidade, dados inválidos, erro): ciclo 9e.
+    setLoading(false);
   };
 
   return (
@@ -34,21 +110,40 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
       <h1>Cadastre seu perfil</h1>
       <p className="body-copy">Divulgue sua produção, seus produtos e suas experiências.</p>
 
-      <form className="login-form" noValidate>
-        <fieldset className="choice-group">
+      <form className="login-form" onSubmit={handleSubmit} noValidate>
+        <fieldset
+          className="choice-group"
+          aria-describedby={errors.nature ? 'register-nature-error' : undefined}
+        >
           <legend className="field-label">Natureza do cadastro</legend>
           {NATURES.map(({ value, label }) => (
             <label key={value} className="choice-option">
-              <input type="radio" name="nature" value={value} />
+              <input
+                type="radio"
+                name="nature"
+                value={value}
+                checked={values.nature === value}
+                onChange={() => setField('nature', value)}
+              />
               {label}
             </label>
           ))}
+          {errors.nature && (
+            <p id="register-nature-error" className="field-error">
+              {errors.nature}
+            </p>
+          )}
         </fieldset>
 
-        <label className="field-label" htmlFor="register-name">
-          Nome
-        </label>
-        <input id="register-name" className="text-input" type="text" autoComplete="name" />
+        <TextField
+          id="register-name"
+          label="Nome"
+          type="text"
+          autoComplete="name"
+          value={values.name}
+          error={errors.name}
+          onChange={(value) => setField('name', value)}
+        />
 
         <fieldset className="choice-group">
           <legend className="field-label">Tipo de documento</legend>
@@ -57,7 +152,7 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
               type="radio"
               name="documentType"
               value="cpf"
-              checked={documentType === 'cpf'}
+              checked={!isCnpj}
               onChange={() => changeDocumentType('cpf')}
             />
             Pessoa física (CPF)
@@ -67,88 +162,96 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
               type="radio"
               name="documentType"
               value="cnpj"
-              checked={documentType === 'cnpj'}
+              checked={isCnpj}
               onChange={() => changeDocumentType('cnpj')}
             />
             Pessoa jurídica (CNPJ)
           </label>
         </fieldset>
 
-        <label className="field-label" htmlFor="register-document">
-          {documentLabel}
-        </label>
-        <input
+        <TextField
           id="register-document"
-          className="text-input"
+          label={isCnpj ? 'CNPJ' : 'CPF'}
           type="text"
           inputMode="numeric"
-          placeholder={documentType === 'cnpj' ? '00.000.000/0000-00' : '000.000.000-00'}
-          value={documentValue}
-          onChange={(event) => setDocumentValue(formatDocument(event.target.value))}
+          placeholder={isCnpj ? '00.000.000/0000-00' : '000.000.000-00'}
+          value={values.document}
+          error={errors.document}
+          onChange={(value) => setField('document', formatDocument(value))}
         />
 
-        <label className="field-label" htmlFor="register-phone">
-          Telefone
-        </label>
-        <input
+        <TextField
           id="register-phone"
-          className="text-input"
+          label="Telefone"
           type="tel"
           inputMode="tel"
           autoComplete="tel"
           placeholder="(00) 00000-0000"
-          value={phone}
-          onChange={(event) => setPhone(formatPhone(event.target.value))}
+          value={values.phone}
+          error={errors.phone}
+          onChange={(value) => setField('phone', formatPhone(value))}
         />
 
-        <label className="field-label" htmlFor="register-email">
-          E-mail
-        </label>
-        <input
+        <TextField
           id="register-email"
-          className="text-input"
+          label="E-mail"
           type="email"
           autoComplete="email"
+          value={values.email}
+          error={errors.email}
+          onChange={(value) => setField('email', value)}
         />
 
-        <label className="field-label" htmlFor="register-address">
-          Endereço
-        </label>
-        <input
+        <TextField
           id="register-address"
-          className="text-input"
+          label="Endereço"
           type="text"
           autoComplete="street-address"
+          value={values.address}
+          error={errors.address}
+          onChange={(value) => setField('address', value)}
         />
 
-        <label className="field-label" htmlFor="register-password">
-          Senha
-        </label>
-        <input
+        <TextField
           id="register-password"
-          className="text-input"
+          label="Senha"
           type="password"
           autoComplete="new-password"
+          value={values.password}
+          error={errors.password}
+          onChange={(value) => setField('password', value)}
         />
 
-        <label className="field-label" htmlFor="register-confirm-password">
-          Confirmar senha
-        </label>
-        <input
+        <TextField
           id="register-confirm-password"
-          className="text-input"
+          label="Confirmar senha"
           type="password"
           autoComplete="new-password"
+          value={values.confirmPassword}
+          error={errors.confirmPassword}
+          onChange={(value) => setField('confirmPassword', value)}
         />
 
         <label className="choice-option">
-          <input type="checkbox" name="isAdult" />
+          <input
+            type="checkbox"
+            name="isAdult"
+            checked={values.isAdult}
+            onChange={(event) => setField('isAdult', event.target.checked)}
+            aria-invalid={Boolean(errors.isAdult)}
+            aria-describedby={errors.isAdult ? 'register-adult-error' : undefined}
+          />
           Declaro que sou maior de 18 anos
         </label>
+        {errors.isAdult && (
+          <p id="register-adult-error" className="field-error">
+            {errors.isAdult}
+          </p>
+        )}
 
         <div className="login-actions">
-          <ActionButton variant="orange" type="submit">
-            Criar conta
+          <ActionButton variant="orange" type="submit" disabled={loading}>
+            {loading ? 'Criando conta…' : 'Criar conta'}
           </ActionButton>
         </div>
       </form>
