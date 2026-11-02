@@ -24,7 +24,7 @@ O Swagger UI não é commitado: o `mkdocs build` copia `shared/openapi.json` par
 |---|---|
 | `backend` → *Contract drift* | `shared/openapi.json` difere do que o código gera |
 | `frontend` → *Contract types drift* | `schema.ts` difere do que o contrato gera |
-| teste `openapi.spec.ts` | o documento é inválido, falta resumo/`operationId`/tag, algum 4xx sem `ErrorResponse`, ou aparece dado sensível |
+| teste `openapi.spec.ts` | o documento é inválido, falta resumo/`operationId`/tag, algum 4xx sem `ErrorResponse`, aparece dado sensível, falta descrição/exemplo em campo de DTO, falta resposta 2xx com schema, ou um campo `@IsOptional` aparece como obrigatório |
 
 Na prática: mudou um endpoint? O CI obriga a atualizar o contrato **e** os tipos do front no mesmo PR, então uma incompatibilidade vira erro de compilação, não bug em produção.
 

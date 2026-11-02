@@ -342,7 +342,7 @@ create(@CurrentUser() user: AuthenticatedUser, @Body() dto: CreateProdutoDto) {
 - [ ] `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm run test:cov`, `npm run test:e2e` e `npm run build` passando localmente
 - [ ] Fábrica criada para entidades novas
 - [ ] DTO de resposta não expõe dados privados (CPF, senha, e-mail de terceiros)
-- [ ] Rota aparece corretamente no Swagger
+- [ ] Rota aparece corretamente no Swagger, com descrição e exemplo em cada campo de DTO e resposta 2xx com `type` (o `openapi.spec.ts` falha se faltar)
 
 ## 8. Problemas comuns no primeiro uso
 
