@@ -21,8 +21,8 @@ export class User {
   @Prop({ required: true, lowercase: true, trim: true })
   email: string;
 
-  @Prop({ required: true })
-  telefone: string;
+  @Prop()
+  telefone?: string;
 
   @Prop({ required: true })
   dataNascimento: Date;

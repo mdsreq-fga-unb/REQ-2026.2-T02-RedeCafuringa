@@ -64,8 +64,11 @@ nav:
     - Infraestrutura: infra/visao-geral.md
 
   - Contrato da API:
-    - Referência da API: shared/api.md
+    - Referência da API (Swagger): shared/api.md
     - Versionamento e contrato: shared/contratos.md
+
+hooks:
+  - scripts/mkdocs_hooks.py
 
 markdown_extensions:
   - attr_list

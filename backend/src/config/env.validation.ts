@@ -97,6 +97,14 @@ export const envValidationSchema = Joi.object({
   THROTTLE_LIMIT: Joi.number().integer().min(1).default(100),
   METRICS_TOKEN: Joi.string().min(16).allow('').optional(),
 
+  // Swagger UI em /api/v1/docs. Ligado por padrão fora de produção; em produção
+  // só com SWAGGER_ENABLED=true (e o Caddy exige basic auth, ver deploy/Caddyfile).
+  SWAGGER_ENABLED: Joi.boolean().when('NODE_ENV', {
+    is: 'production',
+    then: Joi.boolean().default(false),
+    otherwise: Joi.boolean().default(true),
+  }),
+
   // Autenticação (RF09, RNF08). Gere cada segredo com: openssl rand -hex 32
   JWT_SECRET: Joi.string().min(32).required(),
   // Validade do token de acesso, em segundos (padrão 15 min, máximo 24 h).
