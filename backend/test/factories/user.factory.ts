@@ -5,7 +5,7 @@ import { makeCpf } from './documento.factory.js';
 /** Senha que atende à política de cadastro (8+ caracteres, letra e número). */
 export const VALID_PASSWORD = 'SenhaForte123';
 
-/** Payload válido de cadastro de consumidor (HU01, RN02, RN15). */
+/** Payload válido de cadastro de consumidor (HU01, RN02, RNF15). */
 export function makeConsumer(
   overrides: Partial<CreateConsumerDto> = {},
 ): CreateConsumerDto {
