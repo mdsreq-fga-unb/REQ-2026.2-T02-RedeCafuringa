@@ -911,7 +911,7 @@
   "info": {
     "title": "Rede Cafuringa API",
     "description": "API REST da plataforma **Rede Cafuringa**.\n\n**Autenticação.** `POST /auth/login` troca CPF e senha por um JWT. Envie-o em `Authorization: Bearer <token>`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).\n\n**Rastreabilidade.** Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`). A API devolve o mesmo id no cabeçalho da resposta e nos logs; sem o cabeçalho, ou com valor inválido, gera um UUID.\n\n**Erros.** Todo erro tem o corpo `ErrorResponse` (`statusCode`, `message`, `error`). Nas falhas de validação (400), `message` é uma lista.\n\n**Limites.** Rotas de login e cadastro têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com `Retry-After` (segundos).\n\n**Dados pessoais.** Respostas nunca trazem hash de senha nem o CPF completo (vem mascarado).\n\n**Versão do contrato.** SemVer, em `info.version`. Veja docs/shared/contratos.md.",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -992,16 +992,24 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
           },
           "nome": {
-            "type": "string"
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Nome completo"
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail da conta"
           },
           "telefone": {
-            "type": "string"
+            "type": "string",
+            "example": "61999990000",
+            "description": "DDD + número; ausente se não informado"
           },
           "perfil": {
             "type": "string",
@@ -1009,7 +1017,8 @@
               "CONSUMIDOR",
               "PRODUTOR",
               "ADMINISTRADOR"
-            ]
+            ],
+            "description": "Perfil de acesso (RN01)"
           },
           "cpf": {
             "type": "string",

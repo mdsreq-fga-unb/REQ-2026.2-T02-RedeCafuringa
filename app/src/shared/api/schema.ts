@@ -155,11 +155,30 @@ export interface components {
             senha: string;
         };
         UserResponse: {
+            /**
+             * @description Identificador do usuário
+             * @example 665f1c2e9b1d4a0012ab34cd
+             */
             id: string;
+            /**
+             * @description Nome completo
+             * @example Maria das Graças
+             */
             nome: string;
+            /**
+             * @description E-mail da conta
+             * @example maria@exemplo.com
+             */
             email: string;
+            /**
+             * @description DDD + número; ausente se não informado
+             * @example 61999990000
+             */
             telefone?: string;
-            /** @enum {string} */
+            /**
+             * @description Perfil de acesso (RN01)
+             * @enum {string}
+             */
             perfil: "CONSUMIDOR" | "PRODUTOR" | "ADMINISTRADOR";
             /**
              * @description CPF mascarado

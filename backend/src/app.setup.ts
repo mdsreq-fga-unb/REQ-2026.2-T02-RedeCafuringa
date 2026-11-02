@@ -15,7 +15,7 @@ export const API_PREFIX = 'api/v1';
  * Versão do contrato OpenAPI (SemVer), publicada em `info.version` e em
  * shared/openapi.json. Regras de quando subir cada número: docs/shared/contratos.md.
  */
-export const OPENAPI_VERSION = '0.1.0';
+export const OPENAPI_VERSION = '0.1.1';
 
 const OPENAPI_DESCRIPTION = `API REST da plataforma **Rede Cafuringa**.
 
