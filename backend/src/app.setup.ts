@@ -108,7 +108,7 @@ export function configureApp(app: INestApplication): void {
   );
   app.enableShutdownHooks();
 
-  if (config.get<string>('NODE_ENV') !== 'production') {
+  if (config.get<boolean>('SWAGGER_ENABLED', false)) {
     SwaggerModule.setup(`${API_PREFIX}/docs`, app, createOpenApiDocument(app));
   }
 }

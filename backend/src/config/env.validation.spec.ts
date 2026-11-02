@@ -83,6 +83,35 @@ describe('envValidationSchema', () => {
     expect(error).toBeUndefined();
   });
 
+  describe('SWAGGER_ENABLED', () => {
+    it('liga por padrão fora de produção', () => {
+      const { value } = envValidationSchema.validate(base);
+
+      expect(value.SWAGGER_ENABLED).toBe(true);
+    });
+
+    it('desliga por padrão em produção', () => {
+      const { value } = envValidationSchema.validate({
+        ...base,
+        NODE_ENV: 'production',
+        CORS_ORIGINS: 'https://example.com',
+      });
+
+      expect(value.SWAGGER_ENABLED).toBe(false);
+    });
+
+    it('em produção só liga se pedido explicitamente', () => {
+      const { value } = envValidationSchema.validate({
+        ...base,
+        NODE_ENV: 'production',
+        CORS_ORIGINS: 'https://example.com',
+        SWAGGER_ENABLED: 'true',
+      });
+
+      expect(value.SWAGGER_ENABLED).toBe(true);
+    });
+  });
+
   describe('segredos de autenticação e dados pessoais', () => {
     it.each(['JWT_SECRET', 'PII_HMAC_SECRET', 'PII_ENCRYPTION_KEY'])(
       'exige %s',
