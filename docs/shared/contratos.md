@@ -1,13 +1,13 @@
 # Contrato da API (OpenAPI)
 
-O contrato entre backend e frontend é o arquivo [`shared/openapi.json`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/blob/dev/shared/openapi.json), **gerado do código do backend**. A referência legível de cada endpoint está em [Referência da API](api.md).
+O contrato entre backend e frontend é o arquivo [`shared/openapi.json`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/blob/dev/shared/openapi.json), **gerado do código do backend**. A referência legível de cada endpoint é o [Swagger UI](../api/index.html){ target=_blank } do site, montado a partir desse mesmo arquivo (veja [Referência da API](api.md)).
 
 ## Fluxo
 
 ```text
 decorators do NestJS (backend)  ──►  shared/openapi.json  ──►  app/src/shared/api/schema.ts (front)
                                           │
-                                          └──►  docs/shared/api.md (referência)
+                                          └──►  Swagger UI no GitHub Pages (/api/)
 ```
 
 | Etapa | Comando | Quando |
@@ -15,9 +15,8 @@ decorators do NestJS (backend)  ──►  shared/openapi.json  ──►  app/s
 | Tudo de uma vez | `./scripts/dev.sh contract` | Sempre que mudar um controller ou DTO |
 | Só o contrato | `cd backend && npm run openapi:export` | |
 | Só os tipos do front | `cd app && npm run api:types` | |
-| Só a referência | `node scripts/gen-api-docs.mjs` | |
 
-Os arquivos gerados **são commitados** e **nunca editados à mão**. A geração não precisa de banco de dados e é determinística.
+O Swagger UI não é commitado: o `mkdocs build` copia `shared/openapi.json` para `/api/` (hook `scripts/mkdocs_hooks.py`). Os arquivos gerados do contrato **são commitados** e **nunca editados à mão**. A geração não precisa de banco de dados e é determinística.
 
 ## Guardas no CI
 
