@@ -5,6 +5,7 @@ import { BackButton } from '../../components/navigation/BackButton';
 import { ActionButton } from '../../components/ui/ActionButton';
 import { buildRegisterPayload, validateRegisterForm } from './registerForm';
 import { registerProducer } from './registerService';
+import type { RegisterResult } from './registerService';
 import type {
   DocumentType,
   RegisterFormErrors,
@@ -69,10 +70,63 @@ function TextField({ id, label, value, error, onChange, ...inputProps }: TextFie
   );
 }
 
+type RegisterFailure = Extract<RegisterResult, { ok: false }>;
+
+function rateLimitMessage(seconds?: number) {
+  if (seconds === undefined) return 'Muitas tentativas. Tente novamente em instantes.';
+  return `Muitas tentativas. Tente novamente em ${seconds} ${seconds === 1 ? 'segundo' : 'segundos'}.`;
+}
+
+function FailureAlert({
+  failure,
+  onGoToLogin,
+}: {
+  failure: RegisterFailure;
+  onGoToLogin: () => void;
+}) {
+  switch (failure.reason) {
+    case 'duplicate':
+      return (
+        <>
+          <p className="form-alert" role="alert">
+            CPF/CNPJ ou e-mail já cadastrado. Entre na sua conta ou recupere o acesso.
+          </p>
+          <ActionButton variant="orange" type="button" onClick={onGoToLogin}>
+            Ir para o login
+          </ActionButton>
+        </>
+      );
+    case 'invalid':
+      return (
+        <div className="form-alert" role="alert">
+          <p>Confira os dados informados:</p>
+          <ul>
+            {failure.messages.map((message) => (
+              <li key={message}>{message}</li>
+            ))}
+          </ul>
+        </div>
+      );
+    case 'rate_limit':
+      return (
+        <p className="form-alert" role="alert">
+          {rateLimitMessage(failure.retryAfterSeconds)}
+        </p>
+      );
+    case 'error':
+      return (
+        <p className="form-alert" role="alert">
+          Não foi possível concluir o cadastro agora. Tente novamente em instantes.
+        </p>
+      );
+  }
+}
+
 export function RegisterPage({ onNavigate }: RegisterPageProps) {
   const [values, setValues] = useState<RegisterFormValues>(INITIAL_VALUES);
   const [errors, setErrors] = useState<RegisterFormErrors>({});
   const [loading, setLoading] = useState(false);
+  const [failure, setFailure] = useState<RegisterFailure | null>(null);
 
   const isCnpj = values.documentType === 'cnpj';
   const formatDocument = isCnpj ? formatCnpj : formatCpf;
@@ -85,22 +139,28 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
   const changeDocumentType = (type: DocumentType) =>
     setValues((current) => ({ ...current, documentType: type, document: '' }));
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+      const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setFailure(null);
 
     const validationErrors = validateRegisterForm(values);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) return;
 
     setLoading(true);
-    const result = await registerProducer(buildRegisterPayload(values));
+    let result: RegisterResult;
+    try {
+      result = await registerProducer(buildRegisterPayload(values));
+    } catch {
+      result = { ok: false, reason: 'error' };
+    }
 
     if (result.ok) {
       onNavigate('/entrar?cadastro=ok');
       return;
     }
 
-    // Falhas do serviço (duplicidade, dados inválidos, erro): ciclo 9e.
+    setFailure(result);
     setLoading(false);
   };
 
@@ -115,6 +175,7 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
           className="choice-group"
           aria-describedby={errors.nature ? 'register-nature-error' : undefined}
         >
+            {failure && <FailureAlert failure={failure} onGoToLogin={() => onNavigate('/entrar')} />}
           <legend className="field-label">Natureza do cadastro</legend>
           {NATURES.map(({ value, label }) => (
             <label key={value} className="choice-option">

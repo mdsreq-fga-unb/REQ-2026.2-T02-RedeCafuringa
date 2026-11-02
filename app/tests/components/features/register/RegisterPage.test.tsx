@@ -292,3 +292,114 @@ describe('RegisterPage — HU02 Cadastrar perfil de produtor', () => {
     await waitFor(() => expect(onNavigate).toHaveBeenCalledWith('/entrar?cadastro=ok'));
   });
 });
+
+describe('RegisterPage — falhas ao cadastrar', () => {
+  // CA08
+  it('orienta a entrar ou recuperar o acesso quando CPF/CNPJ ou e-mail já existem', async () => {
+    vi.mocked(registerProducer).mockResolvedValue({ ok: false, reason: 'duplicate' });
+    const { onNavigate, user } = renderRegister();
+
+    await fillForm(user);
+    await submit(user);
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(
+      'CPF/CNPJ ou e-mail já cadastrado. Entre na sua conta ou recupere o acesso.',
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Ir para o login' }));
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+    expect(onNavigate).toHaveBeenCalledWith('/entrar');
+  });
+
+  it('lista as mensagens do servidor quando os dados são recusados', async () => {
+    vi.mocked(registerProducer).mockResolvedValue({
+      ok: false,
+      reason: 'invalid',
+      messages: ['CPF inválido', 'Senha é obrigatória'],
+    });
+    const { user } = renderRegister();
+
+    await fillForm(user);
+    await submit(user);
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toContain('Confira os dados informados');
+    expect(screen.getByText('CPF inválido')).toBeTruthy();
+    expect(screen.getByText('Senha é obrigatória')).toBeTruthy();
+  });
+
+  it.each([
+    [30, 'Muitas tentativas. Tente novamente em 30 segundos.'],
+    [1, 'Muitas tentativas. Tente novamente em 1 segundo.'],
+    [undefined, 'Muitas tentativas. Tente novamente em instantes.'],
+  ] as const)('avisa o limite de tentativas (espera: %s)', async (seconds, message) => {
+    vi.mocked(registerProducer).mockResolvedValue({
+      ok: false,
+      reason: 'rate_limit',
+      retryAfterSeconds: seconds,
+    });
+    const { user } = renderRegister();
+
+    await fillForm(user);
+    await submit(user);
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(message);
+  });
+
+  it('mostra um erro genérico quando o serviço falha', async () => {
+    vi.mocked(registerProducer).mockResolvedValue({ ok: false, reason: 'error' });
+    const { user } = renderRegister();
+
+    await fillForm(user);
+    await submit(user);
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(
+      'Não foi possível concluir o cadastro agora. Tente novamente em instantes.',
+    );
+  });
+
+  it('trata uma exceção inesperada do serviço como erro genérico', async () => {
+    vi.mocked(registerProducer).mockRejectedValue(new Error('boom'));
+    const { user } = renderRegister();
+
+    await fillForm(user);
+    await submit(user);
+
+    const alert = await screen.findByRole('alert');
+    expect(alert.textContent).toBe(
+      'Não foi possível concluir o cadastro agora. Tente novamente em instantes.',
+    );
+  });
+
+  it('mantém o que foi digitado e libera o botão depois da falha', async () => {
+    vi.mocked(registerProducer).mockResolvedValue({ ok: false, reason: 'error' });
+    const { user } = renderRegister();
+
+    await fillForm(user);
+    await submit(user);
+    await screen.findByRole('alert');
+
+    expect((screen.getByLabelText('Nome') as HTMLInputElement).value).toBe('Maria da Silva');
+    expect((screen.getByRole('button', { name: 'Criar conta' }) as HTMLButtonElement).disabled).toBe(
+      false,
+    );
+  });
+
+  it('remove o aviso de falha ao enviar de novo', async () => {
+    vi.mocked(registerProducer)
+      .mockResolvedValueOnce({ ok: false, reason: 'error' })
+      .mockResolvedValueOnce({ ok: true });
+    const { user } = renderRegister();
+
+    await fillForm(user);
+    await submit(user);
+    await screen.findByRole('alert');
+
+    await submit(user);
+
+    await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
+  });
+});
