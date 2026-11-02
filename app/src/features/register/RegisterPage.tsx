@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { formatCpf } from '@/features/auth/cpf';
+import { formatCnpj, formatPhone } from './validators';
 import { BackButton } from '../../components/navigation/BackButton';
 import { ActionButton } from '../../components/ui/ActionButton';
 import type { DocumentType, RegisterNature } from './registerForm';
@@ -17,6 +19,14 @@ const NATURES: { value: RegisterNature; label: string }[] = [
 export function RegisterPage({ onNavigate }: RegisterPageProps) {
   const [documentType, setDocumentType] = useState<DocumentType>('cpf');
   const documentLabel = documentType === 'cnpj' ? 'CNPJ' : 'CPF';
+    const [documentValue, setDocumentValue] = useState('');
+  const [phone, setPhone] = useState('');
+  const formatDocument = documentType === 'cnpj' ? formatCnpj : formatCpf;
+
+  const changeDocumentType = (type: DocumentType) => {
+    setDocumentType(type);
+    setDocumentValue('');
+  };
 
   return (
     <section className="login-page register-page">
@@ -48,7 +58,7 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
               name="documentType"
               value="cpf"
               checked={documentType === 'cpf'}
-              onChange={() => setDocumentType('cpf')}
+              onChange={() => changeDocumentType('cpf')}
             />
             Pessoa física (CPF)
           </label>
@@ -58,7 +68,7 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
               name="documentType"
               value="cnpj"
               checked={documentType === 'cnpj'}
-              onChange={() => setDocumentType('cnpj')}
+              onChange={() => changeDocumentType('cnpj')}
             />
             Pessoa jurídica (CNPJ)
           </label>
@@ -73,6 +83,8 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
           type="text"
           inputMode="numeric"
           placeholder={documentType === 'cnpj' ? '00.000.000/0000-00' : '000.000.000-00'}
+          value={documentValue}
+          onChange={(event) => setDocumentValue(formatDocument(event.target.value))}
         />
 
         <label className="field-label" htmlFor="register-phone">
@@ -85,6 +97,8 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
           inputMode="tel"
           autoComplete="tel"
           placeholder="(00) 00000-0000"
+          value={phone}
+          onChange={(event) => setPhone(formatPhone(event.target.value))}
         />
 
         <label className="field-label" htmlFor="register-email">

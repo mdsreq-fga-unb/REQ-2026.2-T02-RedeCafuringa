@@ -71,4 +71,38 @@ describe('RegisterPage — HU02 Cadastrar perfil de produtor', () => {
       screen.getByRole('checkbox', { name: 'Declaro que sou maior de 18 anos' }),
     ).toBeTruthy();
   });
+
+    it('aplica a máscara de CPF enquanto o usuário digita', async () => {
+    const { user } = renderRegister();
+
+    await user.type(screen.getByLabelText('CPF'), '52998224725');
+
+    expect((screen.getByLabelText('CPF') as HTMLInputElement).value).toBe('529.982.247-25');
+  });
+
+  it('aplica a máscara de CNPJ quando o tipo escolhido é CNPJ', async () => {
+    const { user } = renderRegister();
+
+    await user.click(screen.getByRole('radio', { name: 'Pessoa jurídica (CNPJ)' }));
+    await user.type(screen.getByLabelText('CNPJ'), '11222333000181');
+
+    expect((screen.getByLabelText('CNPJ') as HTMLInputElement).value).toBe('11.222.333/0001-81');
+  });
+
+  it('limpa o documento digitado ao trocar o tipo de documento', async () => {
+    const { user } = renderRegister();
+
+    await user.type(screen.getByLabelText('CPF'), '52998224725');
+    await user.click(screen.getByRole('radio', { name: 'Pessoa jurídica (CNPJ)' }));
+
+    expect((screen.getByLabelText('CNPJ') as HTMLInputElement).value).toBe('');
+  });
+
+  it('aplica a máscara de telefone enquanto o usuário digita', async () => {
+    const { user } = renderRegister();
+
+    await user.type(screen.getByLabelText('Telefone'), '61912345678');
+
+    expect((screen.getByLabelText('Telefone') as HTMLInputElement).value).toBe('(61) 91234-5678');
+  });
 });
