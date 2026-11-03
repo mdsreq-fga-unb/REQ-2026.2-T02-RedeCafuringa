@@ -1,6 +1,6 @@
 <span class="version-badge">Unidade 02</span>
 
-## 9.1 Critérios de Priorização do Backlog
+## 10.1 Critérios de Priorização do Backlog
 
 Para a priorização do backlog, foram utilizados os seguintes critérios:
 
@@ -53,7 +53,7 @@ A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**
 
 ---
 
-## 9.2 Resultados da Priorização do Backlog
+## 10.2 Resultados da Priorização do Backlog
 
 | HU   | Requisito funcional                         | VN | ES | CX | CAP | ET   | Média | Prioridade |
 | ---- | ------------------------------------------- | -- | -- | -- | --- | ---- | ----- | ---------- |
@@ -108,7 +108,7 @@ A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**
 
 ---
 
-## 9.3 Requisitos do MVP
+## 10.3 Requisitos do MVP
 
 | RF | Requisito funcional | História de usuário correspondente | CP | Prioridade |
 |---|---|---|---|---|
@@ -135,7 +135,7 @@ A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**
 
 ---
 
-## 9.4 Observações Importantes
+## 10.4 Observações Importantes
 
 No total, ficaram 20 requisitos funcionais no MVP da Rede Cafuringa.
 
