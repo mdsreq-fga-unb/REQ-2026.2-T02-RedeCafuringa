@@ -141,9 +141,10 @@ describe('registerProducer (modo mock)', () => {
     const fetchMock = vi.fn<typeof fetch>();
     vi.stubGlobal('fetch', fetchMock);
     const { registerProducer } = await load();
+    const mockPayload = { ...payload, document: '39053344705' };
 
-    expect(await registerProducer(payload)).toEqual({ ok: true });
-    expect(await registerProducer(payload)).toEqual({
+    expect(await registerProducer(mockPayload)).toEqual({ ok: true });
+    expect(await registerProducer(mockPayload)).toEqual({
       ok: false,
       reason: 'duplicate',
       field: 'document',

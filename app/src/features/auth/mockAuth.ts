@@ -61,3 +61,7 @@ export function registerMockUser(account: {
     });
     return user;
 }
+
+export function isMockCpfRegistered(cpf: string): boolean {
+    return mockUsers.some((item) => item.cpf === cpf);
+}
