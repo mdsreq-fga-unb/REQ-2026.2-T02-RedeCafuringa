@@ -12,12 +12,14 @@ import type { LoginErrors } from "./validateLogin";
 
 type LoginPageProps = {
     fromContact?: boolean;
+    registered?: boolean;
     onNavigate: (path: string) => void;
     onSignIn: (auth: AuthResult) => void;
 };
 
 export function LoginPage({
     fromContact = false,
+    registered = false,
     onNavigate,
     onSignIn,
 }: LoginPageProps) {
@@ -64,6 +66,12 @@ export function LoginPage({
                     ? "Acesse sua conta para continuar para o WhatsApp."
                     : "Entre com seu CPF e sua senha."}
             </p>
+
+            {registered && (
+                <p className="form-notice" role="status">
+                    Cadastro concluído. Entre com seu CPF e sua senha.
+                </p>
+            )}
 
             <form className="login-form" onSubmit={handleSubmit} noValidate>
                 {formError && (
@@ -124,6 +132,13 @@ export function LoginPage({
                     >
                         {loading ? "Entrando…" : "Entrar"}
                     </ActionButton>
+                    <button
+                        type="button"
+                        className="secondary-action"
+                        onClick={() => onNavigate("/cadastro")}
+                    >
+                        Criar uma conta
+                    </button>
                 </div>
             </form>
 
