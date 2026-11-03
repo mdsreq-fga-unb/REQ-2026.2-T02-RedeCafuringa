@@ -22,12 +22,9 @@ export function App() {
         useContactSettings();
 
     const path = route.split("?")[0];
-    const fromContact = new URLSearchParams(route.split("?")[1] || "").has(
-        "contato",
-    );
-    const justRegistered =
-        new URLSearchParams(route.split("?")[1] || "").get("cadastro") ===
-        "ok";
+    const query = new URLSearchParams(route.split("?")[1] || "");
+    const fromContact = query.has("contato");
+    const justRegistered = query.get("cadastro") === "ok";
     // Áreas de usuário logado: quem não está autenticado vê a tela de entrar.
     const screenPath = path === "/conta" && role === null ? "/entrar" : path;
     const offerId = path.startsWith("/oferta/")
