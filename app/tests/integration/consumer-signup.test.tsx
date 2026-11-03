@@ -53,6 +53,10 @@ describe("integração do cadastro de consumidor — HU01", () => {
             screen.getByLabelText("E-mail"),
             "gabriela@exemplo.com",
         );
+        await user.type(
+            screen.getByLabelText("Data de nascimento"),
+            "10051990",
+        );
         await user.type(screen.getByLabelText("Senha"), "SenhaForte123");
         await user.type(
             screen.getByLabelText("Confirmar senha"),
