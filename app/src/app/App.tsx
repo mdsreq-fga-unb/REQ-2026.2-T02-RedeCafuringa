@@ -12,6 +12,7 @@ import { CatalogPage, offers, OfferDetailsPage } from "@/features/offers";
 import { ProfilePage } from "@/features/profile";
 import type { AuthResult } from "@/shared/types";
 import { useHashRoute } from "./useHashRoute";
+import { RegisterPage } from "@/features/register";
 import "../App.css";
 
 export function App() {
@@ -24,6 +25,9 @@ export function App() {
     const fromContact = new URLSearchParams(route.split("?")[1] || "").has(
         "contato",
     );
+    const justRegistered =
+        new URLSearchParams(route.split("?")[1] || "").get("cadastro") ===
+        "ok";
     // Áreas de usuário logado: quem não está autenticado vê a tela de entrar.
     const screenPath = path === "/conta" && role === null ? "/entrar" : path;
     const offerId = path.startsWith("/oferta/")
@@ -118,9 +122,13 @@ export function App() {
                 {screenPath === "/entrar" && (
                     <LoginPage
                         fromContact={fromContact}
+                        registered={justRegistered}
                         onNavigate={navigate}
                         onSignIn={handleSignIn}
                     />
+                )}
+                {path === "/cadastro" && (
+                    <RegisterPage onNavigate={navigate} />
                 )}
                 {screenPath === "/conta" && (
                     <AccountPage
