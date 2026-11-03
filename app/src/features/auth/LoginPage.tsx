@@ -132,13 +132,13 @@ export function LoginPage({
                     >
                         {loading ? "Entrando…" : "Entrar"}
                     </ActionButton>
-                    <button
+                    <ActionButton
+                        variant="outline"
                         type="button"
-                        className="secondary-action"
                         onClick={() => onNavigate("/cadastro")}
                     >
                         Criar uma conta
-                    </button>
+                    </ActionButton>
                 </div>
             </form>
 
