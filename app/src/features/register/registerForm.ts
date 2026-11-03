@@ -8,11 +8,9 @@ import {
   passwordsMatch,
 } from './validators';
 
-export type RegisterNature = 'producer' | 'property' | 'association' | 'community';
 export type DocumentType = 'cpf' | 'cnpj';
 
 export interface RegisterFormValues {
-  nature: RegisterNature | '';
   documentType: DocumentType;
   name: string;
   document: string;
@@ -36,7 +34,6 @@ export function validateRegisterForm(values: RegisterFormValues): RegisterFormEr
   const documentLabel = isCnpj ? 'CNPJ' : 'CPF';
   const documentIsValid = isCnpj ? isValidCnpj(document) : isValidCpf(document);
 
-  if (!values.nature) errors.nature = 'Escolha a natureza do cadastro.';
   if (!values.name.trim()) errors.name = 'Informe o nome.';
 
   if (!document) errors.document = `Informe o ${documentLabel}.`;
@@ -70,7 +67,6 @@ export function validateRegisterForm(values: RegisterFormValues): RegisterFormEr
 }
 
 export interface RegisterPayload {
-  nature: RegisterNature;
   name: string;
   document: string;
   phone: string;
@@ -82,7 +78,6 @@ export interface RegisterPayload {
 
 export function buildRegisterPayload(values: RegisterFormValues): RegisterPayload {
   return {
-    nature: values.nature as RegisterNature,
     name: values.name.trim(),
     document: onlyDigits(values.document),
     phone: onlyDigits(values.phone),

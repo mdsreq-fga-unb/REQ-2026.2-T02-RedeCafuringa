@@ -10,7 +10,6 @@ import type {
   DocumentType,
   RegisterFormErrors,
   RegisterFormValues,
-  RegisterNature,
 } from './registerForm';
 import { formatCnpj, formatPhone } from './validators';
 
@@ -18,15 +17,8 @@ type RegisterPageProps = {
   onNavigate: (path: string) => void;
 };
 
-const NATURES: { value: RegisterNature; label: string }[] = [
-  { value: 'producer', label: 'Produtor' },
-  { value: 'property', label: 'Propriedade' },
-  { value: 'association', label: 'Associação' },
-  { value: 'community', label: 'Comunidade' },
-];
 
 const INITIAL_VALUES: RegisterFormValues = {
-  nature: '',
   documentType: 'cpf',
   name: '',
   document: '',
@@ -171,30 +163,9 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
       <p className="body-copy">Divulgue sua produção, seus produtos e suas experiências.</p>
 
       <form className="login-form" onSubmit={handleSubmit} noValidate>
-        <fieldset
-          className="choice-group"
-          aria-describedby={errors.nature ? 'register-nature-error' : undefined}
-        >
-            {failure && <FailureAlert failure={failure} onGoToLogin={() => onNavigate('/entrar')} />}
-          <legend className="field-label">Natureza do cadastro</legend>
-          {NATURES.map(({ value, label }) => (
-            <label key={value} className="choice-option">
-              <input
-                type="radio"
-                name="nature"
-                value={value}
-                checked={values.nature === value}
-                onChange={() => setField('nature', value)}
-              />
-              {label}
-            </label>
-          ))}
-          {errors.nature && (
-            <p id="register-nature-error" className="field-error">
-              {errors.nature}
-            </p>
-          )}
-        </fieldset>
+        {failure && (
+          <FailureAlert failure={failure} onGoToLogin={() => onNavigate('/entrar')} />
+        )}
 
         <TextField
           id="register-name"
