@@ -4,7 +4,6 @@ import type { RegisterPayload } from '@/features/register/registerForm';
 const API = 'http://api.test/api/v1';
 
 const payload: RegisterPayload = {
-  nature: 'producer',
   name: 'Maria da Silva',
   document: '52998224725',
   phone: '61912345678',
@@ -51,7 +50,6 @@ describe('registerProducer (API real)', () => {
     expect(String(url)).toBe(`${API}/users/producers`);
     expect(init?.method).toBe('POST');
     expect(JSON.parse(String(init?.body))).toEqual({
-      natureza: 'PRODUTOR',
       nome: 'Maria da Silva',
       cpf: '52998224725',
       telefone: '61912345678',

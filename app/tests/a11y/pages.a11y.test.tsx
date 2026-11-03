@@ -81,7 +81,6 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
         expect(screen.getByLabelText("Endereço")).toBeTruthy();
         expect(screen.getByLabelText("Senha")).toBeTruthy();
         expect(screen.getByLabelText("Confirmar senha")).toBeTruthy();
-        expect(screen.getByRole("radio", { name: "Produtor" })).toBeTruthy();
         expect(
             screen.getByRole("checkbox", {
                 name: "Declaro que sou maior de 18 anos",

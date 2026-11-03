@@ -3,7 +3,6 @@ import type { RegisterPayload } from '@/features/register/registerForm';
 import { createMockRegisterService } from '@/features/register/registerService';
 
 const payload: RegisterPayload = {
-  nature: 'producer',
   name: 'Maria da Silva',
   document: '52998224725',
   phone: '61912345678',

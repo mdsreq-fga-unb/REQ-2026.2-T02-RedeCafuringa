@@ -2,7 +2,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { RegisterPayload } from "@/features/register/registerForm";
 
 const payload: RegisterPayload = {
-    nature: "producer", // use o valor real de RegisterNature
     name: "Seu João",
     document: "39053344705",
     phone: "61912345678",

@@ -7,7 +7,6 @@ import {
 
 
 const validForm: RegisterFormValues = {
-  nature: 'producer',
   documentType: 'cpf',
   name: 'Maria da Silva',
   document: '529.982.247-25',
@@ -31,7 +30,6 @@ describe('buildRegisterPayload', () => {
     });
 
     expect(payload).toEqual({
-      nature: 'producer',
       name: 'Maria da Silva',
       document: '52998224725',
       phone: '61912345678',
@@ -64,7 +62,6 @@ describe('validateRegisterForm: campos obrigatórios', () => {
   it('sinaliza todos os campos obrigatórios vazios', () => {
     const empty: RegisterFormValues = {
       ...validForm,
-      nature: '',
       name: '',
       document: '',
       phone: '',
@@ -76,7 +73,6 @@ describe('validateRegisterForm: campos obrigatórios', () => {
     };
 
     expect(validateRegisterForm(empty)).toEqual({
-      nature: 'Escolha a natureza do cadastro.',
       name: 'Informe o nome.',
       document: 'Informe o CPF.',
       phone: 'Informe o telefone.',

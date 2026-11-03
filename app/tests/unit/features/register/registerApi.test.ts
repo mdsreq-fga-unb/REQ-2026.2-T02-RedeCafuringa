@@ -3,7 +3,6 @@ import type { RegisterPayload } from '@/features/register/registerForm';
 import { toCreateProducerBody } from '@/features/register/registerApi';
 
 const payload: RegisterPayload = {
-  nature: 'producer',
   name: 'Maria da Silva',
   document: '52998224725',
   phone: '61912345678',
@@ -16,7 +15,6 @@ const payload: RegisterPayload = {
 describe('toCreateProducerBody', () => {
   it('traduz o payload para o corpo da API em português, usando cpf', () => {
     expect(toCreateProducerBody(payload)).toEqual({
-      natureza: 'PRODUTOR',
       nome: 'Maria da Silva',
       cpf: '52998224725',
       telefone: '61912345678',
@@ -31,14 +29,5 @@ describe('toCreateProducerBody', () => {
     const body = toCreateProducerBody({ ...payload, document: '11222333000181' });
     expect(body.cnpj).toBe('11222333000181');
     expect(body).not.toHaveProperty('cpf');
-  });
-
-  it.each([
-    ['producer', 'PRODUTOR'],
-    ['property', 'PROPRIEDADE'],
-    ['association', 'ASSOCIACAO'],
-    ['community', 'COMUNIDADE'],
-  ] as const)('converte a natureza %s para %s', (nature, expected) => {
-    expect(toCreateProducerBody({ ...payload, nature }).natureza).toBe(expected);
   });
 });

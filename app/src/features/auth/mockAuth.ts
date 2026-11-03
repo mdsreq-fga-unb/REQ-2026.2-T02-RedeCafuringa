@@ -48,7 +48,10 @@ export function registerMockUser(account: {
     name: string;
     role: Role;
 }): AuthResult["user"] {
-    const nextId = Math.max(0, ...mockUsers.map((item) => item.user.id)) + 1;
+    const numericIds = mockUsers
+        .map((item) => Number(item.user.id))
+        .filter(Number.isFinite);
+    const nextId = Math.max(0, ...numericIds) + 1;
     const user: AuthResult["user"] = {
         id: nextId,
         name: account.name,

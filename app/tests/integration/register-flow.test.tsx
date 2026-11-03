@@ -16,7 +16,6 @@ const newCpf = "39053344705";
 const newPassword = "senha-segura-1";
 
 async function fillRegisterForm(user: ReturnType<typeof userEvent.setup>) {
-    await user.click(screen.getByRole("radio", { name: "Produtor" }));
     await user.type(screen.getByLabelText("Nome"), "Seu João");
     await user.type(screen.getByLabelText("CPF"), newCpf);
     await user.type(screen.getByLabelText("Telefone"), "61912345678");

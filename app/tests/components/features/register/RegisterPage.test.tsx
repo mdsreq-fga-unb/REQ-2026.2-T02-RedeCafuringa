@@ -48,7 +48,6 @@ async function fillForm(user: User, input: FormInput = {}) {
     ...input,
   };
 
-  await user.click(screen.getByRole('radio', { name: 'Produtor' }));
   await user.type(screen.getByLabelText('Nome'), values.name);
   await user.type(screen.getByLabelText(values.documentLabel), values.document);
   await user.type(screen.getByLabelText('Telefone'), values.phone);
@@ -71,16 +70,6 @@ describe('RegisterPage — HU02 Cadastrar perfil de produtor', () => {
 
     await user.click(screen.getByRole('button', { name: /Voltar/ }));
     expect(onNavigate).toHaveBeenCalledWith('/entrar');
-  });
-
-  // CA02
-  it('oferece as quatro naturezas de cadastro', () => {
-    renderRegister();
-
-    expect(screen.getByRole('group', { name: 'Natureza do cadastro' })).toBeTruthy();
-    for (const label of ['Produtor', 'Propriedade', 'Associação', 'Comunidade']) {
-      expect(screen.getByRole('radio', { name: label })).toBeTruthy();
-    }
   });
 
   // CA03
@@ -163,7 +152,6 @@ describe('RegisterPage — HU02 Cadastrar perfil de produtor', () => {
     await submit(user);
 
     for (const message of [
-      'Escolha a natureza do cadastro.',
       'Informe o nome.',
       'Informe o CPF.',
       'Informe o telefone.',
@@ -250,7 +238,6 @@ describe('RegisterPage — HU02 Cadastrar perfil de produtor', () => {
 
     await waitFor(() => expect(onNavigate).toHaveBeenCalledWith('/entrar?cadastro=ok'));
     expect(registerProducer).toHaveBeenCalledWith({
-      nature: 'producer',
       name: 'Maria da Silva',
       document: '52998224725',
       phone: '61912345678',
