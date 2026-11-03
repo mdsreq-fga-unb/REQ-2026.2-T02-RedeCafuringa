@@ -7,10 +7,9 @@
 | **ID da História** | HU03 |
 | **Requisito Funcional** | [RF03 — Cadastrar usuário administrador](../requisitos_software.md#71-requisitos-funcionais) |
 | **Requisito Não Funcional** | [RNF03, RNF04, RNF07, RNF08, RNF10, RNF11, RNF12](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN03, RN05](../requisitos_software.md#74-lista-de-regras-de-negocio) |
+| **Regra de Negócio** | [RN01, RN03, RN05](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Média |
 
 ---
 
@@ -54,65 +53,65 @@
 
 ## 4. Relação com os Requisitos Não Funcionais
 
-**RNF03 — Prevenção e Recuperação de Erros**
+**[RNF03 — Prevenção e Recuperação de Erros](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o responsável consiga identificar e corrigir erros durante o cadastro, como campos obrigatórios vazios, e-mail inválido ou duplicado, por meio de mensagens claras e orientações para correção.
+Garante que o responsável consiga identificar e corrigir erros durante o cadastro, como campos obrigatórios vazios, e-mail inválido ou duplicado, por meio de mensagens claras e orientações para correção.
 
-**RNF04 — Acessibilidade Digital**
+**[RNF04 — Acessibilidade Digital](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Permite que responsáveis pela administração com diferentes necessidades de acesso utilizem o formulário de cadastro, incluindo usuários que navegam por teclado ou utilizam tecnologias assistivas.
+Permite que responsáveis pela administração com diferentes necessidades de acesso utilizem o formulário de cadastro, incluindo usuários que navegam por teclado ou utilizam tecnologias assistivas.
 
-**RNF07 — Resiliência à Perda de Conexão**
+**[RNF07 — Resiliência à Perda de Conexão](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Evita que os dados já preenchidos sejam apagados automaticamente caso ocorra uma interrupção de conexão durante o cadastro, permitindo uma nova tentativa de envio.
+Evita que os dados já preenchidos sejam apagados automaticamente caso ocorra uma interrupção de conexão durante o cadastro, permitindo uma nova tentativa de envio.
 
-**RNF08 — Controle de Acesso por Perfil**
+**[RNF08 — Controle de Acesso por Perfil](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que a conta criada seja identificada como perfil de administrador e receba as permissões correspondentes, impedindo que usuários de outros perfis acessem funcionalidades administrativas.
+Garante que a conta criada seja identificada como perfil de administrador e receba as permissões correspondentes, impedindo que usuários de outros perfis acessem funcionalidades administrativas.
 
-**RNF10 — Proteção da Comunicação**
+**[RNF10 — Proteção da Comunicação](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Protege os dados transmitidos durante o cadastro, especialmente o e-mail e a senha utilizados na criação da conta administrativa, por meio de comunicação segura.
+Protege os dados transmitidos durante o cadastro, especialmente o e-mail e a senha utilizados na criação da conta administrativa, por meio de comunicação segura.
 
-**RNF11 — Proteção de Dados Pessoais**
+**[RNF11 — Proteção de Dados Pessoais](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que os dados utilizados no cadastro tenham finalidade funcional definida e sejam tratados adequadamente, impedindo a exposição indevida das informações da conta administrativa.
+Garante que os dados utilizados no cadastro tenham finalidade funcional definida e sejam tratados adequadamente, impedindo a exposição indevida das informações da conta administrativa.
 
-**RNF12 — Compatibilidade entre Navegadores**
+**[RNF12 — Compatibilidade entre Navegadores](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o formulário de cadastro e seu fluxo de conclusão funcionem nos navegadores e ambientes previstos para utilização da plataforma.
+Garante que o formulário de cadastro e seu fluxo de conclusão funcionem nos navegadores e ambientes previstos para utilização da plataforma.
 
 ---
 
 ## 5. Relação com as Regras de Negócio
 
-**RN01 — Perfis e permissões**
+**[RN01 — Perfis e permissões](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que a conta criada seja identificada como administrador, recebendo as permissões necessárias para executar as funcionalidades administrativas da plataforma.
+Determina que a conta criada seja identificada como administrador, recebendo as permissões necessárias para executar as funcionalidades administrativas da plataforma.
 
-**RN03 — Gestão administrativa**
+**[RN03 — Gestão administrativa](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que as atividades administrativas sobre usuários, conteúdos e informações institucionais sejam realizadas exclusivamente por administradores, justificando a necessidade de disponibilizar contas específicas para os responsáveis pelo gerenciamento da plataforma.
+Estabelece que as atividades administrativas sobre usuários, conteúdos e informações institucionais sejam realizadas exclusivamente por administradores, justificando a necessidade de disponibilizar contas específicas para os responsáveis pelo gerenciamento da plataforma.
 
-**RN05 — Autenticação e recuperação de acesso**
+**[RN05 — Autenticação e recuperação de acesso](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Define que o acesso à conta administrativa deve utilizar e-mail e senha, sendo essas as credenciais registradas durante o cadastro. A recuperação de acesso deve verificar a titularidade antes de permitir a redefinição das credenciais.
+Define que o acesso à conta administrativa deve utilizar e-mail e senha, sendo essas as credenciais registradas durante o cadastro. A recuperação de acesso deve verificar a titularidade antes de permitir a redefinição das credenciais.
 
 ---
 
 ## 6. Relação com as Características de Produto
 
-**CP1 — Perfis**
+**[CP1 — Perfis](../solucao.md#23-caracteristicas-do-produto)**
 
-- Relação com a HU: O cadastro de administradores permite estabelecer os perfis responsáveis pelo gerenciamento da Rede Cafuringa. Dessa forma, possibilita a organização das permissões administrativas e a identificação dos usuários autorizados a realizar atividades de gestão da plataforma.
+O cadastro de administradores permite estabelecer os perfis responsáveis pelo gerenciamento da Rede Cafuringa. Dessa forma, possibilita a organização das permissões administrativas e a identificação dos usuários autorizados a realizar atividades de gestão da plataforma.
 
 ---
 
 ## 7. Relação com os Objetivos Específicos
 
-**OE2 — Visibilidade e oferta local**
+**[OE2 — Visibilidade e oferta local](../solucao.md#22-objetivos-especificos-oe-do-produto)**
 
-- Relação com a HU: O cadastro de usuários administradores contribui indiretamente para a visibilidade das iniciativas locais, pois permite estruturar os responsáveis pela manutenção e organização das informações disponibilizadas na Rede Cafuringa. Dessa forma, apoia o gerenciamento da plataforma e a continuidade da divulgação dos produtores, produtos e experiências da região.
+O cadastro de usuários administradores contribui indiretamente para a visibilidade das iniciativas locais, pois permite estruturar os responsáveis pela manutenção e organização das informações disponibilizadas na Rede Cafuringa. Dessa forma, apoia o gerenciamento da plataforma e a continuidade da divulgação dos produtores, produtos e experiências da região.
 
 ---
 

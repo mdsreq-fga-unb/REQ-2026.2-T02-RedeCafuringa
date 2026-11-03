@@ -7,10 +7,9 @@
 | **ID da História** | HU05 |
 | **Requisito Funcional** | [RF05 — Excluir usuário](../requisitos_software.md#71-requisitos-funcionais) |
 | **Requisito Não Funcional** | [RNF03, RNF08, RNF11](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN03, RN04](../requisitos_software.md#74-lista-de-regras-de-negocio) |
+| **Regra de Negócio** | [RN01, RN03, RN04](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Baixa |
 
 ---
 
@@ -58,49 +57,49 @@
 
 ## 4. Relação com os Requisitos Não Funcionais
 
-**RNF03 — Prevenção e Recuperação de Erros**
+**[RNF03 — Prevenção e Recuperação de Erros](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o administrador receba mensagens claras durante o processo de exclusão, incluindo avisos de confirmação, cancelamento e falhas na operação, evitando ações equivocadas.
+Garante que o administrador receba mensagens claras durante o processo de exclusão, incluindo avisos de confirmação, cancelamento e falhas na operação, evitando ações equivocadas.
 
-**RNF08 — Controle de Acesso por Perfil**
+**[RNF08 — Controle de Acesso por Perfil](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que somente usuários autenticados com perfil de administrador possam executar a exclusão de contas, impedindo que consumidores e produtores realizem intervenções administrativas.
+Garante que somente usuários autenticados com perfil de administrador possam executar a exclusão de contas, impedindo que consumidores e produtores realizem intervenções administrativas.
 
-**RNF11 — Proteção de Dados Pessoais**
+**[RNF11 — Proteção de Dados Pessoais](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que a exclusão de contas seja realizada de maneira adequada, considerando a proteção dos dados pessoais dos usuários e as finalidades de tratamento estabelecidas pela plataforma.
+Garante que a exclusão de contas seja realizada de maneira adequada, considerando a proteção dos dados pessoais dos usuários e as finalidades de tratamento estabelecidas pela plataforma.
 
 ---
 
 ## 5. Relação com as Regras de Negócio
 
-**RN01 — Perfis e permissões**
+**[RN01 — Perfis e permissões](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que a funcionalidade de exclusão administrativa seja disponibilizada exclusivamente ao perfil de administrador, respeitando as permissões estabelecidas para cada categoria de usuário.
+Determina que a funcionalidade de exclusão administrativa seja disponibilizada exclusivamente ao perfil de administrador, respeitando as permissões estabelecidas para cada categoria de usuário.
 
-**RN03 — Gestão administrativa**
+**[RN03 — Gestão administrativa](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que intervenções administrativas sobre usuários sejam de responsabilidade exclusiva dos administradores, garantindo que consumidores e produtores não possam excluir contas de terceiros por meio das funcionalidades comuns da plataforma.
+Estabelece que intervenções administrativas sobre usuários sejam de responsabilidade exclusiva dos administradores, garantindo que consumidores e produtores não possam excluir contas de terceiros por meio das funcionalidades comuns da plataforma.
 
-**RN04 — Exclusão administrativa**
+**[RN04 — Exclusão administrativa](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que a exclusão administrativa de usuários ocorra somente quando houver necessidade administrativa ou descumprimento das regras da plataforma, evitando exclusões arbitrárias ou sem justificativa.
+Determina que a exclusão administrativa de usuários ocorra somente quando houver necessidade administrativa ou descumprimento das regras da plataforma, evitando exclusões arbitrárias ou sem justificativa.
 
 ---
 
 ## 6. Relação com as Características de Produto
 
-**CP1 — Perfis**
+**[CP1 — Perfis](../solucao.md#23-caracteristicas-do-produto)**
 
-- Relação com a HU: A exclusão administrativa permite que os responsáveis pela Rede Cafuringa realizem o gerenciamento dos perfis cadastrados, mantendo a organização dos usuários da plataforma e possibilitando intervenções quando houver necessidade administrativa ou descumprimento das regras estabelecidas.
+A exclusão administrativa permite que os responsáveis pela Rede Cafuringa realizem o gerenciamento dos perfis cadastrados, mantendo a organização dos usuários da plataforma e possibilitando intervenções quando houver necessidade administrativa ou descumprimento das regras estabelecidas.
 
 ---
 
 ## 7. Relação com os Objetivos Específicos
 
-**OE2 — Visibilidade e oferta local**
+**[OE2 — Visibilidade e oferta local](../solucao.md#22-objetivos-especificos-oe-do-produto)**
 
-- Relação com a HU: A exclusão administrativa contribui indiretamente para a organização e a confiabilidade das informações disponibilizadas na Rede Cafuringa, permitindo que a administração intervenha em contas que não estejam de acordo com as regras da plataforma. Dessa forma, apoia a manutenção de um ambiente adequado para a divulgação das iniciativas e ofertas locais.
+A exclusão administrativa contribui indiretamente para a organização e a confiabilidade das informações disponibilizadas na Rede Cafuringa, permitindo que a administração intervenha em contas que não estejam de acordo com as regras da plataforma. Dessa forma, apoia a manutenção de um ambiente adequado para a divulgação das iniciativas e ofertas locais.
 
 ---
 
@@ -139,21 +138,3 @@ Marque os itens conforme a história atender a cada condição.
 - [ ] Os responsáveis estão definidos?
 - [x] O requisito está implementado no protótipo e validado?
 
----
-
-## 10. Checklist do Definition of Done (DoD)
-
-Marque os itens após a verificação da entrega.
-
-- [ ] Entrega um incremento do produto?
-- [ ] Contempla os critérios de aceite estabelecidos?
-- [ ] O desenvolvimento foi concluído integralmente?
-- [ ] Os testes foram executados e aprovados?
-- [ ] Está aderente aos padrões de codificação?
-- [ ] A funcionalidade foi revisada pela equipe?
-- [ ] Mantém os índices de performance do produto?
-- [ ] Atende aos requisitos de acessibilidade e responsividade?
-- [ ] Preserva a segurança e a privacidade dos dados?
-- [ ] Trata os erros do usuário?
-- [ ] Está livre de defeitos críticos?
-- [ ] Está documentado?

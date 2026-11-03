@@ -7,10 +7,9 @@
 | **ID da História** | HU07 |
 | **Requisito Funcional** | [RF07 — Remover conteúdo inadequado](../requisitos_software.md#71-requisitos-funcionais) |
 | **Requisito Não Funcional** | [RNF03, RNF08, RNF10, RNF11](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN03, RN04, RN10](../requisitos_software.md#74-lista-de-regras-de-negocio) |
+| **Regra de Negócio** | [RN01, RN03, RN04, RN10](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP2, CP3](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Baixa |
 
 ---
 
@@ -58,61 +57,61 @@
 
 ## 4. Relação com os Requisitos Não Funcionais
 
-**RNF03 — Prevenção e Recuperação de Erros**
+**[RNF03 — Prevenção e Recuperação de Erros](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o administrador receba mensagens claras durante o processo de remoção, incluindo avisos de confirmação, cancelamento e falhas na operação, evitando ações equivocadas.
+Garante que o administrador receba mensagens claras durante o processo de remoção, incluindo avisos de confirmação, cancelamento e falhas na operação, evitando ações equivocadas.
 
-**RNF08 — Controle de Acesso por Perfil**
+**[RNF08 — Controle de Acesso por Perfil](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Contribui para que as funcionalidades sejam protegidas conforme as permissões dos perfis. Na remoção administrativa, o acesso deve ser restrito ao administrador, impedindo que consumidores e produtores executem essa operação.
+Contribui para que as funcionalidades sejam protegidas conforme as permissões dos perfis. Na remoção administrativa, o acesso deve ser restrito ao administrador, impedindo que consumidores e produtores executem essa operação.
 
-**RNF10 — Proteção da Comunicação**
+**[RNF10 — Proteção da Comunicação](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que as solicitações de remoção e a comunicação com os serviços responsáveis pelo gerenciamento dos conteúdos ocorram por meio de HTTPS, protegendo os dados transmitidos durante a operação.
+Garante que as solicitações de remoção e a comunicação com os serviços responsáveis pelo gerenciamento dos conteúdos ocorram por meio de HTTPS, protegendo os dados transmitidos durante a operação.
 
-**RNF11 — Proteção de Dados Pessoais**
+**[RNF11 — Proteção de Dados Pessoais](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que a operação de remoção considere a proteção dos dados pessoais associados aos conteúdos e aos responsáveis pelas ofertas, evitando a exposição pública de informações privadas.
+Garante que a operação de remoção considere a proteção dos dados pessoais associados aos conteúdos e aos responsáveis pelas ofertas, evitando a exposição pública de informações privadas.
 
 ---
 
 ## 5. Relação com as Regras de Negócio
 
-**RN01 — Perfis e permissões**
+**[RN01 — Perfis e permissões](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que cada perfil acesse somente as funcionalidades compatíveis com suas permissões, restringindo a remoção administrativa de conteúdos aos usuários autorizados.
+Determina que cada perfil acesse somente as funcionalidades compatíveis com suas permissões, restringindo a remoção administrativa de conteúdos aos usuários autorizados.
 
-**RN03 — Gestão administrativa**
+**[RN03 — Gestão administrativa](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que consultas e intervenções administrativas sobre conteúdos sejam de responsabilidade exclusiva dos administradores, garantindo que consumidores e produtores não realizem remoções administrativas de conteúdos de terceiros.
+Estabelece que consultas e intervenções administrativas sobre conteúdos sejam de responsabilidade exclusiva dos administradores, garantindo que consumidores e produtores não realizem remoções administrativas de conteúdos de terceiros.
 
-**RN04 — Exclusão administrativa**
+**[RN04 — Exclusão administrativa](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que a remoção de conteúdos ocorra somente quando houver necessidade administrativa ou descumprimento das regras da plataforma, evitando remoções arbitrárias ou sem justificativa.
+Determina que a remoção de conteúdos ocorra somente quando houver necessidade administrativa ou descumprimento das regras da plataforma, evitando remoções arbitrárias ou sem justificativa.
 
-**RN10 — Disponibilidade das ofertas**
+**[RN10 — Disponibilidade das ofertas](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que o responsável pode disponibilizar ou retirar produtos, experiências e eventos da oferta pública sem necessariamente excluir seus registros. Essa regra deve ser considerada na implementação da remoção, diferenciando a retirada da oferta pública da exclusão definitiva do registro.
+Estabelece que o responsável pode disponibilizar ou retirar produtos, experiências e eventos da oferta pública sem necessariamente excluir seus registros. Essa regra deve ser considerada na implementação da remoção, diferenciando a retirada da oferta pública da exclusão definitiva do registro.
 
 ---
 
 ## 6. Relação com as Características de Produto
 
-**CP2 — Conteúdos**
+**[CP2 — Conteúdos](../solucao.md#23-caracteristicas-do-produto)**
 
-- Relação com a HU: A remoção de conteúdos inadequados contribui para manter a organização e a qualidade dos produtos, experiências e eventos disponibilizados na plataforma, garantindo que os conteúdos apresentados estejam de acordo com as regras estabelecidas.
+A remoção de conteúdos inadequados contribui para manter a organização e a qualidade dos produtos, experiências e eventos disponibilizados na plataforma, garantindo que os conteúdos apresentados estejam de acordo com as regras estabelecidas.
 
-**CP3 — Divulgação e acesso à oferta local**
+**[CP3 — Divulgação e acesso à oferta local](../solucao.md#23-caracteristicas-do-produto)**
 
-- Relação com a HU: A possibilidade de remover conteúdos que violem as regras da plataforma contribui para a confiabilidade das informações divulgadas, preservando a qualidade da oferta local apresentada aos consumidores e visitantes.
+A possibilidade de remover conteúdos que violem as regras da plataforma contribui para a confiabilidade das informações divulgadas, preservando a qualidade da oferta local apresentada aos consumidores e visitantes.
 
 ---
 
 ## 7. Relação com os Objetivos Específicos
 
-**OE2 — Visibilidade e oferta local**
+**[OE2 — Visibilidade e oferta local](../solucao.md#22-objetivos-especificos-oe-do-produto)**
 
-- Relação com a HU: A remoção administrativa de conteúdos inadequados contribui para manter a confiabilidade das informações disponibilizadas na Rede Cafuringa. Dessa forma, a plataforma preserva um ambiente adequado para a divulgação dos produtos, experiências e eventos das iniciativas locais.
+A remoção administrativa de conteúdos inadequados contribui para manter a confiabilidade das informações disponibilizadas na Rede Cafuringa. Dessa forma, a plataforma preserva um ambiente adequado para a divulgação dos produtos, experiências e eventos das iniciativas locais.
 
 ---
 
@@ -150,22 +149,3 @@ Marque os itens conforme a história atender a cada condição.
 - [ ] As dependências estão mapeadas?
 - [ ] Os responsáveis estão definidos?
 - [x] O requisito está implementado no protótipo e validado?
-
----
-
-## 10. Checklist do Definition of Done (DoD)
-
-Marque os itens após a verificação da entrega.
-
-- [ ] Entrega um incremento do produto?
-- [ ] Contempla os critérios de aceite estabelecidos?
-- [ ] O desenvolvimento foi concluído integralmente?
-- [ ] Os testes foram executados e aprovados?
-- [ ] Está aderente aos padrões de codificação?
-- [ ] A funcionalidade foi revisada pela equipe?
-- [ ] Mantém os índices de performance do produto?
-- [ ] Atende aos requisitos de acessibilidade e responsividade?
-- [ ] Preserva a segurança e a privacidade dos dados?
-- [ ] Trata os erros do usuário?
-- [ ] Está livre de defeitos críticos?
-- [ ] Está documentado?

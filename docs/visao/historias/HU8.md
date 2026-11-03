@@ -1,5 +1,3 @@
-
-
 # HU08 — Atualizar informações institucionais
 
 ## 1. Identificação
@@ -9,10 +7,9 @@
 | **ID da História** | HU08 |
 | **Requisito Funcional** | [RF08 — Atualizar informações institucionais](../requisitos_software.md#71-requisitos-funcionais) |
 | **Requisito Não Funcional** | [RNF03, RNF07, RNF08](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN03, RN13](../requisitos_software.md#74-lista-de-regras-de-negocio) |
+| **Regra de Negócio** | [RN03, RN13](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP3](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Baixa |
 
 ---
 
@@ -60,45 +57,45 @@
 
 ## 4. Relação com os Requisitos Não Funcionais
 
-**RNF03 — Prevenção e Recuperação de Erros**
+**[RNF03 — Prevenção e Recuperação de Erros](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o administrador receba mensagens claras durante o processo de atualização, incluindo orientações sobre dados inválidos e falhas no salvamento, permitindo identificar e corrigir problemas sem comprometer a operação.
+Garante que o administrador receba mensagens claras durante o processo de atualização, incluindo orientações sobre dados inválidos e falhas no salvamento, permitindo identificar e corrigir problemas sem comprometer a operação.
 
-**RNF07 — Resiliência à Perda de Conexão**
+**[RNF07 — Resiliência à Perda de Conexão](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Contribui para que os dados preenchidos durante a atualização não sejam automaticamente apagados em caso de perda de conexão, permitindo que o administrador recupere as informações inseridas e tente concluir a operação novamente.
+Contribui para que os dados preenchidos durante a atualização não sejam automaticamente apagados em caso de perda de conexão, permitindo que o administrador recupere as informações inseridas e tente concluir a operação novamente.
 
-**RNF08 — Controle de Acesso por Perfil**
+**[RNF08 — Controle de Acesso por Perfil](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Contribui para que as funcionalidades sejam protegidas conforme as permissões dos perfis. Na atualização das informações institucionais, o acesso deve ser restrito ao administrador, impedindo que consumidores e produtores executem essa operação.
+Contribui para que as funcionalidades sejam protegidas conforme as permissões dos perfis. Na atualização das informações institucionais, o acesso deve ser restrito ao administrador, impedindo que consumidores e produtores executem essa operação.
 
 ---
 
 ## 5. Relação com as Regras de Negócio
 
-**RN03 — Gestão administrativa**
+**[RN03 — Gestão administrativa](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que consultas e intervenções administrativas sobre informações institucionais sejam realizadas exclusivamente por administradores, garantindo que a atualização dos conteúdos oficiais seja restrita aos usuários autorizados.
+Estabelece que consultas e intervenções administrativas sobre informações institucionais sejam realizadas exclusivamente por administradores, garantindo que a atualização dos conteúdos oficiais seja restrita aos usuários autorizados.
 
-**RN13 — Informações institucionais e regionais**
+**[RN13 — Informações institucionais e regionais](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina a disponibilização de informações institucionais e regionais na plataforma. A atualização desses conteúdos permite manter as informações sobre a Rede Cafuringa e a região corretas e atualizadas para consulta dos usuários.
+Determina a disponibilização de informações institucionais e regionais na plataforma. A atualização desses conteúdos permite manter as informações sobre a Rede Cafuringa e a região corretas e atualizadas para consulta dos usuários.
 
 ---
 
 ## 6. Relação com as Características de Produto
 
-**CP3 — Divulgação e acesso à oferta local**
+**[CP3 — Divulgação e acesso à oferta local](../solucao.md#23-caracteristicas-do-produto)**
 
-- Relação com a HU: A atualização das informações institucionais contribui para manter os conteúdos sobre a Rede Cafuringa e seu contexto regional corretos e atualizados, fortalecendo a comunicação da plataforma e apoiando a divulgação das iniciativas locais.
+A atualização das informações institucionais contribui para manter os conteúdos sobre a Rede Cafuringa e seu contexto regional corretos e atualizados, fortalecendo a comunicação da plataforma e apoiando a divulgação das iniciativas locais.
 
 ---
 
 ## 7. Relação com os Objetivos Específicos
 
-**OE2 — Visibilidade e oferta local**
+**[OE2 — Visibilidade e oferta local](../solucao.md#22-objetivos-especificos-oe-do-produto)**
 
-- Relação com a HU: A atualização das informações institucionais contribui para manter a apresentação da Rede Cafuringa e de seu contexto regional adequada e confiável. Dessa forma, a plataforma fortalece sua comunicação e oferece informações atualizadas aos consumidores, visitantes e demais interessados na oferta local.
+A atualização das informações institucionais contribui para manter a apresentação da Rede Cafuringa e de seu contexto regional adequada e confiável. Dessa forma, a plataforma fortalece sua comunicação e oferece informações atualizadas aos consumidores, visitantes e demais interessados na oferta local.
 
 ---
 
@@ -136,23 +133,4 @@ Marque os itens conforme a história atender a cada condição.
 - [ ] As dependências estão mapeadas?
 - [ ] Os responsáveis estão definidos?
 - [ ] O requisito está implementado no protótipo e validado?
-
----
-
-## 10. Checklist do Definition of Done (DoD)
-
-Marque os itens após a verificação da entrega.
-
-- [ ] Entrega um incremento do produto?
-- [ ] Contempla os critérios de aceite estabelecidos?
-- [ ] O desenvolvimento foi concluído integralmente?
-- [ ] Os testes foram executados e aprovados?
-- [ ] Está aderente aos padrões de codificação?
-- [ ] A funcionalidade foi revisada pela equipe?
-- [ ] Mantém os índices de performance do produto?
-- [ ] Atende aos requisitos de acessibilidade e responsividade?
-- [ ] Preserva a segurança e a privacidade dos dados?
-- [ ] Trata os erros do usuário?
-- [ ] Está livre de defeitos críticos?
-- [ ] Está documentado?
 

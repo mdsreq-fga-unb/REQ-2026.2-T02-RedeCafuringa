@@ -7,10 +7,9 @@
 | **ID da História** | HU04 |
 | **Requisito Funcional** | [RF04 — Consultar usuários cadastrados](../requisitos_software.md#71-requisitos-funcionais) |
 | **Requisito Não Funcional** | [RNF03, RNF04, RNF05, RNF08, RNF11, RNF12](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN03](../requisitos_software.md#74-lista-de-regras-de-negocio) |
+| **Regra de Negócio** | [RN01, RN03](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Alta |
 
 ---
 
@@ -62,57 +61,57 @@
 
 ## 4. Relação com os Requisitos Não Funcionais
 
-**RNF03 — Prevenção e Recuperação de Erros**
+**[RNF03 — Prevenção e Recuperação de Erros](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o administrador receba mensagens claras caso ocorra alguma falha durante a consulta, como indisponibilidade dos registros ou problemas no carregamento das informações.
+Garante que o administrador receba mensagens claras caso ocorra alguma falha durante a consulta, como indisponibilidade dos registros ou problemas no carregamento das informações.
 
-**RNF04 — Acessibilidade Digital**
+**[RNF04 — Acessibilidade Digital](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Permite que administradores com diferentes necessidades de acesso utilizem a interface de consulta, incluindo navegação por teclado, identificação adequada dos elementos e utilização de tecnologias assistivas.
+Permite que administradores com diferentes necessidades de acesso utilizem a interface de consulta, incluindo navegação por teclado, identificação adequada dos elementos e utilização de tecnologias assistivas.
 
-**RNF05 — Responsividade da Interface**
+**[RNF05 — Responsividade da Interface](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que a interface de consulta dos usuários se adapte a diferentes tamanhos de tela, permitindo a visualização organizada dos registros em computadores e dispositivos móveis.
+Garante que a interface de consulta dos usuários se adapte a diferentes tamanhos de tela, permitindo a visualização organizada dos registros em computadores e dispositivos móveis.
 
-**RNF08 — Controle de Acesso por Perfil**
+**[RNF08 — Controle de Acesso por Perfil](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que somente usuários com perfil de administrador possam acessar a funcionalidade de consulta de todos os usuários cadastrados, impedindo o acesso por consumidores e produtores.
+Garante que somente usuários com perfil de administrador possam acessar a funcionalidade de consulta de todos os usuários cadastrados, impedindo o acesso por consumidores e produtores.
 
-**RNF11 — Proteção de Dados Pessoais**
+**[RNF11 — Proteção de Dados Pessoais](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que as informações pessoais consultadas sejam tratadas conforme suas finalidades e permissões, impedindo a exposição de dados privados e, especialmente, de credenciais como senhas.
+Garante que as informações pessoais consultadas sejam tratadas conforme suas finalidades e permissões, impedindo a exposição de dados privados e, especialmente, de credenciais como senhas.
 
-**RNF12 — Compatibilidade entre Navegadores**
+**[RNF12 — Compatibilidade entre Navegadores](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que a funcionalidade de consulta e apresentação dos registros seja executada corretamente nos navegadores e ambientes previstos para utilização da plataforma.
+Garante que a funcionalidade de consulta e apresentação dos registros seja executada corretamente nos navegadores e ambientes previstos para utilização da plataforma.
 
 ---
 
 ## 5. Relação com as Regras de Negócio
 
-**RN01 — Perfis e permissões**
+**[RN01 — Perfis e permissões](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que a consulta de usuários seja disponibilizada exclusivamente ao perfil de administrador, respeitando as permissões estabelecidas para cada categoria de usuário.
+Determina que a consulta de usuários seja disponibilizada exclusivamente ao perfil de administrador, respeitando as permissões estabelecidas para cada categoria de usuário.
 
-**RN03 — Gestão administrativa**
+**[RN03 — Gestão administrativa](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que consultas e intervenções administrativas sobre usuários sejam de responsabilidade exclusiva dos administradores. Dessa forma, a funcionalidade permite acompanhar os consumidores, produtores e demais administradores cadastrados na plataforma.
+Estabelece que consultas e intervenções administrativas sobre usuários sejam de responsabilidade exclusiva dos administradores. Dessa forma, a funcionalidade permite acompanhar os consumidores, produtores e demais administradores cadastrados na plataforma.
 
 ---
 
 ## 6. Relação com as Características de Produto
 
-**CP1 — Perfis**
+**[CP1 — Perfis](../solucao.md#23-caracteristicas-do-produto)**
 
-- Relação com a HU: A consulta de usuários permite que os administradores acompanhem os diferentes perfis existentes na Rede Cafuringa, incluindo consumidores, produtores e outros administradores. Dessa forma, contribui para a organização e o gerenciamento dos usuários cadastrados, mantendo a identificação das categorias de acesso à plataforma.
+A consulta de usuários permite que os administradores acompanhem os diferentes perfis existentes na Rede Cafuringa, incluindo consumidores, produtores e outros administradores. Dessa forma, contribui para a organização e o gerenciamento dos usuários cadastrados, mantendo a identificação das categorias de acesso à plataforma.
 
 ---
 
 ## 7. Relação com os Objetivos Específicos
 
-**OE2 — Visibilidade e oferta local**
+**[OE2 — Visibilidade e oferta local](../solucao.md#22-objetivos-especificos-oe-do-produto)**
 
-- Relação com a HU: A consulta de usuários contribui indiretamente para a visibilidade das iniciativas locais ao permitir que a administração acompanhe os produtores cadastrados e a composição da base de usuários da Rede Cafuringa. Dessa forma, apoia o gerenciamento das informações necessárias à divulgação e à conexão entre produtores, consumidores e visitantes.
+A consulta de usuários contribui indiretamente para a visibilidade das iniciativas locais ao permitir que a administração acompanhe os produtores cadastrados e a composição da base de usuários da Rede Cafuringa. Dessa forma, apoia o gerenciamento das informações necessárias à divulgação e à conexão entre produtores, consumidores e visitantes.
 
 ---
 
