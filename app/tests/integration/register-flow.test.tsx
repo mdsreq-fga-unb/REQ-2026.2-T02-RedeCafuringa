@@ -1,7 +1,38 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
+
+// Cadastro e login usam o modo mock: o cadastro real (registerService) grava a
+// conta onde o login mock (loginMock) procura.
+vi.mock("@/features/auth/authService", async (importOriginal) => {
+    const original =
+        await importOriginal<typeof import("@/features/auth/authService")>();
+    const { loginMock } = await import("@/features/auth/mockAuth");
+    return { ...original, isMockAuthEnabled: true, login: loginMock };
+});
+
+const newCpf = "39053344705";
+const newPassword = "senha-segura-1";
+
+async function fillRegisterForm(user: ReturnType<typeof userEvent.setup>) {
+    await user.click(screen.getByRole("radio", { name: "Produtor" }));
+    await user.type(screen.getByLabelText("Nome"), "Seu João");
+    await user.type(screen.getByLabelText("CPF"), newCpf);
+    await user.type(screen.getByLabelText("Telefone"), "61912345678");
+    await user.type(screen.getByLabelText("E-mail"), "joao@exemplo.com");
+    await user.type(
+        screen.getByLabelText("Endereço"),
+        "Chácara 7, Núcleo Rural, Brasília - DF",
+    );
+    await user.type(screen.getByLabelText("Senha"), newPassword);
+    await user.type(screen.getByLabelText("Confirmar senha"), newPassword);
+    await user.click(
+        screen.getByRole("checkbox", {
+            name: "Declaro que sou maior de 18 anos",
+        }),
+    );
+}
 
 describe("HU02 — acesso ao cadastro de produtor no app", () => {
     beforeEach(() => {
@@ -55,4 +86,57 @@ describe("HU02 — acesso ao cadastro de produtor no app", () => {
 
         expect(screen.queryByRole("status")).toBeNull();
     });
+});
+
+describe("HU02 — do cadastro à área do produtor", () => {
+    beforeEach(() => {
+        localStorage.clear();
+        window.location.hash = "";
+    });
+
+    afterEach(() => {
+        cleanup();
+        localStorage.clear();
+        window.location.hash = "";
+    });
+
+    // Critérios 9 e 10
+    it(
+        "cadastra o produtor, deixa entrar com a conta nova e abre a área de produtor",
+        async () => {
+            window.location.hash = "#/entrar";
+            render(<App />);
+            const user = userEvent.setup();
+
+            await user.click(
+                screen.getByRole("button", { name: "Criar uma conta" }),
+            );
+            await fillRegisterForm(user);
+            await user.click(
+                screen.getByRole("button", { name: "Criar conta" }),
+            );
+
+            expect(
+                (await screen.findByRole("status", {}, { timeout: 3000 }))
+                    .textContent,
+            ).toBe("Cadastro concluído. Entre com seu CPF e sua senha.");
+
+            await user.type(await screen.findByLabelText("CPF"), newCpf);
+            await user.type(screen.getByLabelText("Senha"), newPassword);
+            await user.click(screen.getByRole("button", { name: "Entrar" }));
+
+            expect(
+                await screen.findByRole(
+                    "heading",
+                    { name: "Contato público" },
+                    { timeout: 3000 },
+                ),
+            ).toBeTruthy();
+            expect(window.location.hash).toBe("#/conta");
+        },
+        15000,
+    );
+
+    // Critério 9, caso CNPJ: depende da mudança pendente da HU09
+    it.todo("entra com a conta criada com CNPJ (login deve aceitar CPF ou CNPJ)");
 });
