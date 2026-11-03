@@ -475,74 +475,203 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   transition: background-color 0.15s ease;
 }
 
-/* =====================================================
-   CARDS DE SEÇÃO
-   ===================================================== */
+/* =========================================
+   CARDS DE ATALHOS — PÁGINA INICIAL
+   ========================================= */
+
 .section-cards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 28px;
-  row-gap: 24px;
-  align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+    margin: 28px 0;
+    align-items: stretch;
 }
 
-.section-cards .hu-card {
-  margin: 0;
+.section-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 135px;
+    padding: 22px;
+
+    background: #F7E4C5;
+    border: 1px solid rgba(145, 153, 107, 0.35);
+    border-radius: 12px;
+
+    text-decoration: none !important;
+    color: var(--nativo-black) !important;
+
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
 }
 
+/* Detalhe lateral */
 .section-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background-color: var(--nativo-sage);
-  transition: background-color 0.18s ease;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background-color: var(--nativo-sage);
+    border-radius: 12px 0 0 12px;
+    transition: background-color 0.2s ease;
 }
 
+/* Hover */
 .section-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(4, 50, 34, 0.13);
-  border-color: var(--nativo-cinnamon);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: var(--nativo-cinnamon);
 }
 
 .section-card:hover::before {
-  background-color: var(--nativo-cinnamon);
+    background-color: var(--nativo-cinnamon);
 }
 
+/* Título */
 .section-card h3 {
-  font-family: var(--nativo-font-heading) !important;
-  font-size: 0.97rem !important;
-  font-weight: 700 !important;
-  color: var(--nativo-evergreen) !important;
-  margin: 0 0 0.45rem 0 !important;
-  border: none !important;
-  padding: 0 !important;
+    font-family: var(--nativo-font-heading) !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: var(--nativo-evergreen) !important;
+    margin: 0 0 10px 0 !important;
+    padding: 0 !important;
+    border: none !important;
 }
 
+/* Descrição */
 .section-card p {
-  font-size: 0.81rem;
-  margin: 0;
-  color: rgba(23, 25, 24, 0.7);
-  line-height: 1.5;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    margin: 0;
+    text-align: left !important;
+    color: rgba(43, 33, 24, 0.8);
 }
 
+/* Modo escuro */
 [data-md-color-scheme="slate"] .section-card {
-  background: linear-gradient(135deg, rgba(217, 119, 50, 0.25) 0%, rgba(45, 33, 24, 0.9) 100%);
-  border-color: rgba(145, 153, 107, 0.3);
+    background: linear-gradient(
+        135deg,
+        rgba(217, 119, 50, 0.20),
+        rgba(45, 33, 24, 0.95)
+    );
+    border-color: rgba(145, 153, 107, 0.3);
+    color: var(--nativo-cream) !important;
 }
 
 [data-md-color-scheme="slate"] .section-card h3 {
-  color: var(--nativo-cream) !important;
+    color: var(--nativo-cream) !important;
 }
 
 [data-md-color-scheme="slate"] .section-card p {
-  color: rgba(246, 233, 217, 0.65);
+    color: rgba(246, 233, 217, 0.8);
 }
 
-[data-md-color-scheme="slate"] .section-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+/* =========================================
+   CARDS DE HISTÓRIAS DE USUÁRIO
+   ========================================= */
+
+.hu-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+    width: 100%;
+    margin: 28px 0;
+    align-items: stretch;
+}
+
+.hu-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 150px;
+    padding: 16px;
+
+    background-color: var(--md-code-bg-color);
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 12px;
+
+    text-decoration: none !important;
+    color: var(--md-typeset-color) !important;
+
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+}
+
+.hu-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--md-accent-fg-color);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.hu-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.hu-card-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.hu-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 6px;
+    border-radius: 20px;
+    font-size: 0.50rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.hu-status-execucao {
+    color: #e5b94f;
+    background-color: rgba(229, 185, 79, 0.08);
+    border-color: rgba(229, 185, 79, 0.25);
+}
+
+.hu-status-planejada {
+    color: #a5a5a5;
+    background-color: rgba(165, 165, 165, 0.08);
+    border-color: rgba(165, 165, 165, 0.20);
+}
+
+.hu-status-mvp {
+    color: #80b88a;
+    background-color: rgba(128, 184, 138, 0.08);
+    border-color: rgba(128, 184, 138, 0.25);
+}
+
+.hu-status-prioridade {
+    color: #79aee0;
+    background-color: rgba(121, 174, 224, 0.08);
+    border-color: rgba(121, 174, 224, 0.25);
+}
+
+.hu-card h3 {
+    margin: 0 !important;
+    padding: 0;
+    color: var(--md-typeset-color);
+    font-size: 0.80rem;
+    font-weight: 700;
+    line-height: 1.45;
+    overflow-wrap: break-word;
+}
+
+.hu-card:hover h3 {
+    color: var(--md-accent-fg-color);
 }
 
 /* =====================================================
@@ -860,161 +989,118 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
     color: #f6d76f;
 }
 
+/* ================================
+   CARDS DE HISTÓRIAS DE USUÁRIO
+================================ */
 
-/* =========================================
-   BACKLOG — CARDS DE HISTÓRIAS DE USUÁRIO
-   ========================================= */
-
-/* Grade de cards */
+/* Grade dos cards */
 .section-cards {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 17px;
-    width: 100%;
-    margin: 28px 0;
-    align-items: stretch;
+    gap: 16px;
+    margin-top: 24px;
 }
 
 /* Card individual */
 .hu-card {
     display: flex;
-    flex-direction: column;
-    min-width: 0;
-    min-height: 150px;
-    padding: 16px;
-    
-    background-color: var(--md-code-bg-color);
-    border: 1px solid var(--md-default-fg-color--lightest);
+    align-items: center;
+    justify-content: center;
+    min-height: 135px;
+    padding: 20px;
+    border: 1px solid #554331;
+    border-left: 4px solid #e5ad3c;
     border-radius: 12px;
-
+    background: linear-gradient(135deg, #4a2d1c, #302116);
     text-decoration: none !important;
-    color: var(--md-typeset-color) !important;
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease,
-        background-color 0.2s ease;
+    text-align: center;
+    transition: all 0.25s ease;
 }
 
 /* Efeito ao passar o mouse */
 .hu-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--md-accent-fg-color);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+    border-color: #e5ad3c;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Cabeçalho do card */
+/* Conteúdo interno */
 .hu-card-header {
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    height: 100%;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 14px;
 }
 
-/* Área das etiquetas */
+/* Agrupamento das tags */
 .hu-card-status {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    justify-content: center;
     align-items: center;
-    gap: 4px;
-    min-width: 0;
-    max-width: 100%;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 6px;
 }
 
+/* Tags */
 .hu-status {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 3px 6px;
-
+    padding: 3px 9px;
+    border: 1px solid;
     border-radius: 20px;
-    font-size: 0.50rem;
-    font-weight: 600;
-    line-height: 1.2;
-    white-space: nowrap;
-
-    flex-shrink: 0;
-    border: 1px solid transparent;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1.4;
 }
 
-/* Em execução — amarelo */
+/* Status: Em execução */
 .hu-status-execucao {
-    color: #e5b94f;
-    background-color: rgba(229, 185, 79, 0.08);
-    border-color: rgba(229, 185, 79, 0.25);
+    color: #f5c344;
+    background: rgba(245, 195, 68, 0.10);
+    border-color: rgba(245, 195, 68, 0.35);
 }
 
-/* Planejado — cinza */
+/* Status: Planejado */
 .hu-status-planejada {
-    color: #a5a5a5;
-    background-color: rgba(165, 165, 165, 0.08);
-    border-color: rgba(165, 165, 165, 0.20);
+    color: #b0b0b0;
+    background: rgba(176, 176, 176, 0.10);
+    border-color: rgba(176, 176, 176, 0.25);
 }
 
-/* MVP — verde */
+/* Tag: MVP */
 .hu-status-mvp {
-    color: #80b88a;
-    background-color: rgba(128, 184, 138, 0.08);
-    border-color: rgba(128, 184, 138, 0.25);
+    color: #7cc99a;
+    background: rgba(124, 201, 154, 0.10);
+    border-color: rgba(124, 201, 154, 0.35);
 }
 
-/* Prioridade — azul */
+/* Tag: Prioridade */
 .hu-status-prioridade {
-    color: #79aee0;
-    background-color: rgba(121, 174, 224, 0.08);
-    border-color: rgba(121, 174, 224, 0.25);
+    color: #70baff;
+    background: rgba(112, 186, 255, 0.10);
+    border-color: rgba(112, 186, 255, 0.35);
 }
-
 
 /* Título da história */
 .hu-card h3 {
+    display: block;
+    width: 100%;
     margin: 0 !important;
     padding: 0;
-
-    color: var(--md-typeset-color);
-    font-size: 0.80rem;
-    font-weight: 700;
-    line-height: 1.45;
-
-    overflow-wrap: break-word;
+    color: #f5eee5 !important;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
 }
 
-/* Título ao passar o mouse */
-.hu-card:hover h3 {
-    color: var(--md-accent-fg-color);
+/* Remove decoração dos links */
+.hu-card:link,
+.hu-card:visited,
+.hu-card:hover {
+    text-decoration: none !important;
 }
-
-/* =========================================
-   RESPONSIVIDADE
-   ========================================= */
-
-/* Telas médias: duas colunas */
-@media screen and (max-width: 1000px) {
-    .section-cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-    }
-}
-
-/* Celulares: uma coluna */
-@media screen and (max-width: 600px) {
-    .section-cards {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
-
-    .hu-card {
-        min-height: auto;
-        padding: 18px;
-    }
-
-    .hu-card-header {
-        gap: 14px;
-    }
-}
-
-
-
 
