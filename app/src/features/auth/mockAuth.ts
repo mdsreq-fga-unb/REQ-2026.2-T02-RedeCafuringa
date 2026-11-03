@@ -1,6 +1,6 @@
 // Usuários falsos para desenvolvimento enquanto não existe backend.
 // Só são usados com VITE_USE_MOCK_AUTH=true (ver .env.development).
-import type { AuthResult } from "../../shared/types";
+import type { AuthResult, Role } from "../../shared/types";
 import { producerName } from "../offers/offerData";
 import { InvalidCredentialsError } from "./errors";
 
@@ -40,4 +40,24 @@ export async function loginMock(credentials: {
     if (!found) throw new InvalidCredentialsError();
 
     return { token: `mock-token-${found.user.id}`, user: found.user };
+}
+
+export function registerMockUser(account: {
+    cpf: string;
+    password: string;
+    name: string;
+    role: Role;
+}): AuthResult["user"] {
+    const nextId = Math.max(0, ...mockUsers.map((item) => item.user.id)) + 1;
+    const user: AuthResult["user"] = {
+        id: nextId,
+        name: account.name,
+        role: account.role,
+    };
+    mockUsers.push({
+        cpf: account.cpf,
+        password: account.password,
+        user,
+    });
+    return user;
 }
