@@ -25,7 +25,8 @@ import "../App.css";
 
 export function App() {
     const { route, navigate } = useHashRoute();
-    const { role, consumerName, signIn, signOut } = useDemoSession();
+    const { role, consumerName, email, cpf, signIn, signOut } =
+        useDemoSession();
     const { settings, draft, setDraft, saved, setSaved, save } =
         useContactSettings();
 
@@ -167,6 +168,8 @@ export function App() {
                     <AccountPage
                         role={role}
                         consumerName={consumerName}
+                        consumerEmail={email}
+                        consumerCpf={cpf}
                         settings={settings}
                         draft={draft}
                         saved={saved}

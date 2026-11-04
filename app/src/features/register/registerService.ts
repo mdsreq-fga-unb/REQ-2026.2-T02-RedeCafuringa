@@ -24,6 +24,7 @@ const mockService = createMockRegisterService({
     add: (payload) => {
         registerMockUser({
             cpf: payload.document,
+            email: payload.email,
             password: payload.password,
             name: payload.name,
             role: "producer",

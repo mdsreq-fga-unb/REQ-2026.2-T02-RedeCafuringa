@@ -457,6 +457,55 @@ h2 {
     border-bottom: 1px solid var(--line);
 }
 
+.account-profile-form {
+    display: grid;
+    gap: 0;
+    margin-top: 12px;
+}
+
+.account-field .field-label {
+    margin: 14px 0 10px;
+}
+
+.account-profile-form .text-input {
+    min-height: 58px;
+    padding: 14px 16px;
+    border-radius: 15px;
+    background: #fff;
+    font-size: 16px;
+}
+
+.account-profile-form > .button {
+    width: 100%;
+    margin-top: 16px;
+}
+
+.account-contact-disclosure {
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+}
+
+.account-contact-disclosure summary {
+    padding: 16px 0 8px;
+    color: var(--orange-text);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.account-contact-disclosure[open] summary {
+    padding-bottom: 0;
+}
+
+.button-danger {
+    background: #a83232;
+    color: #fff;
+}
+
+.account-page > .button-danger {
+    width: 100%;
+    margin-top: 16px;
+}
+
 .contact-settings h2,
 .contact-settings .body-copy {
     margin-bottom: 4px;
@@ -602,6 +651,22 @@ h2 {
     .register-page {
         max-width: 960px;
         margin: 0 auto;
+    }
+
+    .account-page {
+        max-width: 760px;
+        margin-inline: auto;
+    }
+
+    .account-profile-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 28px;
+        align-items: start;
+    }
+
+    .account-profile-form > .button,
+    .account-contact-disclosure {
+        grid-column: 1 / -1;
     }
 
     .register-page .register-form {

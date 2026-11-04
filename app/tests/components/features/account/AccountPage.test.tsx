@@ -2,7 +2,10 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AccountPage } from "@/features/account";
 
-afterEach(cleanup);
+afterEach(() => {
+    cleanup();
+    localStorage.clear();
+});
 
 describe("configurações de contato da conta", () => {
     it("permite alterar consentimento e salvar o contato", () => {
@@ -30,6 +33,9 @@ describe("configurações de contato da conta", () => {
             />,
         );
 
+        fireEvent.click(
+            screen.getByText("Contato público", { selector: "summary" }),
+        );
         fireEvent.click(screen.getByRole("checkbox"));
         expect(onDraftChange).toHaveBeenCalledWith({
             ...draft,
@@ -60,8 +66,88 @@ describe("configurações de contato da conta", () => {
             />,
         );
 
+        fireEvent.click(
+            screen.getByText("Contato público", { selector: "summary" }),
+        );
         expect(screen.getByRole("status").textContent).toMatch(
             /Contato autorizado e disponível/,
         );
+    });
+
+    it("mostra e salva os dados principais do perfil produtor", () => {
+        render(
+            <AccountPage
+                role="producer"
+                consumerName="Maria"
+                settings={{ whatsappNumber: "", authorized: false }}
+                draft={{ whatsappNumber: "", authorized: false }}
+                saved={false}
+                onDraftChange={vi.fn()}
+                onSavedChange={vi.fn()}
+                onSaveContact={vi.fn()}
+                onNavigate={vi.fn()}
+                onSignOut={vi.fn()}
+            />,
+        );
+
+        expect(
+            screen.getByRole("heading", { name: "Olá, Maria" }),
+        ).toBeTruthy();
+        expect(screen.getByLabelText("Nome da iniciativa")).toHaveProperty(
+            "placeholder",
+            "Flor do campo",
+        );
+        fireEvent.change(screen.getByLabelText("Nome da iniciativa"), {
+            target: { value: "Sítio Raízes" },
+        });
+        fireEvent.click(screen.getByRole("button", { name: "Salvar" }));
+
+        expect(localStorage.getItem("cafuringa-producer-initiative")).toBe(
+            "Sítio Raízes",
+        );
+        expect(screen.getByRole("status").textContent).toBe(
+            "Alterações salvas.",
+        );
+    });
+
+    it("exibe os dados do consumidor e permite acessar o login de produtor", () => {
+        const onNavigate = vi.fn();
+        const onSignOut = vi.fn();
+
+        render(
+            <AccountPage
+                role="consumer"
+                consumerName="Gabriela Pereira da Silva"
+                consumerEmail="gabriela@exemplo.com"
+                consumerCpf="52998224725"
+                settings={{ whatsappNumber: "", authorized: false }}
+                draft={{ whatsappNumber: "", authorized: false }}
+                saved={false}
+                onDraftChange={vi.fn()}
+                onSavedChange={vi.fn()}
+                onSaveContact={vi.fn()}
+                onNavigate={onNavigate}
+                onSignOut={onSignOut}
+            />,
+        );
+
+        expect(
+            screen.getByRole("heading", { name: "Olá, Gabriela" }),
+        ).toBeTruthy();
+        expect(screen.getByLabelText("E-mail")).toHaveProperty(
+            "value",
+            "gabriela@exemplo.com",
+        );
+        expect(screen.getByLabelText("CPF")).toHaveProperty(
+            "value",
+            "529.982.247-25",
+        );
+        fireEvent.click(
+            screen.getByRole("button", { name: "Acessar como produtor" }),
+        );
+        fireEvent.click(screen.getByRole("button", { name: "Sair da conta" }));
+
+        expect(onNavigate).toHaveBeenCalledWith("/login/producer");
+        expect(onSignOut).toHaveBeenCalledOnce();
     });
 });

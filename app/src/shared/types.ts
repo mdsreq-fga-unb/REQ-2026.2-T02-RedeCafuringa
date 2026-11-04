@@ -20,6 +20,8 @@ export type AuthUser = {
     id: string | number;
     name: string;
     role: Role;
+    email?: string;
+    cpf?: string;
 };
 
 export type AuthResult = {
