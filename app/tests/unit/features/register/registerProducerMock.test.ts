@@ -16,13 +16,10 @@ const payload: RegisterPayload = {
 async function loadMock() {
     vi.resetModules();
     vi.stubEnv("VITE_USE_MOCK_AUTH", "true");
-    const { registerProducer } = await import(
-        "@/features/register/registerService"
-    );
+    const { registerProducer } =
+        await import("@/features/register/registerService");
     const { loginMock } = await import("@/features/auth/mockAuth");
-    const { InvalidCredentialsError } = await import(
-        "@/features/auth/errors"
-    );
+    const { InvalidCredentialsError } = await import("@/features/auth/errors");
     return { registerProducer, loginMock, InvalidCredentialsError };
 }
 

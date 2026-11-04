@@ -80,12 +80,12 @@ describe("HU09 — fluxo de autenticação no app", () => {
     });
 
     // Critério 6
-    it("mostra o login quando um visitante abre a área da conta", () => {
+    it("mostra a seleção de perfil quando um visitante abre a área da conta", () => {
         window.location.hash = "#/conta";
         render(<App />);
 
         expect(
-            screen.getByRole("heading", { name: "Que bom ter você aqui" }),
+            screen.getByRole("heading", { name: "Entre em sua conta" }),
         ).toBeTruthy();
         expect(
             screen.queryByRole("button", { name: "Sair da demonstração" }),
@@ -103,7 +103,7 @@ describe("HU09 — fluxo de autenticação no app", () => {
         ).toBeTruthy();
     });
 
-    it("ao sair, volta para o perfil público e não fica preso no login", async () => {
+    it("ao sair, volta à seleção de perfil", async () => {
         localStorage.setItem("cafuringa-role", "consumer");
         localStorage.setItem("cafuringa-name", "Gabriela Pereira da Silva");
         window.location.hash = "#/conta";
@@ -115,13 +115,15 @@ describe("HU09 — fluxo de autenticação no app", () => {
                 screen.getByRole("button", { name: "Sair da demonstração" }),
             );
 
-        await waitFor(() => expect(window.location.hash).toBe("#/perfil"));
+        await waitFor(() =>
+            expect(window.location.hash).toBe("#/escolher-perfil"),
+        );
         await waitFor(() =>
             expect(
                 screen.queryByRole("heading", {
-                    name: "Que bom ter você aqui",
+                    name: "Entre em sua conta",
                 }),
-            ).toBeNull(),
+            ).toBeTruthy(),
         );
     });
 });

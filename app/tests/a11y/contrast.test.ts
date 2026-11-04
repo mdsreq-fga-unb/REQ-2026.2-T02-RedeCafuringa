@@ -62,8 +62,17 @@ describe("contraste dos tokens de cor (WCAG 2.1 AA)", () => {
         );
     });
 
-    it("texto escuro sobre os botões laranja e verde", () => {
-        expect(contrast(ink, orange)).toBeGreaterThanOrEqual(AA_TEXT);
+    it("o botão principal preserva a combinação exata do protótipo", () => {
+        const rules = css.split("}").map((r) => r.trim());
+        const orangeButton = rules.find((r) => r.startsWith(".button-orange"));
+
+        expect(orange).toBe("#ff8d28");
+        expect(orangeButton).toMatch(/background:\s*var\(--orange\)/);
+        expect(orangeButton).toMatch(/color:\s*#fff/);
+        expect(contrast("#ffffff", orange)).toBeLessThan(AA_TEXT);
+    });
+
+    it("o texto escuro mantém contraste sobre os botões verdes", () => {
         expect(contrast(ink, green)).toBeGreaterThanOrEqual(AA_TEXT);
         expect(contrast(ink, "#52c544")).toBeGreaterThanOrEqual(AA_TEXT); // verde suave
     });
@@ -80,7 +89,7 @@ describe("contraste dos tokens de cor (WCAG 2.1 AA)", () => {
         expect(contrast(orange, paper)).toBeLessThan(AA_TEXT);
     });
 
-    it("nenhuma regra de texto volta a usar a laranja pura ou branco sobre ela", () => {
+    it("nenhuma regra de texto usa a laranja pura como cor do texto", () => {
         const rules = css.split("}").map((r) => r.trim());
         const textUsesBrandOrange = rules.filter((r) =>
             /(^|[\s;{])color:\s*var\(--orange\)/.test(r),
@@ -90,9 +99,7 @@ describe("contraste dos tokens de cor (WCAG 2.1 AA)", () => {
             "use var(--orange-text) para texto",
         ).toEqual([]);
 
-        const orangeButton = rules.find((r) => r.startsWith(".button-orange"));
         const greenButton = rules.find((r) => r.startsWith(".button-green {"));
-        expect(orangeButton).toMatch(/color:\s*var\(--ink\)/);
         expect(greenButton).toMatch(/color:\s*var\(--ink\)/);
     });
 });

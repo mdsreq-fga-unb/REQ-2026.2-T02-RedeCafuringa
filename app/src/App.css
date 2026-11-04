@@ -3,10 +3,7 @@
     --ink: #1c332b;
     --muted: #5f716b;
     --orange: #ff8d28;
-    /* WCAG 2.1 AA: a laranja da marca dá só 2,2:1 como texto sobre o fundo claro.
-       --orange-text mantém o matiz e passa (4,6:1 sobre --paper, 4,8:1 sobre o card);
-       --orange-text-strong é o estado ativo (7,1:1). Use --orange para fundos e logo,
-       e --ink como cor do texto sobre fundo laranja ou verde (5,8:1 e 4,9:1). */
+    /* --orange-button preserves the supplied prototype's white-on-orange CTA. */
     --orange-text: #b85600;
     --orange-text-strong: #8a4000;
     --green: #0ab512;
@@ -185,7 +182,7 @@ h2 {
 
 .button-orange {
     background: var(--orange);
-    color: var(--ink);
+    color: #fff;
 }
 
 .button-green {
@@ -537,4 +534,347 @@ h2 {
 
 .text-input[aria-invalid="true"] {
     border-color: #a83232;
+}
+
+.auth-shell {
+    padding-bottom: 0;
+}
+
+.auth-shell .main-content {
+    min-height: calc(100svh - 60px);
+    padding-bottom: 40px;
+}
+
+.signup-page {
+    padding-bottom: 28px;
+}
+
+.profile-selection-page h1,
+.consumer-signup-page h1 {
+    color: var(--orange-text);
+}
+
+.profile-selection-page .body-copy {
+    margin-bottom: 0;
+}
+
+.profile-options {
+    display: grid;
+    width: min(100%, 266px);
+    gap: 42px;
+    margin: 82px auto 0;
+}
+
+.profile-option {
+    display: flex;
+    min-height: 128px;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 16px;
+    border: 1px solid var(--muted);
+    border-radius: 11px;
+    background: #fffefa;
+    cursor: pointer;
+    text-align: left;
+}
+
+.profile-option:first-child {
+    border-color: var(--orange);
+}
+
+.profile-option[aria-pressed="true"] {
+    box-shadow: 0 0 0 2px var(--orange);
+}
+
+.profile-option-icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    fill: none;
+    stroke: var(--orange);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.8;
+}
+
+.profile-option-copy {
+    display: grid;
+    gap: 7px;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.profile-option-copy strong {
+    font-size: 14px;
+}
+
+.profile-option-copy > span {
+    color: var(--muted);
+}
+
+.profile-selection-actions {
+    width: min(100%, 266px);
+    margin: 120px auto 0;
+}
+
+.profile-selection-actions .button,
+.signup-submit,
+.signup-success-page > .button {
+    width: 100%;
+}
+
+.consumer-signup-page h1 {
+    margin-bottom: 2px;
+}
+
+.signup-field .field-label {
+    margin: 15px 0 10px;
+}
+
+.signup-field:first-of-type .field-label {
+    margin-top: 8px;
+}
+
+.signup-input {
+    min-height: 58px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #fff;
+    font-size: 16px;
+}
+
+.signup-input::placeholder {
+    color: var(--muted);
+    opacity: 1;
+}
+
+.birth-date-control {
+    position: relative;
+}
+
+.birth-date-control .signup-input {
+    padding-right: 54px;
+}
+
+.birth-calendar-trigger {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    transform: translateY(-50%);
+    border: 0;
+    border-radius: 10px;
+    background: #fff3e7;
+    color: var(--orange-text);
+    cursor: pointer;
+}
+
+.birth-calendar-trigger:hover {
+    background: #ffe4ca;
+}
+
+.birth-calendar-trigger svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+.birth-calendar {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 8px);
+    left: 0;
+    width: min(100%, 340px);
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fffefa;
+    box-shadow: 0 12px 30px rgb(28 51 43 / 16%);
+}
+
+.birth-calendar-header {
+    display: flex;
+    min-height: 38px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: var(--orange-text);
+}
+
+.birth-calendar-header strong {
+    margin-left: auto;
+    text-transform: capitalize;
+}
+
+.birth-calendar-year {
+    min-height: 36px;
+    margin-right: auto;
+    padding: 0 8px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-weight: 700;
+}
+
+.birth-calendar-nav {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1;
+}
+
+.birth-calendar-nav:hover:not(:disabled) {
+    border-color: var(--orange);
+    color: var(--orange-text);
+}
+
+.birth-calendar-nav:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.birth-calendar-weekdays,
+.birth-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+    text-align: center;
+}
+
+.birth-calendar-weekdays {
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.birth-calendar-weekdays span {
+    display: grid;
+    min-height: 28px;
+    place-items: center;
+}
+
+.birth-calendar-day,
+.birth-calendar-empty {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 1;
+    min-width: 0;
+    place-items: center;
+}
+
+.birth-calendar-day {
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.birth-calendar-day:hover:not(:disabled),
+.birth-calendar-day[aria-pressed="true"] {
+    background: var(--orange);
+    color: #fff;
+}
+
+.birth-calendar-day:disabled {
+    color: #aeb8b0;
+    cursor: not-allowed;
+}
+
+.signup-submit {
+    margin-top: 16px;
+}
+
+.signup-consent {
+    margin: 15px 0 0;
+    color: var(--orange-text);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.login-signup-link {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.signup-success-page {
+    padding-top: 0;
+}
+
+.success-check {
+    display: grid;
+    width: 64px;
+    height: 64px;
+    place-items: center;
+    margin: 34px 0 16px;
+    border-radius: 50%;
+    background: #eaf0e8;
+}
+
+.success-check svg {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: var(--orange);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+}
+
+.signup-success-page h1 {
+    margin-bottom: 9px;
+    font-size: 24px;
+}
+
+.signup-success-page .body-copy {
+    margin-bottom: 16px;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+    filter: grayscale(0.1);
+    opacity: 0.65;
+}
+
+@media (max-width: 360px) {
+    .profile-options {
+        gap: 28px;
+        margin-top: 54px;
+    }
+
+    .profile-option {
+        gap: 10px;
+        padding-inline: 12px;
+    }
+
+    .profile-option-icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+    .profile-selection-actions {
+        margin-top: 72px;
+    }
 }

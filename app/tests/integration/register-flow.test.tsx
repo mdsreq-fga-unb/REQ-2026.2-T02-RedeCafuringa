@@ -100,42 +100,38 @@ describe("HU02 — do cadastro à área do produtor", () => {
     });
 
     // Critérios 9 e 10
-    it(
-        "cadastra o produtor, deixa entrar com a conta nova e abre a área de produtor",
-        async () => {
-            window.location.hash = "#/entrar";
-            render(<App />);
-            const user = userEvent.setup();
+    it("cadastra o produtor, deixa entrar com a conta nova e abre a área de produtor", async () => {
+        window.location.hash = "#/entrar";
+        render(<App />);
+        const user = userEvent.setup();
 
-            await user.click(
-                screen.getByRole("button", { name: "Criar uma conta" }),
-            );
-            await fillRegisterForm(user);
-            await user.click(
-                screen.getByRole("button", { name: "Criar conta" }),
-            );
+        await user.click(
+            screen.getByRole("button", { name: "Criar uma conta" }),
+        );
+        await fillRegisterForm(user);
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
 
-            expect(
-                (await screen.findByRole("status", {}, { timeout: 3000 }))
-                    .textContent,
-            ).toBe("Cadastro concluído. Entre com seu CPF e sua senha.");
+        expect(
+            (await screen.findByRole("status", {}, { timeout: 3000 }))
+                .textContent,
+        ).toBe("Cadastro concluído. Entre com seu CPF e sua senha.");
 
-            await user.type(await screen.findByLabelText("CPF"), newCpf);
-            await user.type(screen.getByLabelText("Senha"), newPassword);
-            await user.click(screen.getByRole("button", { name: "Entrar" }));
+        await user.type(await screen.findByLabelText("CPF"), newCpf);
+        await user.type(screen.getByLabelText("Senha"), newPassword);
+        await user.click(screen.getByRole("button", { name: "Entrar" }));
 
-            expect(
-                await screen.findByRole(
-                    "heading",
-                    { name: "Contato público" },
-                    { timeout: 3000 },
-                ),
-            ).toBeTruthy();
-            expect(window.location.hash).toBe("#/conta");
-        },
-        15000,
-    );
+        expect(
+            await screen.findByRole(
+                "heading",
+                { name: "Contato público" },
+                { timeout: 3000 },
+            ),
+        ).toBeTruthy();
+        expect(window.location.hash).toBe("#/conta");
+    }, 15000);
 
     // Critério 9, caso CNPJ: depende da mudança pendente da HU09
-    it.todo("entra com a conta criada com CNPJ (login deve aceitar CPF ou CNPJ)");
+    it.todo(
+        "entra com a conta criada com CNPJ (login deve aceitar CPF ou CNPJ)",
+    );
 });

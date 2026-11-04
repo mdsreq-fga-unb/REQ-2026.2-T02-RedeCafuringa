@@ -139,7 +139,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         ).toBeTruthy();
     });
 
-        // HU02, critério 1 (acesso ao cadastro sem conta)
+    // HU02, critério 1 (acesso ao cadastro sem conta)
     it("oferece o caminho para criar uma conta", async () => {
         const { onNavigate, user } = renderLogin();
 

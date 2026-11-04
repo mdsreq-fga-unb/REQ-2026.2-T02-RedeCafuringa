@@ -3,13 +3,14 @@ import type { components } from "../../shared/api/schema";
 import type { AuthResult, Role } from "../../shared/types";
 import { InvalidCredentialsError } from "./errors";
 import { loginMock } from "./mockAuth";
+import { isMockAuthEnabled } from "./authMode";
+
+export { isMockAuthEnabled } from "./authMode";
 
 // Tipos vêm do contrato OpenAPI do backend (shared/openapi.json, via npm run api:types):
 // se o backend mudar a rota ou os campos, o typecheck quebra aqui.
 type LoginRequest = components["schemas"]["LoginDto"];
 type LoginResponse = components["schemas"]["LoginResponse"];
-
-export const isMockAuthEnabled = import.meta.env.VITE_USE_MOCK_AUTH === "true";
 
 export type Credentials = {
     cpf: string;

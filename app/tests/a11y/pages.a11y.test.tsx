@@ -70,7 +70,7 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
         expect(await violationsIn(container)).toEqual([]);
     });
 
-        it("o formulário de cadastro tem rótulos e campos acessíveis", async () => {
+    it("o formulário de cadastro tem rótulos e campos acessíveis", async () => {
         window.location.hash = "#/cadastro";
         const { container } = render(<App />);
 
@@ -98,9 +98,9 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
             .click(await screen.findByRole("button", { name: "Criar conta" }));
 
         expect(await screen.findByText("Informe o nome.")).toBeTruthy();
-        expect(
-            screen.getByLabelText("Nome").getAttribute("aria-invalid"),
-        ).toBe("true");
+        expect(screen.getByLabelText("Nome").getAttribute("aria-invalid")).toBe(
+            "true",
+        );
         expect(await violationsIn(container)).toEqual([]);
     });
 
