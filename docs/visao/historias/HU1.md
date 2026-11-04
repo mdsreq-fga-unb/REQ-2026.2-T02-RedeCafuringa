@@ -7,10 +7,9 @@
 | **ID da História** | HU01 |
 | **Requisito Funcional** | [RF01 — Cadastrar perfil de consumidor](../requisitos_software.md#71-requisitos-funcionais) |
 | **Requisito Não Funcional** | [RNF03, RNF04, RNF05, RNF07, RNF08, RNF10, RNF11, RNF12, RNF15](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN02, RN05, RN08 ](../requisitos_software.md#74-lista-de-regras-de-negocio) |
+| **Regra de Negócio** | [RN01, RN02, RN05, RN08 ](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP1 ](../solucao.md/#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2 ](../solucao.md/#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Média |
 
 ---
 
@@ -46,77 +45,77 @@
 
 ## 4. Relação com os Requisitos Não Funcionais
 
-**RNF03 — Prevenção e Recuperação de Erros**
+**[RNF03 — Prevenção e Recuperação de Erros](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o consumidor consiga corrigir erros no preenchimento do formulário e concluir o cadastro sem dificuldades desnecessárias.
+Garante que o consumidor consiga corrigir erros no preenchimento do formulário e concluir o cadastro sem dificuldades desnecessárias.
 
-**RNF04 — Acessibilidade Digital**
+**[RNF04 — Acessibilidade Digital](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Permite que pessoas com diferentes necessidades de acesso utilizem o formulário de cadastro, incluindo usuários que navegam por teclado ou utilizam tecnologias assistivas.
+Permite que pessoas com diferentes necessidades de acesso utilizem o formulário de cadastro, incluindo usuários que navegam por teclado ou utilizam tecnologias assistivas.
 
-**RNF05 — Responsividade da Interface**
+**[RNF05 — Responsividade da Interface](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Permite que consumidores realizem o cadastro tanto em computadores quanto em dispositivos móveis, incluindo celulares utilizados em regiões rurais.
+Permite que consumidores realizem o cadastro tanto em computadores quanto em dispositivos móveis, incluindo celulares utilizados em regiões rurais.
 
-**RNF07 — Resiliência à Perda de Conexão**
+**[RNF07 — Resiliência à Perda de Conexão](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Evita que o consumidor precise preencher novamente todos os campos caso a conexão com a internet seja interrompida durante o cadastro.
+Evita que o consumidor precise preencher novamente todos os campos caso a conexão com a internet seja interrompida durante o cadastro.
 
-**RNF08 — Controle de Acesso por Perfil**
+**[RNF08 — Controle de Acesso por Perfil](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que a conta criada seja identificada como perfil de consumidor e que suas permissões sejam aplicadas corretamente, sem conceder privilégios exclusivos de produtores ou administradores.
+Garante que a conta criada seja identificada como perfil de consumidor e que suas permissões sejam aplicadas corretamente, sem conceder privilégios exclusivos de produtores ou administradores.
 
-**RNF10 — Proteção da Comunicação**
+**[RNF10 — Proteção da Comunicação](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Protege os dados transmitidos durante o cadastro, especialmente informações pessoais como CPF, e-mail e senha.
+Protege os dados transmitidos durante o cadastro, especialmente informações pessoais como CPF, e-mail e senha.
 
-**RNF11 — Proteção de Dados Pessoais**
+**[RNF11 — Proteção de Dados Pessoais](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Exige que a coleta de nome, CPF, e-mail e senha tenha finalidade definida, que os dados sejam tratados de forma adequada e que informações privadas do consumidor não sejam expostas publicamente.
+Exige que a coleta de nome, CPF, e-mail e senha tenha finalidade definida, que os dados sejam tratados de forma adequada e que informações privadas do consumidor não sejam expostas publicamente.
 
-**RNF12 — Compatibilidade entre Navegadores**
+**[RNF12 — Compatibilidade entre Navegadores](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o formulário de cadastro e seu fluxo de conclusão funcionem nos navegadores e ambientes previstos para utilização da plataforma.
+Garante que o formulário de cadastro e seu fluxo de conclusão funcionem nos navegadores e ambientes previstos para utilização da plataforma.
 
-**RNF15 — Proteção de Crianças e Adolescentes**
+**[RNF15 — Proteção de Crianças e Adolescentes](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: O cadastro deve observar as medidas de proteção de dados e de verificação de idade aplicáveis ao público atendido pela plataforma, sem expor informações pessoais de menores.
+O cadastro deve observar as medidas de proteção de dados e de verificação de idade aplicáveis ao público atendido pela plataforma, sem expor informações pessoais de menores.
 
 ---
 
-## 5. Relação com as Regras de Negócio 
+## 5. Relação com as Regras de Negócio
 
-**RN01 — Perfis e permissões**
+**[RN01 — Perfis e permissões](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: O cadastro deve criar uma conta identificada como consumidor, garantindo que as permissões atribuídas correspondam a esse perfil.
+O cadastro deve criar uma conta identificada como consumidor, garantindo que as permissões atribuídas correspondam a esse perfil.
 
-**RN02 — Dados de cadastro**
+**[RN02 — Dados de cadastro](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Define os dados necessários para a criação do perfil de consumidor, correspondentes aos campos previstos no RF01: nome completo, CPF, e-mail e senha.
+Define os dados necessários para a criação do perfil de consumidor, correspondentes aos campos previstos no RF01: nome completo, CPF, e-mail e senha.
 
-**RN05 — Autenticação e recuperação de acesso**
+**[RN05 — Autenticação e recuperação de acesso](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que o e-mail e a senha cadastrados serão utilizados para acesso à conta e que o CPF será um dado de identificação, não uma credencial de autenticação.
+Estabelece que o e-mail e a senha cadastrados serão utilizados para acesso à conta e que o CPF será um dado de identificação, não uma credencial de autenticação.
 
-**RN08 — Proteção de dados de menores**
+**[RN08 — Proteção de dados de menores](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: O fluxo de cadastro deve considerar as medidas de proteção aplicáveis caso crianças ou adolescentes possam utilizar o serviço, incluindo os requisitos legais pertinentes ao tratamento de seus dados.
+O fluxo de cadastro deve considerar as medidas de proteção aplicáveis caso crianças ou adolescentes possam utilizar o serviço, incluindo os requisitos legais pertinentes ao tratamento de seus dados.
 
 ---
 
 ## 6. Relaçao com as Características de Produto 
 
-**CP1 — Perfis**
+**[CP1 — Perfis](../solucao.md/#23-caracteristicas-do-produto)**
 
-- Relação com a HU: O cadastro de consumidores contribui para a formação da base de usuários que acessará os perfis de produtores, propriedades, associações e comunidades disponíveis na Rede Cafuringa. Dessa forma, possibilita que consumidores e visitantes utilizem a plataforma para conhecer os responsáveis pelas ofertas e interagir com as iniciativas locais.
+O cadastro de consumidores contribui para a formação da base de usuários que acessará os perfis de produtores, propriedades, associações e comunidades disponíveis na Rede Cafuringa. Dessa forma, possibilita que consumidores e visitantes utilizem a plataforma para conhecer os responsáveis pelas ofertas e interagir com as iniciativas locais.
 
 ---
 
 ## 7. Relação com os Objetivos Específicos 
 
-**OE2 — Visibilidade e oferta local**
+**[OE2 — Visibilidade e oferta local](../solucao.md/#22-objetivos-especificos-oe-do-produto)**
 
-- Relação com a HU: O cadastro de consumidores contribui para formar a base de usuários da Rede Cafuringa, permitindo que mais pessoas acessem os produtos, produtores e experiências divulgados pela plataforma. Assim, favorece a descoberta e a visibilidade das ofertas locais.
+O cadastro de consumidores contribui para formar a base de usuários da Rede Cafuringa, permitindo que mais pessoas acessem os produtos, produtores e experiências divulgados pela plataforma. Assim, favorece a descoberta e a visibilidade das ofertas locais.
 
 ---
 

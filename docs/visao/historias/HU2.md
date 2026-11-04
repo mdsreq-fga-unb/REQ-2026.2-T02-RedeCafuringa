@@ -7,10 +7,9 @@
 | **ID da História** | HU02 |
 | **Requisito Funcional** | [RF02 — Cadastrar perfil de produtor](../requisitos_software.md#71-requisitos-funcionais) |
 | **Requisito Não Funcional** | [RNF03, RNF04, RNF07, RNF08, RNF11, RNF15](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN02, RN05, RN07, RN08, RN09](../requisitos_software.md#74-lista-de-regras-de-negocio) |
+| **Regra de Negócio** | [RN01, RN02, RN05, RN07, RN08, RN09](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Média |
 
 ---
 
@@ -66,73 +65,73 @@
 
 ## 4. Relação com os Requisitos Não Funcionais
 
-**RNF03 — Prevenção e Recuperação de Erros**
+**[RNF03 — Prevenção e Recuperação de Erros](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o produtor consiga identificar e corrigir erros no preenchimento do formulário, como campos obrigatórios vazios, CPF ou CNPJ inválidos e e-mail em formato incorreto, sem dificuldades desnecessárias.
+Garante que o produtor consiga identificar e corrigir erros no preenchimento do formulário, como campos obrigatórios vazios, CPF ou CNPJ inválidos e e-mail em formato incorreto, sem dificuldades desnecessárias.
 
-**RNF04 — Acessibilidade Digital**
+**[RNF04 — Acessibilidade Digital](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Permite que produtores com diferentes necessidades de acesso utilizem o formulário de cadastro, incluindo usuários que navegam por teclado ou utilizam tecnologias assistivas.
+Permite que produtores com diferentes necessidades de acesso utilizem o formulário de cadastro, incluindo usuários que navegam por teclado ou utilizam tecnologias assistivas.
 
-**RNF07 — Resiliência à Perda de Conexão**
+**[RNF07 — Resiliência à Perda de Conexão](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Evita que o produtor precise preencher novamente todos os campos caso ocorra uma interrupção de conexão durante o cadastro, preservando os dados já preenchidos antes de uma nova tentativa de envio.
+Evita que o produtor precise preencher novamente todos os campos caso ocorra uma interrupção de conexão durante o cadastro, preservando os dados já preenchidos antes de uma nova tentativa de envio.
 
-**RNF08 — Controle de Acesso por Perfil**
+**[RNF08 — Controle de Acesso por Perfil](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que a conta criada seja identificada como perfil de produtor e receba as permissões correspondentes, permitindo o acesso às funcionalidades de gerenciamento de produtos, experiências e demais ofertas.
+Garante que a conta criada seja identificada como perfil de produtor e receba as permissões correspondentes, permitindo o acesso às funcionalidades de gerenciamento de produtos, experiências e demais ofertas.
 
-**RNF11 — Proteção de Dados Pessoais**
+**[RNF11 — Proteção de Dados Pessoais](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Exige que a coleta de dados como CPF, CNPJ, e-mail e demais informações de identificação tenha finalidade funcional definida, garantindo que informações cadastrais privadas não sejam expostas publicamente no perfil do produtor.
+Exige que a coleta de dados como CPF, CNPJ, e-mail e demais informações de identificação tenha finalidade funcional definida, garantindo que informações cadastrais privadas não sejam expostas publicamente no perfil do produtor.
 
-**RNF15 — Proteção de Crianças e Adolescentes**
+**[RNF15 — Proteção de Crianças e Adolescentes](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: O cadastro e o tratamento de dados de produtores menores de idade, caso sejam permitidos pela plataforma, devem observar as medidas legais de proteção, privacidade e consentimento aplicáveis, sem exposição indevida de informações pessoais.
+O cadastro e o tratamento de dados de produtores menores de idade, caso sejam permitidos pela plataforma, devem observar as medidas legais de proteção, privacidade e consentimento aplicáveis, sem exposição indevida de informações pessoais.
 
 ---
 
 ## 5. Relação com as Regras de Negócio
 
-**RN01 — Perfis e permissões**
+**[RN01 — Perfis e permissões](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: O cadastro deve criar uma conta identificada como produtor, garantindo que as permissões atribuídas correspondam a esse perfil e permitam o gerenciamento das funcionalidades destinadas aos produtores.
+O cadastro deve criar uma conta identificada como produtor, garantindo que as permissões atribuídas correspondam a esse perfil e permitam o gerenciamento das funcionalidades destinadas aos produtores.
 
-**RN02 — Dados de cadastro**
+**[RN02 — Dados de cadastro](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Define que os dados solicitados devem corresponder ao perfil de produtor, incluindo as informações necessárias à identificação e apresentação da iniciativa, como responsável, CPF, CNPJ quando aplicável, localidade e categorias ofertadas.
+Define que os dados solicitados devem corresponder ao perfil de produtor, incluindo as informações necessárias à identificação e apresentação da iniciativa, como responsável, CPF, CNPJ quando aplicável, localidade e categorias ofertadas.
 
-**RN05 — Autenticação e recuperação de acesso**
+**[RN05 — Autenticação e recuperação de acesso](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que o e-mail e a senha cadastrados serão utilizados para acesso à conta, enquanto CPF e CNPJ serão utilizados exclusivamente para identificação, não constituindo credenciais de autenticação.
+Estabelece que o e-mail e a senha cadastrados serão utilizados para acesso à conta, enquanto CPF e CNPJ serão utilizados exclusivamente para identificação, não constituindo credenciais de autenticação.
 
-**RN07 — Informações públicas do produtor**
+**[RN07 — Informações públicas do produtor](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que o perfil público apresente somente informações destinadas à divulgação da iniciativa, como nome, categoria ofertada e demais informações autorizadas, impedindo a exposição de dados cadastrais privados, como CPF e CNPJ.
+Determina que o perfil público apresente somente informações destinadas à divulgação da iniciativa, como nome, categoria ofertada e demais informações autorizadas, impedindo a exposição de dados cadastrais privados, como CPF e CNPJ.
 
-**RN08 — Proteção de dados de menores**
+**[RN08 — Proteção de dados de menores](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: O fluxo de cadastro deve considerar as medidas de proteção aplicáveis caso crianças ou adolescentes possam atuar como responsáveis ou participar de iniciativas cadastradas, observando os requisitos legais pertinentes ao tratamento de seus dados.
+O fluxo de cadastro deve considerar as medidas de proteção aplicáveis caso crianças ou adolescentes possam atuar como responsáveis ou participar de iniciativas cadastradas, observando os requisitos legais pertinentes ao tratamento de seus dados.
 
-**RN09 — Responsabilidade pelas ofertas**
+**[RN09 — Responsabilidade pelas ofertas](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Garante que o perfil de produtor esteja vinculado a um responsável identificado, que será responsável pela manutenção das informações e das ofertas posteriormente cadastradas na plataforma.
+Garante que o perfil de produtor esteja vinculado a um responsável identificado, que será responsável pela manutenção das informações e das ofertas posteriormente cadastradas na plataforma.
 
 ---
 
 ## 6. Relação com as Características de Produto
 
-**CP1 — Perfis**
+**[CP1 — Perfis](../solucao.md#23-caracteristicas-do-produto)**
 
-- Relação com a HU: O cadastro de produtores possibilita a criação de perfis de identificação e apresentação das propriedades, associações, comunidades e demais iniciativas da região da Cafuringa. Esses perfis permitem organizar as informações dos responsáveis e estabelecer a identificação necessária para a divulgação de produtos e experiências na plataforma.
+O cadastro de produtores possibilita a criação de perfis de identificação e apresentação das propriedades, associações, comunidades e demais iniciativas da região da Cafuringa. Esses perfis permitem organizar as informações dos responsáveis e estabelecer a identificação necessária para a divulgação de produtos e experiências na plataforma.
 
 ---
 
 ## 7. Relação com os Objetivos Específicos
 
-**OE2 — Visibilidade e oferta local**
+**[OE2 — Visibilidade e oferta local](../solucao.md#22-objetivos-especificos-oe-do-produto)**
 
-- Relação com a HU: O cadastro de produtores contribui diretamente para ampliar a visibilidade das iniciativas locais, permitindo que agricultores familiares, propriedades, associações e comunidades apresentem suas atividades e disponibilizem informações sobre sua produção. Dessa forma, fortalece a divulgação das ofertas da região da Cafuringa e facilita sua descoberta pelos consumidores e visitantes.
+O cadastro de produtores contribui diretamente para ampliar a visibilidade das iniciativas locais, permitindo que agricultores familiares, propriedades, associações e comunidades apresentem suas atividades e disponibilizem informações sobre sua produção. Dessa forma, fortalece a divulgação das ofertas da região da Cafuringa e facilita sua descoberta pelos consumidores e visitantes.
 
 ---
 

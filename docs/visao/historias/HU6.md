@@ -7,10 +7,9 @@
 | **ID da História** | HU06 |
 | **Requisito Funcional** | [RF06 — Consultar conteúdos cadastrados](../requisitos_software.md#71-requisitos-funcionais) |
 | **Requisito Não Funcional** | [RNF01, RNF02, RNF03, RNF04, RNF05, RNF06, RNF10, RNF11, RNF12, RNF14](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN07, RN09, RN10, RN11, RN15, RN16](../requisitos_software.md#74-lista-de-regras-de-negocio) |
+| **Regra de Negócio** | [RN01, RN07, RN09, RN10, RN11, RN15, RN16](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP2, CP3](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Alta |
 
 ---
 
@@ -62,97 +61,97 @@
 
 ## 4. Relação com os Requisitos Não Funcionais
 
-**RNF01 — Eficiência de Navegação**
+**[RNF01 — Eficiência de Navegação](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que os usuários consigam acessar os catálogos e as informações dos produtos, experiências e eventos com poucos passos, permitindo que a consulta seja realizada em, no máximo, cinco cliques ou toques a partir da tela inicial.
+Garante que os usuários consigam acessar os catálogos e as informações dos produtos, experiências e eventos com poucos passos, permitindo que a consulta seja realizada em, no máximo, cinco cliques ou toques a partir da tela inicial.
 
-**RNF02 — Tempo de Execução de Tarefas**
+**[RNF02 — Tempo de Execução de Tarefas](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Estabelece que os usuários consigam localizar um produto ou uma experiência específica e acessar sua página de detalhes em até 60 segundos de navegação contínua, contribuindo para uma consulta eficiente.
+Estabelece que os usuários consigam localizar um produto ou uma experiência específica e acessar sua página de detalhes em até 60 segundos de navegação contínua, contribuindo para uma consulta eficiente.
 
-**RNF03 — Prevenção e Recuperação de Erros**
+**[RNF03 — Prevenção e Recuperação de Erros](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o sistema apresente mensagens claras quando ocorrerem falhas durante a busca, recuperação ou visualização dos conteúdos, orientando o usuário sobre o problema encontrado.
+Garante que o sistema apresente mensagens claras quando ocorrerem falhas durante a busca, recuperação ou visualização dos conteúdos, orientando o usuário sobre o problema encontrado.
 
-**RNF04 — Acessibilidade Digital**
+**[RNF04 — Acessibilidade Digital](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que a interface de consulta e as páginas de detalhes dos conteúdos possam ser utilizadas por pessoas com diferentes necessidades, contemplando contraste adequado, textos alternativos para imagens relevantes, indicação de foco e navegação por teclado.
+Garante que a interface de consulta e as páginas de detalhes dos conteúdos possam ser utilizadas por pessoas com diferentes necessidades, contemplando contraste adequado, textos alternativos para imagens relevantes, indicação de foco e navegação por teclado.
 
-**RNF05 — Responsividade da Interface**
+**[RNF05 — Responsividade da Interface](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que os catálogos e as páginas de detalhes dos conteúdos sejam apresentados adequadamente em dispositivos móveis e computadores, mantendo a usabilidade em diferentes dimensões de tela.
+Garante que os catálogos e as páginas de detalhes dos conteúdos sejam apresentados adequadamente em dispositivos móveis e computadores, mantendo a usabilidade em diferentes dimensões de tela.
 
-**RNF06 — Desempenho em Conectividade Limitada**
+**[RNF06 — Desempenho em Conectividade Limitada](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Estabelece que as páginas públicas de consulta e os detalhes dos conteúdos sejam carregados em tempo adequado mesmo em conexões móveis ou rurais com baixa velocidade ou alta latência.
+Estabelece que as páginas públicas de consulta e os detalhes dos conteúdos sejam carregados em tempo adequado mesmo em conexões móveis ou rurais com baixa velocidade ou alta latência.
 
-**RNF10 — Proteção da Comunicação**
+**[RNF10 — Proteção da Comunicação](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que a comunicação entre os dispositivos dos usuários e os serviços responsáveis pela consulta dos conteúdos ocorra por meio de HTTPS, protegendo os dados transmitidos durante a navegação.
+Garante que a comunicação entre os dispositivos dos usuários e os serviços responsáveis pela consulta dos conteúdos ocorra por meio de HTTPS, protegendo os dados transmitidos durante a navegação.
 
-**RNF11 — Proteção de Dados Pessoais**
+**[RNF11 — Proteção de Dados Pessoais](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que as informações apresentadas nos perfis e nas páginas de conteúdos não exponham dados pessoais privados, como CPF, CNPJ e e-mail, restringindo a exibição às informações destinadas à divulgação pública.
+Garante que as informações apresentadas nos perfis e nas páginas de conteúdos não exponham dados pessoais privados, como CPF, CNPJ e e-mail, restringindo a exibição às informações destinadas à divulgação pública.
 
-**RNF12 — Compatibilidade entre Navegadores**
+**[RNF12 — Compatibilidade entre Navegadores](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que os fluxos de consulta e visualização dos conteúdos funcionem adequadamente nos principais navegadores utilizados em computadores e dispositivos móveis.
+Garante que os fluxos de consulta e visualização dos conteúdos funcionem adequadamente nos principais navegadores utilizados em computadores e dispositivos móveis.
 
-**RNF14 — Disponibilização como Aplicação Web Progressiva**
+**[RNF14 — Disponibilização como Aplicação Web Progressiva](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que a consulta dos conteúdos possa ser realizada diretamente pelo navegador, em diferentes dispositivos, sem exigir obrigatoriamente a instalação de um aplicativo por meio de lojas de aplicativos.
+Garante que a consulta dos conteúdos possa ser realizada diretamente pelo navegador, em diferentes dispositivos, sem exigir obrigatoriamente a instalação de um aplicativo por meio de lojas de aplicativos.
 
 ---
 
 ## 5. Relação com as Regras de Negócio
 
-**RN01 — Perfis e permissões**
+**[RN01 — Perfis e permissões](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que o acesso aos conteúdos e às funcionalidades de consulta respeite as permissões estabelecidas para cada perfil de usuário, considerando as diferenças entre consumidores, produtores e administradores.
+Determina que o acesso aos conteúdos e às funcionalidades de consulta respeite as permissões estabelecidas para cada perfil de usuário, considerando as diferenças entre consumidores, produtores e administradores.
 
-**RN07 — Informações públicas do produtor**
+**[RN07 — Informações públicas do produtor](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que os perfis e conteúdos disponibilizados publicamente apresentem somente informações destinadas à divulgação, impedindo a exposição de dados cadastrais privados dos produtores.
+Determina que os perfis e conteúdos disponibilizados publicamente apresentem somente informações destinadas à divulgação, impedindo a exposição de dados cadastrais privados dos produtores.
 
-**RN09 — Responsabilidade pelas ofertas**
+**[RN09 — Responsabilidade pelas ofertas](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que produtos, experiências, atividades e eventos estejam vinculados a um produtor, propriedade ou responsável identificado, permitindo que o usuário conheça a origem e a responsabilidade pelas ofertas consultadas.
+Estabelece que produtos, experiências, atividades e eventos estejam vinculados a um produtor, propriedade ou responsável identificado, permitindo que o usuário conheça a origem e a responsabilidade pelas ofertas consultadas.
 
-**RN10 — Disponibilidade das ofertas**
+**[RN10 — Disponibilidade das ofertas](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que produtos, experiências e eventos sejam apresentados conforme sua disponibilidade pública. O responsável pode disponibilizar ou retirar conteúdos da oferta pública sem necessariamente excluir seus registros.
+Determina que produtos, experiências e eventos sejam apresentados conforme sua disponibilidade pública. O responsável pode disponibilizar ou retirar conteúdos da oferta pública sem necessariamente excluir seus registros.
 
-**RN11 — Informações mínimas das ofertas**
+**[RN11 — Informações mínimas das ofertas](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que as páginas de detalhes apresentem informações suficientes para que o usuário compreenda a oferta, incluindo descrição, responsável e informações de valor, localização ou período, quando aplicáveis ao tipo de conteúdo.
+Estabelece que as páginas de detalhes apresentem informações suficientes para que o usuário compreenda a oferta, incluindo descrição, responsável e informações de valor, localização ou período, quando aplicáveis ao tipo de conteúdo.
 
-**RN15 — Busca e descoberta**
+**[RN15 — Busca e descoberta](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina que os mecanismos de consulta e descoberta considerem os diferentes tipos de ofertas cadastrados na plataforma, permitindo que os usuários encontrem produtos, experiências e eventos conforme os critérios disponibilizados pelo sistema.
+Determina que os mecanismos de consulta e descoberta considerem os diferentes tipos de ofertas cadastrados na plataforma, permitindo que os usuários encontrem produtos, experiências e eventos conforme os critérios disponibilizados pelo sistema.
 
-**RN16 — Localização**
+**[RN16 — Localização](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece que a representação dos conteúdos em mapas e os recursos de busca por proximidade dependam da existência de uma localização cadastrada para a respectiva oferta, produtor ou propriedade.
+Estabelece que a representação dos conteúdos em mapas e os recursos de busca por proximidade dependam da existência de uma localização cadastrada para a respectiva oferta, produtor ou propriedade.
 
 ---
 
 ## 6. Relação com as Características de Produto
 
-**CP2 — Conteúdos**
+**[CP2 — Conteúdos](../solucao.md#23-caracteristicas-do-produto)**
 
-- Relação com a HU: A consulta dos conteúdos cadastrados permite que os usuários tenham acesso aos produtos, experiências e eventos disponibilizados na plataforma, reunindo as informações das iniciativas locais em um ambiente de fácil acesso.
+A consulta dos conteúdos cadastrados permite que os usuários tenham acesso aos produtos, experiências e eventos disponibilizados na plataforma, reunindo as informações das iniciativas locais em um ambiente de fácil acesso.
 
-**CP3 — Divulgação e acesso à oferta local**
+**[CP3 — Divulgação e acesso à oferta local](../solucao.md#23-caracteristicas-do-produto)**
 
-- Relação com a HU: A apresentação dos produtos, experiências e eventos permite que consumidores e visitantes conheçam as ofertas disponíveis na Rede Cafuringa, ampliando a divulgação das iniciativas e facilitando o acesso às informações sobre a oferta local.
+A apresentação dos produtos, experiências e eventos permite que consumidores e visitantes conheçam as ofertas disponíveis na Rede Cafuringa, ampliando a divulgação das iniciativas e facilitando o acesso às informações sobre a oferta local.
 
 ---
 
 ## 7. Relação com os Objetivos Específicos
 
-**OE2 — Visibilidade e oferta local**
+**[OE2 — Visibilidade e oferta local](../solucao.md#22-objetivos-especificos-oe-do-produto)**
 
-- Relação com a HU: A consulta dos conteúdos cadastrados contribui diretamente para ampliar a visibilidade dos produtos, experiências e eventos oferecidos pelas iniciativas locais. Ao reunir essas informações na plataforma, a funcionalidade facilita o acesso dos consumidores e visitantes à oferta da região e fortalece a divulgação das atividades desenvolvidas na APA de Cafuringa.
+A consulta dos conteúdos cadastrados contribui diretamente para ampliar a visibilidade dos produtos, experiências e eventos oferecidos pelas iniciativas locais. Ao reunir essas informações na plataforma, a funcionalidade facilita o acesso dos consumidores e visitantes à oferta da região e fortalece a divulgação das atividades desenvolvidas na APA de Cafuringa.
 
 ---
 
@@ -193,21 +192,3 @@ Marque os itens conforme a história atender a cada condição.
 - [ ] Os responsáveis estão definidos?
 - [x] O requisito está implementado no protótipo e validado?
 
----
-
-## 10. Checklist do Definition of Done (DoD)
-
-Marque os itens após a verificação da entrega.
-
-- [ ] Entrega um incremento do produto?
-- [ ] Contempla os critérios de aceite estabelecidos?
-- [ ] O desenvolvimento foi concluído integralmente?
-- [ ] Os testes foram executados e aprovados?
-- [ ] Está aderente aos padrões de codificação?
-- [ ] A funcionalidade foi revisada pela equipe?
-- [ ] Mantém os índices de performance do produto?
-- [ ] Atende aos requisitos de acessibilidade e responsividade?
-- [ ] Preserva a segurança e a privacidade dos dados?
-- [ ] Trata os erros do usuário?
-- [ ] Está livre de defeitos críticos?
-- [ ] Está documentado?

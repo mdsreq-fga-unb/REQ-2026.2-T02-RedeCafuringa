@@ -9,10 +9,9 @@
 | **ID da História** | HU09 |
 | **Requisito Funcional** | [RF09 — Autenticar usuário](../requisitos_software.md#71-requisitos-funcionais) |
 | **Requisito Não Funcional** | [RNF03, RNF08, RNF10, RNF11](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN05](../requisitos_software.md#74-lista-de-regras-de-negocio) |
+| **Regra de Negócio** | [RN01, RN05](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE1](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Alta |
 
 ---
 
@@ -52,55 +51,55 @@
 
 ## 4. Relação com os Requisitos Não Funcionais
 
-**RNF03 — Prevenção e Recuperação de Erros**
+**[RNF03 — Prevenção e Recuperação de Erros](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que o usuário receba mensagens claras quando informar credenciais inválidas ou ocorrer alguma falha durante a autenticação, permitindo compreender o problema e tentar novamente.
+Garante que o usuário receba mensagens claras quando informar credenciais inválidas ou ocorrer alguma falha durante a autenticação, permitindo compreender o problema e tentar novamente.
 
-**RNF08 — Controle de Acesso por Perfil**
+**[RNF08 — Controle de Acesso por Perfil](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que, após a autenticação, o usuário tenha acesso somente às funcionalidades e informações compatíveis com seu perfil, impedindo a execução de operações não autorizadas.
+Garante que, após a autenticação, o usuário tenha acesso somente às funcionalidades e informações compatíveis com seu perfil, impedindo a execução de operações não autorizadas.
 
-**RNF10 — Proteção da Comunicação**
+**[RNF10 — Proteção da Comunicação](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que as credenciais e demais dados transmitidos durante a autenticação sejam protegidos por meio de HTTPS em ambiente de produção.
+Garante que as credenciais e demais dados transmitidos durante a autenticação sejam protegidos por meio de HTTPS em ambiente de produção.
 
-**RNF11 — Proteção de Dados Pessoais**
+**[RNF11 — Proteção de Dados Pessoais](../requisitos_software.md#72-requisitos-nao-funcionais)**
 
-- Relação com a HU: Garante que os dados pessoais associados à conta sejam tratados conforme sua finalidade e não sejam expostos indevidamente durante o processo de autenticação.
+Garante que os dados pessoais associados à conta sejam tratados conforme sua finalidade e não sejam expostos indevidamente durante o processo de autenticação.
 
 ---
 
 ## 5. Relação com as Regras de Negócio
 
-**RN01 — Perfis e permissões**
+**[RN01 — Perfis e permissões](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Determina a existência de perfis distintos na plataforma e estabelece que cada usuário deve acessar somente as funcionalidades compatíveis com seu perfil após a autenticação.
+Determina a existência de perfis distintos na plataforma e estabelece que cada usuário deve acessar somente as funcionalidades compatíveis com seu perfil após a autenticação.
 
-**RN05 — Autenticação e recuperação de acesso**
+**[RN05 — Autenticação e recuperação de acesso](../requisitos_software.md#73-lista-de-regras-de-negocio)**
 
-- Relação com a HU: Estabelece as condições para autenticação e recuperação de acesso às contas cadastradas, orientando a validação das credenciais utilizadas pelo usuário.
+Estabelece as condições para autenticação e recuperação de acesso às contas cadastradas, orientando a validação das credenciais utilizadas pelo usuário.
 
 ---
 
 ## 6. Relação com as Características de Produto
 
-**CP1 — Gestão de usuários e perfis**
+**[CP1 — Gestão de usuários e perfis](../solucao.md#23-caracteristicas-do-produto)**
 
-- Relação com a HU: A autenticação permite identificar os usuários cadastrados e disponibilizar as funcionalidades correspondentes aos seus perfis, viabilizando a utilização das áreas restritas da plataforma.
+A autenticação permite identificar os usuários cadastrados e disponibilizar as funcionalidades correspondentes aos seus perfis, viabilizando a utilização das áreas restritas da plataforma.
 
 ---
 
 ## 7. Relação com os Objetivos Específicos
 
-**OE1 — Inclusão e acessibilidade digital**
+**[OE1 — Inclusão e acessibilidade digital](../solucao.md#22-objetivos-especificos-oe-do-produto)**
 
-- Relação com a HU: A autenticação permite que os usuários cadastrados acessem os recursos da plataforma de acordo com seu perfil, contribuindo para a utilização dos serviços digitais disponibilizados pela Rede Cafuringa.
+A autenticação permite que os usuários cadastrados acessem os recursos da plataforma de acordo com seu perfil, contribuindo para a utilização dos serviços digitais disponibilizados pela Rede Cafuringa.
 
 ---
 
 ## 8. Protótipo
 
-![Protótipo HU01](../../img/prototipo/HU9.png)
+![Protótipo HU09](../../img/prototipo/HU9.png)
 
 ---
 
