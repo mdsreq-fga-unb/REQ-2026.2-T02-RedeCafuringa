@@ -534,11 +534,32 @@ export function ConsumerSignupPage({
 export function ConsumerSignupSuccessPage({
     onNavigate,
 }: ConsumerProfileSelectionPageProps) {
+    return <SignupSuccessPage profile="consumer" onNavigate={onNavigate} />;
+}
+
+export function ProducerSignupSuccessPage({
+    onNavigate,
+}: ConsumerProfileSelectionPageProps) {
+    return <SignupSuccessPage profile="producer" onNavigate={onNavigate} />;
+}
+
+function SignupSuccessPage({
+    profile,
+    onNavigate,
+}: ConsumerProfileSelectionPageProps & {
+    profile: "consumer" | "producer";
+}) {
+    const isConsumer = profile === "consumer";
+
     return (
         <section className="signup-page signup-success-page">
             <BackButton
                 label="Voltar"
-                onClick={() => onNavigate("/cadastro/consumidor")}
+                onClick={() =>
+                    onNavigate(
+                        isConsumer ? "/cadastro/consumidor" : "/cadastro",
+                    )
+                }
             />
             <div className="success-check" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
@@ -552,7 +573,11 @@ export function ConsumerSignupSuccessPage({
             </p>
             <ActionButton
                 variant="orange"
-                onClick={() => onNavigate("/login/consumer")}
+                onClick={() =>
+                    onNavigate(
+                        isConsumer ? "/login/consumer" : "/login/producer",
+                    )
+                }
             >
                 Entrar na minha conta
             </ActionButton>

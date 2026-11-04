@@ -13,6 +13,7 @@ const getInitialRoute = () => {
         "/cadastro",
         "/cadastro/consumidor",
         "/conta-criada/consumer",
+        "/conta-criada/producer",
         "/notificacoes",
         "/reservas",
     ].includes(requested.split("?")[0]) || requested.startsWith("/oferta/")

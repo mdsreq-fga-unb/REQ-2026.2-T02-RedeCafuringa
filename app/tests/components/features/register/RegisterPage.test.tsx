@@ -328,14 +328,14 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
     });
 
     // CA09
-    it("envia o cadastro normalizado ao serviço e vai para o login com aviso de sucesso", async () => {
+    it("envia o cadastro normalizado e abre a confirmação de produtor", async () => {
         const { onNavigate, user } = renderRegister();
 
         await fillForm(user);
         await submit(user);
 
         await waitFor(() =>
-            expect(onNavigate).toHaveBeenCalledWith("/entrar?cadastro=ok"),
+            expect(onNavigate).toHaveBeenCalledWith("/conta-criada/producer"),
         );
         expect(registerProducer).toHaveBeenCalledWith({
             name: "Maria da Silva",
@@ -378,7 +378,7 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
 
         finish({ ok: true });
         await waitFor(() =>
-            expect(onNavigate).toHaveBeenCalledWith("/entrar?cadastro=ok"),
+            expect(onNavigate).toHaveBeenCalledWith("/conta-criada/producer"),
         );
     });
 });

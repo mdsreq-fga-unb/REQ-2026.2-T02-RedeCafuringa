@@ -5,6 +5,7 @@ import {
     ConsumerSignupPage,
     ConsumerSignupSuccessPage,
     LoginPage,
+    ProducerSignupSuccessPage,
     registerConsumer,
     useDemoSession,
 } from "@/features/auth";
@@ -46,6 +47,7 @@ export function App() {
         showLogin ||
         path === "/cadastro/consumidor" ||
         path === "/conta-criada/consumer" ||
+        path === "/conta-criada/producer" ||
         path === "/cadastro";
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
@@ -157,6 +159,9 @@ export function App() {
                 )}
                 {path === "/conta-criada/consumer" && (
                     <ConsumerSignupSuccessPage onNavigate={navigate} />
+                )}
+                {path === "/conta-criada/producer" && (
+                    <ProducerSignupSuccessPage onNavigate={navigate} />
                 )}
                 {screenPath === "/conta" && (
                     <AccountPage

@@ -228,7 +228,7 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
         }
 
         if (result.ok) {
-            onNavigate("/entrar?cadastro=ok");
+            onNavigate("/conta-criada/producer");
             return;
         }
 

@@ -99,8 +99,8 @@ describe("HU02 — do cadastro à área do produtor", () => {
         window.location.hash = "";
     });
 
-    // Critérios 9 e 10
-    it("cadastra o produtor, deixa entrar com a conta nova e abre a área de produtor", async () => {
+    // Critério 9
+    it("cadastra o produtor e exibe a confirmação antes de entrar", async () => {
         window.location.hash = "#/entrar";
         render(<App />);
         const user = userEvent.setup();
@@ -112,22 +112,17 @@ describe("HU02 — do cadastro à área do produtor", () => {
         await user.click(screen.getByRole("button", { name: "Continuar" }));
 
         expect(
-            (await screen.findByRole("status", {}, { timeout: 3000 }))
-                .textContent,
-        ).toBe("Cadastro concluído. Entre com seu CPF e sua senha.");
-
-        await user.type(await screen.findByLabelText("CPF"), newCpf);
-        await user.type(screen.getByLabelText("Senha"), newPassword);
-        await user.click(screen.getByRole("button", { name: "Entrar" }));
-
-        expect(
-            await screen.findByRole(
-                "heading",
-                { name: "Contato público" },
-                { timeout: 3000 },
-            ),
+            await screen.findByRole("heading", {
+                name: "Você já faz parte da rede",
+            }),
         ).toBeTruthy();
-        expect(window.location.hash).toBe("#/conta");
+        expect(window.location.hash).toBe("#/conta-criada/producer");
+
+        await user.click(
+            screen.getByRole("button", { name: "Entrar na minha conta" }),
+        );
+
+        expect(window.location.hash).toBe("#/login/producer");
     }, 15000);
 
     // Critério 9, caso CNPJ: depende da mudança pendente da HU09
