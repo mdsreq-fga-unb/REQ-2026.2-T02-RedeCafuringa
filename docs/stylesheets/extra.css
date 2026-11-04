@@ -1104,3 +1104,203 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
     text-decoration: none !important;
 }
 
+/* =====================================================
+   HISTÓRIAS DE USUÁRIO — BUSCA E FILTROS
+   ===================================================== */
+.hu-filters {
+  margin: 0.7rem 0 1.4rem;
+  padding: 1.2rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 14px;
+  background: var(--md-code-bg-color);
+}
+
+.hu-filters__grid {
+  display: grid;
+  grid-template-columns: minmax(13rem, 2fr) repeat(4, minmax(8rem, 1fr));
+  gap: 0.8rem;
+}
+
+.hu-filters__field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.3rem;
+}
+
+.md-typeset .hu-filters__field label {
+  font-family: var(--nativo-font-body);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--md-typeset-color);
+}
+
+.md-typeset .hu-filters__field input,
+.md-typeset .hu-filters__field select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 8px;
+  background: var(--md-default-bg-color);
+  color: var(--md-typeset-color);
+  font: inherit;
+  font-size: 0.78rem;
+}
+
+.md-typeset .hu-filters__field input:focus-visible,
+.md-typeset .hu-filters__field select:focus-visible,
+.md-typeset .hu-filters__footer button:focus-visible {
+  outline: 3px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
+
+.hu-filters__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.md-typeset .hu-filters__footer p {
+  margin: 0;
+  text-align: left;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--md-typeset-color);
+}
+
+.md-typeset .hu-filters__footer button {
+  min-height: 2.3rem;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--md-accent-fg-color);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--md-accent-fg-color);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.md-typeset .hu-filters__footer button:hover {
+  background: var(--md-accent-fg-color--transparent);
+}
+
+.section-cards.hu-catalog {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+
+.hu-catalog .hu-card[hidden],
+.hu-empty[hidden] {
+  display: none !important;
+}
+
+.md-typeset .hu-empty {
+  padding: 1.2rem;
+  border: 1px dashed var(--md-default-fg-color--lighter);
+  border-radius: 10px;
+  text-align: center;
+  color: var(--md-typeset-color);
+}
+
+@media (max-width: 1100px) {
+  .hu-filters__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .hu-filters {
+    padding: 0.9rem;
+  }
+
+  .hu-filters__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Ordem de implementação conforme o cronograma (iterações 6 a 8).
+   Distinta da categoria Alta / Média / Baixa. */
+.hu-status-ordem {
+  color: #a675f5;
+  background: rgba(166, 117, 245, 0.11);
+  border-color: rgba(166, 117, 245, 0.36);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Se houver apenas uma HU visível, não mostrar cards ocultos no grid. */
+.hu-catalog .hu-card[hidden] { display: none !important; }
+
+/* INICIO: ajuste-responsivo-filtros-hu */
+/* Ajuste para os 5 campos: busca na primeira linha e os 4 filtros na segunda. */
+.md-typeset .hu-filters {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+.md-typeset .hu-filters .hu-filters__grid {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+  align-items: end;
+}
+
+.md-typeset .hu-filters .hu-filters__field--search {
+  grid-column: 1 / -1;
+}
+
+.md-typeset .hu-filters .hu-filters__field {
+  min-width: 0;
+  width: 100%;
+}
+
+.md-typeset .hu-filters .hu-filters__field input,
+.md-typeset .hu-filters .hu-filters__field select {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.md-typeset .hu-filters .hu-filters__field label {
+  overflow-wrap: anywhere;
+}
+
+/* Titulos claros e legiveis sobre o fundo escuro dos cards. */
+.md-typeset .hu-catalog .hu-card h3 {
+  color: #f5eee5 !important;
+}
+
+.md-typeset .hu-catalog .hu-card:hover h3 {
+  color: #ffe1ac !important;
+}
+
+@media (max-width: 1000px) {
+  .md-typeset .hu-filters .hu-filters__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .md-typeset .hu-filters .hu-filters__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .hu-filters .hu-filters__field--search {
+    grid-column: auto;
+  }
+}
+/* FIM: ajuste-responsivo-filtros-hu */
