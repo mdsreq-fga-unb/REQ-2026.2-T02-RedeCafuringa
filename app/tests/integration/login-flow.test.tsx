@@ -35,6 +35,24 @@ describe("HU09 — fluxo de autenticação no app", () => {
         window.location.hash = "";
     });
 
+    it.each([
+        ["consumer", "Criar conta de consumidor", "Criar conta de produtor"],
+        ["producer", "Criar conta de produtor", "Criar conta de consumidor"],
+    ] as const)(
+        "shows only the %s signup action on its login route",
+        async (profile, signupLabel, otherSignupLabel) => {
+            window.location.hash = `#/login/${profile}`;
+            render(<App />);
+
+            expect(
+                await screen.findByRole("button", { name: signupLabel }),
+            ).toBeTruthy();
+            expect(
+                screen.queryByRole("button", { name: otherSignupLabel }),
+            ).toBeNull();
+        },
+    );
+
     // Critério 2
     it("leva o consumidor autenticado à área da conta com o nome dele", async () => {
         vi.mocked(login).mockResolvedValue(consumerAuth);

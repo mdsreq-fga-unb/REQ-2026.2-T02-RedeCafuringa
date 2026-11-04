@@ -39,6 +39,8 @@ export function App() {
     const showProfileSelection = screenPath === "/escolher-perfil";
     const showLogin =
         screenPath === "/entrar" || path.startsWith("/login/") || fromContact;
+    const loginProfile =
+        path === "/login/consumer" || fromContact ? "consumer" : "producer";
     const isAuthFlow =
         showProfileSelection ||
         showLogin ||
@@ -140,6 +142,7 @@ export function App() {
                 {showLogin && (
                     <LoginPage
                         fromContact={fromContact}
+                        profile={loginProfile}
                         registered={justRegistered}
                         onNavigate={navigate}
                         onSignIn={handleSignIn}
