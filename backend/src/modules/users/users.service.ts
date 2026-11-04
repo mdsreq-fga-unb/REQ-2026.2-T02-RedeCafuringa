@@ -13,6 +13,7 @@ import { Role } from './domain/role.js';
 import { CreateConsumerDto } from './dto/create-consumer.dto.js';
 import { CreateProducerDto } from './dto/create-producer.dto.js';
 import { UserResponse } from './dto/user.response.js';
+import { ProducerResponse } from './dto/producer.response.js';
 import { User, UserDocument } from './schemas/user.schema.js';
 
 const DUPLICATE_KEY = 11000;
@@ -121,6 +122,21 @@ export class UsersService {
   async findById(id: string): Promise<UserDocument | null> {
     if (!isValidObjectId(id)) return null;
     return this.users.findById(id).exec();
+  }
+
+  toResponseProducer(user: UserDocument): ProducerResponse {
+    return {
+      id: user.id as string,
+      nome: user.nome,
+      nomeIniciativa: user.nomeIniciativa,
+      nomeResponsavel: user.nomeResponsavel,
+      email: user.email,
+      localidade: user.localidade,
+      categoriaOfertada: user.categoriaOfertada,
+      formasPagamento: user.formasPagamento,
+      perfil: user.perfil,
+      cpf: maskCpf(this.cipher.decrypt(user.cpfCifrado)),
+    };
   }
 
   toResponse(user: UserDocument): UserResponse {

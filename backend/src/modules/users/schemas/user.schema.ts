@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { Role } from '../domain/role.js';
+import { ProducerCategory } from '../domain/producer-category.js';
 
 /**
  * Conta de acesso (consumidor, produtor ou administrador — RN01).
@@ -42,8 +43,8 @@ export class User {
   @Prop({ trim: true })
   localidade?: string;
 
-  @Prop({ enum: ['Produtos', 'Experiências', 'Produtos e Experiências'] })
-  categoriaOfertada?: string;
+  @Prop({ enum: ProducerCategory, type: String })
+  categoriaOfertada?: ProducerCategory;
 
   @Prop({ type: [String], default: undefined })
   formasPagamento?: string[];
