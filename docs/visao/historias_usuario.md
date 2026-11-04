@@ -1,7 +1,46 @@
 
 <span class="version-badge">Unidade 02</span>
 
-<div class="section-cards">
+
+<section class="hu-filters" id="hu-filters" aria-label="Pesquisar e filtrar histórias de usuário">
+  <div class="hu-filters__grid">
+    <div class="hu-filters__field hu-filters__field--search">
+      <label for="hu-search">Buscar história</label>
+      <input id="hu-search" type="search" placeholder="Ex.: HU09, cadastro, produtor" autocomplete="off">
+    </div>
+    <div class="hu-filters__field">
+      <label for="hu-status-filter">Situação</label>
+      <select id="hu-status-filter">
+        <option value="">Todas</option>
+        <option value="execucao">Em execução</option>
+        <option value="planejada">Planejado</option>
+      </select>
+    </div>
+    <div class="hu-filters__field">
+      <label for="hu-priority-filter">Prioridade</label>
+      <select id="hu-priority-filter">
+        <option value="">Todas</option>
+        <option value="alta">Alta</option>
+        <option value="media">Média</option>
+        <option value="baixa">Baixa</option>
+      </select>
+    </div>
+    <div class="hu-filters__field">
+      <label for="hu-mvp-filter">Escopo</label>
+      <select id="hu-mvp-filter">
+        <option value="">Todas</option>
+        <option value="sim">MVP</option>
+        <option value="nao">Fora do MVP</option>
+      </select>
+    </div>
+  </div>
+  <div class="hu-filters__footer">
+    <p id="hu-results-count" role="status" aria-live="polite" aria-atomic="true">48 histórias disponíveis</p>
+    <button id="hu-reset" type="button">Limpar filtros</button>
+  </div>
+</section>
+
+<div class="section-cards hu-catalog">
 
 <a class="hu-card" href="../historias/HU1/">
   <div class="hu-card-header">
@@ -502,5 +541,6 @@
     <h3>HU48 — Notificar alteração de pré-reserva</h3>
   </div>
 </a>
-
 </div>
+
+<p id="hu-empty" class="hu-empty" hidden>Nenhuma história corresponde à busca. Experimente outros termos ou limpe os filtros.</p>
