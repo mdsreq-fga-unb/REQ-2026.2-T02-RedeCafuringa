@@ -17,6 +17,7 @@
 
 button,
 input,
+select,
 textarea {
     font: inherit;
 }
@@ -65,7 +66,7 @@ button {
 }
 
 .main-content {
-    width: min(100%, 720px);
+    width: min(100%, 1120px);
     min-height: calc(100svh - 138px);
     margin: 0 auto;
     padding: 0 24px 36px;
@@ -243,20 +244,30 @@ h2 {
     object-fit: cover;
 }
 
-.offer-card-copy,
-.offer-card-copy small {
+.offer-card-copy {
+    display: grid;
+    min-width: 0;
+    flex: 1 1 0%;
+    gap: 4px;
     color: var(--orange-text);
     font-size: 12px;
 }
 
+.offer-card-copy small {
+    min-width: 0;
+}
+
 .offer-card-copy strong,
 .offer-card-copy > span {
+    display: block;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .card-arrow {
+    flex: 0 0 auto;
     margin-left: auto;
     color: var(--orange-text);
     font-size: 19px;
@@ -312,12 +323,56 @@ h2 {
     margin-bottom: 10px;
 }
 
+.register-page h1 {
+    margin-bottom: 20px;
+    color: var(--orange-text);
+}
+
+.register-page .field-label {
+    margin: 15px 0 10px;
+    font-size: 15px;
+}
+
+.register-page .text-input {
+    min-height: 58px;
+    padding: 14px 16px;
+    border-radius: 15px;
+    background: #fff;
+}
+
+.register-page .choice-group {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.register-page .choice-group .field-label {
+    grid-column: 1 / -1;
+    margin: 0 0 2px;
+}
+
+.register-page .choice-option {
+    min-height: 58px;
+    margin: 0;
+    padding: 12px;
+    border-radius: 15px;
+}
+
+.register-page .signup-field .field-label {
+    margin: 15px 0 10px;
+}
+
 .field-label {
     display: block;
     margin: 22px 0 7px;
     color: var(--ink);
     font-size: 14px;
     font-weight: 700;
+}
+
+.field-label-required::after {
+    color: var(--orange-text);
+    content: " *";
 }
 
 .text-input {
@@ -400,6 +455,55 @@ h2 {
     padding: 20px 0;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
+}
+
+.account-profile-form {
+    display: grid;
+    gap: 0;
+    margin-top: 12px;
+}
+
+.account-field .field-label {
+    margin: 14px 0 10px;
+}
+
+.account-profile-form .text-input {
+    min-height: 58px;
+    padding: 14px 16px;
+    border-radius: 15px;
+    background: #fff;
+    font-size: 16px;
+}
+
+.account-profile-form > .button {
+    width: 100%;
+    margin-top: 16px;
+}
+
+.account-contact-disclosure {
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+}
+
+.account-contact-disclosure summary {
+    padding: 16px 0 8px;
+    color: var(--orange-text);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.account-contact-disclosure[open] summary {
+    padding-bottom: 0;
+}
+
+.button-danger {
+    background: #a83232;
+    color: #fff;
+}
+
+.account-page > .button-danger {
+    width: 100%;
+    margin-top: 16px;
 }
 
 .contact-settings h2,
@@ -485,17 +589,127 @@ h2 {
     }
 
     .topbar {
-        padding-inline: max(28px, calc((100vw - 1080px) / 2));
+        padding-inline: max(28px, calc((100vw - 1120px) / 2));
     }
 
     .main-content {
         min-height: calc(100vh - 61px);
-        padding: 0 32px 42px;
+        padding: 0 clamp(32px, 5vw, 64px) 48px;
+    }
+
+    .main-content:has(.register-page) {
+        width: min(100%, 1200px);
+    }
+
+    .profile-page {
+        max-width: 960px;
+        margin-inline: auto;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: clamp(280px, 38vw, 460px);
+        margin: 0 0 22px;
+    }
+
+    .offer-page {
+        max-width: 900px;
+        margin-inline: auto;
+    }
+
+    .offer-image {
+        width: 100%;
+        height: clamp(280px, 38vw, 440px);
+        margin: 0 0 24px;
+    }
+
+    .catalog-page,
+    .account-page,
+    .login-page:not(.register-page),
+    .signup-page {
+        max-width: 760px;
+        margin-inline: auto;
+    }
+
+    .offer-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .profile-selection-page .profile-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: min(100%, 760px);
+        gap: 24px;
+        margin-top: 48px;
+    }
+
+    .profile-selection-page .profile-selection-actions {
+        width: min(100%, 420px);
+        margin-top: 32px;
+    }
+
+    .register-page {
+        max-width: 960px;
+        margin: 0 auto;
+    }
+
+    .account-page {
+        max-width: 760px;
+        margin-inline: auto;
+    }
+
+    .account-profile-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 28px;
+        align-items: start;
+    }
+
+    .account-profile-form > .button,
+    .account-contact-disclosure {
+        grid-column: 1 / -1;
+    }
+
+    .register-page .register-form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 28px;
+        align-items: start;
+    }
+
+    .register-page .register-document-type {
+        display: grid;
+    }
+
+    .register-page .register-document-type,
+    .register-page .register-form-alert,
+    .register-page .register-form > [data-field="register-payment-methods"],
+    .register-page .register-form > .login-actions {
+        grid-column: 1 / -1;
+    }
+
+    .register-page .register-form > .signup-field {
+        grid-column: 2;
+    }
+
+    .register-page .register-form > [data-field="register-phone"],
+    .register-page .register-form > [data-field="register-password"] {
+        grid-column: 1;
+    }
+
+    .register-page .register-form > [data-field="register-email"],
+    .register-page .register-form > [data-field="register-confirm-password"] {
+        grid-column: 2;
+    }
+
+    .register-page .login-actions {
+        max-width: 480px;
+        justify-self: center;
+        width: 100%;
     }
 
     .bottom-nav {
         position: static;
-        width: min(100%, 720px);
+        width: min(100%, 1120px);
         height: 68px;
         margin: 0 auto;
         border: 1px solid var(--line);
@@ -503,7 +717,13 @@ h2 {
 
     .profile-actions,
     .offer-actions {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1200px) {
+    .offer-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
@@ -571,18 +791,15 @@ h2 {
     align-items: center;
     gap: 16px;
     padding: 18px 16px;
-    border: 1px solid var(--muted);
+    border: 1px solid var(--line);
     border-radius: 11px;
     background: #fffefa;
     cursor: pointer;
     text-align: left;
 }
 
-.profile-option:first-child {
-    border-color: var(--orange);
-}
-
 .profile-option[aria-pressed="true"] {
+    border-color: var(--orange);
     box-shadow: 0 0 0 2px var(--orange);
 }
 
@@ -811,11 +1028,6 @@ h2 {
     color: var(--orange-text);
     font-size: 13px;
     line-height: 1.5;
-}
-
-.login-signup-link {
-    width: 100%;
-    margin-top: 12px;
 }
 
 .signup-success-page {

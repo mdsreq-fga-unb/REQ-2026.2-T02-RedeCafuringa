@@ -1,5 +1,6 @@
 import { onlyDigits } from "@/features/auth/cpf";
 import { isValidCpf } from "@/features/auth/cpf";
+import { isAdultBirthDate, parseBirthDate } from "@/features/auth/birthDate";
 import {
     isValidCnpj,
     isValidEmail,
@@ -12,6 +13,7 @@ export type DocumentType = "cpf" | "cnpj";
 
 export interface RegisterFormValues {
     documentType: DocumentType;
+    birthDate: string;
     name: string;
     document: string;
     phone: string;
@@ -19,7 +21,6 @@ export interface RegisterFormValues {
     address: string;
     password: string;
     confirmPassword: string;
-    isAdult: boolean;
 }
 
 export type RegisterFormErrors = Partial<
@@ -68,8 +69,16 @@ export function validateRegisterForm(
         errors.confirmPassword = "As senhas não conferem.";
     }
 
-    if (!values.isAdult)
-        errors.isAdult = "Confirme que você é maior de 18 anos.";
+    if (!isCnpj) {
+        if (!values.birthDate.trim()) {
+            errors.birthDate = "Informe a data de nascimento.";
+        } else if (!parseBirthDate(values.birthDate)) {
+            errors.birthDate = "Informe uma data válida no formato DD-MM-AAAA.";
+        } else if (!isAdultBirthDate(values.birthDate)) {
+            errors.birthDate =
+                "É necessário ter 18 anos ou mais para se cadastrar.";
+        }
+    }
 
     return errors;
 }
@@ -81,7 +90,6 @@ export interface RegisterPayload {
     email: string;
     address: string;
     password: string;
-    isAdult: true;
 }
 
 export function buildRegisterPayload(
@@ -94,6 +102,5 @@ export function buildRegisterPayload(
         email: values.email.trim().toLowerCase(),
         address: values.address.trim(),
         password: values.password,
-        isAdult: true,
     };
 }

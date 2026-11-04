@@ -15,7 +15,11 @@ const producerAuth: AuthResult = {
 };
 
 function renderLogin(
-    props: { fromContact?: boolean; registered?: boolean } = {},
+    props: {
+        fromContact?: boolean;
+        profile?: "consumer" | "producer";
+        registered?: boolean;
+    } = {},
 ) {
     const onSignIn = vi.fn();
     const onNavigate = vi.fn();
@@ -24,6 +28,7 @@ function renderLogin(
             onNavigate={onNavigate}
             onSignIn={onSignIn}
             fromContact={props.fromContact}
+            profile={props.profile}
             registered={props.registered}
         />,
     );
@@ -144,10 +149,24 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         const { onNavigate, user } = renderLogin();
 
         await user.click(
-            screen.getByRole("button", { name: "Criar uma conta" }),
+            screen.getByRole("button", { name: "Criar conta de produtor" }),
         );
 
         expect(onNavigate).toHaveBeenCalledWith("/cadastro");
+    });
+
+    it("mostra somente a ação de cadastro do perfil selecionado", () => {
+        renderLogin({ profile: "consumer" });
+
+        expect(
+            screen.getAllByRole("button", { name: /Criar conta de/ }),
+        ).toHaveLength(1);
+        expect(
+            screen.getByRole("button", { name: "Criar conta de consumidor" }),
+        ).toBeTruthy();
+        expect(
+            screen.queryByRole("button", { name: "Criar conta de produtor" }),
+        ).toBeNull();
     });
 
     // HU02, critério 9 (depois do cadastro, o usuário segue para o login)

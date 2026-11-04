@@ -9,7 +9,6 @@ const payload: RegisterPayload = {
     email: "maria@exemplo.com",
     address: "Chácara 12, Núcleo Rural, Brasília - DF",
     password: "senha-segura-1",
-    isAdult: true,
 };
 
 describe("createMockRegisterService", () => {

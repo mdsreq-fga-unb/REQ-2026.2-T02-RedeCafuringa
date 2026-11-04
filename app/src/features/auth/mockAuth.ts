@@ -15,8 +15,13 @@ type MockUser = {
 const mockUsers: MockUser[] = [
     {
         cpf: "52998224725",
+        email: "ana@exemplo.com",
         password: "senha123",
-        user: { id: 1, name: "Gabriela Pereira da Silva", role: "consumer" },
+        user: {
+            id: 1,
+            name: "Gabriela Pereira da Silva",
+            role: "consumer",
+        },
     },
     {
         cpf: "11144477735",
@@ -93,11 +98,15 @@ export async function loginMock(credentials: {
     );
     if (!found) throw new InvalidCredentialsError();
 
-    return { token: `mock-token-${found.user.id}`, user: found.user };
+    return {
+        token: `mock-token-${found.user.id}`,
+        user: { ...found.user, cpf: found.cpf, email: found.email },
+    };
 }
 
 export function registerMockUser(account: {
     cpf: string;
+    email?: string;
     password: string;
     name: string;
     role: Role;
@@ -113,6 +122,7 @@ export function registerMockUser(account: {
     };
     mockUsers.push({
         cpf: account.cpf,
+        email: account.email,
         password: account.password,
         user,
     });

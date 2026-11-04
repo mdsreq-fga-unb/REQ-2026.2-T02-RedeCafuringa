@@ -8,7 +8,6 @@ const payload: RegisterPayload = {
     email: "joao@exemplo.com",
     address: "Chácara 7, Núcleo Rural, Brasília - DF",
     password: "senha-segura-1",
-    isAdult: true,
 };
 
 // O módulo lê VITE_USE_MOCK_AUTH ao ser importado, e o cadastro e o login mock

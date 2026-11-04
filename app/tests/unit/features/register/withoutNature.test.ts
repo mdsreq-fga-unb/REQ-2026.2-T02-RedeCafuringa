@@ -13,6 +13,7 @@ import type {
 // ou associação são vinculadas ao perfil depois (fora da HU02).
 const values = {
     documentType: "cpf",
+    birthDate: "10-05-1990",
     name: "Maria da Silva",
     document: "529.982.247-25",
     phone: "(61) 91234-5678",
@@ -20,7 +21,6 @@ const values = {
     address: "Chácara 12, Núcleo Rural, Brasília - DF",
     password: "senha-segura-1",
     confirmPassword: "senha-segura-1",
-    isAdult: true,
 } as RegisterFormValues;
 
 describe("cadastro de produtor sem natureza (HU02, critério 2 revisto)", () => {

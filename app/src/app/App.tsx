@@ -5,6 +5,7 @@ import {
     ConsumerSignupPage,
     ConsumerSignupSuccessPage,
     LoginPage,
+    ProducerSignupSuccessPage,
     registerConsumer,
     useDemoSession,
 } from "@/features/auth";
@@ -24,7 +25,8 @@ import "../App.css";
 
 export function App() {
     const { route, navigate } = useHashRoute();
-    const { role, consumerName, signIn, signOut } = useDemoSession();
+    const { role, consumerName, email, cpf, signIn, signOut } =
+        useDemoSession();
     const { settings, draft, setDraft, saved, setSaved, save } =
         useContactSettings();
 
@@ -39,11 +41,14 @@ export function App() {
     const showProfileSelection = screenPath === "/escolher-perfil";
     const showLogin =
         screenPath === "/entrar" || path.startsWith("/login/") || fromContact;
+    const loginProfile =
+        path === "/login/consumer" || fromContact ? "consumer" : "producer";
     const isAuthFlow =
         showProfileSelection ||
         showLogin ||
         path === "/cadastro/consumidor" ||
         path === "/conta-criada/consumer" ||
+        path === "/conta-criada/producer" ||
         path === "/cadastro";
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
@@ -140,6 +145,7 @@ export function App() {
                 {showLogin && (
                     <LoginPage
                         fromContact={fromContact}
+                        profile={loginProfile}
                         registered={justRegistered}
                         onNavigate={navigate}
                         onSignIn={handleSignIn}
@@ -155,10 +161,15 @@ export function App() {
                 {path === "/conta-criada/consumer" && (
                     <ConsumerSignupSuccessPage onNavigate={navigate} />
                 )}
+                {path === "/conta-criada/producer" && (
+                    <ProducerSignupSuccessPage onNavigate={navigate} />
+                )}
                 {screenPath === "/conta" && (
                     <AccountPage
                         role={role}
                         consumerName={consumerName}
+                        consumerEmail={email}
+                        consumerCpf={cpf}
                         settings={settings}
                         draft={draft}
                         saved={saved}

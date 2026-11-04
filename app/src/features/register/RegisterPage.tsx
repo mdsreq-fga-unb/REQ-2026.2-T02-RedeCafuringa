@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEvent, InputHTMLAttributes } from "react";
 import { formatCpf } from "@/features/auth/cpf";
+import { BirthDateField } from "@/features/auth/registration";
 import { BackButton } from "../../components/navigation/BackButton";
 import { ActionButton } from "../../components/ui/ActionButton";
 import { buildRegisterPayload, validateRegisterForm } from "./registerForm";
@@ -19,6 +20,7 @@ type RegisterPageProps = {
 
 const INITIAL_VALUES: RegisterFormValues = {
     documentType: "cpf",
+    birthDate: "",
     name: "",
     document: "",
     phone: "",
@@ -26,7 +28,6 @@ const INITIAL_VALUES: RegisterFormValues = {
     address: "",
     password: "",
     confirmPassword: "",
-    isAdult: false,
 };
 
 type TextFieldProps = Omit<
@@ -35,6 +36,7 @@ type TextFieldProps = Omit<
 > & {
     id: string;
     label: string;
+    required?: boolean;
     value: string;
     error?: string;
     onChange: (value: string) => void;
@@ -43,14 +45,18 @@ type TextFieldProps = Omit<
 function TextField({
     id,
     label,
+    required = false,
     value,
     error,
     onChange,
     ...inputProps
 }: TextFieldProps) {
     return (
-        <>
-            <label className="field-label" htmlFor={id}>
+        <div className="register-field" data-field={id}>
+            <label
+                className={`field-label ${required ? "field-label-required" : ""}`}
+                htmlFor={id}
+            >
                 {label}
             </label>
             <input
@@ -59,6 +65,8 @@ function TextField({
                 className="text-input"
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
+                aria-label={label}
+                aria-required={required}
                 aria-invalid={Boolean(error)}
                 aria-describedby={error ? `${id}-error` : undefined}
             />
@@ -67,7 +75,50 @@ function TextField({
                     {error}
                 </p>
             )}
-        </>
+        </div>
+    );
+}
+
+type SelectFieldProps = {
+    id: string;
+    label: string;
+    required?: boolean;
+    value: string;
+    options: string[];
+    onChange: (value: string) => void;
+};
+
+function SelectField({
+    id,
+    label,
+    required = false,
+    value,
+    options,
+    onChange,
+}: SelectFieldProps) {
+    return (
+        <div className="register-field" data-field={id}>
+            <label
+                className={`field-label ${required ? "field-label-required" : ""}`}
+                htmlFor={id}
+            >
+                {label}
+            </label>
+            <select
+                id={id}
+                className="text-input"
+                value={value}
+                onChange={(event) => onChange(event.target.value)}
+                aria-label={label}
+                aria-required={required}
+            >
+                {options.map((option) => (
+                    <option key={option} value={option}>
+                        {option}
+                    </option>
+                ))}
+            </select>
+        </div>
     );
 }
 
@@ -135,6 +186,11 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
     const [errors, setErrors] = useState<RegisterFormErrors>({});
     const [loading, setLoading] = useState(false);
     const [failure, setFailure] = useState<RegisterFailure | null>(null);
+    const [referenceDetails, setReferenceDetails] = useState({
+        responsible: "",
+        category: "Produtos",
+        paymentMethods: "Pix, Cartão de crédito",
+    });
 
     const isCnpj = values.documentType === "cnpj";
     const formatDocument = isCnpj ? formatCnpj : formatCpf;
@@ -144,12 +200,16 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
         value: RegisterFormValues[K],
     ) => setValues((current) => ({ ...current, [field]: value }));
 
-    const changeDocumentType = (type: DocumentType) =>
+    const changeDocumentType = (type: DocumentType) => {
         setValues((current) => ({
             ...current,
             documentType: type,
             document: "",
+            birthDate: "",
         }));
+        setErrors({});
+        setFailure(null);
+    };
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -168,7 +228,7 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
         }
 
         if (result.ok) {
-            onNavigate("/entrar?cadastro=ok");
+            onNavigate("/conta-criada/producer");
             return;
         }
 
@@ -179,30 +239,51 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
     return (
         <section className="login-page register-page">
             <BackButton label="Voltar" onClick={() => onNavigate("/entrar")} />
-            <h1>Cadastre seu perfil</h1>
-            <p className="body-copy">
-                Divulgue sua produção, seus produtos e suas experiências.
-            </p>
+            <h1>Cadastro de produtor</h1>
 
-            <form className="login-form" onSubmit={handleSubmit} noValidate>
+            <form
+                className="login-form register-form"
+                onSubmit={handleSubmit}
+                noValidate
+            >
                 {failure && (
-                    <FailureAlert
-                        failure={failure}
-                        onGoToLogin={() => onNavigate("/entrar")}
-                    />
+                    <div className="register-form-alert">
+                        <FailureAlert
+                            failure={failure}
+                            onGoToLogin={() => onNavigate("/entrar")}
+                        />
+                    </div>
                 )}
 
                 <TextField
                     id="register-name"
-                    label="Nome"
+                    label="Nome da iniciativa"
+                    required
                     type="text"
                     autoComplete="name"
+                    placeholder="Sítio Raízes"
                     value={values.name}
                     error={errors.name}
                     onChange={(value) => setField("name", value)}
                 />
 
-                <fieldset className="choice-group">
+                <TextField
+                    id="register-responsible"
+                    label="Responsável"
+                    required
+                    type="text"
+                    autoComplete="name"
+                    placeholder="Maria Silva"
+                    value={referenceDetails.responsible}
+                    onChange={(value) =>
+                        setReferenceDetails((current) => ({
+                            ...current,
+                            responsible: value,
+                        }))
+                    }
+                />
+
+                <fieldset className="choice-group register-document-type">
                     <legend className="field-label">Tipo de documento</legend>
                     <label className="choice-option">
                         <input
@@ -228,11 +309,12 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
 
                 <TextField
                     id="register-document"
-                    label={isCnpj ? "CNPJ" : "CPF"}
+                    label={isCnpj ? "CNPJ (empresa / MEI)" : "CPF"}
+                    required
                     type="text"
                     inputMode="numeric"
                     placeholder={
-                        isCnpj ? "00.000.000/0000-00" : "000.000.000-00"
+                        isCnpj ? "00.000.000/0001-00" : "000.000.000-00"
                     }
                     value={values.document}
                     error={errors.document}
@@ -241,9 +323,68 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
                     }
                 />
 
+                {!isCnpj && (
+                    <BirthDateField
+                        value={values.birthDate}
+                        error={errors.birthDate}
+                        onChange={(value) => {
+                            setField("birthDate", value);
+                        }}
+                    />
+                )}
+
+                <SelectField
+                    id="register-category"
+                    label="Categoria"
+                    required
+                    value={referenceDetails.category}
+                    options={[
+                        "Produtos",
+                        "Experiências",
+                        "Produtos e experiências",
+                    ]}
+                    onChange={(value) =>
+                        setReferenceDetails((current) => ({
+                            ...current,
+                            category: value,
+                        }))
+                    }
+                />
+
+                <TextField
+                    id="register-address"
+                    label="Localidade"
+                    type="text"
+                    autoComplete="street-address"
+                    placeholder="Cafuringa, Brasília, DF"
+                    value={values.address}
+                    error={errors.address}
+                    onChange={(value) => setField("address", value)}
+                />
+
+                <SelectField
+                    id="register-payment-methods"
+                    label="Formas de pagamento"
+                    required
+                    value={referenceDetails.paymentMethods}
+                    options={[
+                        "Pix",
+                        "Pix, Cartão de crédito",
+                        "Pix, Dinheiro",
+                        "Pix, Cartão de crédito, Dinheiro",
+                    ]}
+                    onChange={(value) =>
+                        setReferenceDetails((current) => ({
+                            ...current,
+                            paymentMethods: value,
+                        }))
+                    }
+                />
+
                 <TextField
                     id="register-phone"
                     label="Telefone"
+                    required
                     type="tel"
                     inputMode="tel"
                     autoComplete="tel"
@@ -256,28 +397,22 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
                 <TextField
                     id="register-email"
                     label="E-mail"
+                    required
                     type="email"
                     autoComplete="email"
+                    placeholder="raizes@exemplo.com"
                     value={values.email}
                     error={errors.email}
                     onChange={(value) => setField("email", value)}
                 />
 
                 <TextField
-                    id="register-address"
-                    label="Endereço"
-                    type="text"
-                    autoComplete="street-address"
-                    value={values.address}
-                    error={errors.address}
-                    onChange={(value) => setField("address", value)}
-                />
-
-                <TextField
                     id="register-password"
                     label="Senha"
+                    required
                     type="password"
                     autoComplete="new-password"
+                    placeholder="••••••••"
                     value={values.password}
                     error={errors.password}
                     onChange={(value) => setField("password", value)}
@@ -286,6 +421,7 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
                 <TextField
                     id="register-confirm-password"
                     label="Confirmar senha"
+                    required
                     type="password"
                     autoComplete="new-password"
                     value={values.confirmPassword}
@@ -293,34 +429,13 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
                     onChange={(value) => setField("confirmPassword", value)}
                 />
 
-                <label className="choice-option">
-                    <input
-                        type="checkbox"
-                        name="isAdult"
-                        checked={values.isAdult}
-                        onChange={(event) =>
-                            setField("isAdult", event.target.checked)
-                        }
-                        aria-invalid={Boolean(errors.isAdult)}
-                        aria-describedby={
-                            errors.isAdult ? "register-adult-error" : undefined
-                        }
-                    />
-                    Declaro que sou maior de 18 anos
-                </label>
-                {errors.isAdult && (
-                    <p id="register-adult-error" className="field-error">
-                        {errors.isAdult}
-                    </p>
-                )}
-
                 <div className="login-actions">
                     <ActionButton
                         variant="orange"
                         type="submit"
                         disabled={loading}
                     >
-                        {loading ? "Criando conta…" : "Criar conta"}
+                        {loading ? "Continuando…" : "Continuar"}
                     </ActionButton>
                 </div>
             </form>

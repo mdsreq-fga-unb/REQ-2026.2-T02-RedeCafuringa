@@ -9,9 +9,17 @@ describe("Entrada do cadastro de consumidor — HU01", () => {
     it("permite iniciar o cadastro a partir da tela de login", async () => {
         const onNavigate = vi.fn();
         const user = userEvent.setup();
-        render(<LoginPage onNavigate={onNavigate} onSignIn={vi.fn()} />);
+        render(
+            <LoginPage
+                profile="consumer"
+                onNavigate={onNavigate}
+                onSignIn={vi.fn()}
+            />,
+        );
 
-        await user.click(screen.getByRole("link", { name: "Criar uma conta" }));
+        await user.click(
+            screen.getByRole("button", { name: "Criar conta de consumidor" }),
+        );
 
         expect(onNavigate).toHaveBeenCalledWith("/cadastro/consumidor");
     });
