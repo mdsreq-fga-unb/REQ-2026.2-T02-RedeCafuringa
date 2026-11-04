@@ -16,21 +16,17 @@ const newCpf = "39053344705";
 const newPassword = "senha-segura-1";
 
 async function fillRegisterForm(user: ReturnType<typeof userEvent.setup>) {
-    await user.type(screen.getByLabelText("Nome"), "Seu João");
+    await user.type(screen.getByLabelText("Nome da iniciativa"), "Seu João");
     await user.type(screen.getByLabelText("CPF"), newCpf);
+    await user.type(screen.getByLabelText("Data de nascimento"), "10051990");
     await user.type(screen.getByLabelText("Telefone"), "61912345678");
     await user.type(screen.getByLabelText("E-mail"), "joao@exemplo.com");
     await user.type(
-        screen.getByLabelText("Endereço"),
+        screen.getByLabelText("Localidade"),
         "Chácara 7, Núcleo Rural, Brasília - DF",
     );
     await user.type(screen.getByLabelText("Senha"), newPassword);
     await user.type(screen.getByLabelText("Confirmar senha"), newPassword);
-    await user.click(
-        screen.getByRole("checkbox", {
-            name: "Declaro que sou maior de 18 anos",
-        }),
-    );
 }
 
 describe("HU02 — acesso ao cadastro de produtor no app", () => {
@@ -51,7 +47,7 @@ describe("HU02 — acesso ao cadastro de produtor no app", () => {
         render(<App />);
 
         expect(
-            screen.getByRole("heading", { name: "Cadastre seu perfil" }),
+            screen.getByRole("heading", { name: "Cadastro de produtor" }),
         ).toBeTruthy();
     });
 
@@ -59,12 +55,16 @@ describe("HU02 — acesso ao cadastro de produtor no app", () => {
         window.location.hash = "#/entrar";
         render(<App />);
 
-        await userEvent
-            .setup()
-            .click(screen.getByRole("button", { name: "Criar uma conta" }));
+        await userEvent.setup().click(
+            screen.getByRole("button", {
+                name: "Criar conta de produtor",
+            }),
+        );
 
         expect(
-            await screen.findByRole("heading", { name: "Cadastre seu perfil" }),
+            await screen.findByRole("heading", {
+                name: "Cadastro de produtor",
+            }),
         ).toBeTruthy();
         expect(window.location.hash).toBe("#/cadastro");
     });
@@ -106,10 +106,10 @@ describe("HU02 — do cadastro à área do produtor", () => {
         const user = userEvent.setup();
 
         await user.click(
-            screen.getByRole("button", { name: "Criar uma conta" }),
+            screen.getByRole("button", { name: "Criar conta de produtor" }),
         );
         await fillRegisterForm(user);
-        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+        await user.click(screen.getByRole("button", { name: "Continuar" }));
 
         expect(
             (await screen.findByRole("status", {}, { timeout: 3000 }))

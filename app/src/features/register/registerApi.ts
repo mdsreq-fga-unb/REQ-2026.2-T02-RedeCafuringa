@@ -8,7 +8,6 @@ export type CreateProducerBody = {
     email: string;
     endereco: string;
     senha: string;
-    maiorDeIdade: true;
 };
 
 export function toCreateProducerBody(
@@ -22,6 +21,5 @@ export function toCreateProducerBody(
         email: payload.email,
         endereco: payload.address,
         senha: payload.password,
-        maiorDeIdade: true,
     };
 }

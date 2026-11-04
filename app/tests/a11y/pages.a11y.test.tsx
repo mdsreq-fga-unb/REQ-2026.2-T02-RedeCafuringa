@@ -74,18 +74,14 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
         window.location.hash = "#/cadastro";
         const { container } = render(<App />);
 
-        expect(await screen.findByLabelText("Nome")).toBeTruthy();
+        expect(await screen.findByLabelText("Nome da iniciativa")).toBeTruthy();
         expect(screen.getByLabelText("CPF")).toBeTruthy();
         expect(screen.getByLabelText("Telefone")).toBeTruthy();
         expect(screen.getByLabelText("E-mail")).toBeTruthy();
-        expect(screen.getByLabelText("Endereço")).toBeTruthy();
+        expect(screen.getByLabelText("Localidade")).toBeTruthy();
         expect(screen.getByLabelText("Senha")).toBeTruthy();
         expect(screen.getByLabelText("Confirmar senha")).toBeTruthy();
-        expect(
-            screen.getByRole("checkbox", {
-                name: "Declaro que sou maior de 18 anos",
-            }),
-        ).toBeTruthy();
+        expect(screen.getByLabelText("Data de nascimento")).toBeTruthy();
         expect(await violationsIn(container)).toEqual([]);
     });
 
@@ -95,12 +91,14 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
 
         await userEvent
             .setup()
-            .click(await screen.findByRole("button", { name: "Criar conta" }));
+            .click(await screen.findByRole("button", { name: "Continuar" }));
 
         expect(await screen.findByText("Informe o nome.")).toBeTruthy();
-        expect(screen.getByLabelText("Nome").getAttribute("aria-invalid")).toBe(
-            "true",
-        );
+        expect(
+            screen
+                .getByLabelText("Nome da iniciativa")
+                .getAttribute("aria-invalid"),
+        ).toBe("true");
         expect(await violationsIn(container)).toEqual([]);
     });
 

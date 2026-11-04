@@ -9,7 +9,6 @@ const payload: RegisterPayload = {
     email: "maria@exemplo.com",
     address: "Chácara 12, Núcleo Rural, Brasília - DF",
     password: "senha-segura-1",
-    isAdult: true,
 };
 
 describe("toCreateProducerBody", () => {
@@ -21,7 +20,6 @@ describe("toCreateProducerBody", () => {
             email: "maria@exemplo.com",
             endereco: "Chácara 12, Núcleo Rural, Brasília - DF",
             senha: "senha-segura-1",
-            maiorDeIdade: true,
         });
     });
 

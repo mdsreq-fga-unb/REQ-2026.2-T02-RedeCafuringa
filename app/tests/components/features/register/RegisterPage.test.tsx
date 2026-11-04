@@ -26,6 +26,7 @@ type User = ReturnType<typeof userEvent.setup>;
 
 type FormInput = {
     documentLabel?: string;
+    birthDate?: string;
     name?: string;
     document?: string;
     phone?: string;
@@ -38,6 +39,7 @@ type FormInput = {
 async function fillForm(user: User, input: FormInput = {}) {
     const values = {
         documentLabel: "CPF",
+        birthDate: "10051990",
         name: "Maria da Silva",
         document: "52998224725",
         phone: "61912345678",
@@ -48,28 +50,29 @@ async function fillForm(user: User, input: FormInput = {}) {
         ...input,
     };
 
-    await user.type(screen.getByLabelText("Nome"), values.name);
+    await user.type(screen.getByLabelText("Nome da iniciativa"), values.name);
     await user.type(
         screen.getByLabelText(values.documentLabel),
         values.document,
     );
+    if (values.documentLabel === "CPF") {
+        await user.type(
+            screen.getByLabelText("Data de nascimento"),
+            values.birthDate,
+        );
+    }
     await user.type(screen.getByLabelText("Telefone"), values.phone);
     await user.type(screen.getByLabelText("E-mail"), values.email);
-    await user.type(screen.getByLabelText("Endereço"), values.address);
+    await user.type(screen.getByLabelText("Localidade"), values.address);
     await user.type(screen.getByLabelText("Senha"), values.password);
     await user.type(
         screen.getByLabelText("Confirmar senha"),
         values.confirmPassword,
     );
-    await user.click(
-        screen.getByRole("checkbox", {
-            name: "Declaro que sou maior de 18 anos",
-        }),
-    );
 }
 
 async function submit(user: User) {
-    await user.click(screen.getByRole("button", { name: "Criar conta" }));
+    await user.click(screen.getByRole("button", { name: "Continuar" }));
 }
 
 describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
@@ -77,7 +80,7 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
         const { onNavigate, user } = renderRegister();
 
         expect(
-            screen.getByRole("heading", { name: "Cadastre seu perfil" }),
+            screen.getByRole("heading", { name: "Cadastro de produtor" }),
         ).toBeTruthy();
 
         await user.click(screen.getByRole("button", { name: /Voltar/ }));
@@ -85,23 +88,39 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
     });
 
     // CA03
-    it("mostra os campos exigidos e o botão de criar conta", () => {
+    it("mostra os campos exigidos e o botão Continuar", () => {
         renderRegister();
 
         for (const label of [
-            "Nome",
+            "Nome da iniciativa",
+            "Responsável",
+            "Data de nascimento",
             "CPF",
+            "Categoria",
+            "Formas de pagamento",
             "Telefone",
             "E-mail",
-            "Endereço",
+            "Localidade",
             "Senha",
             "Confirmar senha",
         ]) {
             expect(screen.getByLabelText(label)).toBeTruthy();
         }
-        expect(
-            screen.getByRole("button", { name: "Criar conta" }),
-        ).toBeTruthy();
+        expect(screen.getByRole("button", { name: "Continuar" })).toBeTruthy();
+    });
+
+    it("permite escolher a categoria e as formas de pagamento", async () => {
+        const { user } = renderRegister();
+        const category = screen.getByRole("combobox", { name: "Categoria" });
+        const paymentMethods = screen.getByRole("combobox", {
+            name: "Formas de pagamento",
+        });
+
+        await user.selectOptions(category, "Experiências");
+        await user.selectOptions(paymentMethods, "Pix, Dinheiro");
+
+        expect(category).toHaveProperty("value", "Experiências");
+        expect(paymentMethods).toHaveProperty("value", "Pix, Dinheiro");
     });
 
     it("começa com CPF e troca o campo de documento para CNPJ ao escolher esse tipo", async () => {
@@ -116,19 +135,43 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
             screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
         );
 
-        expect(screen.getByLabelText("CNPJ")).toBeTruthy();
+        expect(screen.getByLabelText("CNPJ (empresa / MEI)")).toBeTruthy();
         expect(screen.queryByLabelText("CPF")).toBeNull();
     });
 
     // CA07
-    it("pede a confirmação de maioridade por uma caixa de seleção", () => {
+    it("mostra a data de nascimento para pessoa física", () => {
         renderRegister();
 
-        expect(
-            screen.getByRole("checkbox", {
-                name: "Declaro que sou maior de 18 anos",
-            }),
-        ).toBeTruthy();
+        expect(screen.getByLabelText("Data de nascimento")).toBeTruthy();
+        expect(screen.queryByRole("checkbox")).toBeNull();
+    });
+
+    it("não pede autodeclaração nem data de nascimento para pessoa jurídica", async () => {
+        const { user } = renderRegister();
+
+        await user.click(
+            screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
+        );
+
+        expect(screen.queryByRole("checkbox")).toBeNull();
+        expect(screen.queryByLabelText("Data de nascimento")).toBeNull();
+    });
+
+    it("limpa os erros visíveis ao trocar o tipo de documento", async () => {
+        const { user } = renderRegister();
+
+        await submit(user);
+        expect(screen.getByText("Informe o CPF.")).toBeTruthy();
+        expect(screen.getByText("Informe a data de nascimento.")).toBeTruthy();
+
+        await user.click(
+            screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
+        );
+
+        expect(screen.queryByText("Informe o CPF.")).toBeNull();
+        expect(screen.queryByText("Informe a data de nascimento.")).toBeNull();
+        expect(screen.queryByText("Informe o nome.")).toBeNull();
     });
 
     it("aplica a máscara de CPF enquanto o usuário digita", async () => {
@@ -147,11 +190,15 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
         await user.click(
             screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
         );
-        await user.type(screen.getByLabelText("CNPJ"), "11222333000181");
-
-        expect((screen.getByLabelText("CNPJ") as HTMLInputElement).value).toBe(
-            "11.222.333/0001-81",
+        await user.type(
+            screen.getByLabelText("CNPJ (empresa / MEI)"),
+            "11222333000181",
         );
+
+        expect(
+            (screen.getByLabelText("CNPJ (empresa / MEI)") as HTMLInputElement)
+                .value,
+        ).toBe("11.222.333/0001-81");
     });
 
     it("limpa o documento digitado ao trocar o tipo de documento", async () => {
@@ -162,9 +209,10 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
             screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
         );
 
-        expect((screen.getByLabelText("CNPJ") as HTMLInputElement).value).toBe(
-            "",
-        );
+        expect(
+            (screen.getByLabelText("CNPJ (empresa / MEI)") as HTMLInputElement)
+                .value,
+        ).toBe("");
     });
 
     it("aplica a máscara de telefone enquanto o usuário digita", async () => {
@@ -178,7 +226,7 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
     });
 
     // CA06 e CA07
-    it("sinaliza os campos obrigatórios vazios e a maioridade não confirmada", async () => {
+    it("sinaliza os campos obrigatórios vazios para pessoa física", async () => {
         const { user } = renderRegister();
 
         await submit(user);
@@ -186,12 +234,12 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
         for (const message of [
             "Informe o nome.",
             "Informe o CPF.",
+            "Informe a data de nascimento.",
             "Informe o telefone.",
             "Informe o e-mail.",
             "Informe o endereço.",
             "Informe a senha.",
             "Confirme a senha.",
-            "Confirme que você é maior de 18 anos.",
         ]) {
             expect(screen.getByText(message)).toBeTruthy();
         }
@@ -202,7 +250,7 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
 
         await submit(user);
 
-        const name = screen.getByLabelText("Nome");
+        const name = screen.getByLabelText("Nome da iniciativa");
         expect(name.getAttribute("aria-invalid")).toBe("true");
         const errorId = name.getAttribute("aria-describedby") ?? "";
         expect(document.getElementById(errorId)?.textContent).toBe(
@@ -235,7 +283,7 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
             screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
         );
         await fillForm(user, {
-            documentLabel: "CNPJ",
+            documentLabel: "CNPJ (empresa / MEI)",
             document: "11222333000182",
         });
         await submit(user);
@@ -296,7 +344,6 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
             email: "maria@exemplo.com",
             address: "Chácara 12, Núcleo Rural, Brasília - DF",
             password: "senha-segura-1",
-            isAdult: true,
         });
     });
 
@@ -322,7 +369,7 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
         await submit(user);
 
         const button = await screen.findByRole("button", {
-            name: "Criando conta…",
+            name: "Continuando…",
         });
         expect((button as HTMLButtonElement).disabled).toBe(true);
         await user.click(button);
@@ -439,13 +486,14 @@ describe("RegisterPage — falhas ao cadastrar", () => {
         await submit(user);
         await screen.findByRole("alert");
 
-        expect((screen.getByLabelText("Nome") as HTMLInputElement).value).toBe(
-            "Maria da Silva",
-        );
+        expect(
+            (screen.getByLabelText("Nome da iniciativa") as HTMLInputElement)
+                .value,
+        ).toBe("Maria da Silva");
         expect(
             (
                 screen.getByRole("button", {
-                    name: "Criar conta",
+                    name: "Continuar",
                 }) as HTMLButtonElement
             ).disabled,
         ).toBe(false);

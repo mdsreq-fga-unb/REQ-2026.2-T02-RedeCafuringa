@@ -7,6 +7,7 @@ import {
 
 const validForm: RegisterFormValues = {
     documentType: "cpf",
+    birthDate: "10-05-1990",
     name: "Maria da Silva",
     document: "529.982.247-25",
     phone: "(61) 91234-5678",
@@ -14,7 +15,6 @@ const validForm: RegisterFormValues = {
     address: "Chácara 12, Núcleo Rural, Brasília - DF",
     password: "senha-segura-1",
     confirmPassword: "senha-segura-1",
-    isAdult: true,
 };
 
 describe("buildRegisterPayload", () => {
@@ -35,7 +35,6 @@ describe("buildRegisterPayload", () => {
             email: "maria@exemplo.com",
             address: "Chácara 12, Núcleo Rural",
             password: "senha-segura-1",
-            isAdult: true,
         });
     });
 
@@ -61,6 +60,7 @@ describe("validateRegisterForm: campos obrigatórios", () => {
     it("sinaliza todos os campos obrigatórios vazios", () => {
         const empty: RegisterFormValues = {
             ...validForm,
+            birthDate: "",
             name: "",
             document: "",
             phone: "",
@@ -68,7 +68,6 @@ describe("validateRegisterForm: campos obrigatórios", () => {
             address: "",
             password: "",
             confirmPassword: "",
-            isAdult: false,
         };
 
         expect(validateRegisterForm(empty)).toEqual({
@@ -79,8 +78,19 @@ describe("validateRegisterForm: campos obrigatórios", () => {
             address: "Informe o endereço.",
             password: "Informe a senha.",
             confirmPassword: "Confirme a senha.",
-            isAdult: "Confirme que você é maior de 18 anos.",
+            birthDate: "Informe a data de nascimento.",
         });
+    });
+
+    it("exige data válida e maioridade para pessoa física", () => {
+        expect(
+            validateRegisterForm({ ...validForm, birthDate: "31-02-1990" })
+                .birthDate,
+        ).toBe("Informe uma data válida no formato DD-MM-AAAA.");
+        expect(
+            validateRegisterForm({ ...validForm, birthDate: "04-11-2010" })
+                .birthDate,
+        ).toBe("É necessário ter 18 anos ou mais para se cadastrar.");
     });
 
     it("rejeita senha sem letra ou sem número", () => {
@@ -143,7 +153,11 @@ describe("validateRegisterForm: campos obrigatórios", () => {
         });
 
         it("valida o documento conforme o tipo escolhido (CNPJ)", () => {
-            const cnpj = { ...validForm, documentType: "cnpj" as const };
+            const cnpj = {
+                ...validForm,
+                documentType: "cnpj" as const,
+                birthDate: "",
+            };
 
             expect(
                 validateRegisterForm({

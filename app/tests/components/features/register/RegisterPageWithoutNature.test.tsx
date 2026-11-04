@@ -7,22 +7,21 @@ import { registerProducer } from "@/features/register/registerService";
 vi.mock("@/features/register/registerService");
 
 async function fillAndSubmit(user: ReturnType<typeof userEvent.setup>) {
-    await user.type(screen.getByLabelText("Nome"), "Maria da Silva");
+    await user.type(
+        screen.getByLabelText("Nome da iniciativa"),
+        "Maria da Silva",
+    );
     await user.type(screen.getByLabelText("CPF"), "52998224725");
+    await user.type(screen.getByLabelText("Data de nascimento"), "10051990");
     await user.type(screen.getByLabelText("Telefone"), "61912345678");
     await user.type(screen.getByLabelText("E-mail"), "maria@exemplo.com");
     await user.type(
-        screen.getByLabelText("Endereço"),
+        screen.getByLabelText("Localidade"),
         "Chácara 12, Núcleo Rural, Brasília - DF",
     );
     await user.type(screen.getByLabelText("Senha"), "senha-segura-1");
     await user.type(screen.getByLabelText("Confirmar senha"), "senha-segura-1");
-    await user.click(
-        screen.getByRole("checkbox", {
-            name: "Declaro que sou maior de 18 anos",
-        }),
-    );
-    await user.click(screen.getByRole("button", { name: "Criar conta" }));
+    await user.click(screen.getByRole("button", { name: "Continuar" }));
 }
 
 describe("RegisterPage sem natureza — HU02", () => {
@@ -65,6 +64,8 @@ describe("RegisterPage sem natureza — HU02", () => {
 
         const alert = await screen.findByRole("alert");
         expect(alert.closest("fieldset")).toBeNull();
-        expect(alert.closest("form")?.firstElementChild).toBe(alert);
+        expect(alert.closest("form")?.firstElementChild?.contains(alert)).toBe(
+            true,
+        );
     });
 });
