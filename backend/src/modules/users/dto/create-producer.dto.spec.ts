@@ -29,12 +29,12 @@ async function errorsForProperty(property: string, value: unknown) {
   return errors.find((error) => error.property === property);
 }
 
-describe('CreateProducerDto', () => {
+describe('HU02 — CreateProducerDto (RN02, RNF03)', () => {
   it.each([
     ProducerCategory.PRODUTOS,
     ProducerCategory.EXPERIENCIAS,
     ProducerCategory.PRODUTOS_E_EXPERIENCIAS,
-  ])('aceita a categoria ofertada %s', async (categoriaOfertada) => {
+  ])('HU02: aceita a categoria ofertada %s', async (categoriaOfertada) => {
     const dto = plainToInstance(
       CreateProducerDto,
       validPayload(categoriaOfertada),
@@ -43,7 +43,7 @@ describe('CreateProducerDto', () => {
     expect(await validate(dto)).toHaveLength(0);
   });
 
-  it('rejeita categoria ofertada fora das três opções', async () => {
+  it('RN02: rejeita categoria ofertada fora das três opções', async () => {
     const dto = plainToInstance(CreateProducerDto, validPayload('Hortaliças'));
 
     const errors = await validate(dto);
@@ -60,19 +60,22 @@ describe('CreateProducerDto', () => {
     ['nomeIniciativa', undefined],
     ['nomeResponsavel', undefined],
     ['localidade', undefined],
-  ])('rejeita campo obrigatório inválido: %s', async (property, value) => {
-    const error = await errorsForProperty(property, value);
+  ])(
+    'RN02: rejeita campo obrigatório inválido: %s',
+    async (property, value) => {
+      const error = await errorsForProperty(property, value);
 
-    expect(error).toBeDefined();
-  });
+      expect(error).toBeDefined();
+    },
+  );
 
-  it('rejeita CPF inválido', async () => {
+  it('RNF03: rejeita CPF inválido', async () => {
     const error = await errorsForProperty('cpf', '529.982.247-26');
 
     expect(error?.constraints?.isCpf).toBe('CPF inválido');
   });
 
-  it('aceita cadastro sem CNPJ', async () => {
+  it('RN02: aceita cadastro sem CNPJ', async () => {
     const payload = validPayload(ProducerCategory.PRODUTOS);
     const dto = plainToInstance(CreateProducerDto, {
       ...payload,
@@ -82,19 +85,19 @@ describe('CreateProducerDto', () => {
     expect(await validate(dto)).toHaveLength(0);
   });
 
-  it('rejeita CNPJ inválido', async () => {
+  it('RNF03: rejeita CNPJ inválido', async () => {
     const error = await errorsForProperty('cnpj', '11.222.333/0001-82');
 
     expect(error?.constraints?.isCnpj).toBe('CNPJ inválido');
   });
 
-  it('rejeita formas de pagamento vazias', async () => {
+  it('RN02: rejeita formas de pagamento vazias', async () => {
     const error = await errorsForProperty('formasPagamento', []);
 
     expect(error).toBeDefined();
   });
 
-  it('rejeita e-mail inválido', async () => {
+  it('RN02/RNF03: rejeita e-mail inválido', async () => {
     const error = await errorsForProperty('email', 'email-invalido');
 
     expect(error?.constraints?.isEmail).toBe('E-mail inválido');
@@ -104,7 +107,7 @@ describe('CreateProducerDto', () => {
     ['cur1', 'Senha deve ter pelo menos 8 caracteres'],
     ['somenteletras', 'Senha deve conter pelo menos um número'],
     ['12345678', 'Senha deve conter pelo menos uma letra'],
-  ])('rejeita senha inválida: %s', async (senha) => {
+  ])('RNF03: rejeita senha inválida: %s', async (senha) => {
     const error = await errorsForProperty('senha', senha);
 
     expect(error).toBeDefined();
