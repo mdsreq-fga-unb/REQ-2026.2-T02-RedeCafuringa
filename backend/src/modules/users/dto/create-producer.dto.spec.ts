@@ -112,4 +112,104 @@ describe('HU02 — CreateProducerDto (RN02, RNF03)', () => {
 
     expect(error).toBeDefined();
   });
+
+  it.each([
+    ['nomeIniciativa', 120, 121],
+    ['nomeResponsavel', 120, 121],
+    ['localidade', 200, 201],
+  ])(
+    'RN02/RNF03: valida limite máximo de %s',
+    async (property, acceptedLength, rejectedLength) => {
+      const accepted = await errorsForProperty(
+        property,
+        'a'.repeat(acceptedLength),
+      );
+      const rejected = await errorsForProperty(
+        property,
+        'a'.repeat(rejectedLength),
+      );
+
+      expect(accepted).toBeUndefined();
+      expect(rejected).toBeDefined();
+    },
+  );
+
+  it('RNF03: aceita senha com 128 caracteres e rejeita com 129', async () => {
+    const accepted = await errorsForProperty('senha', `A1${'a'.repeat(126)}`);
+    const rejected = await errorsForProperty('senha', `A1${'a'.repeat(127)}`);
+
+    expect(accepted).toBeUndefined();
+    expect(rejected?.constraints?.maxLength).toBe(
+      'Senha deve ter no máximo 128 caracteres',
+    );
+  });
+
+  it('RNF03: rejeita e-mail com mais de 254 caracteres', async () => {
+    const error = await errorsForProperty(
+      'email',
+      `${'a'.repeat(250)}@example.com`,
+    );
+
+    expect(error?.constraints?.maxLength).toBe(
+      'E-mail deve ter no máximo 254 caracteres',
+    );
+  });
+
+  it.each(['nomeIniciativa', 'nomeResponsavel', 'localidade'])(
+    'RN02: rejeita %s vazio',
+    async (property) => {
+      const error = await errorsForProperty(property, '');
+
+      expect(error).toBeDefined();
+    },
+  );
+
+  it('RN02/RNF03: rejeita formas de pagamento que não são lista', async () => {
+    const error = await errorsForProperty('formasPagamento', 'PIX');
+
+    expect(error?.constraints?.isArray).toBe(
+      'Formas de pagamento deve ser uma lista',
+    );
+  });
+
+  it('RN02/RNF03: rejeita forma de pagamento que não é texto', async () => {
+    const error = await errorsForProperty('formasPagamento', ['PIX', 123]);
+
+    expect(error?.constraints?.isString).toBe(
+      'Cada forma de pagamento deve ser um texto',
+    );
+  });
+
+  it('RNF03: aceita CPF mascarado e normaliza seus caracteres', async () => {
+    const payload = {
+      ...validPayload(ProducerCategory.PRODUTOS),
+      cpf: '529.982.247-25',
+    };
+    const dto = plainToInstance(CreateProducerDto, payload);
+
+    expect(dto.cpf).toBe('52998224725');
+    expect(await validate(dto)).toHaveLength(0);
+  });
+
+  it('RN03/RNF03: aceita CNPJ mascarado e normaliza suas letras', async () => {
+    const cnpj = makeCnpj({ alfanumerico: true }).toLowerCase();
+    const maskedCnpj = `${cnpj.slice(0, 2)}.${cnpj.slice(2, 5)}.${cnpj.slice(5, 8)}/${cnpj.slice(8, 12)}-${cnpj.slice(12)}`;
+    const payload = {
+      ...validPayload(ProducerCategory.PRODUTOS),
+      cnpj: maskedCnpj,
+    };
+    const dto = plainToInstance(CreateProducerDto, payload);
+
+    expect(dto.cnpj).toBe(cnpj.toUpperCase());
+    expect(await validate(dto)).toHaveLength(0);
+  });
+
+  it('RN03/RNF03: aceita CNPJ alfanumérico válido', async () => {
+    const error = await errorsForProperty(
+      'cnpj',
+      makeCnpj({ alfanumerico: true }),
+    );
+
+    expect(error).toBeUndefined();
+  });
 });
