@@ -4,7 +4,6 @@ import { ActionButton } from "../../components/ui/ActionButton";
 import { BackButton } from "../../components/navigation/BackButton";
 import type { AuthResult } from "../../shared/types";
 import { isMockAuthEnabled, login } from "./authService";
-import { formatCpf, onlyDigits } from "./cpf";
 import { InvalidCredentialsError } from "./errors";
 import { demoHint } from "./mockAuth";
 import { validateLogin } from "./validateLogin";
@@ -25,7 +24,7 @@ export function LoginPage({
     onNavigate,
     onSignIn,
 }: LoginPageProps) {
-    const [cpf, setCpf] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState<LoginErrors>({});
     const [formError, setFormError] = useState("");
@@ -41,18 +40,18 @@ export function LoginPage({
         event.preventDefault();
         setFormError("");
 
-        const validationErrors = validateLogin({ cpf, password });
+        const validationErrors = validateLogin({ email, password });
         setErrors(validationErrors);
         if (Object.keys(validationErrors).length > 0) return;
 
         setLoading(true);
         let auth: AuthResult;
         try {
-            auth = await login({ cpf: onlyDigits(cpf), password });
+            auth = await login({ email, password });
         } catch (error) {
             setFormError(
                 error instanceof InvalidCredentialsError
-                    ? "CPF ou senha inválidos"
+                    ? "E-mail ou senha inválidos"
                     : "Não foi possível entrar agora. Tente novamente em instantes.",
             );
             setLoading(false);
@@ -77,12 +76,12 @@ export function LoginPage({
             <p className="body-copy">
                 {fromContact
                     ? "Acesse sua conta para continuar para o WhatsApp."
-                    : "Entre com seu CPF e sua senha."}
+                    : "Entre com seu e-mail e sua senha."}
             </p>
 
             {registered && (
                 <p className="form-notice" role="status">
-                    Cadastro concluído. Entre com seu CPF e sua senha.
+                    Cadastro concluído. Entre com seu e-mail e sua senha.
                 </p>
             )}
 
@@ -93,26 +92,26 @@ export function LoginPage({
                     </p>
                 )}
 
-                <label className="field-label" htmlFor="login-cpf">
-                    CPF
+                <label className="field-label" htmlFor="login-email">
+                    E-mail
                 </label>
                 <input
-                    id="login-cpf"
+                    id="login-email"
                     className="text-input"
-                    type="text"
-                    inputMode="numeric"
+                    type="email"
+                    inputMode="email"
                     autoComplete="username"
-                    placeholder="000.000.000-00"
-                    value={cpf}
-                    onChange={(event) => setCpf(formatCpf(event.target.value))}
-                    aria-invalid={Boolean(errors.cpf)}
+                    placeholder="seu@email.com"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    aria-invalid={Boolean(errors.email)}
                     aria-describedby={
-                        errors.cpf ? "login-cpf-error" : undefined
+                        errors.email ? "login-email-error" : undefined
                     }
                 />
-                {errors.cpf && (
-                    <p id="login-cpf-error" className="field-error">
-                        {errors.cpf}
+                {errors.email && (
+                    <p id="login-email-error" className="field-error">
+                        {errors.email}
                     </p>
                 )}
 

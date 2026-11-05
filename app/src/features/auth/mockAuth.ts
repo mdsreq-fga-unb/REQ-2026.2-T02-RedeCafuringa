@@ -8,7 +8,7 @@ import type { ConsumerSignupData } from "./registrationService";
 type MockUser = {
     cpf: string;
     password: string;
-    email?: string;
+    email: string;
     user: AuthResult["user"];
 };
 
@@ -25,6 +25,7 @@ const mockUsers: MockUser[] = [
     },
     {
         cpf: "11144477735",
+        email: "produtor@exemplo.com",
         password: "senha123",
         user: { id: 2, name: producerName, role: "producer" },
     },
@@ -83,17 +84,17 @@ export async function registerMockConsumer(
 }
 
 export const demoHint =
-    "Demonstração: CPF 529.982.247-25 (consumidor) ou 111.444.777-35 (produtor), senha senha123.";
+    "Demonstração: ana@exemplo.com (consumidor) ou produtor@exemplo.com (produtor), senha senha123.";
 
 export async function loginMock(credentials: {
-    cpf: string;
+    email: string;
     password: string;
 }): Promise<AuthResult> {
     await new Promise((resolve) => setTimeout(resolve, 400));
 
     const found = [...mockUsers, ...readRegisteredUsers()].find(
         (item) =>
-            item.cpf === credentials.cpf &&
+            item.email === credentials.email.trim().toLowerCase() &&
             item.password === credentials.password,
     );
     if (!found) throw new InvalidCredentialsError();
@@ -106,7 +107,7 @@ export async function loginMock(credentials: {
 
 export function registerMockUser(account: {
     cpf: string;
-    email?: string;
+    email: string;
     password: string;
     name: string;
     role: Role;
@@ -122,7 +123,7 @@ export function registerMockUser(account: {
     };
     mockUsers.push({
         cpf: account.cpf,
-        email: account.email,
+        email: account.email.trim().toLowerCase(),
         password: account.password,
         user,
     });
