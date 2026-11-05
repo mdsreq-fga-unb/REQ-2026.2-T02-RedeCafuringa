@@ -59,13 +59,13 @@ Em produção o Mongoose **não** cria índices no boot. Depois do primeiro `up`
 a cada deploy que altere índices) sincronize-os, de forma idempotente:
 
 ```bash
-docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env \
-  exec api node dist/database/sync-indexes.cli.js
+./scripts/dev.sh indexes --prod     # na raiz do repositório; usa backend/deploy/.env
 ```
 
 Bancos anteriores à HU03 têm `cpfHash` único **não** esparso, o que impede mais de
 um administrador (sem CPF); o comando acima troca o índice. Em desenvolvimento
-local use `npm run db:sync-indexes` (dentro de `backend/`).
+local o `./scripts/dev.sh up` já roda a sincronização (também disponível como
+`./scripts/dev.sh indexes`).
 
 O cadastro de administrador (`POST /users/admins`) exige um administrador
 autenticado. O primeiro nasce das variáveis `ADMIN_BOOTSTRAP_EMAIL` e

@@ -101,7 +101,7 @@ Compose de dev/prod healthy; restore de 1 documento validado; app user negado no
      uma conta bloqueia novos logins e o `/auth/me`, mas tokens já emitidos seguem
      válidos nas demais rotas até o `exp`.
    - O índice único (esparso, HU03) de `cpfHash` só é criado automaticamente fora de
-     produção (`autoIndex`). Em produção, criá-lo com `db:sync-indexes` **antes** do
+     produção (`autoIndex`). Em produção, criá-lo com `./scripts/dev.sh indexes --prod` **antes** do
      primeiro cadastro (ver [operação, 3.1](operacao.md)).
    - `ADMIN_BOOTSTRAP_SENHA` é segredo de uso único: remova-a do `.env` depois do
      primeiro login.
