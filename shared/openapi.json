@@ -859,6 +859,84 @@
         ]
       }
     },
+    "/api/v1/users/admins": {
+      "post": {
+        "description": "HU03: só um administrador autenticado cria outra conta administrativa, informando e-mail e senha. O primeiro administrador vem de ADMIN_BOOTSTRAP_EMAIL/ADMIN_BOOTSTRAP_SENHA.",
+        "operationId": "usersCreateAdmin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Administrador criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "E-mail ou senha inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "E-mail já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cadastrar administrador",
+        "tags": [
+          "users"
+        ]
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "description": "Troca e-mail e senha (RN05) por um JWT, válido por `expiresIn` segundos. Rota pública com limite estrito de tentativas por IP.",
@@ -1095,15 +1173,14 @@
           "cpf": {
             "type": "string",
             "example": "***.982.247-**",
-            "description": "CPF mascarado"
+            "description": "CPF mascarado; ausente em contas administrativas"
           }
         },
         "required": [
           "id",
           "nome",
           "email",
-          "perfil",
-          "cpf"
+          "perfil"
         ]
       },
       "ErrorResponse": {
@@ -1298,6 +1375,55 @@
           "localidade",
           "categoriaOfertada",
           "formasPagamento",
+          "perfil"
+        ]
+      },
+      "CreateAdminDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "admin@exemplo.com",
+            "description": "E-mail de acesso do novo administrador"
+          },
+          "senha": {
+            "type": "string",
+            "example": "SenhaForte123",
+            "description": "8 a 128 caracteres, com pelo menos uma letra e um número"
+          }
+        },
+        "required": [
+          "email",
+          "senha"
+        ]
+      },
+      "AdminResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
+          },
+          "email": {
+            "type": "string",
+            "example": "admin@exemplo.com",
+            "description": "E-mail da conta"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR",
+              "ADMINISTRADOR"
+            ],
+            "example": "ADMINISTRADOR",
+            "description": "Perfil de acesso (RN01)"
+          }
+        },
+        "required": [
+          "id",
+          "email",
           "perfil"
         ]
       },
