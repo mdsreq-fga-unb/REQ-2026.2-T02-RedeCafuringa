@@ -145,6 +145,22 @@ describe('HU01 — Cadastrar perfil de consumidor (e2e)', () => {
 
     expect(response.body.message).toBe('CPF já cadastrado');
   });
+
+  it('CA03: recusa e-mail já cadastrado com 409 e mensagem de e-mail', async () => {
+    await t
+      .request()
+      .post(REGISTER)
+      .send(makeConsumer({ email: 'maria@exemplo.com' }))
+      .expect(201);
+
+    const response = await t
+      .request()
+      .post(REGISTER)
+      .send(makeConsumer({ email: 'MARIA@exemplo.com' }))
+      .expect(409);
+
+    expect(response.body.message).toBe('E-mail já cadastrado');
+  });
 });
 
 const PRODUCER_REGISTER = '/api/v1/users/producers';
