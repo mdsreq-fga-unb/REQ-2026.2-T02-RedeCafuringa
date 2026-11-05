@@ -93,12 +93,15 @@ describe("authService.login", () => {
         );
     });
 
-    it("recusa o perfil ADMINISTRADOR, que ainda não tem área no app", async () => {
+    it("mapeia ADMINISTRADOR para o papel admin (conta sem CPF)", async () => {
         const { toAuthResult } = await load();
+        const response = backendLogin("ADMINISTRADOR");
+        delete response.usuario.cpf;
 
-        expect(() => toAuthResult(backendLogin("ADMINISTRADOR"))).toThrow(
-            /não é suportado/,
-        );
+        expect(toAuthResult(response)).toEqual({
+            token: "jwt-abc",
+            user: expect.objectContaining({ role: "admin" }),
+        });
     });
 
     it("lança InvalidCredentialsError quando o servidor responde 401", async () => {

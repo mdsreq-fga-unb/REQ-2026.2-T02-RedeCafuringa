@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PasswordHasher } from '../../common/crypto/password-hasher.js';
 import { PiiCipher } from '../../common/crypto/pii-cipher.js';
+import { AdminBootstrapService } from './admin-bootstrap.service.js';
 import { User, UserSchema } from './schemas/user.schema.js';
 import { UsersController } from './users.controller.js';
 import { UsersService } from './users.service.js';
@@ -14,6 +15,7 @@ import { UsersService } from './users.service.js';
   controllers: [UsersController],
   providers: [
     UsersService,
+    AdminBootstrapService,
     PasswordHasher,
     {
       provide: PiiCipher,

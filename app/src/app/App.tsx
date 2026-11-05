@@ -1,6 +1,12 @@
+import { useEffect } from "react";
 import { BrandHeader, BottomNavigation } from "@/components";
 import { AccountPage } from "@/features/account";
 import {
+    AdminAccessPage,
+    AdminSignupPage,
+    AdminSignupSuccessPage,
+    AdminLoginPage,
+    registerAdmin,
     ConsumerProfileSelectionPage,
     ConsumerSignupPage,
     ConsumerSignupSuccessPage,
@@ -22,6 +28,8 @@ import type { AuthResult } from "@/shared/types";
 import { useHashRoute } from "./useHashRoute";
 import { RegisterPage } from "@/features/register";
 import "../App.css";
+import { isMockAuthEnabled } from "@/features/auth/authMode";
+import { DemoNavigation } from "@/features/auth/DemoNavigation";
 
 export function App() {
     const { route, navigate } = useHashRoute();
@@ -34,6 +42,13 @@ export function App() {
     const query = new URLSearchParams(route.split("?")[1] || "");
     const fromContact = query.has("contato");
     const justRegistered = query.get("cadastro") === "ok";
+    // RN03/RNF08: só administrador autenticado cadastra outro (o backend também exige).
+    const adminOnly =
+        path === "/cadastro/administrador" || path === "/conta-criada/admin";
+    const adminBlocked = adminOnly && role !== "admin";
+    useEffect(() => {
+        if (adminBlocked) navigate("/admin/entrar");
+    }, [adminBlocked]); // eslint-disable-line react-hooks/exhaustive-deps
     const needsProfileSelection =
         role === null &&
         ["/conta", "/notificacoes", "/reservas"].includes(path);
@@ -44,6 +59,9 @@ export function App() {
     const loginProfile =
         path === "/login/consumer" || fromContact ? "consumer" : "producer";
     const isAuthFlow =
+        path.startsWith("/admin/") ||
+        path === "/cadastro/administrador" ||
+        path === "/conta-criada/admin" ||
         showProfileSelection ||
         showLogin ||
         path === "/cadastro/consumidor" ||
@@ -116,7 +134,25 @@ export function App() {
     return (
         <div className={`app-shell ${isAuthFlow ? "auth-shell" : ""}`}>
             <BrandHeader onHome={() => navigate("/perfil")} />
+            {isMockAuthEnabled && (
+                <DemoNavigation onNavigate={navigate} onSignIn={signIn} />
+            )}
             <main className="main-content">
+                {path === "/admin/acesso" && (
+                    <AdminAccessPage onNavigate={navigate} />
+                )}
+                {path === "/admin/entrar" && (
+                    <AdminLoginPage onNavigate={navigate} onSignIn={signIn} />
+                )}
+                {path === "/cadastro/administrador" && !adminBlocked && (
+                    <AdminSignupPage
+                        createAccount={registerAdmin}
+                        onNavigate={navigate}
+                    />
+                )}
+                {path === "/conta-criada/admin" && !adminBlocked && (
+                    <AdminSignupSuccessPage onNavigate={navigate} />
+                )}
                 {path === "/perfil" && (
                     <ProfilePage
                         contactAvailable={contactAvailable}

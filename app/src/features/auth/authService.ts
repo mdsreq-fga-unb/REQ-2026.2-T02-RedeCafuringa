@@ -17,12 +17,11 @@ export type Credentials = {
     password: string;
 };
 
-// O app só tem telas para consumidor e produtor. O perfil ADMINISTRADOR existe no
-// backend, mas ainda não tem área no app.
 const roleByPerfil: Partial<Record<LoginResponse["usuario"]["perfil"], Role>> =
     {
         CONSUMIDOR: "consumer",
         PRODUTOR: "producer",
+        ADMINISTRADOR: "admin",
     };
 
 /** Converte a resposta do backend (contrato OpenAPI) no formato usado pelo app. */

@@ -273,6 +273,76 @@ describe('UsersService', () => {
     });
   });
 
+  describe('createAdmin (HU03, RF03)', () => {
+    it('CA05: grava a conta com perfil ADMINISTRADOR, e-mail em minúsculas e senha com hash', async () => {
+      const { service, model, hasher } = setup();
+
+      const user = await service.createAdmin({
+        email: 'Admin@Exemplo.COM',
+        senha: 'SenhaForte123',
+      });
+
+      const saved = model.create.mock.calls[0][0];
+      expect(user.perfil).toBe(Role.ADMINISTRADOR);
+      expect(saved.perfil).toBe(Role.ADMINISTRADOR);
+      expect(saved.email).toBe('admin@exemplo.com');
+      expect(saved.senhaHash).toBe('hash:SenhaForte123');
+      expect(hasher.hash).toHaveBeenCalledWith('SenhaForte123');
+    });
+
+    it('HU03 só pede e-mail e senha: não grava CPF, CNPJ nem data de nascimento', async () => {
+      const { service, model } = setup();
+
+      await service.createAdmin({
+        email: 'admin@exemplo.com',
+        senha: 'SenhaForte123',
+      });
+
+      const saved = model.create.mock.calls[0][0];
+      expect(saved).not.toHaveProperty('cpfHash');
+      expect(saved).not.toHaveProperty('cpfCifrado');
+      expect(saved).not.toHaveProperty('dataNascimento');
+      expect(saved.nome).toBeTruthy();
+    });
+
+    it('CA04: recusa e-mail já cadastrado com 409', async () => {
+      const { service, model } = setup();
+      model.exists.mockReturnValue(query({ _id: 'existente' }));
+
+      await expect(
+        service.createAdmin({ email: 'a@b.com', senha: 'SenhaForte123' }),
+      ).rejects.toThrow(new ConflictException('E-mail já cadastrado'));
+      expect(model.create).not.toHaveBeenCalled();
+    });
+
+    it('CA04: converte corrida do índice único de e-mail em 409', async () => {
+      const { service, model } = setup();
+      model.create.mockRejectedValue(
+        Object.assign(new Error('E11000'), {
+          code: 11000,
+          keyPattern: { email: 1 },
+        }),
+      );
+
+      await expect(
+        service.createAdmin({ email: 'a@b.com', senha: 'SenhaForte123' }),
+      ).rejects.toThrow(ConflictException);
+    });
+
+    it('não disfarça de "e-mail repetido" uma chave duplicada de outro índice', async () => {
+      const { service, model } = setup();
+      const indexError = Object.assign(new Error('E11000'), {
+        code: 11000,
+        keyPattern: { cpfHash: 1 },
+      });
+      model.create.mockRejectedValue(indexError);
+
+      await expect(
+        service.createAdmin({ email: 'a@b.com', senha: 'SenhaForte123' }),
+      ).rejects.toBe(indexError);
+    });
+  });
+
   describe('findByEmail (RN05)', () => {
     it('busca pelo e-mail normalizado em minúsculas', async () => {
       const { service, model } = setup();

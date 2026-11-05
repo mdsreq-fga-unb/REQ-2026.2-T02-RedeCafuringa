@@ -4,6 +4,10 @@ const getInitialRoute = () => {
     const requested = window.location.hash.slice(1) || "/escolher-perfil";
     return [
         "/perfil",
+        "/admin/acesso",
+        "/admin/entrar",
+        "/cadastro/administrador",
+        "/conta-criada/admin",
         "/catalogo",
         "/entrar",
         "/conta",

@@ -1,4 +1,4 @@
-export type Role = "consumer" | "producer";
+export type Role = "consumer" | "producer" | "admin";
 
 export type Offer = {
     id: string;

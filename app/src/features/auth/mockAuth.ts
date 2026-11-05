@@ -6,7 +6,8 @@ import { InvalidCredentialsError } from "./errors";
 import type { ConsumerSignupData } from "./registrationService";
 
 type MockUser = {
-    cpf: string;
+    // Administrador não tem CPF (HU03).
+    cpf?: string;
     password: string;
     email: string;
     user: AuthResult["user"];
@@ -28,6 +29,11 @@ const mockUsers: MockUser[] = [
         email: "produtor@exemplo.com",
         password: "senha123",
         user: { id: 2, name: producerName, role: "producer" },
+    },
+    {
+        email: "admin@exemplo.com",
+        password: "senha123",
+        user: { id: 3, name: "Administrador", role: "admin" },
     },
 ];
 
@@ -51,6 +57,45 @@ function readRegisteredUsers(): MockUser[] {
     } catch {
         return [];
     }
+}
+
+// Só existe com o login falso ligado (dados fictícios de demonstração): por isso a
+// senha do administrador criado na demonstração fica no localStorage para ele poder entrar.
+const mockAdminsKey = "cafuringa-mock-admin-emails";
+
+type MockAdmin = { email: string; password: string };
+
+function readMockAdmins(): MockAdmin[] {
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem(mockAdminsKey) || "[]",
+        ) as unknown;
+        if (!Array.isArray(saved)) return [];
+        return saved.filter(
+            (item): item is MockAdmin =>
+                typeof item?.email === "string" &&
+                typeof item?.password === "string",
+        );
+    } catch {
+        return [];
+    }
+}
+
+export async function registerMockAdmin(data: {
+    email: string;
+    senha: string;
+}): Promise<void> {
+    const email = data.email.trim().toLowerCase();
+    const admins = readMockAdmins();
+    if (
+        admins.some((item) => item.email === email) ||
+        mockUsers.some((item) => item.email === email) ||
+        readRegisteredUsers().some((item) => item.email === email)
+    ) {
+        throw new Error("E-mail já cadastrado");
+    }
+    admins.push({ email, password: data.senha });
+    localStorage.setItem(mockAdminsKey, JSON.stringify(admins));
 }
 
 export async function registerMockConsumer(
@@ -92,7 +137,16 @@ export async function loginMock(credentials: {
 }): Promise<AuthResult> {
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    const found = [...mockUsers, ...readRegisteredUsers()].find(
+    const adminUsers: MockUser[] = readMockAdmins().map((item, index) => ({
+        email: item.email,
+        password: item.password,
+        user: {
+            id: `admin-${index + 1}`,
+            name: "Administrador",
+            role: "admin" as const,
+        },
+    }));
+    const found = [...mockUsers, ...readRegisteredUsers(), ...adminUsers].find(
         (item) =>
             item.email === credentials.email.trim().toLowerCase() &&
             item.password === credentials.password,

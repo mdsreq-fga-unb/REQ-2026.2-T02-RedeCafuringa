@@ -356,6 +356,13 @@ export function ConsumerProfileSelectionPage({
                 >
                     Continuar
                 </ActionButton>
+                <button
+                    className="text-action admin-access-link"
+                    type="button"
+                    onClick={() => onNavigate("/admin/acesso")}
+                >
+                    Acesso administrativo
+                </button>
             </div>
         </section>
     );

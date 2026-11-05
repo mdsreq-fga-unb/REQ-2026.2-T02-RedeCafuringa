@@ -3,7 +3,9 @@ import type { AuthResult, Role } from "../../shared/types";
 
 const readRole = (): Role | null => {
     const saved = localStorage.getItem("cafuringa-role");
-    return saved === "consumer" || saved === "producer" ? saved : null;
+    return saved === "consumer" || saved === "producer" || saved === "admin"
+        ? saved
+        : null;
 };
 
 export function useDemoSession() {

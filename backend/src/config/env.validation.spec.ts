@@ -112,6 +112,55 @@ describe('envValidationSchema', () => {
     });
   });
 
+  describe('administrador inicial (HU03)', () => {
+    it('é opcional', () => {
+      const { error, value } = envValidationSchema.validate(base);
+
+      expect(error).toBeUndefined();
+      expect(value.ADMIN_BOOTSTRAP_EMAIL).toBeUndefined();
+    });
+
+    it('aceita e-mail e senha forte juntos', () => {
+      const { error } = envValidationSchema.validate({
+        ...base,
+        ADMIN_BOOTSTRAP_EMAIL: 'admin@exemplo.com',
+        ADMIN_BOOTSTRAP_SENHA: 'SenhaForte123',
+      });
+
+      expect(error).toBeUndefined();
+    });
+
+    it('aceita e-mail de domínio interno (.local), como o do .env.example', () => {
+      const { error } = envValidationSchema.validate({
+        ...base,
+        ADMIN_BOOTSTRAP_EMAIL: 'admin@cafuringa.local',
+        ADMIN_BOOTSTRAP_SENHA: 'AdminDev123',
+      });
+
+      expect(error).toBeUndefined();
+    });
+
+    it.each([
+      ['só o e-mail', { ADMIN_BOOTSTRAP_EMAIL: 'admin@exemplo.com' }],
+      ['só a senha', { ADMIN_BOOTSTRAP_SENHA: 'SenhaForte123' }],
+      [
+        'e-mail inválido',
+        { ADMIN_BOOTSTRAP_EMAIL: 'x', ADMIN_BOOTSTRAP_SENHA: 'SenhaForte123' },
+      ],
+      [
+        'senha fraca',
+        {
+          ADMIN_BOOTSTRAP_EMAIL: 'admin@exemplo.com',
+          ADMIN_BOOTSTRAP_SENHA: 'fraca',
+        },
+      ],
+    ])('rejeita %s', (_caso, extra) => {
+      const { error } = envValidationSchema.validate({ ...base, ...extra });
+
+      expect(error).toBeDefined();
+    });
+  });
+
   describe('segredos de autenticação e dados pessoais', () => {
     it.each(['JWT_SECRET', 'PII_HMAC_SECRET', 'PII_ENCRYPTION_KEY'])(
       'exige %s',

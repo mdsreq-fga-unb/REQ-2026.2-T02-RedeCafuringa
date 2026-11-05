@@ -104,6 +104,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/users/admins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cadastrar administrador
+         * @description HU03: só um administrador autenticado cria outra conta administrativa, informando e-mail e senha. O primeiro administrador vem de ADMIN_BOOTSTRAP_EMAIL/ADMIN_BOOTSTRAP_SENHA.
+         */
+        post: operations["usersCreateAdmin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/login": {
         parameters: {
             query?: never;
@@ -201,10 +221,10 @@ export interface components {
              */
             perfil: "CONSUMIDOR" | "PRODUTOR" | "ADMINISTRADOR";
             /**
-             * @description CPF mascarado
+             * @description CPF mascarado; ausente em contas administrativas
              * @example ***.982.247-**
              */
-            cpf: string;
+            cpf?: string;
         };
         ErrorResponse: {
             /**
@@ -322,6 +342,36 @@ export interface components {
              * @example ***.982.247-**
              */
             cpf?: string;
+        };
+        CreateAdminDto: {
+            /**
+             * @description E-mail de acesso do novo administrador
+             * @example admin@exemplo.com
+             */
+            email: string;
+            /**
+             * @description 8 a 128 caracteres, com pelo menos uma letra e um número
+             * @example SenhaForte123
+             */
+            senha: string;
+        };
+        AdminResponse: {
+            /**
+             * @description Identificador do usuário
+             * @example 665f1c2e9b1d4a0012ab34cd
+             */
+            id: string;
+            /**
+             * @description E-mail da conta
+             * @example admin@exemplo.com
+             */
+            email: string;
+            /**
+             * @description Perfil de acesso (RN01)
+             * @example ADMINISTRADOR
+             * @enum {string}
+             */
+            perfil: "CONSUMIDOR" | "PRODUTOR" | "ADMINISTRADOR";
         };
         LoginDto: {
             /**
@@ -895,6 +945,66 @@ export interface operations {
                 headers: {
                     /** @description Segundos até a próxima tentativa ser aceita */
                     "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersCreateAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAdminDto"];
+            };
+        };
+        responses: {
+            /** @description Administrador criado */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminResponse"];
+                };
+            };
+            /** @description E-mail ou senha inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: ADMINISTRADOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description E-mail já cadastrado */
+            409: {
+                headers: {
                     [name: string]: unknown;
                 };
                 content: {

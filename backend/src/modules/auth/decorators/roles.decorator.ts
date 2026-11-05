@@ -1,5 +1,6 @@
 import { applyDecorators, SetMetadata } from '@nestjs/common';
 import { ApiForbiddenResponse } from '@nestjs/swagger';
+import { ErrorResponse } from '../../../common/dto/error.response.js';
 import type { Role } from '../../users/domain/role.js';
 
 export const ROLES_KEY = 'auth:roles';
@@ -13,5 +14,6 @@ export const Roles = (...roles: Role[]) =>
     SetMetadata(ROLES_KEY, roles),
     ApiForbiddenResponse({
       description: `Exclusivo para: ${roles.join(', ')}`,
+      type: ErrorResponse,
     }),
   );

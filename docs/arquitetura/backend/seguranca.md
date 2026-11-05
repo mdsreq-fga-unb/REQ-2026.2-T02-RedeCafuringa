@@ -51,6 +51,7 @@ O time responde em até 5 dias úteis.
 | Senhas com argon2id; política mínima (8–128, letra e número) | `backend/src/common/crypto/password-hasher.ts` |
 | CPF como *blind index* HMAC-SHA256 + cifra AES-256-GCM (D1) | `backend/src/common/crypto/pii-cipher.ts` |
 | Login por e-mail e senha (RN05), sem enumeração (mensagem e custo iguais para e-mail inexistente) | `backend/src/modules/auth/auth.service.ts` |
+| Cadastro de administrador só por administrador (`@Roles(ADMINISTRADOR)`, RN03); 1º admin por `ADMIN_BOOTSTRAP_*` | `backend/src/modules/users/users.controller.ts`, `admin-bootstrap.service.ts` |
 | Rate limit dedicado a login/cadastro (`AUTH_THROTTLE_LIMIT`) | `@AuthThrottle()` |
 | Bloqueio de cadastro de menores de 18 anos (RNF15) | `backend/src/modules/users/domain/age.ts` |
 
@@ -99,8 +100,11 @@ Compose de dev/prod healthy; restore de 1 documento validado; app user negado no
    - Não há refresh token nem revogação: o token vale até expirar (15 min). Desativar
      uma conta bloqueia novos logins e o `/auth/me`, mas tokens já emitidos seguem
      válidos nas demais rotas até o `exp`.
-   - O índice único de `cpfHash` só é criado automaticamente fora de produção
-     (`autoIndex`). Em produção, criá-lo por migração **antes** do primeiro cadastro.
+   - O índice único (esparso, HU03) de `cpfHash` só é criado automaticamente fora de
+     produção (`autoIndex`). Em produção, criá-lo com `./scripts/dev.sh indexes --prod` **antes** do
+     primeiro cadastro (ver [operação, 3.1](operacao.md)).
+   - `ADMIN_BOOTSTRAP_SENHA` é segredo de uso único: remova-a do `.env` depois do
+     primeiro login.
    - `PII_HMAC_SECRET` e `PII_ENCRYPTION_KEY` não têm rotação: perdê-los torna os
      CPFs ilegíveis/inacessíveis. Guardar junto da chave de backup.
 9. **Docs:** `mkdocs build` tem warnings de links quebrados pré-existentes; não
