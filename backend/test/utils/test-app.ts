@@ -48,6 +48,9 @@ export async function createTestApp(
   process.env.JWT_SECRET = TEST_JWT_SECRET;
   process.env.PII_HMAC_SECRET = randomBytes(32).toString('hex');
   process.env.PII_ENCRYPTION_KEY = randomBytes(32).toString('hex');
+  // Um .env local não pode semear o administrador inicial nos testes.
+  process.env.ADMIN_BOOTSTRAP_EMAIL = '';
+  process.env.ADMIN_BOOTSTRAP_SENHA = '';
 
   const { AppModule } = await import('../../src/app.module.js');
   const { configureApp } = await import('../../src/app.setup.js');
