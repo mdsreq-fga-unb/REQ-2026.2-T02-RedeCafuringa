@@ -249,97 +249,159 @@ export function AdminSignupSuccessPage({ onNavigate }: NavigationProps) {
 /** O contrato atual autentica por CPF; login administrativo por e-mail depende do backend. */
 export function AdminLoginPage({ onNavigate }: NavigationProps) {
     const [entered, setEntered] = useState(false);
-    if (isMockAuthEnabled) {
-        return (
-            <section className="signup-page admin-signup-page">
-                <BackButton
-                    label="Voltar"
-                    onClick={() => onNavigate("/admin/acesso")}
-                />
-                <h1>
-                    {entered
-                        ? "Acesso administrativo local"
-                        : "Entrar como administrador"}
-                </h1>
-                {entered ? (
-                    <>
-                        <p className="body-copy" role="status">
-                            Entrada simulada com sucesso. Use o menu “Explorar
-                            telas” para navegar pelas telas existentes.
-                        </p>
-                        <ActionButton
-                            variant="orange"
-                            onClick={() =>
-                                onNavigate("/cadastro/administrador")
-                            }
-                        >
-                            Cadastrar adm
-                        </ActionButton>
-                    </>
-                ) : (
-                    <form
-                        onSubmit={(event) => {
-                            event.preventDefault();
-                            setEntered(true);
-                        }}
-                    >
-                        <p className="demo-note">
-                            Demonstração: use qualquer e-mail válido e uma senha
-                            com pelo menos 8 caracteres. Nenhuma permissão real
-                            é concedida.
-                        </p>
-                        <label
-                            className="field-label"
-                            htmlFor="demo-admin-email"
-                        >
-                            E-mail
-                        </label>
-                        <input
-                            className="text-input signup-input"
-                            id="demo-admin-email"
-                            type="email"
-                            autoComplete="username"
-                            defaultValue="admin@exemplo.com"
-                            required
-                        />
-                        <label
-                            className="field-label"
-                            htmlFor="demo-admin-password"
-                        >
-                            Senha
-                        </label>
-                        <input
-                            className="text-input signup-input"
-                            id="demo-admin-password"
-                            type="password"
-                            autoComplete="current-password"
-                            defaultValue="senha123"
-                            minLength={8}
-                            required
-                        />
-                        <ActionButton
-                            variant="orange"
-                            className="signup-submit"
-                            type="submit"
-                        >
-                            Entrar
-                        </ActionButton>
-                    </form>
-                )}
-            </section>
-        );
-    }
+    const [formError, setFormError] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+        {},
+    );
     return (
-        <section className="signup-page">
+        <section className="signup-page admin-login-page">
             <BackButton
                 label="Voltar"
                 onClick={() => onNavigate("/admin/acesso")}
             />
-            <h1>Entrar como administrador</h1>
-            <p className="body-copy" role="status">
-                O acesso administrativo por e-mail estará disponível após a
-                integração com o serviço de autenticação.
-            </p>
+            <h1>{entered ? "Acesso administrativo local" : "Bem-vindo!"}</h1>
+            {!entered && (
+                <p className="body-copy">
+                    Entre para acompanhar os usuários cadastrados na plataforma.
+                </p>
+            )}
+            {entered ? (
+                <>
+                    <p className="body-copy" role="status">
+                        Entrada simulada com sucesso. Use o menu “Explorar
+                        telas” para navegar pelas telas existentes.
+                    </p>
+                    <ActionButton
+                        variant="orange"
+                        onClick={() => onNavigate("/cadastro/administrador")}
+                    >
+                        Cadastrar adm
+                    </ActionButton>
+                </>
+            ) : (
+                <form
+                    noValidate
+                    onSubmit={(event) => {
+                        event.preventDefault();
+                        setFormError("");
+                        const next: typeof errors = {};
+                        if (!email.trim()) next.email = "Campo obrigatório.";
+                        else if (
+                            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+                        )
+                            next.email = "Informe um e-mail válido.";
+                        if (!password.trim())
+                            next.password = "Campo obrigatório.";
+                        else if (password.length < 8)
+                            next.password =
+                                "A senha precisa ter ao menos 8 caracteres.";
+                        setErrors(next);
+                        if (Object.keys(next).length) {
+                            document
+                                .getElementById(
+                                    next.email
+                                        ? "demo-admin-email"
+                                        : "demo-admin-password",
+                                )
+                                ?.focus();
+                            return;
+                        }
+                        if (!isMockAuthEnabled) {
+                            setFormError(
+                                "O acesso administrativo por e-mail estará disponível após a integração com o serviço de autenticação.",
+                            );
+                            return;
+                        }
+                        setEntered(true);
+                    }}
+                >
+                    {formError && (
+                        <p className="form-alert" role="alert">
+                            {formError}
+                        </p>
+                    )}
+                    {Object.keys(errors).length > 0 && (
+                        <p className="form-alert" role="alert">
+                            Revise os campos indicados.
+                        </p>
+                    )}
+                    <label className="field-label" htmlFor="demo-admin-email">
+                        E-mail <span aria-hidden="true">*</span>
+                    </label>
+                    <input
+                        className="text-input signup-input"
+                        id="demo-admin-email"
+                        aria-label="E-mail"
+                        type="email"
+                        autoComplete="username"
+                        placeholder="ana@exemplo.com"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        aria-invalid={Boolean(errors.email)}
+                        aria-describedby={
+                            errors.email ? "demo-admin-email-error" : undefined
+                        }
+                        required
+                    />
+                    {errors.email && (
+                        <p className="field-error" id="demo-admin-email-error">
+                            {errors.email}
+                        </p>
+                    )}
+                    <label
+                        className="field-label"
+                        htmlFor="demo-admin-password"
+                    >
+                        Senha <span aria-hidden="true">*</span>
+                    </label>
+                    <input
+                        className="text-input signup-input"
+                        id="demo-admin-password"
+                        aria-label="Senha"
+                        type="password"
+                        placeholder="••••••••"
+                        autoComplete="current-password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        aria-invalid={Boolean(errors.password)}
+                        aria-describedby={
+                            errors.password
+                                ? "demo-admin-password-error"
+                                : undefined
+                        }
+                        minLength={8}
+                        required
+                    />
+                    {errors.password && (
+                        <p
+                            className="field-error"
+                            id="demo-admin-password-error"
+                        >
+                            {errors.password}
+                        </p>
+                    )}
+                    <ActionButton
+                        variant="orange"
+                        className="signup-submit"
+                        type="submit"
+                    >
+                        Entrar
+                    </ActionButton>
+                    {isMockAuthEnabled && (
+                        <p className="demo-note">
+                            Conta de administrador para teste local:
+                            <br />
+                            E-mail: admin@exemplo.com
+                            <br />
+                            Senha: senha123
+                            <br />
+                            Acesso simulado, sem permissões reais.
+                        </p>
+                    )}
+                </form>
+            )}
         </section>
     );
 }
