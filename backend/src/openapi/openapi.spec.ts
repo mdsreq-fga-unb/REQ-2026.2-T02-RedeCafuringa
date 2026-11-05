@@ -65,6 +65,7 @@ describe('contrato OpenAPI', () => {
       'GET /api/v1/health/live',
       'GET /api/v1/health/ready',
       'POST /api/v1/auth/login',
+      'POST /api/v1/users/admins',
       'POST /api/v1/users/consumers',
       'POST /api/v1/users/producers',
     ]);
@@ -89,11 +90,14 @@ describe('contrato OpenAPI', () => {
     }
   });
 
-  it('só /auth/me exige Bearer; o resto é público', () => {
+  it('só /auth/me e o cadastro de administrador exigem Bearer; o resto é público', () => {
     const protectedOps = operations
       .filter((o) => o.op.security?.some((s) => 'bearer' in s))
       .map((o) => `${o.method} ${o.path}`);
-    expect(protectedOps).toEqual(['get /api/v1/auth/me']);
+    expect(protectedOps.sort()).toEqual([
+      'get /api/v1/auth/me',
+      'post /api/v1/users/admins',
+    ]);
   });
 
   it('respostas de erro usam o schema ErrorResponse; 429 documenta Retry-After', () => {
@@ -119,7 +123,12 @@ describe('contrato OpenAPI', () => {
       string,
       { properties?: Record<string, { description?: string }> }
     >;
-    for (const out of ['UserResponse', 'ProducerResponse', 'LoginResponse']) {
+    for (const out of [
+      'UserResponse',
+      'ProducerResponse',
+      'AdminResponse',
+      'LoginResponse',
+    ]) {
       expect(Object.keys(schemas[out].properties ?? {})).not.toContain('senha');
       expect(Object.keys(schemas[out].properties ?? {})).not.toContain('hash');
     }
