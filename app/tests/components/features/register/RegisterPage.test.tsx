@@ -1,4 +1,10 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+    cleanup,
+    render,
+    screen,
+    waitFor,
+    within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RegisterPage } from "@/features/register/RegisterPage";
@@ -24,11 +30,14 @@ afterEach(() => {
 
 type User = ReturnType<typeof userEvent.setup>;
 
+const MEI_OPTION = "MEI (CPF e CNPJ)";
+
 type FormInput = {
-    documentLabel?: string;
     birthDate?: string;
     name?: string;
+    responsible?: string;
     document?: string;
+    cnpj?: string;
     phone?: string;
     email?: string;
     address?: string;
@@ -38,9 +47,9 @@ type FormInput = {
 
 async function fillForm(user: User, input: FormInput = {}) {
     const values = {
-        documentLabel: "CPF",
         birthDate: "10051990",
-        name: "Maria da Silva",
+        name: "Horta da Maria",
+        responsible: "Maria da Silva",
         document: "52998224725",
         phone: "61912345678",
         email: "maria@exemplo.com",
@@ -51,16 +60,16 @@ async function fillForm(user: User, input: FormInput = {}) {
     };
 
     await user.type(screen.getByLabelText("Nome da iniciativa"), values.name);
-    await user.type(
-        screen.getByLabelText(values.documentLabel),
-        values.document,
-    );
-    if (values.documentLabel === "CPF") {
-        await user.type(
-            screen.getByLabelText("Data de nascimento"),
-            values.birthDate,
-        );
+    await user.type(screen.getByLabelText("Responsável"), values.responsible);
+    await user.type(screen.getByLabelText("CPF"), values.document);
+    if (values.cnpj) {
+        await user.click(screen.getByRole("radio", { name: MEI_OPTION }));
+        await user.type(screen.getByLabelText("CNPJ"), values.cnpj);
     }
+    await user.type(
+        screen.getByLabelText("Data de nascimento"),
+        values.birthDate,
+    );
     await user.type(screen.getByLabelText("Telefone"), values.phone);
     await user.type(screen.getByLabelText("E-mail"), values.email);
     await user.type(screen.getByLabelText("Localidade"), values.address);
@@ -109,34 +118,117 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
         expect(screen.getByRole("button", { name: "Continuar" })).toBeTruthy();
     });
 
-    it("permite escolher a categoria e as formas de pagamento", async () => {
+    it("permite escolher a categoria", async () => {
         const { user } = renderRegister();
         const category = screen.getByRole("combobox", { name: "Categoria" });
-        const paymentMethods = screen.getByRole("combobox", {
+
+        await user.selectOptions(category, "Experiências");
+
+        expect(category).toHaveProperty("value", "Experiências");
+    });
+
+    it("HU02 CA01: formas de pagamento são um grupo de caixas de seleção (várias opções)", async () => {
+        const { user } = renderRegister();
+        const group = screen.getByRole("group", {
+            name: "Formas de pagamento",
+        });
+        const box = (name: string) =>
+            within(group).getByRole("checkbox", { name }) as HTMLInputElement;
+
+        expect(
+            within(group)
+                .getAllByRole("checkbox")
+                .map((item) => (item as HTMLInputElement).value),
+        ).toEqual(["Pix", "Dinheiro", "Cartão de débito", "Cartão de crédito"]);
+        expect(box("Pix").checked).toBe(true);
+        expect(box("Cartão de crédito").checked).toBe(true);
+
+        await user.click(box("Dinheiro"));
+        await user.click(box("Pix"));
+
+        expect(box("Dinheiro").checked).toBe(true);
+        expect(box("Pix").checked).toBe(false);
+    });
+
+    it("HU02 CA01: envia exatamente as formas marcadas", async () => {
+        const { user } = renderRegister();
+        const group = screen.getByRole("group", {
             name: "Formas de pagamento",
         });
 
-        await user.selectOptions(category, "Experiências");
-        await user.selectOptions(paymentMethods, "Pix, Dinheiro");
+        await fillForm(user);
+        await user.click(within(group).getByRole("checkbox", { name: "Pix" }));
+        await user.click(
+            within(group).getByRole("checkbox", { name: "Dinheiro" }),
+        );
+        await submit(user);
 
-        expect(category).toHaveProperty("value", "Experiências");
-        expect(paymentMethods).toHaveProperty("value", "Pix, Dinheiro");
+        await waitFor(() => expect(registerProducer).toHaveBeenCalledTimes(1));
+        expect(
+            vi.mocked(registerProducer).mock.calls[0][0].paymentMethods,
+        ).toEqual(["Dinheiro", "Cartão de crédito"]);
     });
 
-    it("começa com CPF e troca o campo de documento para CNPJ ao escolher esse tipo", async () => {
+    it("HU02 CA04: sem nenhuma forma de pagamento, mostra o erro associado ao grupo e foca o primeiro item", async () => {
+        const { user } = renderRegister();
+        const group = screen.getByRole("group", {
+            name: "Formas de pagamento",
+        });
+        await fillForm(user);
+        for (const name of ["Pix", "Cartão de crédito"]) {
+            await user.click(within(group).getByRole("checkbox", { name }));
+        }
+        await submit(user);
+
+        const message = await screen.findByText(
+            "Selecione ao menos uma forma de pagamento.",
+        );
+        expect(group.getAttribute("aria-describedby")).toBe(message.id);
+        expect(group.getAttribute("aria-invalid")).toBe("true");
+        expect(registerProducer).not.toHaveBeenCalled();
+        expect(document.activeElement).toBe(
+            within(group).getAllByRole("checkbox")[0],
+        );
+    });
+
+    it("RNF07: a seleção de pagamento sobrevive a uma falha de conexão", async () => {
+        vi.mocked(registerProducer).mockResolvedValue({
+            ok: false,
+            reason: "error",
+        });
+        const { user } = renderRegister();
+        const group = screen.getByRole("group", {
+            name: "Formas de pagamento",
+        });
+        await fillForm(user);
+        await user.click(
+            within(group).getByRole("checkbox", { name: "Dinheiro" }),
+        );
+        await submit(user);
+        await screen.findByRole("alert");
+
+        expect(
+            (
+                within(group).getByRole("checkbox", {
+                    name: "Dinheiro",
+                }) as HTMLInputElement
+            ).checked,
+        ).toBe(true);
+    });
+
+    it("HU02 CA03: começa como pessoa física e mostra o CNPJ junto ao CPF para MEI", async () => {
         const { user } = renderRegister();
 
         const cpfOption = screen.getByRole("radio", {
             name: "Pessoa física (CPF)",
         }) as HTMLInputElement;
         expect(cpfOption.checked).toBe(true);
+        expect(screen.queryByLabelText("CNPJ")).toBeNull();
 
-        await user.click(
-            screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
-        );
+        await user.click(screen.getByRole("radio", { name: MEI_OPTION }));
 
-        expect(screen.getByLabelText("CNPJ (empresa / MEI)")).toBeTruthy();
-        expect(screen.queryByLabelText("CPF")).toBeNull();
+        expect(screen.getByLabelText("CNPJ")).toBeTruthy();
+        expect(screen.getByLabelText("CPF")).toBeTruthy();
     });
 
     // CA07
@@ -144,34 +236,35 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
         renderRegister();
 
         expect(screen.getByLabelText("Data de nascimento")).toBeTruthy();
-        expect(screen.queryByRole("checkbox")).toBeNull();
+        expect(
+            screen.queryByRole("checkbox", { name: /maior|18/i }),
+        ).toBeNull();
     });
 
-    it("não pede autodeclaração nem data de nascimento para pessoa jurídica", async () => {
+    it("pede a data de nascimento do responsável também no cadastro de MEI", async () => {
         const { user } = renderRegister();
 
-        await user.click(
-            screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
-        );
+        await user.click(screen.getByRole("radio", { name: MEI_OPTION }));
 
-        expect(screen.queryByRole("checkbox")).toBeNull();
-        expect(screen.queryByLabelText("Data de nascimento")).toBeNull();
+        expect(
+            screen.queryByRole("checkbox", { name: /maior|18/i }),
+        ).toBeNull();
+        expect(screen.getByLabelText("Data de nascimento")).toBeTruthy();
     });
 
-    it("limpa os erros visíveis ao trocar o tipo de documento", async () => {
+    it("limpa o CNPJ digitado ao voltar para pessoa física", async () => {
         const { user } = renderRegister();
 
-        await submit(user);
-        expect(screen.getByText("Informe o CPF.")).toBeTruthy();
-        expect(screen.getByText("Informe a data de nascimento.")).toBeTruthy();
-
+        await user.click(screen.getByRole("radio", { name: MEI_OPTION }));
+        await user.type(screen.getByLabelText("CNPJ"), "11222333000181");
         await user.click(
-            screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
+            screen.getByRole("radio", { name: "Pessoa física (CPF)" }),
         );
+        await user.click(screen.getByRole("radio", { name: MEI_OPTION }));
 
-        expect(screen.queryByText("Informe o CPF.")).toBeNull();
-        expect(screen.queryByText("Informe a data de nascimento.")).toBeNull();
-        expect(screen.queryByText("Informe o nome.")).toBeNull();
+        expect((screen.getByLabelText("CNPJ") as HTMLInputElement).value).toBe(
+            "",
+        );
     });
 
     it("aplica a máscara de CPF enquanto o usuário digita", async () => {
@@ -184,35 +277,15 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
         );
     });
 
-    it("aplica a máscara de CNPJ quando o tipo escolhido é CNPJ", async () => {
+    it("aplica a máscara de CNPJ para MEI", async () => {
         const { user } = renderRegister();
 
-        await user.click(
-            screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
+        await user.click(screen.getByRole("radio", { name: MEI_OPTION }));
+        await user.type(screen.getByLabelText("CNPJ"), "11222333000181");
+
+        expect((screen.getByLabelText("CNPJ") as HTMLInputElement).value).toBe(
+            "11.222.333/0001-81",
         );
-        await user.type(
-            screen.getByLabelText("CNPJ (empresa / MEI)"),
-            "11222333000181",
-        );
-
-        expect(
-            (screen.getByLabelText("CNPJ (empresa / MEI)") as HTMLInputElement)
-                .value,
-        ).toBe("11.222.333/0001-81");
-    });
-
-    it("limpa o documento digitado ao trocar o tipo de documento", async () => {
-        const { user } = renderRegister();
-
-        await user.type(screen.getByLabelText("CPF"), "52998224725");
-        await user.click(
-            screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
-        );
-
-        expect(
-            (screen.getByLabelText("CNPJ (empresa / MEI)") as HTMLInputElement)
-                .value,
-        ).toBe("");
     });
 
     it("aplica a máscara de telefone enquanto o usuário digita", async () => {
@@ -233,6 +306,7 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
 
         for (const message of [
             "Informe o nome.",
+            "Informe o responsável.",
             "Informe o CPF.",
             "Informe a data de nascimento.",
             "Informe o telefone.",
@@ -276,16 +350,10 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
         expect(screen.getByText("E-mail inválido.")).toBeTruthy();
     });
 
-    it("rejeita CNPJ inválido quando o tipo de documento é CNPJ", async () => {
+    it("HU02 CA05: rejeita CNPJ inválido no cadastro de MEI", async () => {
         const { user } = renderRegister();
 
-        await user.click(
-            screen.getByRole("radio", { name: "Pessoa jurídica (CNPJ)" }),
-        );
-        await fillForm(user, {
-            documentLabel: "CNPJ (empresa / MEI)",
-            document: "11222333000182",
-        });
+        await fillForm(user, { cnpj: "11222333000182" });
         await submit(user);
 
         expect(screen.getByText("CNPJ inválido.")).toBeTruthy();
@@ -338,8 +406,11 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
             expect(onNavigate).toHaveBeenCalledWith("/conta-criada/producer"),
         );
         expect(registerProducer).toHaveBeenCalledWith({
-            name: "Maria da Silva",
+            name: "Horta da Maria",
+            responsible: "Maria da Silva",
             document: "52998224725",
+            category: "Produtos",
+            paymentMethods: ["Pix", "Cartão de crédito"],
             phone: "61912345678",
             email: "maria@exemplo.com",
             address: "Chácara 12, Núcleo Rural, Brasília - DF",
@@ -381,6 +452,37 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
             expect(onNavigate).toHaveBeenCalledWith("/conta-criada/producer"),
         );
     });
+});
+
+describe("RegisterPage — duplicidade por campo", () => {
+    it.each([
+        ["email", "register-email", "E-mail já cadastrado"],
+        ["document", "register-document", "CPF já cadastrado"],
+        ["cnpj", "register-cnpj", "CNPJ já cadastrado"],
+    ] as const)(
+        "CA06/CA07: duplicidade de %s mostra a mensagem no campo certo e foca nele",
+        async (field, inputId, message) => {
+            vi.mocked(registerProducer).mockResolvedValue({
+                ok: false,
+                reason: "duplicate",
+                field,
+            });
+            const { user } = renderRegister();
+
+            await fillForm(
+                user,
+                field === "cnpj" ? { cnpj: "11222333000181" } : {},
+            );
+            await submit(user);
+
+            const error = await screen.findByText(message);
+            const input = document.getElementById(inputId);
+            expect(error.id).toBe(`${inputId}-error`);
+            expect(input?.getAttribute("aria-describedby")).toBe(error.id);
+            expect(input?.getAttribute("aria-invalid")).toBe("true");
+            expect(document.activeElement).toBe(input);
+        },
+    );
 });
 
 describe("RegisterPage — falhas ao cadastrar", () => {
@@ -489,7 +591,7 @@ describe("RegisterPage — falhas ao cadastrar", () => {
         expect(
             (screen.getByLabelText("Nome da iniciativa") as HTMLInputElement)
                 .value,
-        ).toBe("Maria da Silva");
+        ).toBe("Horta da Maria");
         expect(
             (
                 screen.getByRole("button", {

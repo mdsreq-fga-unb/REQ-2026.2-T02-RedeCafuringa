@@ -4,6 +4,9 @@ import type { RegisterPayload } from "@/features/register/registerForm";
 const API = "http://api.test/api/v1";
 
 const payload: RegisterPayload = {
+    responsible: "Maria da Silva",
+    category: "Produtos",
+    paymentMethods: ["Pix"],
     name: "Maria da Silva",
     document: "52998224725",
     phone: "61912345678",
@@ -55,11 +58,14 @@ describe("registerProducer (API real)", () => {
         expect(String(url)).toBe(`${API}/users/producers`);
         expect(init?.method).toBe("POST");
         expect(JSON.parse(String(init?.body))).toEqual({
-            nome: "Maria da Silva",
+            nomeIniciativa: "Maria da Silva",
+            nomeResponsavel: "Maria da Silva",
             cpf: "52998224725",
+            localidade: "Chácara 12, Núcleo Rural, Brasília - DF",
+            categoriaOfertada: "Produtos",
+            formasPagamento: ["Pix"],
             telefone: "61912345678",
             email: "maria@exemplo.com",
-            endereco: "Chácara 12, Núcleo Rural, Brasília - DF",
             senha: "senha-segura-1",
         });
         expect(
@@ -87,6 +93,33 @@ describe("registerProducer (API real)", () => {
         expect(await registerProducer(payload)).toEqual({
             ok: false,
             reason: "duplicate",
+            field: "document",
+        });
+    });
+
+    it.each([
+        ["E-mail já cadastrado", "email"],
+        ["CPF já cadastrado", "document"],
+        ["CNPJ já cadastrado", "cnpj"],
+        ["Dados já cadastrados", undefined],
+    ])("409 '%s' aponta o campo %s", async (message, field) => {
+        vi.stubGlobal(
+            "fetch",
+            vi
+                .fn<typeof fetch>()
+                .mockResolvedValue(
+                    jsonResponse(
+                        { statusCode: 409, message, error: "Conflict" },
+                        409,
+                    ),
+                ),
+        );
+        const { registerProducer } = await load();
+
+        expect(await registerProducer(payload)).toEqual({
+            ok: false,
+            reason: "duplicate",
+            ...(field ? { field } : {}),
         });
     });
 
