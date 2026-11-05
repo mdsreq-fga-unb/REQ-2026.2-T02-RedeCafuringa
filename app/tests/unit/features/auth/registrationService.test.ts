@@ -6,6 +6,7 @@ const consumer: ConsumerSignupData = {
     nome: " Gabriela Pereira da Silva ",
     cpf: "168.995.350-09",
     email: " Gabriela@Exemplo.com ",
+    dataNascimento: "10-05-1990",
     senha: "SenhaForte123",
 };
 
@@ -48,6 +49,7 @@ describe("registrationService.registerConsumer", () => {
             nome: "Gabriela Pereira da Silva",
             cpf: "16899535009",
             email: "gabriela@exemplo.com",
+            dataNascimento: "1990-05-10",
             senha: "SenhaForte123",
         });
         expect(
@@ -104,7 +106,7 @@ describe("registrationService.registerConsumer", () => {
 
         const { login } = await import("@/features/auth/authService");
         await expect(
-            login({ cpf: "16899535009", password: "SenhaForte123" }),
+            login({ email: "gabriela@exemplo.com", password: "SenhaForte123" }),
         ).resolves.toMatchObject({
             user: {
                 name: "Gabriela Pereira da Silva",
