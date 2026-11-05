@@ -94,11 +94,15 @@ export class UsersService {
     if (await this.users.exists({ cpfHash }).exec()) {
       throw new ConflictException('CPF já cadastrado');
     }
+    const email = dto.email.toLowerCase();
+    if (await this.users.exists({ email }).exec()) {
+      throw new ConflictException('E-mail já cadastrado');
+    }
 
     try {
       return await this.users.create({
         nome: dto.nome,
-        email: dto.email.toLowerCase(),
+        email,
         telefone: dto.telefone,
         dataNascimento: new Date(dto.dataNascimento),
         perfil,
