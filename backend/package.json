@@ -23,6 +23,7 @@
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
+    "db:sync-indexes": "nest build && node dist/database/sync-indexes.cli.js",
     "openapi:export": "nest build && node dist/openapi/export-openapi.js",
     "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\""
   },
