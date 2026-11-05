@@ -53,6 +53,26 @@ boot do Mongo executa `deploy/mongo-init/01-app-user.js` e cria o usuário
 > Se o volume já existia, o init **não** roda. Crie o usuário manualmente
 > (seção 7) antes de subir a API.
 
+### 3.1 Índices e primeiro administrador (HU03)
+
+Em produção o Mongoose **não** cria índices no boot. Depois do primeiro `up` (e
+a cada deploy que altere índices) sincronize-os, de forma idempotente:
+
+```bash
+docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env \
+  exec api node dist/database/sync-indexes.cli.js
+```
+
+Bancos anteriores à HU03 têm `cpfHash` único **não** esparso, o que impede mais de
+um administrador (sem CPF); o comando acima troca o índice. Em desenvolvimento
+local use `npm run db:sync-indexes` (dentro de `backend/`).
+
+O cadastro de administrador (`POST /users/admins`) exige um administrador
+autenticado. O primeiro nasce das variáveis `ADMIN_BOOTSTRAP_EMAIL` e
+`ADMIN_BOOTSTRAP_SENHA` (as duas juntas, em `deploy/.env`): a API cria a conta
+na subida se o e-mail ainda não existir. Depois de entrar com ela, cadastre os
+demais administradores pela API e **remova a senha do `.env`**.
+
 ## 4. Atualizar e reverter
 
 ```bash
