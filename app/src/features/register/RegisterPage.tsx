@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent, InputHTMLAttributes } from "react";
 import { formatCpf } from "@/features/auth/cpf";
 import { BirthDateField } from "@/features/auth/registration";
 import { BackButton } from "../../components/navigation/BackButton";
 import { ActionButton } from "../../components/ui/ActionButton";
-import { buildRegisterPayload, validateRegisterForm } from "./registerForm";
+import {
+    buildRegisterPayload,
+    PAYMENT_METHOD_OPTIONS,
+    validateRegisterForm,
+} from "./registerForm";
 import { registerProducer } from "./registerService";
 import type { RegisterResult } from "./registerService";
 import type {
@@ -22,7 +26,11 @@ const INITIAL_VALUES: RegisterFormValues = {
     documentType: "cpf",
     birthDate: "",
     name: "",
+    responsible: "",
     document: "",
+    cnpj: "",
+    category: "Produtos",
+    paymentMethods: ["Pix", "Cartão de crédito"],
     phone: "",
     email: "",
     address: "",
@@ -122,6 +130,84 @@ function SelectField({
     );
 }
 
+const DUPLICATE_MESSAGES = {
+    email: "E-mail já cadastrado",
+    document: "CPF já cadastrado",
+    cnpj: "CNPJ já cadastrado",
+} as const;
+
+/** Id do elemento que recebe o foco quando o campo tem erro (ordem da tela). */
+const FOCUS_ORDER: [keyof RegisterFormValues, string][] = [
+    ["name", "register-name"],
+    ["responsible", "register-responsible"],
+    ["document", "register-document"],
+    ["cnpj", "register-cnpj"],
+    ["birthDate", "signup-birth-date"],
+    ["address", "register-address"],
+    ["paymentMethods", "register-payment-methods-0"],
+    ["phone", "register-phone"],
+    ["email", "register-email"],
+    ["password", "register-password"],
+    ["confirmPassword", "register-confirm-password"],
+];
+
+function PaymentMethodsField({
+    selected,
+    error,
+    onChange,
+}: {
+    selected: string[];
+    error?: string;
+    onChange: (methods: string[]) => void;
+}) {
+    const toggle = (method: string) =>
+        onChange(
+            selected.includes(method)
+                ? selected.filter((item) => item !== method)
+                : PAYMENT_METHOD_OPTIONS.filter(
+                      (option) =>
+                          option === method || selected.includes(option),
+                  ),
+        );
+
+    return (
+        <div className="register-field" data-field="register-payment-methods">
+            <fieldset
+                className="choice-group"
+                aria-labelledby="register-payment-methods-legend"
+                aria-invalid={Boolean(error)}
+                aria-describedby={
+                    error ? "register-payment-methods-error" : undefined
+                }
+            >
+                <legend
+                    id="register-payment-methods-legend"
+                    className="field-label field-label-required"
+                >
+                    Formas de pagamento
+                </legend>
+                {PAYMENT_METHOD_OPTIONS.map((method, index) => (
+                    <label className="choice-option" key={method}>
+                        <input
+                            id={`register-payment-methods-${index}`}
+                            type="checkbox"
+                            value={method}
+                            checked={selected.includes(method)}
+                            onChange={() => toggle(method)}
+                        />
+                        {method}
+                    </label>
+                ))}
+            </fieldset>
+            {error && (
+                <p id="register-payment-methods-error" className="field-error">
+                    {error}
+                </p>
+            )}
+        </div>
+    );
+}
+
 type RegisterFailure = Extract<RegisterResult, { ok: false }>;
 
 function rateLimitMessage(seconds?: number) {
@@ -139,6 +225,18 @@ function FailureAlert({
 }) {
     switch (failure.reason) {
         case "duplicate":
+            if (failure.field) {
+                // A mensagem aparece junto ao campo; aqui fica só o atalho.
+                return (
+                    <ActionButton
+                        variant="orange"
+                        type="button"
+                        onClick={onGoToLogin}
+                    >
+                        Ir para o login
+                    </ActionButton>
+                );
+            }
             return (
                 <>
                     <p className="form-alert" role="alert">
@@ -186,14 +284,21 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
     const [errors, setErrors] = useState<RegisterFormErrors>({});
     const [loading, setLoading] = useState(false);
     const [failure, setFailure] = useState<RegisterFailure | null>(null);
-    const [referenceDetails, setReferenceDetails] = useState({
-        responsible: "",
-        category: "Produtos",
-        paymentMethods: "Pix, Cartão de crédito",
-    });
 
-    const isCnpj = values.documentType === "cnpj";
-    const formatDocument = isCnpj ? formatCnpj : formatCpf;
+    const [focusRequest, setFocusRequest] = useState<{
+        id: string;
+        n: number;
+    } | null>(null);
+
+    // O foco só pode ir para o campo depois que o erro foi renderizado.
+    useEffect(() => {
+        if (focusRequest) document.getElementById(focusRequest.id)?.focus();
+    }, [focusRequest]);
+
+    const requestFocus = (id: string) =>
+        setFocusRequest((current) => ({ id, n: (current?.n ?? 0) + 1 }));
+
+    const isMei = values.documentType === "cnpj";
 
     const setField = <K extends keyof RegisterFormValues>(
         field: K,
@@ -204,8 +309,7 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
         setValues((current) => ({
             ...current,
             documentType: type,
-            document: "",
-            birthDate: "",
+            cnpj: "",
         }));
         setErrors({});
         setFailure(null);
@@ -217,7 +321,13 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
 
         const validationErrors = validateRegisterForm(values);
         setErrors(validationErrors);
-        if (Object.keys(validationErrors).length > 0) return;
+        const firstInvalid = FOCUS_ORDER.find(
+            ([field]) => validationErrors[field],
+        );
+        if (firstInvalid) {
+            requestFocus(firstInvalid[1]);
+            return;
+        }
 
         setLoading(true);
         let result: RegisterResult;
@@ -232,6 +342,16 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
             return;
         }
 
+        if (result.reason === "duplicate" && result.field) {
+            setErrors({ [result.field]: DUPLICATE_MESSAGES[result.field] });
+            requestFocus(
+                result.field === "email"
+                    ? "register-email"
+                    : result.field === "cnpj"
+                      ? "register-cnpj"
+                      : "register-document",
+            );
+        }
         setFailure(result);
         setLoading(false);
     };
@@ -274,23 +394,19 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
                     type="text"
                     autoComplete="name"
                     placeholder="Maria Silva"
-                    value={referenceDetails.responsible}
-                    onChange={(value) =>
-                        setReferenceDetails((current) => ({
-                            ...current,
-                            responsible: value,
-                        }))
-                    }
+                    value={values.responsible}
+                    error={errors.responsible}
+                    onChange={(value) => setField("responsible", value)}
                 />
 
                 <fieldset className="choice-group register-document-type">
-                    <legend className="field-label">Tipo de documento</legend>
+                    <legend className="field-label">Tipo de cadastro</legend>
                     <label className="choice-option">
                         <input
                             type="radio"
                             name="documentType"
                             value="cpf"
-                            checked={!isCnpj}
+                            checked={!isMei}
                             onChange={() => changeDocumentType("cpf")}
                         />
                         Pessoa física (CPF)
@@ -300,55 +416,60 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
                             type="radio"
                             name="documentType"
                             value="cnpj"
-                            checked={isCnpj}
+                            checked={isMei}
                             onChange={() => changeDocumentType("cnpj")}
                         />
-                        Pessoa jurídica (CNPJ)
+                        MEI (CPF e CNPJ)
                     </label>
                 </fieldset>
 
                 <TextField
                     id="register-document"
-                    label={isCnpj ? "CNPJ (empresa / MEI)" : "CPF"}
+                    label="CPF"
                     required
                     type="text"
                     inputMode="numeric"
-                    placeholder={
-                        isCnpj ? "00.000.000/0001-00" : "000.000.000-00"
-                    }
+                    placeholder="000.000.000-00"
                     value={values.document}
                     error={errors.document}
-                    onChange={(value) =>
-                        setField("document", formatDocument(value))
-                    }
+                    onChange={(value) => setField("document", formatCpf(value))}
                 />
 
-                {!isCnpj && (
-                    <BirthDateField
-                        value={values.birthDate}
-                        error={errors.birthDate}
-                        onChange={(value) => {
-                            setField("birthDate", value);
-                        }}
+                {isMei && (
+                    <TextField
+                        id="register-cnpj"
+                        label="CNPJ"
+                        required
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="00.000.000/0001-00"
+                        value={values.cnpj}
+                        error={errors.cnpj}
+                        onChange={(value) =>
+                            setField("cnpj", formatCnpj(value))
+                        }
                     />
                 )}
+
+                <BirthDateField
+                    value={values.birthDate}
+                    error={errors.birthDate}
+                    onChange={(value) => {
+                        setField("birthDate", value);
+                    }}
+                />
 
                 <SelectField
                     id="register-category"
                     label="Categoria"
                     required
-                    value={referenceDetails.category}
+                    value={values.category}
                     options={[
                         "Produtos",
                         "Experiências",
-                        "Produtos e experiências",
+                        "Produtos e Experiências",
                     ]}
-                    onChange={(value) =>
-                        setReferenceDetails((current) => ({
-                            ...current,
-                            category: value,
-                        }))
-                    }
+                    onChange={(value) => setField("category", value)}
                 />
 
                 <TextField
@@ -362,23 +483,10 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
                     onChange={(value) => setField("address", value)}
                 />
 
-                <SelectField
-                    id="register-payment-methods"
-                    label="Formas de pagamento"
-                    required
-                    value={referenceDetails.paymentMethods}
-                    options={[
-                        "Pix",
-                        "Pix, Cartão de crédito",
-                        "Pix, Dinheiro",
-                        "Pix, Cartão de crédito, Dinheiro",
-                    ]}
-                    onChange={(value) =>
-                        setReferenceDetails((current) => ({
-                            ...current,
-                            paymentMethods: value,
-                        }))
-                    }
+                <PaymentMethodsField
+                    selected={values.paymentMethods}
+                    error={errors.paymentMethods}
+                    onChange={(methods) => setField("paymentMethods", methods)}
                 />
 
                 <TextField
