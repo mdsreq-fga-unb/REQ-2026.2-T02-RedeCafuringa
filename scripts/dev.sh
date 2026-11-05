@@ -33,6 +33,8 @@ Ambiente
   down [-v]                Derruba o ambiente (-v apaga também os volumes, inclusive o banco)
   status                   Mostra os containers
   logs [serviço]           Acompanha os logs (api, app, mongo)
+  indexes [--prod]         Sincroniza os índices do Mongo com os schemas (idempotente; o "up" já roda).
+                           --prod: usa o compose de produção (backend/deploy), rode depois de cada deploy
 
 Qualidade (os mesmos passos do CI)
   check [backend|app|all]  lint, format, typecheck, build e testes (sem E2E, audit e Docker)
@@ -149,6 +151,22 @@ cmd_up() {
       ok "app em http://localhost:5173 | api em http://localhost:3000/api/v1/health/live"
       ;;
     *) die "opção desconhecida para up: $1 (use --prod)" ;;
+  esac
+  # Bancos criados antes da HU03 têm o índice antigo de cpfHash; a rotina é idempotente.
+  cmd_indexes
+}
+
+cmd_indexes() {
+  need docker "Instale o Docker."
+  info "Sincronizando os índices do Mongo com os schemas"
+  case "${1:-}" in
+    --prod)
+      [ -f backend/deploy/.env ] || die "backend/deploy/.env não existe (veja docs/arquitetura/backend/operacao.md)"
+      docker compose -f backend/deploy/docker-compose.prod.yml --env-file backend/deploy/.env \
+        exec -T api node dist/database/sync-indexes.cli.js
+      ;;
+    '') docker compose exec -T api node dist/database/sync-indexes.cli.js ;;
+    *) die "opção desconhecida para indexes: $1 (use --prod)" ;;
   esac
 }
 
@@ -326,6 +344,7 @@ main() {
     down) cmd_down "$@" ;;
     status) cmd_status ;;
     logs) cmd_logs "$@" ;;
+    indexes) cmd_indexes "$@" ;;
     check) cmd_check "$@" ;;
     test) cmd_test "$@" ;;
     build) cmd_build "$@" ;;
