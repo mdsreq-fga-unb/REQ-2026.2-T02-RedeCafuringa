@@ -10,11 +10,15 @@ vi.mock("@/features/auth/registrationService", () => ({
 }));
 
 beforeEach(() => {
+    // Só administrador autenticado cadastra outro (RN03).
+    localStorage.setItem("cafuringa-role", "admin");
+    localStorage.setItem("cafuringa-token", "session-token");
     vi.mocked(registerAdmin).mockResolvedValue(undefined);
     window.location.hash = "#/admin/acesso";
 });
 
 afterEach(() => {
+    localStorage.clear();
     cleanup();
     vi.restoreAllMocks();
     window.location.hash = "";

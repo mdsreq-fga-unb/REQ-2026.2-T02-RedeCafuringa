@@ -151,3 +151,28 @@ describe("configurações de contato da conta", () => {
         expect(onSignOut).toHaveBeenCalledOnce();
     });
 });
+
+describe("conta do administrador — HU03", () => {
+    it("identifica o perfil como Administrador, sem recursos de consumidor", () => {
+        const draft = { whatsappNumber: "", authorized: false };
+        render(
+            <AccountPage
+                role="admin"
+                consumerName="Administrador"
+                settings={draft}
+                draft={draft}
+                saved={false}
+                onDraftChange={vi.fn()}
+                onSavedChange={vi.fn()}
+                onSaveContact={vi.fn()}
+                onNavigate={vi.fn()}
+                onSignOut={vi.fn()}
+            />,
+        );
+
+        expect(
+            screen.getByText("Administrador", { selector: ".eyebrow" }),
+        ).toBeTruthy();
+        expect(screen.queryByText("Consumidora")).toBeNull();
+    });
+});

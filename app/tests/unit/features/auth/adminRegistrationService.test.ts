@@ -84,22 +84,87 @@ describe("registrationService.registerAdmin", () => {
         });
     });
 
-    it("no modo mock, não persiste a senha e rejeita e-mail duplicado", async () => {
+    it("no modo mock, rejeita e-mail duplicado e a conta criada consegue entrar", async () => {
         vi.stubEnv("VITE_USE_MOCK_AUTH", "true");
         const { registerAdmin } = await load();
+        const novo = {
+            email: "Novo.Admin@Exemplo.com",
+            senha: "SenhaForte123",
+        };
+        const { loginMock } = await import("@/features/auth/mockAuth");
 
-        await registerAdmin(admin);
+        await registerAdmin(novo);
 
-        expect(
-            JSON.parse(
-                localStorage.getItem("cafuringa-mock-admin-emails") || "[]",
-            ),
-        ).toEqual(["admin@exemplo.com"]);
-        expect(
-            localStorage.getItem("cafuringa-mock-admin-emails"),
-        ).not.toContain(admin.senha);
-        await expect(registerAdmin(admin)).rejects.toThrow(
+        await expect(registerAdmin(novo)).rejects.toThrow(
             "E-mail já cadastrado",
         );
+        const auth = await loginMock({
+            email: "novo.admin@exemplo.com",
+            password: novo.senha,
+        });
+        expect(auth.user.role).toBe("admin");
+        // O e-mail do administrador padrão da demonstração também é reservado.
+        await expect(
+            registerAdmin({
+                email: "admin@exemplo.com",
+                senha: "SenhaForte123",
+            }),
+        ).rejects.toThrow("E-mail já cadastrado");
+    });
+
+    it("trata 400 do back com a mensagem de validação", async () => {
+        localStorage.setItem("cafuringa-token", "session-token");
+        vi.stubGlobal(
+            "fetch",
+            vi.fn<typeof fetch>().mockResolvedValue(
+                jsonResponse(
+                    {
+                        statusCode: 400,
+                        message: ["Senha deve conter pelo menos um número"],
+                        error: "Bad Request",
+                    },
+                    400,
+                ),
+            ),
+        );
+        const { registerAdmin } = await load();
+
+        await expect(registerAdmin(admin)).rejects.toThrow(
+            "Senha deve conter pelo menos um número",
+        );
+    });
+
+    it.each([401, 403])(
+        "converte %i em orientação para entrar com conta autorizada",
+        async (status) => {
+            localStorage.setItem("cafuringa-token", "session-token");
+            vi.stubGlobal(
+                "fetch",
+                vi
+                    .fn<typeof fetch>()
+                    .mockResolvedValue(
+                        jsonResponse(
+                            { statusCode: status, message: "x" },
+                            status,
+                        ),
+                    ),
+            );
+            const { registerAdmin } = await load();
+
+            await expect(registerAdmin(admin)).rejects.toThrow(
+                "Entre com uma conta autorizada",
+            );
+        },
+    );
+
+    it("falha de rede vira mensagem de conexão", async () => {
+        localStorage.setItem("cafuringa-token", "session-token");
+        vi.stubGlobal(
+            "fetch",
+            vi.fn<typeof fetch>().mockRejectedValue(new TypeError("offline")),
+        );
+        const { registerAdmin } = await load();
+
+        await expect(registerAdmin(admin)).rejects.toThrow("Falha na conexão");
     });
 });
