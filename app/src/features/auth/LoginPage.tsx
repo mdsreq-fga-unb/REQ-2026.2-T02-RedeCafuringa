@@ -12,12 +12,16 @@ import type { LoginErrors } from "./validateLogin";
 
 type LoginPageProps = {
     fromContact?: boolean;
+    profile?: "consumer" | "producer";
+    registered?: boolean;
     onNavigate: (path: string) => void;
     onSignIn: (auth: AuthResult) => void;
 };
 
 export function LoginPage({
     fromContact = false,
+    profile = "producer",
+    registered = false,
     onNavigate,
     onSignIn,
 }: LoginPageProps) {
@@ -26,6 +30,12 @@ export function LoginPage({
     const [errors, setErrors] = useState<LoginErrors>({});
     const [formError, setFormError] = useState("");
     const [loading, setLoading] = useState(false);
+    const signupPath =
+        profile === "consumer" ? "/cadastro/consumidor" : "/cadastro";
+    const signupLabel =
+        profile === "consumer"
+            ? "Criar conta de consumidor"
+            : "Criar conta de produtor";
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -69,6 +79,12 @@ export function LoginPage({
                     ? "Acesse sua conta para continuar para o WhatsApp."
                     : "Entre com seu CPF e sua senha."}
             </p>
+
+            {registered && (
+                <p className="form-notice" role="status">
+                    Cadastro concluído. Entre com seu CPF e sua senha.
+                </p>
+            )}
 
             <form className="login-form" onSubmit={handleSubmit} noValidate>
                 {formError && (
@@ -129,19 +145,15 @@ export function LoginPage({
                     >
                         {loading ? "Entrando…" : "Entrar"}
                     </ActionButton>
+                    <ActionButton
+                        variant="outline"
+                        type="button"
+                        onClick={() => onNavigate(signupPath)}
+                    >
+                        {signupLabel}
+                    </ActionButton>
                 </div>
             </form>
-
-            <a
-                className="button button-outline login-signup-link"
-                href="#/cadastro/consumidor"
-                onClick={(event) => {
-                    event.preventDefault();
-                    onNavigate("/cadastro/consumidor");
-                }}
-            >
-                Criar uma conta
-            </a>
 
             {isMockAuthEnabled && <p className="demo-note">{demoHint}</p>}
         </section>

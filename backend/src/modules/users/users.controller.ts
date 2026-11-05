@@ -14,6 +14,8 @@ import {
 import { AuthThrottle } from '../auth/decorators/auth-throttle.decorator.js';
 import { Public } from '../auth/decorators/public.decorator.js';
 import { CreateConsumerDto } from './dto/create-consumer.dto.js';
+import { CreateProducerDto } from './dto/create-producer.dto.js';
+import { ProducerResponse } from './dto/producer.response.js';
 import { UserResponse } from './dto/user.response.js';
 import { UsersService } from './users.service.js';
 
@@ -47,5 +49,37 @@ export class UsersController {
   })
   async createConsumer(@Body() dto: CreateConsumerDto): Promise<UserResponse> {
     return this.users.toResponse(await this.users.createConsumer(dto));
+  }
+
+  /** HU02 — cadastro público de produtor. */
+  @Public()
+  @AuthThrottle()
+  @Post('producers')
+  @ApiOperation({
+    summary: 'Cadastrar produtor',
+    description:
+      'Cadastro público da HU02. Documentos, e-mail e senha são protegidos conforme RNF11; o CPF é retornado mascarado.',
+  })
+  @ApiCreatedResponse({
+    type: ProducerResponse,
+    description: 'Produtor criado',
+  })
+  @ApiBadRequestResponse({
+    description: 'Dados inválidos ou campos obrigatórios ausentes',
+    type: ErrorResponse,
+  })
+  @ApiConflictResponse({
+    description: 'E-mail, CPF ou CNPJ já cadastrado',
+    type: ErrorResponse,
+  })
+  @ApiTooManyRequestsResponse({
+    description: 'Muitas tentativas',
+    type: ErrorResponse,
+    headers: RETRY_AFTER_HEADER,
+  })
+  async createProducer(
+    @Body() dto: CreateProducerDto,
+  ): Promise<ProducerResponse> {
+    return this.users.toResponseProducer(await this.users.createProducer(dto));
   }
 }

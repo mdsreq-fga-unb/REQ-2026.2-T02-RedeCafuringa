@@ -14,16 +14,25 @@ const producerAuth: AuthResult = {
     user: { id: 2, name: "Dona Maria", role: "producer" },
 };
 
-function renderLogin(props: { fromContact?: boolean } = {}) {
+function renderLogin(
+    props: {
+        fromContact?: boolean;
+        profile?: "consumer" | "producer";
+        registered?: boolean;
+    } = {},
+) {
     const onSignIn = vi.fn();
+    const onNavigate = vi.fn();
     render(
         <LoginPage
-            onNavigate={vi.fn()}
+            onNavigate={onNavigate}
             onSignIn={onSignIn}
             fromContact={props.fromContact}
+            profile={props.profile}
+            registered={props.registered}
         />,
     );
-    return { onSignIn, user: userEvent.setup() };
+    return { onSignIn, onNavigate, user: userEvent.setup() };
 }
 
 async function fillAndSubmit(
@@ -133,5 +142,45 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         expect(
             screen.getByRole("heading", { name: "Que bom ter você aqui" }),
         ).toBeTruthy();
+    });
+
+    // HU02, critério 1 (acesso ao cadastro sem conta)
+    it("oferece o caminho para criar uma conta", async () => {
+        const { onNavigate, user } = renderLogin();
+
+        await user.click(
+            screen.getByRole("button", { name: "Criar conta de produtor" }),
+        );
+
+        expect(onNavigate).toHaveBeenCalledWith("/cadastro");
+    });
+
+    it("mostra somente a ação de cadastro do perfil selecionado", () => {
+        renderLogin({ profile: "consumer" });
+
+        expect(
+            screen.getAllByRole("button", { name: /Criar conta de/ }),
+        ).toHaveLength(1);
+        expect(
+            screen.getByRole("button", { name: "Criar conta de consumidor" }),
+        ).toBeTruthy();
+        expect(
+            screen.queryByRole("button", { name: "Criar conta de produtor" }),
+        ).toBeNull();
+    });
+
+    // HU02, critério 9 (depois do cadastro, o usuário segue para o login)
+    it("avisa que o cadastro foi concluído quando o usuário vem do cadastro", () => {
+        renderLogin({ registered: true });
+
+        expect(screen.getByRole("status").textContent).toBe(
+            "Cadastro concluído. Entre com seu CPF e sua senha.",
+        );
+    });
+
+    it("não mostra o aviso de cadastro nos demais casos", () => {
+        renderLogin();
+
+        expect(screen.queryByRole("status")).toBeNull();
     });
 });

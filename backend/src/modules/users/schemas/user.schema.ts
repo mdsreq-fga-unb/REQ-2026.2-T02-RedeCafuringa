@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { Role } from '../domain/role.js';
+import { ProducerCategory } from '../domain/producer-category.js';
 
 /**
  * Conta de acesso (consumidor, produtor ou administrador — RN01).
@@ -18,14 +19,35 @@ export class User {
   @Prop({ required: true })
   cpfCifrado: string;
 
-  @Prop({ required: true, lowercase: true, trim: true })
+  @Prop({ required: true, unique: true, lowercase: true, trim: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   telefone: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   dataNascimento: Date;
+
+  @Prop({ unique: true, sparse: true })
+  cnpjHash?: string;
+
+  @Prop()
+  cnpjCifrado?: string;
+
+  @Prop({ trim: true })
+  nomeIniciativa?: string;
+
+  @Prop({ trim: true })
+  nomeResponsavel?: string;
+
+  @Prop({ trim: true })
+  localidade?: string;
+
+  @Prop({ enum: ProducerCategory, type: String })
+  categoriaOfertada?: ProducerCategory;
+
+  @Prop({ type: [String], default: undefined })
+  formasPagamento?: string[];
 
   @Prop({ required: true })
   senhaHash: string;

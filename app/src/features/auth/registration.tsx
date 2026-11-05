@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 import { ActionButton } from "../../components/ui/ActionButton";
 import { BackButton } from "../../components/navigation/BackButton";
 import { formatCpf, isValidCpf } from "./cpf";
+import { isAdultBirthDate, parseBirthDate } from "./birthDate";
 import type { ConsumerSignupData } from "./registrationService";
 
 type ConsumerProfileSelectionPageProps = {
@@ -29,35 +30,6 @@ const requiredFields: SignupField[] = [
     "confirmarSenha",
 ];
 
-function isAdult(birthDateValue: string): boolean {
-    const birthDate = parseBirthDate(birthDateValue);
-    if (!birthDate) return false;
-
-    const adulthood = new Date(birthDate);
-    adulthood.setUTCFullYear(birthDate.getUTCFullYear() + 18);
-    return adulthood <= new Date();
-}
-
-function parseBirthDate(value: string): Date | undefined {
-    const match = /^(\d{2})-(\d{2})-(\d{4})$/.exec(value);
-    if (!match) return undefined;
-
-    const [, dayValue, monthValue, yearValue] = match;
-    const day = Number(dayValue);
-    const month = Number(monthValue);
-    const year = Number(yearValue);
-    const date = new Date(Date.UTC(year, month - 1, day));
-
-    if (
-        date.getUTCFullYear() !== year ||
-        date.getUTCMonth() !== month - 1 ||
-        date.getUTCDate() !== day
-    ) {
-        return undefined;
-    }
-    return date;
-}
-
 function formatBirthDate(value: string): string {
     const digits = value.replace(/\D/g, "").slice(0, 8);
     if (digits.length <= 2) return digits;
@@ -80,7 +52,7 @@ function shiftCalendarMonth({ year, month }: CalendarMonth, amount: number) {
     return { year: date.getUTCFullYear(), month: date.getUTCMonth() };
 }
 
-function BirthDateField({
+export function BirthDateField({
     value,
     error,
     onChange,
@@ -429,7 +401,7 @@ export function ConsumerSignupPage({
             if (!parseBirthDate(values.dataNascimento)) {
                 nextErrors.dataNascimento =
                     "Informe uma data válida no formato DD-MM-AAAA.";
-            } else if (!isAdult(values.dataNascimento)) {
+            } else if (!isAdultBirthDate(values.dataNascimento)) {
                 nextErrors.dataNascimento =
                     "É necessário ter 18 anos ou mais para se cadastrar.";
             }
@@ -562,11 +534,32 @@ export function ConsumerSignupPage({
 export function ConsumerSignupSuccessPage({
     onNavigate,
 }: ConsumerProfileSelectionPageProps) {
+    return <SignupSuccessPage profile="consumer" onNavigate={onNavigate} />;
+}
+
+export function ProducerSignupSuccessPage({
+    onNavigate,
+}: ConsumerProfileSelectionPageProps) {
+    return <SignupSuccessPage profile="producer" onNavigate={onNavigate} />;
+}
+
+function SignupSuccessPage({
+    profile,
+    onNavigate,
+}: ConsumerProfileSelectionPageProps & {
+    profile: "consumer" | "producer";
+}) {
+    const isConsumer = profile === "consumer";
+
     return (
         <section className="signup-page signup-success-page">
             <BackButton
                 label="Voltar"
-                onClick={() => onNavigate("/cadastro/consumidor")}
+                onClick={() =>
+                    onNavigate(
+                        isConsumer ? "/cadastro/consumidor" : "/cadastro",
+                    )
+                }
             />
             <div className="success-check" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
@@ -580,7 +573,11 @@ export function ConsumerSignupSuccessPage({
             </p>
             <ActionButton
                 variant="orange"
-                onClick={() => onNavigate("/login/consumer")}
+                onClick={() =>
+                    onNavigate(
+                        isConsumer ? "/login/consumer" : "/login/producer",
+                    )
+                }
             >
                 Entrar na minha conta
             </ActionButton>

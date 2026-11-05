@@ -1,6 +1,6 @@
 // Usuários falsos para desenvolvimento enquanto não existe backend.
 // Só são usados com VITE_USE_MOCK_AUTH=true (ver .env.development).
-import type { AuthResult } from "../../shared/types";
+import type { AuthResult, Role } from "../../shared/types";
 import { producerName } from "../offers/offerData";
 import { InvalidCredentialsError } from "./errors";
 import type { ConsumerSignupData } from "./registrationService";
@@ -15,8 +15,13 @@ type MockUser = {
 const mockUsers: MockUser[] = [
     {
         cpf: "52998224725",
+        email: "ana@exemplo.com",
         password: "senha123",
-        user: { id: 1, name: "Gabriela Pereira da Silva", role: "consumer" },
+        user: {
+            id: 1,
+            name: "Gabriela Pereira da Silva",
+            role: "consumer",
+        },
     },
     {
         cpf: "11144477735",
@@ -93,5 +98,37 @@ export async function loginMock(credentials: {
     );
     if (!found) throw new InvalidCredentialsError();
 
-    return { token: `mock-token-${found.user.id}`, user: found.user };
+    return {
+        token: `mock-token-${found.user.id}`,
+        user: { ...found.user, cpf: found.cpf, email: found.email },
+    };
+}
+
+export function registerMockUser(account: {
+    cpf: string;
+    email?: string;
+    password: string;
+    name: string;
+    role: Role;
+}): AuthResult["user"] {
+    const numericIds = mockUsers
+        .map((item) => Number(item.user.id))
+        .filter(Number.isFinite);
+    const nextId = Math.max(0, ...numericIds) + 1;
+    const user: AuthResult["user"] = {
+        id: nextId,
+        name: account.name,
+        role: account.role,
+    };
+    mockUsers.push({
+        cpf: account.cpf,
+        email: account.email,
+        password: account.password,
+        user,
+    });
+    return user;
+}
+
+export function isMockCpfRegistered(cpf: string): boolean {
+    return mockUsers.some((item) => item.cpf === cpf);
 }

@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException } from '@nestjs/common';
-import { makeConsumer, makeCpf } from '@test/factories';
+import { makeConsumer, makeCpf, makeProducer } from '@test/factories';
 import type { Model } from 'mongoose';
 import { Types } from 'mongoose';
 import type { PasswordHasher } from '../../common/crypto/password-hasher.js';
@@ -117,6 +117,126 @@ describe('UsersService', () => {
       model.create.mockRejectedValue(new Error('banco fora do ar'));
 
       await expect(service.createConsumer(makeConsumer())).rejects.toThrow(
+        'banco fora do ar',
+      );
+    });
+  });
+
+  describe('createProducer (HU02)', () => {
+    it('CA01/CA05: cria o perfil PRODUTOR com os dados da iniciativa', async () => {
+      const { service, model } = setup();
+      const dto = makeProducer();
+
+      const user = await service.createProducer(dto);
+
+      expect(user.perfil).toBe(Role.PRODUTOR);
+      expect(model.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          nome: dto.nomeResponsavel,
+          nomeIniciativa: dto.nomeIniciativa,
+          nomeResponsavel: dto.nomeResponsavel,
+          localidade: dto.localidade,
+          categoriaOfertada: dto.categoriaOfertada,
+          formasPagamento: dto.formasPagamento,
+          perfil: Role.PRODUTOR,
+        }),
+      );
+    });
+
+    it('RN02/RNF11: guarda CPF e CNPJ sem texto claro e protege a senha', async () => {
+      const { service, model, cipher, hasher } = setup();
+      const dto = makeProducer();
+
+      await service.createProducer(dto);
+
+      const saved = model.create.mock.calls[0][0];
+      expect(saved).toMatchObject({
+        cpfHash: `idx:${dto.cpf}`,
+        cpfCifrado: `enc:${dto.cpf}`,
+        cnpjHash: `idx:${dto.cnpj}`,
+        cnpjCifrado: `enc:${dto.cnpj}`,
+        senhaHash: `hash:${dto.senha}`,
+      });
+      expect(saved).not.toHaveProperty('cpf');
+      expect(saved).not.toHaveProperty('cnpj');
+      expect(saved).not.toHaveProperty('senha');
+      expect(cipher.encrypt).toHaveBeenCalledWith(dto.cnpj);
+      expect(hasher.hash).toHaveBeenCalledWith(dto.senha);
+    });
+
+    it('RF02/RN02: aceita cadastro sem CNPJ e não grava dados opcionais do CNPJ', async () => {
+      const { service, model, cipher } = setup();
+      const dto = makeProducer({ cnpj: undefined });
+
+      await service.createProducer(dto);
+
+      const saved = model.create.mock.calls[0][0];
+      expect(saved).not.toHaveProperty('cnpjHash');
+      expect(saved).not.toHaveProperty('cnpjCifrado');
+      expect(cipher.encrypt).not.toHaveBeenCalledWith(undefined);
+    });
+
+    it('RN02/RNF03: normaliza o e-mail para minúsculas antes de salvar', async () => {
+      const { service, model } = setup();
+
+      await service.createProducer(
+        makeProducer({ email: 'Produtor@Exemplo.COM' }),
+      );
+
+      expect(model.create.mock.calls[0][0].email).toBe('produtor@exemplo.com');
+    });
+
+    it('CA04/RN02: recusa CPF já cadastrado com 409', async () => {
+      const { service, model } = setup();
+      model.exists.mockReturnValueOnce(query({ _id: 'cpf-existente' }));
+
+      await expect(service.createProducer(makeProducer())).rejects.toThrow(
+        ConflictException,
+      );
+      expect(model.create).not.toHaveBeenCalled();
+    });
+
+    it('RF02/RN02: recusa e-mail já cadastrado com 409', async () => {
+      const { service, model } = setup();
+      model.exists
+        .mockReturnValueOnce(query(null))
+        .mockReturnValueOnce(query({ _id: 'email-existente' }));
+
+      await expect(service.createProducer(makeProducer())).rejects.toThrow(
+        ConflictException,
+      );
+      expect(model.create).not.toHaveBeenCalled();
+    });
+
+    it('RF02/RN02: recusa CNPJ já cadastrado com 409 quando informado', async () => {
+      const { service, model } = setup();
+      model.exists
+        .mockReturnValueOnce(query(null))
+        .mockReturnValueOnce(query(null))
+        .mockReturnValueOnce(query({ _id: 'cnpj-existente' }));
+
+      await expect(service.createProducer(makeProducer())).rejects.toThrow(
+        ConflictException,
+      );
+      expect(model.create).not.toHaveBeenCalled();
+    });
+
+    it('RF02/RN02: converte corrida do índice único em 409', async () => {
+      const { service, model } = setup();
+      model.create.mockRejectedValue(
+        Object.assign(new Error('E11000'), { code: 11000 }),
+      );
+
+      await expect(service.createProducer(makeProducer())).rejects.toThrow(
+        ConflictException,
+      );
+    });
+
+    it('RNF07/RNF03: propaga falhas não relacionadas a duplicidade do banco', async () => {
+      const { service, model } = setup();
+      model.create.mockRejectedValue(new Error('banco fora do ar'));
+
+      await expect(service.createProducer(makeProducer())).rejects.toThrow(
         'banco fora do ar',
       );
     });
