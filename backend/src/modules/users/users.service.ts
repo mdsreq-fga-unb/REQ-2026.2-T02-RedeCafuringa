@@ -10,6 +10,8 @@ import { PiiCipher } from '../../common/crypto/pii-cipher.js';
 import { maskCpf } from '../../common/validators/documento.js';
 import { isAdult } from './domain/age.js';
 import { Role } from './domain/role.js';
+import { AdminResponse } from './dto/admin.response.js';
+import { CreateAdminDto } from './dto/create-admin.dto.js';
 import { CreateConsumerDto } from './dto/create-consumer.dto.js';
 import { CreateProducerDto } from './dto/create-producer.dto.js';
 import { UserResponse } from './dto/user.response.js';
@@ -17,6 +19,8 @@ import { ProducerResponse } from './dto/producer.response.js';
 import { User, UserDocument } from './schemas/user.schema.js';
 
 const DUPLICATE_KEY = 11000;
+/** Conta administrativa só tem e-mail e senha (HU03); o nome é fixo. */
+const ADMIN_DISPLAY_NAME = 'Administrador';
 
 @Injectable()
 export class UsersService {
@@ -29,6 +33,34 @@ export class UsersService {
   /** HU01: o cadastro público sempre cria um consumidor (RN01). */
   createConsumer(dto: CreateConsumerDto): Promise<UserDocument> {
     return this.create(dto, Role.CONSUMIDOR);
+  }
+
+  /** HU03: cria uma conta ADMINISTRADOR só com e-mail e senha (RF03). */
+  async createAdmin(dto: CreateAdminDto): Promise<UserDocument> {
+    const email = dto.email.toLowerCase();
+    if (await this.users.exists({ email }).exec()) {
+      throw new ConflictException('E-mail já cadastrado');
+    }
+
+    try {
+      return await this.users.create({
+        nome: ADMIN_DISPLAY_NAME,
+        email,
+        perfil: Role.ADMINISTRADOR,
+        senhaHash: await this.hasher.hash(dto.senha),
+      });
+    } catch (error) {
+      const { code, keyPattern } = error as {
+        code?: number;
+        keyPattern?: Record<string, number>;
+      };
+      // Outra chave duplicada (ex.: índice de cpfHash desatualizado) é falha de
+      // infraestrutura, não "e-mail repetido": vide npm run db:sync-indexes.
+      if (code === DUPLICATE_KEY && keyPattern?.email) {
+        throw new ConflictException('E-mail já cadastrado');
+      }
+      throw error;
+    }
   }
 
   /** HU02: cria uma conta pública com perfil PRODUTOR. */
@@ -142,8 +174,12 @@ export class UsersService {
       categoriaOfertada: user.categoriaOfertada,
       formasPagamento: user.formasPagamento,
       perfil: user.perfil,
-      cpf: maskCpf(this.cipher.decrypt(user.cpfCifrado)),
+      cpf: maskCpf(this.cipher.decrypt(user.cpfCifrado as string)),
     };
+  }
+
+  toResponseAdmin(user: UserDocument): AdminResponse {
+    return { id: user.id as string, email: user.email, perfil: user.perfil };
   }
 
   toResponse(user: UserDocument): UserResponse {
@@ -153,7 +189,9 @@ export class UsersService {
       email: user.email,
       telefone: user.telefone,
       perfil: user.perfil,
-      cpf: maskCpf(this.cipher.decrypt(user.cpfCifrado)),
+      ...(user.cpfCifrado
+        ? { cpf: maskCpf(this.cipher.decrypt(user.cpfCifrado)) }
+        : {}),
     };
   }
 }

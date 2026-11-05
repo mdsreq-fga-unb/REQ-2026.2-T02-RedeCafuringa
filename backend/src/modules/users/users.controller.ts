@@ -1,11 +1,13 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiOperation,
   ApiTags,
   ApiTooManyRequestsResponse,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import {
   ErrorResponse,
@@ -13,6 +15,10 @@ import {
 } from '../../common/dto/error.response.js';
 import { AuthThrottle } from '../auth/decorators/auth-throttle.decorator.js';
 import { Public } from '../auth/decorators/public.decorator.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
+import { Role } from './domain/role.js';
+import { AdminResponse } from './dto/admin.response.js';
+import { CreateAdminDto } from './dto/create-admin.dto.js';
 import { CreateConsumerDto } from './dto/create-consumer.dto.js';
 import { CreateProducerDto } from './dto/create-producer.dto.js';
 import { ProducerResponse } from './dto/producer.response.js';
@@ -81,5 +87,34 @@ export class UsersController {
     @Body() dto: CreateProducerDto,
   ): Promise<ProducerResponse> {
     return this.users.toResponseProducer(await this.users.createProducer(dto));
+  }
+
+  /** HU03 — cadastro de administrador, exclusivo de administradores (RN03). */
+  @Roles(Role.ADMINISTRADOR)
+  @Post('admins')
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Cadastrar administrador',
+    description:
+      'HU03: só um administrador autenticado cria outra conta administrativa, informando e-mail e senha. O primeiro administrador vem de ADMIN_BOOTSTRAP_EMAIL/ADMIN_BOOTSTRAP_SENHA.',
+  })
+  @ApiCreatedResponse({
+    type: AdminResponse,
+    description: 'Administrador criado',
+  })
+  @ApiBadRequestResponse({
+    description: 'E-mail ou senha inválidos',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  @ApiConflictResponse({
+    description: 'E-mail já cadastrado',
+    type: ErrorResponse,
+  })
+  async createAdmin(@Body() dto: CreateAdminDto): Promise<AdminResponse> {
+    return this.users.toResponseAdmin(await this.users.createAdmin(dto));
   }
 }

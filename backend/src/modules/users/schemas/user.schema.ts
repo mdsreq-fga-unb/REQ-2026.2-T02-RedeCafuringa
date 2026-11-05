@@ -13,11 +13,12 @@ export class User {
   @Prop({ required: true, trim: true })
   nome: string;
 
-  @Prop({ required: true, unique: true })
-  cpfHash: string;
+  // Administrador (HU03) não tem CPF: o índice único é esparso.
+  @Prop({ unique: true, sparse: true })
+  cpfHash?: string;
 
-  @Prop({ required: true })
-  cpfCifrado: string;
+  @Prop()
+  cpfCifrado?: string;
 
   @Prop({ required: true, unique: true, lowercase: true, trim: true })
   email: string;

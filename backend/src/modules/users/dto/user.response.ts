@@ -24,6 +24,9 @@ export class UserResponse {
   @ApiProperty({ enum: Role, description: 'Perfil de acesso (RN01)' })
   perfil: Role;
 
-  @ApiProperty({ example: '***.982.247-**', description: 'CPF mascarado' })
-  cpf: string;
+  @ApiPropertyOptional({
+    example: '***.982.247-**',
+    description: 'CPF mascarado; ausente em contas administrativas',
+  })
+  cpf?: string;
 }
