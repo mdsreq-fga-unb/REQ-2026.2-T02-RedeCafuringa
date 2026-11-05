@@ -2,6 +2,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { RegisterPayload } from "@/features/register/registerForm";
 
 const payload: RegisterPayload = {
+    responsible: "Maria da Silva",
+    category: "Produtos",
+    paymentMethods: ["Pix"],
     name: "Seu João",
     document: "39053344705",
     phone: "61912345678",
@@ -34,7 +37,7 @@ describe("cadastro mock ligado ao login mock (HU02, critérios 7 e 9)", () => {
 
         const result = await registerProducer(payload);
         const auth = await loginMock({
-            cpf: payload.document,
+            email: payload.email,
             password: payload.password,
         });
 
@@ -75,7 +78,7 @@ describe("cadastro mock ligado ao login mock (HU02, critérios 7 e 9)", () => {
             field: "email",
         });
         await expect(
-            loginMock({ cpf: "86288366757", password: payload.password }),
+            loginMock({ email: payload.email, password: "outra-senha-9" }),
         ).rejects.toBeInstanceOf(InvalidCredentialsError);
     });
 });

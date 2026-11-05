@@ -73,6 +73,7 @@ describe("integração do cadastro de consumidor — HU01", () => {
                 nome: "Gabriela Pereira da Silva",
                 cpf: "529.982.247-25",
                 email: "gabriela@exemplo.com",
+                dataNascimento: "10-05-1990",
                 senha: "SenhaForte123",
             }),
         );

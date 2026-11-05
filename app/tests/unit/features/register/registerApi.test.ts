@@ -3,32 +3,48 @@ import type { RegisterPayload } from "@/features/register/registerForm";
 import { toCreateProducerBody } from "@/features/register/registerApi";
 
 const payload: RegisterPayload = {
-    name: "Maria da Silva",
+    name: "Horta Comunitária",
+    responsible: "Maria da Silva",
     document: "52998224725",
     phone: "61912345678",
     email: "maria@exemplo.com",
     address: "Chácara 12, Núcleo Rural, Brasília - DF",
+    category: "Produtos e Experiências",
+    paymentMethods: ["Pix", "Dinheiro"],
     password: "senha-segura-1",
 };
 
-describe("toCreateProducerBody", () => {
-    it("traduz o payload para o corpo da API em português, usando cpf", () => {
+describe("toCreateProducerBody (contrato CreateProducerDto)", () => {
+    it("traduz o payload para o corpo da API, sempre com o CPF do responsável", () => {
         expect(toCreateProducerBody(payload)).toEqual({
-            nome: "Maria da Silva",
+            nomeIniciativa: "Horta Comunitária",
+            nomeResponsavel: "Maria da Silva",
             cpf: "52998224725",
+            localidade: "Chácara 12, Núcleo Rural, Brasília - DF",
+            categoriaOfertada: "Produtos e Experiências",
+            formasPagamento: ["Pix", "Dinheiro"],
             telefone: "61912345678",
             email: "maria@exemplo.com",
-            endereco: "Chácara 12, Núcleo Rural, Brasília - DF",
             senha: "senha-segura-1",
         });
     });
 
-    it("usa cnpj, e não cpf, quando o documento tem 14 dígitos", () => {
+    it("HU02 CA03: envia o CNPJ do MEI junto com o CPF", () => {
         const body = toCreateProducerBody({
             ...payload,
-            document: "11222333000181",
+            cnpj: "11222333000181",
         });
         expect(body.cnpj).toBe("11222333000181");
-        expect(body).not.toHaveProperty("cpf");
+        expect(body.cpf).toBe("52998224725");
+    });
+
+    it("não envia campos fora do contrato (endereco)", () => {
+        expect(toCreateProducerBody(payload)).not.toHaveProperty("endereco");
+    });
+
+    it("envia o telefone só com dígitos (campo opcional do contrato)", () => {
+        expect(
+            toCreateProducerBody({ ...payload, phone: "61912345678" }).telefone,
+        ).toBe("61912345678");
     });
 });

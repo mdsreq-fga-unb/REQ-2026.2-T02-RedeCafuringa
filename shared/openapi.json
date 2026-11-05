@@ -717,7 +717,7 @@
     },
     "/api/v1/users/consumers": {
       "post": {
-        "description": "Cadastro público (HU01): dados obrigatórios (RN02), maioridade (RN15) e senha. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.",
+        "description": "Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Data de nascimento é obrigatória e exige 18 anos ou mais (RNF15); telefone é opcional. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.",
         "operationId": "usersCreateConsumer",
         "parameters": [],
         "requestBody": {
@@ -787,9 +787,81 @@
         ]
       }
     },
+    "/api/v1/users/producers": {
+      "post": {
+        "description": "Cadastro público da HU02. Documentos, e-mail e senha são protegidos conforme RNF11; o CPF é retornado mascarado.",
+        "operationId": "usersCreateProducer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProducerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Produtor criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProducerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou campos obrigatórios ausentes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "E-mail, CPF ou CNPJ já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Muitas tentativas",
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cadastrar produtor",
+        "tags": [
+          "users"
+        ]
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
-        "description": "Troca CPF e senha (RN08) por um JWT, válido por `expiresIn` segundos. Rota pública com limite estrito de tentativas por IP.",
+        "description": "Troca e-mail e senha (RN05) por um JWT, válido por `expiresIn` segundos. Rota pública com limite estrito de tentativas por IP.",
         "operationId": "authLogin",
         "parameters": [],
         "requestBody": {
@@ -824,7 +896,7 @@
             }
           },
           "401": {
-            "description": "CPF ou senha inválidos",
+            "description": "E-mail ou senha inválidos",
             "content": {
               "application/json": {
                 "schema": {
@@ -863,7 +935,7 @@
             }
           }
         },
-        "summary": "Autenticar com CPF e senha",
+        "summary": "Autenticar com e-mail e senha",
         "tags": [
           "auth"
         ]
@@ -911,7 +983,7 @@
   "info": {
     "title": "Rede Cafuringa API",
     "description": "API REST da plataforma **Rede Cafuringa**.\n\n**Autenticação.** `POST /auth/login` troca CPF e senha por um JWT. Envie-o em `Authorization: Bearer <token>`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).\n\n**Rastreabilidade.** Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`). A API devolve o mesmo id no cabeçalho da resposta e nos logs; sem o cabeçalho, ou com valor inválido, gera um UUID.\n\n**Erros.** Todo erro tem o corpo `ErrorResponse` (`statusCode`, `message`, `error`). Nas falhas de validação (400), `message` é uma lista.\n\n**Limites.** Rotas de login e cadastro têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com `Retry-After` (segundos).\n\n**Dados pessoais.** Respostas nunca trazem hash de senha nem o CPF completo (vem mascarado).\n\n**Versão do contrato.** SemVer, em `info.version`. Veja docs/shared/contratos.md.",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -921,11 +993,11 @@
   "tags": [
     {
       "name": "auth",
-      "description": "Login e dados da sessão (RN08)"
+      "description": "Login e dados da sessão (RN05)"
     },
     {
       "name": "users",
-      "description": "Cadastro de usuários (RN02, RN15)"
+      "description": "Cadastro de usuários (RN02, RNF15)"
     },
     {
       "name": "health",
@@ -972,7 +1044,7 @@
           "dataNascimento": {
             "type": "string",
             "example": "1990-05-10",
-            "description": "AAAA-MM-DD"
+            "description": "AAAA-MM-DD. Exige 18 anos ou mais"
           },
           "senha": {
             "type": "string",
@@ -983,7 +1055,6 @@
         "required": [
           "nome",
           "cpf",
-          "telefone",
           "email",
           "dataNascimento",
           "senha"
@@ -993,16 +1064,24 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
           },
           "nome": {
-            "type": "string"
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Nome completo"
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail da conta"
           },
           "telefone": {
-            "type": "string"
+            "type": "string",
+            "example": "61999990000",
+            "description": "DDD + número; ausente se não informado"
           },
           "perfil": {
             "type": "string",
@@ -1010,7 +1089,8 @@
               "CONSUMIDOR",
               "PRODUTOR",
               "ADMINISTRADOR"
-            ]
+            ],
+            "description": "Perfil de acesso (RN01)"
           },
           "cpf": {
             "type": "string",
@@ -1022,7 +1102,6 @@
           "id",
           "nome",
           "email",
-          "telefone",
           "perfil",
           "cpf"
         ]
@@ -1066,13 +1145,169 @@
           "error"
         ]
       },
-      "LoginDto": {
+      "CreateProducerDto": {
         "type": "object",
         "properties": {
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Horta Comunitária Cafuringa"
+          },
+          "nomeResponsavel": {
+            "type": "string",
+            "example": "João da Silva"
+          },
           "cpf": {
             "type": "string",
             "example": "529.982.247-25",
             "description": "Com ou sem máscara"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "12.345.678/0001-95",
+            "description": "Com ou sem máscara; opcional quando não houver CNPJ"
+          },
+          "localidade": {
+            "type": "string",
+            "example": "Fazenda da Cafuringa, Núcleo Rural de Planaltina"
+          },
+          "categoriaOfertada": {
+            "type": "string",
+            "enum": [
+              "Produtos",
+              "Experiências",
+              "Produtos e Experiências"
+            ],
+            "example": "Produtos e Experiências",
+            "description": "Tipo de oferta do produtor"
+          },
+          "formasPagamento": {
+            "example": [
+              "PIX",
+              "Dinheiro"
+            ],
+            "description": "Formas de pagamento aceitas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "DDD + número, apenas dígitos; contato do produtor"
+          },
+          "email": {
+            "type": "string",
+            "example": "produtor@exemplo.com"
+          },
+          "senha": {
+            "type": "string",
+            "example": "SenhaForte123",
+            "description": "8 a 128 caracteres, com pelo menos uma letra e um número"
+          }
+        },
+        "required": [
+          "nomeIniciativa",
+          "nomeResponsavel",
+          "cpf",
+          "localidade",
+          "categoriaOfertada",
+          "formasPagamento",
+          "email",
+          "senha"
+        ]
+      },
+      "ProducerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Nome do responsável"
+          },
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Sítio Boa Vista",
+            "description": "Nome da iniciativa ou propriedade"
+          },
+          "nomeResponsavel": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Responsável pela iniciativa (RN09)"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail da conta"
+          },
+          "localidade": {
+            "type": "string",
+            "example": "Cafuringa",
+            "description": "Localidade"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "DDD + número; ausente se não informado"
+          },
+          "categoriaOfertada": {
+            "type": "string",
+            "enum": [
+              "Produtos",
+              "Experiências",
+              "Produtos e Experiências"
+            ],
+            "description": "Categoria ofertada"
+          },
+          "formasPagamento": {
+            "example": [
+              "PIX"
+            ],
+            "description": "Formas de pagamento aceitas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR",
+              "ADMINISTRADOR"
+            ],
+            "description": "Perfil de acesso (RN01)"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "***.982.247-**",
+            "description": "CPF mascarado"
+          }
+        },
+        "required": [
+          "id",
+          "nome",
+          "nomeIniciativa",
+          "nomeResponsavel",
+          "email",
+          "localidade",
+          "categoriaOfertada",
+          "formasPagamento",
+          "perfil"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail cadastrado (sem distinção de maiúsculas)"
           },
           "senha": {
             "type": "string",
@@ -1080,7 +1315,7 @@
           }
         },
         "required": [
-          "cpf",
+          "email",
           "senha"
         ]
       },

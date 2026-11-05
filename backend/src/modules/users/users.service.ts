@@ -53,6 +53,7 @@ export class UsersService {
       nomeIniciativa: dto.nomeIniciativa,
       nomeResponsavel: dto.nomeResponsavel,
       localidade: dto.localidade,
+      ...(dto.telefone ? { telefone: dto.telefone } : {}),
       categoriaOfertada: dto.categoriaOfertada,
       formasPagamento: dto.formasPagamento,
       email,
@@ -83,6 +84,7 @@ export class UsersService {
    * PRODUTOR/ADMINISTRADOR: esses fluxos chegam com as HU02 e HU03.
    */
   async create(dto: CreateConsumerDto, perfil: Role): Promise<UserDocument> {
+    // RNF15: a data de nascimento afere a maioridade e por isso é obrigatória.
     if (!isAdult(new Date(dto.dataNascimento))) {
       throw new BadRequestException(
         'É necessário ter 18 anos ou mais para se cadastrar',
@@ -93,11 +95,15 @@ export class UsersService {
     if (await this.users.exists({ cpfHash }).exec()) {
       throw new ConflictException('CPF já cadastrado');
     }
+    const email = dto.email.toLowerCase();
+    if (await this.users.exists({ email }).exec()) {
+      throw new ConflictException('E-mail já cadastrado');
+    }
 
     try {
       return await this.users.create({
         nome: dto.nome,
-        email: dto.email.toLowerCase(),
+        email,
         telefone: dto.telefone,
         dataNascimento: new Date(dto.dataNascimento),
         perfil,
@@ -114,9 +120,9 @@ export class UsersService {
     }
   }
 
-  /** RN08: o login identifica a conta pelo CPF, via blind index. */
-  findByCpf(cpf: string): Promise<UserDocument | null> {
-    return this.users.findOne({ cpfHash: this.cipher.blindIndex(cpf) }).exec();
+  /** RN05: o login identifica a conta pelo e-mail. */
+  findByEmail(email: string): Promise<UserDocument | null> {
+    return this.users.findOne({ email: email.toLowerCase() }).exec();
   }
 
   async findById(id: string): Promise<UserDocument | null> {
@@ -132,6 +138,7 @@ export class UsersService {
       nomeResponsavel: user.nomeResponsavel,
       email: user.email,
       localidade: user.localidade,
+      ...(user.telefone ? { telefone: user.telefone } : {}),
       categoriaOfertada: user.categoriaOfertada,
       formasPagamento: user.formasPagamento,
       perfil: user.perfil,

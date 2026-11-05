@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
@@ -85,6 +86,20 @@ export class CreateProducerDto {
     message: 'Cada forma de pagamento deve ser um texto',
   })
   formasPagamento: string[];
+
+  @ApiPropertyOptional({
+    example: '61999990000',
+    description: 'DDD + número, apenas dígitos; contato do produtor',
+  })
+  // Formulário que envia o campo em branco equivale a não informar.
+  @Transform(({ value }: { value: unknown }) =>
+    value === '' ? undefined : value,
+  )
+  @IsOptional()
+  @Matches(/^\d{10,11}$/, {
+    message: 'Telefone deve ter DDD e número, apenas dígitos (10 ou 11)',
+  })
+  telefone?: string;
 
   @ApiProperty({ example: 'produtor@exemplo.com' })
   @IsEmail({}, { message: 'E-mail inválido' })

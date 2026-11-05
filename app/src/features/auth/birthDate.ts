@@ -26,3 +26,10 @@ export function isAdultBirthDate(value: string): boolean {
     adulthood.setUTCFullYear(birthDate.getUTCFullYear() + 18);
     return adulthood <= new Date();
 }
+
+/** Converte DD-MM-AAAA (formulário) para AAAA-MM-DD (contrato da API). */
+export function toIsoBirthDate(value: string): string | undefined {
+    if (!parseBirthDate(value)) return undefined;
+    const [day, month, year] = value.split("-");
+    return `${year}-${month}-${day}`;
+}

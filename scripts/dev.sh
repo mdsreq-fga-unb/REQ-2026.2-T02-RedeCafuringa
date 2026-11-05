@@ -214,9 +214,7 @@ cmd_contract() {
   (cd "$ROOT/backend" && npm run --silent openapi:export)
   info "Tipos do front (app)"
   (cd "$ROOT/app" && npm run --silent api:types)
-  info "Referência da API (docs/shared/api.md)"
-  node scripts/gen-api-docs.mjs
-  ok "contrato regenerado; commite shared/, app/src/shared/api/schema.ts e docs/shared/api.md"
+  ok "contrato regenerado; commite shared/ e app/src/shared/api/schema.ts"
 }
 
 cmd_images() {

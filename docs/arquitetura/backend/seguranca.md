@@ -50,9 +50,9 @@ O time responde em até 5 dias úteis.
 | Negação por padrão (`JwtAuthGuard` global + `@Public()`) e RBAC (`RolesGuard` + `@Roles()`) | `backend/src/modules/auth/guards` |
 | Senhas com argon2id; política mínima (8–128, letra e número) | `backend/src/common/crypto/password-hasher.ts` |
 | CPF como *blind index* HMAC-SHA256 + cifra AES-256-GCM (D1) | `backend/src/common/crypto/pii-cipher.ts` |
-| Login sem enumeração (mensagem e custo iguais para CPF inexistente) | `backend/src/modules/auth/auth.service.ts` |
+| Login por e-mail e senha (RN05), sem enumeração (mensagem e custo iguais para e-mail inexistente) | `backend/src/modules/auth/auth.service.ts` |
 | Rate limit dedicado a login/cadastro (`AUTH_THROTTLE_LIMIT`) | `@AuthThrottle()` |
-| Bloqueio de cadastro de menores de 18 anos (RN15, RNF15) | `backend/src/modules/users/domain/age.ts` |
+| Bloqueio de cadastro de menores de 18 anos (RNF15) | `backend/src/modules/users/domain/age.ts` |
 
 ## 4. Auditoria de 2026-10-24 — o que foi encontrado e corrigido
 

@@ -9,7 +9,11 @@ const validForm: RegisterFormValues = {
     documentType: "cpf",
     birthDate: "10-05-1990",
     name: "Maria da Silva",
+    responsible: "Maria da Silva",
     document: "529.982.247-25",
+    cnpj: "",
+    category: "Produtos",
+    paymentMethods: ["Pix", "Cartão de crédito"],
     phone: "(61) 91234-5678",
     email: "maria@exemplo.com",
     address: "Chácara 12, Núcleo Rural, Brasília - DF",
@@ -30,7 +34,10 @@ describe("buildRegisterPayload", () => {
 
         expect(payload).toEqual({
             name: "Maria da Silva",
+            responsible: "Maria da Silva",
             document: "52998224725",
+            category: "Produtos",
+            paymentMethods: ["Pix", "Cartão de crédito"],
             phone: "61912345678",
             email: "maria@exemplo.com",
             address: "Chácara 12, Núcleo Rural",
@@ -38,16 +45,29 @@ describe("buildRegisterPayload", () => {
         });
     });
 
+    it("HU02 CA03: MEI envia CPF e CNPJ só com dígitos; CPF comum não envia CNPJ", () => {
+        const mei = buildRegisterPayload({
+            ...validForm,
+            documentType: "cnpj",
+            cnpj: "11.222.333/0001-81",
+        });
+        expect(mei.document).toBe("52998224725");
+        expect(mei.cnpj).toBe("11222333000181");
+        expect(
+            buildRegisterPayload({ ...validForm, cnpj: "11.222.333/0001-81" }),
+        ).not.toHaveProperty("cnpj");
+    });
+
     it("usa só dígitos no CNPJ e preserva a senha exatamente como digitada", () => {
         const payload = buildRegisterPayload({
             ...validForm,
             documentType: "cnpj",
-            document: "11.222.333/0001-81",
+            cnpj: "11.222.333/0001-81",
             password: " senha com espaço ",
             confirmPassword: " senha com espaço ",
         });
 
-        expect(payload.document).toBe("11222333000181");
+        expect(payload.cnpj).toBe("11222333000181");
         expect(payload.password).toBe(" senha com espaço ");
     });
 });
@@ -122,13 +142,18 @@ describe("validateRegisterForm: campos obrigatórios", () => {
         );
     });
 
-    it("pede CNPJ quando o tipo de documento escolhido é CNPJ", () => {
+    it("pede CNPJ quando o cadastro é de MEI (CA03)", () => {
         const errors = validateRegisterForm({
             ...validForm,
             documentType: "cnpj",
-            document: "",
+            cnpj: "",
         });
-        expect(errors.document).toBe("Informe o CNPJ.");
+        expect(errors.cnpj).toBe("Informe o CNPJ.");
+    });
+
+    it("exige o responsável (CA01/RN09)", () => {
+        const errors = validateRegisterForm({ ...validForm, responsible: " " });
+        expect(errors.responsible).toBe("Informe o responsável.");
     });
 
     it("trata campos só com espaços como vazios", () => {
@@ -152,29 +177,26 @@ describe("validateRegisterForm: campos obrigatórios", () => {
             expect(errors.document).toBe("CPF inválido.");
         });
 
-        it("valida o documento conforme o tipo escolhido (CNPJ)", () => {
-            const cnpj = {
+        it("valida o CNPJ do MEI e continua exigindo o CPF (CA05)", () => {
+            const mei = {
                 ...validForm,
                 documentType: "cnpj" as const,
-                birthDate: "",
             };
 
             expect(
-                validateRegisterForm({
-                    ...cnpj,
-                    document: "11.222.333/0001-81",
-                }).document,
-            ).toBeUndefined();
+                validateRegisterForm({ ...mei, cnpj: "11.222.333/0001-81" }),
+            ).toEqual({});
             expect(
-                validateRegisterForm({
-                    ...cnpj,
-                    document: "11.222.333/0001-82",
-                }).document,
+                validateRegisterForm({ ...mei, cnpj: "11.222.333/0001-82" })
+                    .cnpj,
             ).toBe("CNPJ inválido.");
             expect(
-                validateRegisterForm({ ...cnpj, document: "529.982.247-25" })
-                    .document,
-            ).toBe("CNPJ inválido.");
+                validateRegisterForm({
+                    ...mei,
+                    cnpj: "11.222.333/0001-81",
+                    document: "529.982.247-24",
+                }).document,
+            ).toBe("CPF inválido.");
         });
 
         it("rejeita telefone fora do padrão", () => {
@@ -222,5 +244,22 @@ describe("validateRegisterForm: campos obrigatórios", () => {
             });
             expect(errors.confirmPassword).toBe("As senhas não conferem.");
         });
+    });
+
+    it("HU02 CA01: exige ao menos uma forma de pagamento", () => {
+        expect(
+            validateRegisterForm({ ...validForm, paymentMethods: [] })
+                .paymentMethods,
+        ).toBe("Selecione ao menos uma forma de pagamento.");
+        expect(validateRegisterForm(validForm).paymentMethods).toBeUndefined();
+    });
+
+    it("HU02 CA01: o payload leva exatamente as formas selecionadas", () => {
+        expect(
+            buildRegisterPayload({
+                ...validForm,
+                paymentMethods: ["Dinheiro", "Cartão de débito"],
+            }).paymentMethods,
+        ).toEqual(["Dinheiro", "Cartão de débito"]);
     });
 });

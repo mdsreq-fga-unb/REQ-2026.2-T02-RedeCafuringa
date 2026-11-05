@@ -36,6 +36,28 @@ describe('HU01 — Cadastrar perfil de consumidor (e2e)', () => {
     });
   });
 
+  it('RF01: aceita cadastro sem telefone', async () => {
+    const { nome, cpf, email, senha, dataNascimento } = makeConsumer();
+
+    const response = await t
+      .request()
+      .post(REGISTER)
+      .send({ nome, cpf, email, senha, dataNascimento })
+      .expect(201);
+
+    expect(response.body).not.toHaveProperty('telefone');
+  });
+
+  it('RF01: telefone em branco equivale a não informado', async () => {
+    const response = await t
+      .request()
+      .post(REGISTER)
+      .send(makeConsumer({ telefone: '' }))
+      .expect(201);
+
+    expect(response.body).not.toHaveProperty('telefone');
+  });
+
   it('aceita CPF com máscara', async () => {
     await t
       .request()
@@ -78,11 +100,14 @@ describe('HU01 — Cadastrar perfil de consumidor (e2e)', () => {
       );
     });
 
-    it('400 quando falta campo obrigatório (RN02)', async () => {
-      const { telefone: _telefone, ...dto } = makeConsumer();
+    it.each(['email', 'dataNascimento'] as const)(
+      '400 quando falta campo obrigatório: %s (RF01, RNF15)',
+      async (campo) => {
+        const { [campo]: _omitido, ...dto } = makeConsumer();
 
-      await t.request().post(REGISTER).send(dto).expect(400);
-    });
+        await t.request().post(REGISTER).send(dto).expect(400);
+      },
+    );
 
     it('RN01: não permite escolher o perfil pelo payload', async () => {
       await t
@@ -93,7 +118,7 @@ describe('HU01 — Cadastrar perfil de consumidor (e2e)', () => {
     });
   });
 
-  it('RN15/RNF15: recusa menor de 18 anos com 400', async () => {
+  it('RNF15: recusa menor de 18 anos com 400', async () => {
     const year = new Date().getUTCFullYear() - 17;
 
     const response = await t
@@ -119,6 +144,22 @@ describe('HU01 — Cadastrar perfil de consumidor (e2e)', () => {
       .expect(409);
 
     expect(response.body.message).toBe('CPF já cadastrado');
+  });
+
+  it('CA03: recusa e-mail já cadastrado com 409 e mensagem de e-mail', async () => {
+    await t
+      .request()
+      .post(REGISTER)
+      .send(makeConsumer({ email: 'maria@exemplo.com' }))
+      .expect(201);
+
+    const response = await t
+      .request()
+      .post(REGISTER)
+      .send(makeConsumer({ email: 'MARIA@exemplo.com' }))
+      .expect(409);
+
+    expect(response.body.message).toBe('E-mail já cadastrado');
   });
 });
 

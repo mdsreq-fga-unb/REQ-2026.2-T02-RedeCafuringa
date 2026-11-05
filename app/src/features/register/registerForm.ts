@@ -15,13 +15,28 @@ export interface RegisterFormValues {
     documentType: DocumentType;
     birthDate: string;
     name: string;
+    responsible: string;
+    /** CPF do responsável (sempre exigido). */
     document: string;
+    /** CNPJ do MEI; só exigido quando documentType é "cnpj". */
+    cnpj: string;
+    category: string;
+    /** Formas de pagamento marcadas (ao menos uma). */
+    paymentMethods: string[];
     phone: string;
     email: string;
     address: string;
     password: string;
     confirmPassword: string;
 }
+
+/** Opções de pagamento do cadastro (HU02 CA01), na ordem em que são exibidas. */
+export const PAYMENT_METHOD_OPTIONS = [
+    "Pix",
+    "Dinheiro",
+    "Cartão de débito",
+    "Cartão de crédito",
+] as const;
 
 export type RegisterFormErrors = Partial<
     Record<keyof RegisterFormValues, string>
@@ -32,19 +47,23 @@ export function validateRegisterForm(
 ): RegisterFormErrors {
     const errors: RegisterFormErrors = {};
     const document = values.document.trim();
+    const cnpj = (values.cnpj ?? "").trim();
     const phone = values.phone.trim();
     const email = values.email.trim();
 
-    const isCnpj = values.documentType === "cnpj";
-    const documentLabel = isCnpj ? "CNPJ" : "CPF";
-    const documentIsValid = isCnpj
-        ? isValidCnpj(document)
-        : isValidCpf(document);
+    const isMei = values.documentType === "cnpj";
 
     if (!values.name.trim()) errors.name = "Informe o nome.";
+    if (!(values.responsible ?? "").trim())
+        errors.responsible = "Informe o responsável.";
 
-    if (!document) errors.document = `Informe o ${documentLabel}.`;
-    else if (!documentIsValid) errors.document = `${documentLabel} inválido.`;
+    if (!document) errors.document = "Informe o CPF.";
+    else if (!isValidCpf(document)) errors.document = "CPF inválido.";
+
+    if (isMei) {
+        if (!cnpj) errors.cnpj = "Informe o CNPJ.";
+        else if (!isValidCnpj(cnpj)) errors.cnpj = "CNPJ inválido.";
+    }
 
     if (!phone) errors.phone = "Informe o telefone.";
     else if (!isValidPhone(phone))
@@ -54,6 +73,9 @@ export function validateRegisterForm(
     else if (!isValidEmail(email)) errors.email = "E-mail inválido.";
 
     if (!values.address.trim()) errors.address = "Informe o endereço.";
+
+    if (values.paymentMethods.length === 0)
+        errors.paymentMethods = "Selecione ao menos uma forma de pagamento.";
 
     if (!values.password) errors.password = "Informe a senha.";
     else if (values.password.length < 8) {
@@ -69,15 +91,13 @@ export function validateRegisterForm(
         errors.confirmPassword = "As senhas não conferem.";
     }
 
-    if (!isCnpj) {
-        if (!values.birthDate.trim()) {
-            errors.birthDate = "Informe a data de nascimento.";
-        } else if (!parseBirthDate(values.birthDate)) {
-            errors.birthDate = "Informe uma data válida no formato DD-MM-AAAA.";
-        } else if (!isAdultBirthDate(values.birthDate)) {
-            errors.birthDate =
-                "É necessário ter 18 anos ou mais para se cadastrar.";
-        }
+    if (!values.birthDate.trim()) {
+        errors.birthDate = "Informe a data de nascimento.";
+    } else if (!parseBirthDate(values.birthDate)) {
+        errors.birthDate = "Informe uma data válida no formato DD-MM-AAAA.";
+    } else if (!isAdultBirthDate(values.birthDate)) {
+        errors.birthDate =
+            "É necessário ter 18 anos ou mais para se cadastrar.";
     }
 
     return errors;
@@ -85,7 +105,11 @@ export function validateRegisterForm(
 
 export interface RegisterPayload {
     name: string;
+    responsible: string;
     document: string;
+    cnpj?: string;
+    category: string;
+    paymentMethods: string[];
     phone: string;
     email: string;
     address: string;
@@ -97,7 +121,13 @@ export function buildRegisterPayload(
 ): RegisterPayload {
     return {
         name: values.name.trim(),
+        responsible: values.responsible.trim(),
         document: onlyDigits(values.document),
+        ...(values.documentType === "cnpj" && values.cnpj
+            ? { cnpj: onlyDigits(values.cnpj) }
+            : {}),
+        category: values.category,
+        paymentMethods: [...values.paymentMethods],
         phone: onlyDigits(values.phone),
         email: values.email.trim().toLowerCase(),
         address: values.address.trim(),

@@ -13,7 +13,7 @@ type LoginRequest = components["schemas"]["LoginDto"];
 type LoginResponse = components["schemas"]["LoginResponse"];
 
 export type Credentials = {
-    cpf: string;
+    email: string;
     password: string;
 };
 
@@ -41,13 +41,13 @@ export function toAuthResult(response: LoginResponse): AuthResult {
     };
 }
 
-// POST /auth/login  { cpf, senha }  ->  200 { accessToken, tokenType, expiresIn, usuario }
+// POST /auth/login  { email, senha }  ->  200 { accessToken, tokenType, expiresIn, usuario }
 //   401 credenciais inválidas | 403 conta desativada | 429 muitas tentativas
 export async function login(credentials: Credentials): Promise<AuthResult> {
     if (isMockAuthEnabled) return loginMock(credentials);
 
     const body: LoginRequest = {
-        cpf: credentials.cpf,
+        email: credentials.email.trim().toLowerCase(),
         senha: credentials.password,
     };
 

@@ -444,6 +444,7 @@ export function ConsumerSignupPage({
                 nome: values.nome.trim(),
                 cpf: values.cpf,
                 email: values.email.trim(),
+                dataNascimento: values.dataNascimento,
                 senha: values.senha,
             });
             onNavigate("/conta-criada/consumer");

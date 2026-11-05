@@ -233,7 +233,10 @@ describe("Fluxo de cadastro de consumidor — HU01", () => {
 
         await user.click(screen.getByRole("button", { name: "Criar conta" }));
 
-        expect(createAccount).toHaveBeenCalledWith(validSignup);
+        expect(createAccount).toHaveBeenCalledWith({
+            ...validSignup,
+            dataNascimento: "10-05-1990",
+        });
         expect(onNavigate).toHaveBeenCalledWith("/conta-criada/consumer");
     });
 

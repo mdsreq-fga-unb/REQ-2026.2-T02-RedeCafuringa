@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException } from '@nestjs/common';
-import { makeConsumer, makeCpf, makeProducer } from '@test/factories';
+import { makeConsumer, makeProducer } from '@test/factories';
 import type { Model } from 'mongoose';
 import { Types } from 'mongoose';
 import type { PasswordHasher } from '../../common/crypto/password-hasher.js';
@@ -79,7 +79,7 @@ describe('UsersService', () => {
       expect(model.create.mock.calls[0][0].email).toBe('maria@exemplo.com');
     });
 
-    it('RN15: recusa cadastro de menor de 18 anos', async () => {
+    it('RNF15: recusa cadastro de menor de 18 anos', async () => {
       const { service, model } = setup();
       const seventeenYearsAgo = new Date().getUTCFullYear() - 17;
 
@@ -87,6 +87,27 @@ describe('UsersService', () => {
         service.createConsumer(
           makeConsumer({ dataNascimento: `${seventeenYearsAgo}-01-01` }),
         ),
+      ).rejects.toThrow(BadRequestException);
+      expect(model.create).not.toHaveBeenCalled();
+    });
+
+    it('RF01: cadastra sem telefone', async () => {
+      const { service, model } = setup();
+      const { nome, cpf, email, senha, dataNascimento } = makeConsumer();
+
+      await service.createConsumer({ nome, cpf, email, senha, dataNascimento });
+
+      const saved = model.create.mock.calls[0][0];
+      expect(saved.telefone).toBeUndefined();
+      expect(saved.dataNascimento).toBeInstanceOf(Date);
+    });
+
+    it('RNF15: recusa cadastro sem data de nascimento', async () => {
+      const { service, model } = setup();
+      const { nome, cpf, email, senha } = makeConsumer();
+
+      await expect(
+        service.createConsumer({ nome, cpf, email, senha } as never),
       ).rejects.toThrow(BadRequestException);
       expect(model.create).not.toHaveBeenCalled();
     });
@@ -252,14 +273,15 @@ describe('UsersService', () => {
     });
   });
 
-  describe('findByCpf (RN08)', () => {
-    it('busca pelo blind index, nunca pelo CPF em texto', async () => {
+  describe('findByEmail (RN05)', () => {
+    it('busca pelo e-mail normalizado em minúsculas', async () => {
       const { service, model } = setup();
-      const cpf = makeCpf();
 
-      await service.findByCpf(cpf);
+      await service.findByEmail('Maria@Exemplo.COM');
 
-      expect(model.findOne).toHaveBeenCalledWith({ cpfHash: `idx:${cpf}` });
+      expect(model.findOne).toHaveBeenCalledWith({
+        email: 'maria@exemplo.com',
+      });
     });
   });
 

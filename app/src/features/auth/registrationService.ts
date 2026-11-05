@@ -1,5 +1,6 @@
 import { ApiHttpError, getApiClient } from "../../shared/api";
 import { isMockAuthEnabled } from "./authMode";
+import { toIsoBirthDate } from "./birthDate";
 import { registerMockConsumer } from "./mockAuth";
 
 export type AdminSignupData = { email: string; senha: string };
@@ -50,6 +51,8 @@ export type ConsumerSignupData = {
     nome: string;
     cpf: string;
     email: string;
+    /** DD-MM-AAAA, como digitado no formulário. */
+    dataNascimento: string;
     senha: string;
 };
 
@@ -68,6 +71,7 @@ export async function registerConsumer(
                 nome: data.nome.trim(),
                 cpf: data.cpf.replace(/\D/g, ""),
                 email: data.email.trim().toLowerCase(),
+                dataNascimento: toIsoBirthDate(data.dataNascimento),
                 senha: data.senha,
             },
             { auth: false },

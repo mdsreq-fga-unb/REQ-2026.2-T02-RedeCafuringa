@@ -16,7 +16,7 @@ const publicUser = { id: user.id, nome: 'Maria', perfil: Role.PRODUTOR };
 
 function setup() {
   const users = {
-    findByCpf: vi.fn().mockResolvedValue(user),
+    findByEmail: vi.fn().mockResolvedValue(user),
     findById: vi.fn().mockResolvedValue(user),
     toResponse: vi.fn().mockReturnValue(publicUser),
   };
@@ -37,11 +37,13 @@ function setup() {
 }
 
 describe('AuthService', () => {
-  describe('login (HU09, RN08)', () => {
+  describe('login (HU09, RN05)', () => {
     it('devolve token Bearer e o perfil público do usuário', async () => {
       const { service } = setup();
 
-      await expect(service.login('52998224725', 'Senha123')).resolves.toEqual({
+      await expect(
+        service.login('maria@exemplo.com', 'Senha123'),
+      ).resolves.toEqual({
         accessToken: 'token.jwt',
         tokenType: 'Bearer',
         expiresIn: 900,
@@ -52,7 +54,7 @@ describe('AuthService', () => {
     it('RNF11: o token carrega só id e perfil (sem CPF/e-mail)', async () => {
       const { service, jwt } = setup();
 
-      await service.login('52998224725', 'Senha123');
+      await service.login('maria@exemplo.com', 'Senha123');
 
       expect(jwt.signAsync).toHaveBeenCalledWith({
         sub: user.id,
@@ -64,28 +66,28 @@ describe('AuthService', () => {
       const { service, hasher } = setup();
       hasher.verify.mockResolvedValue(false);
 
-      await expect(service.login('52998224725', 'errada')).rejects.toThrow(
-        new UnauthorizedException('CPF ou senha inválidos'),
-      );
+      await expect(
+        service.login('maria@exemplo.com', 'errada'),
+      ).rejects.toThrow(new UnauthorizedException('E-mail ou senha inválidos'));
     });
 
-    it('recusa CPF desconhecido com o mesmo 401 e o mesmo custo de hash', async () => {
+    it('recusa e-mail desconhecido com o mesmo 401 e o mesmo custo de hash', async () => {
       const { service, users, hasher } = setup();
-      users.findByCpf.mockResolvedValue(null);
+      users.findByEmail.mockResolvedValue(null);
 
-      await expect(service.login('52998224725', 'Senha123')).rejects.toThrow(
-        new UnauthorizedException('CPF ou senha inválidos'),
-      );
+      await expect(
+        service.login('maria@exemplo.com', 'Senha123'),
+      ).rejects.toThrow(new UnauthorizedException('E-mail ou senha inválidos'));
       expect(hasher.verifyDummy).toHaveBeenCalledWith('Senha123');
     });
 
     it('recusa conta desativada com 403 depois de validar a senha', async () => {
       const { service, users, jwt } = setup();
-      users.findByCpf.mockResolvedValue({ ...user, ativo: false });
+      users.findByEmail.mockResolvedValue({ ...user, ativo: false });
 
-      await expect(service.login('52998224725', 'Senha123')).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(
+        service.login('maria@exemplo.com', 'Senha123'),
+      ).rejects.toThrow(ForbiddenException);
       expect(jwt.signAsync).not.toHaveBeenCalled();
     });
   });

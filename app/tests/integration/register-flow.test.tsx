@@ -17,6 +17,7 @@ const newPassword = "senha-segura-1";
 
 async function fillRegisterForm(user: ReturnType<typeof userEvent.setup>) {
     await user.type(screen.getByLabelText("Nome da iniciativa"), "Seu João");
+    await user.type(screen.getByLabelText("Responsável"), "Seu João");
     await user.type(screen.getByLabelText("CPF"), newCpf);
     await user.type(screen.getByLabelText("Data de nascimento"), "10051990");
     await user.type(screen.getByLabelText("Telefone"), "61912345678");
@@ -75,7 +76,7 @@ describe("HU02 — acesso ao cadastro de produtor no app", () => {
         render(<App />);
 
         expect(screen.getByRole("status").textContent).toBe(
-            "Cadastro concluído. Entre com seu CPF e sua senha.",
+            "Cadastro concluído. Entre com seu e-mail e sua senha.",
         );
     });
 
@@ -124,9 +125,4 @@ describe("HU02 — do cadastro à área do produtor", () => {
 
         expect(window.location.hash).toBe("#/login/producer");
     }, 15000);
-
-    // Critério 9, caso CNPJ: depende da mudança pendente da HU09
-    it.todo(
-        "entra com a conta criada com CNPJ (login deve aceitar CPF ou CNPJ)",
-    );
 });

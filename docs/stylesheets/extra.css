@@ -475,81 +475,203 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   transition: background-color 0.15s ease;
 }
 
-/* =====================================================
-   CARDS DE SEÇÃO
-   ===================================================== */
+/* =========================================
+   CARDS DE ATALHOS — PÁGINA INICIAL
+   ========================================= */
+
 .section-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-  margin: 1rem 0 0rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+    margin: 28px 0;
+    align-items: stretch;
 }
 
 .section-card {
-  border: 1px solid rgba(145, 153, 107, 0.4);
-  border-radius: 12px;
-  padding: 1.3rem 1.3rem 1.3rem 1.6rem;
-  background: linear-gradient(135deg, rgba(247, 228, 197, 0.65) 0%, rgba(255, 252, 247, 0.95) 100%);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-  text-decoration: none !important;
-  display: block;
-  position: relative;
-  overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 135px;
+    padding: 22px;
+
+    background: #F7E4C5;
+    border: 1px solid rgba(145, 153, 107, 0.35);
+    border-radius: 12px;
+
+    text-decoration: none !important;
+    color: var(--nativo-black) !important;
+
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
 }
 
+/* Detalhe lateral */
 .section-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background-color: var(--nativo-sage);
-  transition: background-color 0.18s ease;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background-color: var(--nativo-sage);
+    border-radius: 12px 0 0 12px;
+    transition: background-color 0.2s ease;
 }
 
+/* Hover */
 .section-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(4, 50, 34, 0.13);
-  border-color: var(--nativo-cinnamon);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: var(--nativo-cinnamon);
 }
 
 .section-card:hover::before {
-  background-color: var(--nativo-cinnamon);
+    background-color: var(--nativo-cinnamon);
 }
 
+/* Título */
 .section-card h3 {
-  font-family: var(--nativo-font-heading) !important;
-  font-size: 0.97rem !important;
-  font-weight: 700 !important;
-  color: var(--nativo-evergreen) !important;
-  margin: 0 0 0.45rem 0 !important;
-  border: none !important;
-  padding: 0 !important;
+    font-family: var(--nativo-font-heading) !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: var(--nativo-evergreen) !important;
+    margin: 0 0 10px 0 !important;
+    padding: 0 !important;
+    border: none !important;
 }
 
+/* Descrição */
 .section-card p {
-  font-size: 0.81rem;
-  margin: 0;
-  color: rgba(23, 25, 24, 0.7);
-  line-height: 1.5;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    margin: 0;
+    text-align: left !important;
+    color: rgba(43, 33, 24, 0.8);
 }
 
+/* Modo escuro */
 [data-md-color-scheme="slate"] .section-card {
-  background: linear-gradient(135deg, rgba(217, 119, 50, 0.25) 0%, rgba(45, 33, 24, 0.9) 100%);
-  border-color: rgba(145, 153, 107, 0.3);
+    background: linear-gradient(
+        135deg,
+        rgba(217, 119, 50, 0.20),
+        rgba(45, 33, 24, 0.95)
+    );
+    border-color: rgba(145, 153, 107, 0.3);
+    color: var(--nativo-cream) !important;
 }
 
 [data-md-color-scheme="slate"] .section-card h3 {
-  color: var(--nativo-cream) !important;
+    color: var(--nativo-cream) !important;
 }
 
 [data-md-color-scheme="slate"] .section-card p {
-  color: rgba(246, 233, 217, 0.65);
+    color: rgba(246, 233, 217, 0.8);
 }
 
-[data-md-color-scheme="slate"] .section-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+/* =========================================
+   CARDS DE HISTÓRIAS DE USUÁRIO
+   ========================================= */
+
+.hu-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+    width: 100%;
+    margin: 28px 0;
+    align-items: stretch;
+}
+
+.hu-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 150px;
+    padding: 16px;
+
+    background-color: var(--md-code-bg-color);
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 12px;
+
+    text-decoration: none !important;
+    color: var(--md-typeset-color) !important;
+
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+}
+
+.hu-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--md-accent-fg-color);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.hu-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.hu-card-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.hu-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 6px;
+    border-radius: 20px;
+    font-size: 0.50rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.hu-status-execucao {
+    color: #e5b94f;
+    background-color: rgba(229, 185, 79, 0.08);
+    border-color: rgba(229, 185, 79, 0.25);
+}
+
+.hu-status-planejada {
+    color: #a5a5a5;
+    background-color: rgba(165, 165, 165, 0.08);
+    border-color: rgba(165, 165, 165, 0.20);
+}
+
+.hu-status-mvp {
+    color: #80b88a;
+    background-color: rgba(128, 184, 138, 0.08);
+    border-color: rgba(128, 184, 138, 0.25);
+}
+
+.hu-status-prioridade {
+    color: #79aee0;
+    background-color: rgba(121, 174, 224, 0.08);
+    border-color: rgba(121, 174, 224, 0.25);
+}
+
+.hu-card h3 {
+    margin: 0 !important;
+    padding: 0;
+    color: var(--md-typeset-color);
+    font-size: 0.80rem;
+    font-weight: 700;
+    line-height: 1.45;
+    overflow-wrap: break-word;
+}
+
+.hu-card:hover h3 {
+    color: var(--md-accent-fg-color);
 }
 
 /* =====================================================
@@ -867,3 +989,318 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
     color: #f6d76f;
 }
 
+/* ================================
+   CARDS DE HISTÓRIAS DE USUÁRIO
+================================ */
+
+/* Grade dos cards */
+.section-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+}
+
+/* Card individual */
+.hu-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 135px;
+    padding: 20px;
+    border: 1px solid #554331;
+    border-left: 4px solid #e5ad3c;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #4a2d1c, #302116);
+    text-decoration: none !important;
+    text-align: center;
+    transition: all 0.25s ease;
+}
+
+/* Efeito ao passar o mouse */
+.hu-card:hover {
+    transform: translateY(-3px);
+    border-color: #e5ad3c;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Conteúdo interno */
+.hu-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 14px;
+}
+
+/* Agrupamento das tags */
+.hu-card-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 6px;
+}
+
+/* Tags */
+.hu-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 9px;
+    border: 1px solid;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Status: Em execução */
+.hu-status-execucao {
+    color: #f5c344;
+    background: rgba(245, 195, 68, 0.10);
+    border-color: rgba(245, 195, 68, 0.35);
+}
+
+/* Status: Planejado */
+.hu-status-planejada {
+    color: #b0b0b0;
+    background: rgba(176, 176, 176, 0.10);
+    border-color: rgba(176, 176, 176, 0.25);
+}
+
+/* Tag: MVP */
+.hu-status-mvp {
+    color: #7cc99a;
+    background: rgba(124, 201, 154, 0.10);
+    border-color: rgba(124, 201, 154, 0.35);
+}
+
+/* Tag: Prioridade */
+.hu-status-prioridade {
+    color: #70baff;
+    background: rgba(112, 186, 255, 0.10);
+    border-color: rgba(112, 186, 255, 0.35);
+}
+
+/* Título da história */
+.hu-card h3 {
+    display: block;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0;
+    color: #f5eee5 !important;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* Remove decoração dos links */
+.hu-card:link,
+.hu-card:visited,
+.hu-card:hover {
+    text-decoration: none !important;
+}
+
+/* =====================================================
+   HISTÓRIAS DE USUÁRIO — BUSCA E FILTROS
+   ===================================================== */
+.hu-filters {
+  margin: 0.7rem 0 1.4rem;
+  padding: 1.2rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 14px;
+  background: var(--md-code-bg-color);
+}
+
+.hu-filters__grid {
+  display: grid;
+  grid-template-columns: minmax(13rem, 2fr) repeat(4, minmax(8rem, 1fr));
+  gap: 0.8rem;
+}
+
+.hu-filters__field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.3rem;
+}
+
+.md-typeset .hu-filters__field label {
+  font-family: var(--nativo-font-body);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--md-typeset-color);
+}
+
+.md-typeset .hu-filters__field input,
+.md-typeset .hu-filters__field select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 8px;
+  background: var(--md-default-bg-color);
+  color: var(--md-typeset-color);
+  font: inherit;
+  font-size: 0.78rem;
+}
+
+.md-typeset .hu-filters__field input:focus-visible,
+.md-typeset .hu-filters__field select:focus-visible,
+.md-typeset .hu-filters__footer button:focus-visible {
+  outline: 3px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+}
+
+.hu-filters__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.md-typeset .hu-filters__footer p {
+  margin: 0;
+  text-align: left;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--md-typeset-color);
+}
+
+.md-typeset .hu-filters__footer button {
+  min-height: 2.3rem;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--md-accent-fg-color);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--md-accent-fg-color);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.md-typeset .hu-filters__footer button:hover {
+  background: var(--md-accent-fg-color--transparent);
+}
+
+.section-cards.hu-catalog {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+}
+
+.hu-catalog .hu-card[hidden],
+.hu-empty[hidden] {
+  display: none !important;
+}
+
+.md-typeset .hu-empty {
+  padding: 1.2rem;
+  border: 1px dashed var(--md-default-fg-color--lighter);
+  border-radius: 10px;
+  text-align: center;
+  color: var(--md-typeset-color);
+}
+
+@media (max-width: 1100px) {
+  .hu-filters__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .hu-filters {
+    padding: 0.9rem;
+  }
+
+  .hu-filters__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Ordem de implementação conforme o cronograma (iterações 6 a 8).
+   Distinta da categoria Alta / Média / Baixa. */
+.hu-status-ordem {
+  color: #a675f5;
+  background: rgba(166, 117, 245, 0.11);
+  border-color: rgba(166, 117, 245, 0.36);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Se houver apenas uma HU visível, não mostrar cards ocultos no grid. */
+.hu-catalog .hu-card[hidden] { display: none !important; }
+
+/* INICIO: ajuste-responsivo-filtros-hu */
+/* Ajuste para os 5 campos: busca na primeira linha e os 4 filtros na segunda. */
+.md-typeset .hu-filters {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+.md-typeset .hu-filters .hu-filters__grid {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+  align-items: end;
+}
+
+.md-typeset .hu-filters .hu-filters__field--search {
+  grid-column: 1 / -1;
+}
+
+.md-typeset .hu-filters .hu-filters__field {
+  min-width: 0;
+  width: 100%;
+}
+
+.md-typeset .hu-filters .hu-filters__field input,
+.md-typeset .hu-filters .hu-filters__field select {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.md-typeset .hu-filters .hu-filters__field label {
+  overflow-wrap: anywhere;
+}
+
+/* Titulos claros e legiveis sobre o fundo escuro dos cards. */
+.md-typeset .hu-catalog .hu-card h3 {
+  color: #f5eee5 !important;
+}
+
+.md-typeset .hu-catalog .hu-card:hover h3 {
+  color: #ffe1ac !important;
+}
+
+@media (max-width: 1000px) {
+  .md-typeset .hu-filters .hu-filters__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .md-typeset .hu-filters .hu-filters__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .md-typeset .hu-filters .hu-filters__field--search {
+    grid-column: auto;
+  }
+}
+/* FIM: ajuste-responsivo-filtros-hu */

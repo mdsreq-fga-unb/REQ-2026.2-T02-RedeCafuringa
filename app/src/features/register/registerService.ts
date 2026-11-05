@@ -7,9 +7,23 @@ import {
     registerMockUser,
 } from "@/features/auth/mockAuth";
 
+/** Campo que a API (ou o mock) apontou como já cadastrado. */
+export type DuplicateField = "document" | "email" | "cnpj";
+
+/** Traduz a mensagem do 409 do back no campo duplicado; desconhecida → sem campo. */
+function duplicateFieldFromMessage(
+    message: string,
+): DuplicateField | undefined {
+    const text = message.toLocaleLowerCase("pt-BR");
+    if (text.includes("e-mail") || text.includes("email")) return "email";
+    if (text.includes("cnpj")) return "cnpj";
+    if (text.includes("cpf")) return "document";
+    return undefined;
+}
+
 export type RegisterResult =
     | { ok: true }
-    | { ok: false; reason: "duplicate"; field?: "document" | "email" }
+    | { ok: false; reason: "duplicate"; field?: DuplicateField }
     | { ok: false; reason: "invalid"; messages: string[] }
     | { ok: false; reason: "rate_limit"; retryAfterSeconds?: number }
     | { ok: false; reason: "error" };
@@ -50,7 +64,14 @@ export async function registerProducer(
         return { ok: true };
     } catch (error) {
         if (error instanceof ApiHttpError) {
-            if (error.status === 409) return { ok: false, reason: "duplicate" };
+            if (error.status === 409) {
+                const field = duplicateFieldFromMessage(error.message);
+                return {
+                    ok: false,
+                    reason: "duplicate",
+                    ...(field ? { field } : {}),
+                };
+            }
             if (error.status === 400) {
                 const messages =
                     error.details.length > 0 ? error.details : [error.message];
@@ -83,6 +104,12 @@ export function createMockRegisterService(directory?: MockAccountDirectory) {
             }
             if (accounts.some((account) => account.email === payload.email)) {
                 return { ok: false, reason: "duplicate", field: "email" };
+            }
+            if (
+                payload.cnpj &&
+                accounts.some((account) => account.cnpj === payload.cnpj)
+            ) {
+                return { ok: false, reason: "duplicate", field: "cnpj" };
             }
             accounts.push(payload);
             directory?.add(payload);

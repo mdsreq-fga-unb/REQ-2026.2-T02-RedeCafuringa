@@ -1,7 +1,19 @@
 import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenAPIObject } from '@nestjs/swagger';
+import { getMetadataStorage } from 'class-validator';
 import { OPENAPI_VERSION } from '../app.setup.js';
+import { ErrorResponse } from '../common/dto/error.response.js';
+import { LoginDto } from '../modules/auth/dto/login.dto.js';
+import { LoginResponse } from '../modules/auth/dto/login.response.js';
+import { CreateConsumerDto } from '../modules/users/dto/create-consumer.dto.js';
+import { UserResponse } from '../modules/users/dto/user.response.js';
 import { generateOpenApiDocument } from './generate-openapi.js';
+
+type SchemaProperty = {
+  description?: string;
+  example?: unknown;
+  $ref?: string;
+};
 
 type Operation = {
   operationId?: string;
@@ -114,5 +126,70 @@ describe('contrato OpenAPI', () => {
     expect(schemas.UserResponse.properties?.cpf.description).toMatch(
       /mascarado/i,
     );
+  });
+
+  it('toda propriedade de schema tem descrição ou exemplo', () => {
+    const schemas = doc.components?.schemas as Record<
+      string,
+      { properties?: Record<string, SchemaProperty> }
+    >;
+    for (const [schemaName, schema] of Object.entries(schemas)) {
+      for (const [prop, def] of Object.entries(schema.properties ?? {})) {
+        expect(
+          def.description || def.example !== undefined || def.$ref,
+          `${schemaName}.${prop}`,
+        ).toBeTruthy();
+      }
+    }
+  });
+
+  it('toda operação documenta uma resposta de sucesso (2xx)', () => {
+    for (const { method, path, op } of operations) {
+      const success = Object.entries(op.responses).filter(([status]) =>
+        status.startsWith('2'),
+      );
+      expect(success.length, `${method} ${path}`).toBeGreaterThan(0);
+      for (const [status, response] of success) {
+        // 204 e respostas sem corpo não têm schema; o resto precisa tê-lo.
+        if (status === '204') continue;
+        expect(
+          JSON.stringify(response),
+          `${method} ${path} ${status}`,
+        ).toContain('"schema"');
+      }
+    }
+  });
+
+  it('campo @IsOptional nos DTOs de entrada não aparece como obrigatório', () => {
+    const schemas = doc.components?.schemas as Record<
+      string,
+      { required?: string[] }
+    >;
+    const storage = getMetadataStorage();
+    for (const dto of [LoginDto, CreateConsumerDto]) {
+      const optional = storage
+        .getTargetValidationMetadatas(dto, '', false, false)
+        .filter((m) => m.type === 'conditionalValidation')
+        .map((m) => m.propertyName);
+      for (const prop of optional) {
+        expect(
+          schemas[dto.name].required ?? [],
+          `${dto.name}.${prop}`,
+        ).not.toContain(prop);
+      }
+    }
+  });
+
+  it('todo DTO usado na API aparece no contrato', () => {
+    const names = Object.keys(doc.components?.schemas ?? {});
+    for (const dto of [
+      ErrorResponse,
+      LoginDto,
+      LoginResponse,
+      CreateConsumerDto,
+      UserResponse,
+    ]) {
+      expect(names).toContain(dto.name);
+    }
   });
 });

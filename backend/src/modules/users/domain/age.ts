@@ -1,7 +1,7 @@
 const ADULT_AGE = 18;
 
 /**
- * RN15 / RNF15: no MVP só maiores de 18 anos se cadastram, o que dispensa o
+ * RNF15: no MVP só maiores de 18 anos se cadastram, o que dispensa o
  * fluxo de consentimento do responsável legal (D10). Compara em UTC para não
  * depender do fuso do servidor.
  */

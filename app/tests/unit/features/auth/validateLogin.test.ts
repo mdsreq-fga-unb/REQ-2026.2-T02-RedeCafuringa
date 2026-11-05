@@ -2,25 +2,25 @@ import { describe, expect, it } from "vitest";
 import { validateLogin } from "@/features/auth/validateLogin";
 
 describe("validateLogin", () => {
-    it("não retorna erros com CPF válido e senha preenchida", () => {
+    it("não retorna erros com e-mail válido e senha preenchida", () => {
         expect(
-            validateLogin({ cpf: "529.982.247-25", password: "senha123" }),
+            validateLogin({ email: "ana@exemplo.com", password: "senha123" }),
         ).toEqual({});
     });
 
-    it("sinaliza CPF e senha vazios", () => {
-        expect(validateLogin({ cpf: "", password: "" })).toEqual({
-            cpf: "Informe o CPF.",
+    it("sinaliza e-mail e senha vazios", () => {
+        expect(validateLogin({ email: "", password: "" })).toEqual({
+            email: "Informe o e-mail.",
             password: "Informe a senha.",
         });
     });
 
-    it("sinaliza CPF com formato inválido", () => {
-        expect(validateLogin({ cpf: "123", password: "x" })).toEqual({
-            cpf: "CPF com formato inválido.",
+    it("sinaliza e-mail com formato inválido", () => {
+        expect(validateLogin({ email: "ana@", password: "x" })).toEqual({
+            email: "E-mail com formato inválido.",
         });
-        expect(validateLogin({ cpf: "111.111.111-11", password: "x" })).toEqual(
-            { cpf: "CPF com formato inválido." },
-        );
+        expect(validateLogin({ email: "sem-arroba", password: "x" })).toEqual({
+            email: "E-mail com formato inválido.",
+        });
     });
 });

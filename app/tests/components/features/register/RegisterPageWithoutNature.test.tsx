@@ -11,6 +11,7 @@ async function fillAndSubmit(user: ReturnType<typeof userEvent.setup>) {
         screen.getByLabelText("Nome da iniciativa"),
         "Maria da Silva",
     );
+    await user.type(screen.getByLabelText("Responsável"), "Seu João");
     await user.type(screen.getByLabelText("CPF"), "52998224725");
     await user.type(screen.getByLabelText("Data de nascimento"), "10051990");
     await user.type(screen.getByLabelText("Telefone"), "61912345678");

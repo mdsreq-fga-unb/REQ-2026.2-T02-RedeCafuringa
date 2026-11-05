@@ -6,7 +6,7 @@
 backend/        API NestJS + MongoDB (Dockerfile, compose de dev, deploy/ de produção)
 app/            Frontend React + Vite (PWA), Dockerfile e nginx
 shared/         Contrato OpenAPI gerado do backend (openapi.json)
-scripts/        dev.sh (comandos de rotina), smoke test da imagem, gerador da referência da API
+scripts/        dev.sh (comandos de rotina), smoke test da imagem e hook do MkDocs que publica o Swagger UI
 docs/           Este site (MkDocs)
 .github/        Workflows de CI/CD
 compose.yaml    Ambiente local completo: mongo + api + app

@@ -6,13 +6,14 @@ describe("mockAuth — contas criadas pelo cadastro (HU02, critério 9)", () => 
     it("reconhece no login uma conta recém-cadastrada", async () => {
         registerMockUser({
             cpf: "39053344705",
+            email: "joao@exemplo.com",
             password: "senha123",
             name: "Seu João",
             role: "producer",
         });
 
         const auth = await loginMock({
-            cpf: "39053344705",
+            email: "Joao@Exemplo.com",
             password: "senha123",
         });
 
@@ -24,25 +25,28 @@ describe("mockAuth — contas criadas pelo cadastro (HU02, critério 9)", () => 
     it("continua recusando senha errada para uma conta cadastrada", async () => {
         registerMockUser({
             cpf: "86288366757",
+            email: "ana.p@exemplo.com",
             password: "senha123",
             name: "Dona Ana",
             role: "producer",
         });
 
         await expect(
-            loginMock({ cpf: "86288366757", password: "outra-senha1" }),
+            loginMock({ email: "ana.p@exemplo.com", password: "outra-senha1" }),
         ).rejects.toBeInstanceOf(InvalidCredentialsError);
     });
 
     it("dá um id novo a cada conta, sem repetir os usuários de demonstração", () => {
         const first = registerMockUser({
             cpf: "11122233396",
+            email: "p1@exemplo.com",
             password: "senha123",
             name: "Primeiro",
             role: "producer",
         });
         const second = registerMockUser({
             cpf: "74489611016",
+            email: "p2@exemplo.com",
             password: "senha123",
             name: "Segundo",
             role: "producer",
@@ -55,7 +59,7 @@ describe("mockAuth — contas criadas pelo cadastro (HU02, critério 9)", () => 
 
     it("mantém os usuários de demonstração funcionando", async () => {
         const auth = await loginMock({
-            cpf: "52998224725",
+            email: "ana@exemplo.com",
             password: "senha123",
         });
 
