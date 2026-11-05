@@ -245,7 +245,7 @@ import { loginAs, seedUser, forgeToken } from './utils/auth.js';
 const token = await loginAs(t, Role.PRODUTOR);      // semeia + faz login
 t.request().get('/api/v1/...').set('Authorization', `Bearer ${token}`);
 
-const { user, cpf, senha } = await seedUser(t, Role.ADMINISTRADOR);
+const { user, email, senha } = await seedUser(t, Role.ADMINISTRADOR); // login = { email, senha }
 forgeToken({ sub: user.id, perfil: 'ADMINISTRADOR' }, { expiresIn: -60 }); // token expirado
 ```
 
@@ -323,8 +323,9 @@ create(@CurrentUser() user: AuthenticatedUser, @Body() dto: CreateProdutoDto) {
   (`recurso.ownerId === user.id`, senão `403`), com teste unitário.
 - O token carrega apenas `sub` (id) e `perfil`. Nunca coloque CPF, e-mail ou nome nele.
 - O CPF é gravado como *blind index* (`cpfHash`, usado na busca) + cifra AES-GCM
-  (`cpfCifrado`). Para buscar por CPF use `UsersService.findByCpf()`; nunca consulte
-  o campo diretamente.
+  (`cpfCifrado`), só para exibição mascarada. O CPF identifica, não autentica (RN05): o
+  login busca a conta por e-mail (`UsersService.findByEmail()`). Contas administrativas
+  (HU03) não têm CPF, por isso o índice único de `cpfHash` é esparso.
 
 ## 7. Combinados do time
 

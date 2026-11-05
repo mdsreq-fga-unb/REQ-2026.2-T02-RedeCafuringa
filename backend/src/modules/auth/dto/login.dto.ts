@@ -1,16 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
-import {
-  IsCpf,
-  NormalizeDocument,
-} from '../../../common/validators/is-cpf.decorator.js';
+import { Transform } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-/** RN08: a autenticação usa CPF e senha. */
+/** RN05: a autenticação usa e-mail e senha; CPF/CNPJ não são credenciais. */
 export class LoginDto {
-  @ApiProperty({ example: '529.982.247-25', description: 'Com ou sem máscara' })
-  @NormalizeDocument()
-  @IsCpf()
-  cpf: string;
+  @ApiProperty({
+    example: 'maria@exemplo.com',
+    description: 'E-mail cadastrado (sem distinção de maiúsculas)',
+  })
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.trim().toLowerCase() : value,
+  )
+  @IsEmail({}, { message: 'E-mail inválido' })
+  @MaxLength(254, { message: 'E-mail deve ter no máximo 254 caracteres' })
+  email: string;
 
   @ApiProperty({ example: 'SenhaForte123' })
   @IsString({ message: 'Senha deve ser um texto' })

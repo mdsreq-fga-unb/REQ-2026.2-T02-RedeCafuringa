@@ -21,6 +21,9 @@ export default defineConfig(({ mode }) => {
         test: {
             environment: "jsdom",
             include: ["tests/**/*.test.{ts,tsx}"],
+            // Formulários longos digitados com user-event passam de 5 s com a
+            // suíte inteira em paralelo (CI e máquinas lentas).
+            testTimeout: 20_000,
             // Testes herméticos: ignoram o arquivo de ambiente local (que o
             // ./scripts/dev.sh setup cria com o login falso ligado). Cada teste que
             // precisa de outro valor usa vi.stubEnv.

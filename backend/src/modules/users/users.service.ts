@@ -11,7 +11,9 @@ import { maskCpf } from '../../common/validators/documento.js';
 import { isAdult } from './domain/age.js';
 import { Role } from './domain/role.js';
 import { CreateConsumerDto } from './dto/create-consumer.dto.js';
+import { CreateProducerDto } from './dto/create-producer.dto.js';
 import { UserResponse } from './dto/user.response.js';
+import { ProducerResponse } from './dto/producer.response.js';
 import { User, UserDocument } from './schemas/user.schema.js';
 
 const DUPLICATE_KEY = 11000;
@@ -27,6 +29,54 @@ export class UsersService {
   /** HU01: o cadastro público sempre cria um consumidor (RN01). */
   createConsumer(dto: CreateConsumerDto): Promise<UserDocument> {
     return this.create(dto, Role.CONSUMIDOR);
+  }
+
+  /** HU02: cria uma conta pública com perfil PRODUTOR. */
+  async createProducer(dto: CreateProducerDto): Promise<UserDocument> {
+    const email = dto.email.toLowerCase();
+    const cpfHash = this.cipher.blindIndex(dto.cpf);
+
+    if (await this.users.exists({ cpfHash }).exec()) {
+      throw new ConflictException('CPF já cadastrado');
+    }
+    if (await this.users.exists({ email }).exec()) {
+      throw new ConflictException('E-mail já cadastrado');
+    }
+
+    const cnpjHash = dto.cnpj ? this.cipher.blindIndex(dto.cnpj) : undefined;
+    if (cnpjHash && (await this.users.exists({ cnpjHash }).exec())) {
+      throw new ConflictException('CNPJ já cadastrado');
+    }
+
+    const producerData = {
+      nome: dto.nomeResponsavel,
+      nomeIniciativa: dto.nomeIniciativa,
+      nomeResponsavel: dto.nomeResponsavel,
+      localidade: dto.localidade,
+      ...(dto.telefone ? { telefone: dto.telefone } : {}),
+      categoriaOfertada: dto.categoriaOfertada,
+      formasPagamento: dto.formasPagamento,
+      email,
+      perfil: Role.PRODUTOR,
+      cpfHash,
+      cpfCifrado: this.cipher.encrypt(dto.cpf),
+      ...(cnpjHash
+        ? {
+            cnpjHash,
+            cnpjCifrado: this.cipher.encrypt(dto.cnpj as string),
+          }
+        : {}),
+      senhaHash: await this.hasher.hash(dto.senha),
+    };
+
+    try {
+      return await this.users.create(producerData);
+    } catch (error) {
+      if ((error as { code?: number }).code === DUPLICATE_KEY) {
+        throw new ConflictException('Dados já cadastrados');
+      }
+      throw error;
+    }
   }
 
   /**
@@ -45,11 +95,15 @@ export class UsersService {
     if (await this.users.exists({ cpfHash }).exec()) {
       throw new ConflictException('CPF já cadastrado');
     }
+    const email = dto.email.toLowerCase();
+    if (await this.users.exists({ email }).exec()) {
+      throw new ConflictException('E-mail já cadastrado');
+    }
 
     try {
       return await this.users.create({
         nome: dto.nome,
-        email: dto.email.toLowerCase(),
+        email,
         telefone: dto.telefone,
         dataNascimento: new Date(dto.dataNascimento),
         perfil,
@@ -66,14 +120,30 @@ export class UsersService {
     }
   }
 
-  /** RN08: o login identifica a conta pelo CPF, via blind index. */
-  findByCpf(cpf: string): Promise<UserDocument | null> {
-    return this.users.findOne({ cpfHash: this.cipher.blindIndex(cpf) }).exec();
+  /** RN05: o login identifica a conta pelo e-mail. */
+  findByEmail(email: string): Promise<UserDocument | null> {
+    return this.users.findOne({ email: email.toLowerCase() }).exec();
   }
 
   async findById(id: string): Promise<UserDocument | null> {
     if (!isValidObjectId(id)) return null;
     return this.users.findById(id).exec();
+  }
+
+  toResponseProducer(user: UserDocument): ProducerResponse {
+    return {
+      id: user.id as string,
+      nome: user.nome,
+      nomeIniciativa: user.nomeIniciativa,
+      nomeResponsavel: user.nomeResponsavel,
+      email: user.email,
+      localidade: user.localidade,
+      ...(user.telefone ? { telefone: user.telefone } : {}),
+      categoriaOfertada: user.categoriaOfertada,
+      formasPagamento: user.formasPagamento,
+      perfil: user.perfil,
+      cpf: maskCpf(this.cipher.decrypt(user.cpfCifrado)),
+    };
   }
 
   toResponse(user: UserDocument): UserResponse {

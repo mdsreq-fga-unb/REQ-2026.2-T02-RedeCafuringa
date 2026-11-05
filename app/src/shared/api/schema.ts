@@ -84,6 +84,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/users/producers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cadastrar produtor
+         * @description Cadastro público da HU02. Documentos, e-mail e senha são protegidos conforme RNF11; o CPF é retornado mascarado.
+         */
+        post: operations["usersCreateProducer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/login": {
         parameters: {
             query?: never;
@@ -94,8 +114,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Autenticar com CPF e senha
-         * @description Troca CPF e senha (RN08) por um JWT, válido por `expiresIn` segundos. Rota pública com limite estrito de tentativas por IP.
+         * Autenticar com e-mail e senha
+         * @description Troca e-mail e senha (RN05) por um JWT, válido por `expiresIn` segundos. Rota pública com limite estrito de tentativas por IP.
          */
         post: operations["authLogin"];
         delete?: never;
@@ -200,12 +220,115 @@ export interface components {
              */
             error: string;
         };
-        LoginDto: {
+        CreateProducerDto: {
+            /** @example Horta Comunitária Cafuringa */
+            nomeIniciativa: string;
+            /** @example João da Silva */
+            nomeResponsavel: string;
             /**
              * @description Com ou sem máscara
              * @example 529.982.247-25
              */
             cpf: string;
+            /**
+             * @description Com ou sem máscara; opcional quando não houver CNPJ
+             * @example 12.345.678/0001-95
+             */
+            cnpj?: string;
+            /** @example Fazenda da Cafuringa, Núcleo Rural de Planaltina */
+            localidade: string;
+            /**
+             * @description Tipo de oferta do produtor
+             * @example Produtos e Experiências
+             * @enum {string}
+             */
+            categoriaOfertada: "Produtos" | "Experiências" | "Produtos e Experiências";
+            /**
+             * @description Formas de pagamento aceitas
+             * @example [
+             *       "PIX",
+             *       "Dinheiro"
+             *     ]
+             */
+            formasPagamento: string[];
+            /**
+             * @description DDD + número, apenas dígitos; contato do produtor
+             * @example 61999990000
+             */
+            telefone?: string;
+            /** @example produtor@exemplo.com */
+            email: string;
+            /**
+             * @description 8 a 128 caracteres, com pelo menos uma letra e um número
+             * @example SenhaForte123
+             */
+            senha: string;
+        };
+        ProducerResponse: {
+            /**
+             * @description Identificador do usuário
+             * @example 665f1c2e9b1d4a0012ab34cd
+             */
+            id: string;
+            /**
+             * @description Nome do responsável
+             * @example Maria das Graças
+             */
+            nome: string;
+            /**
+             * @description Nome da iniciativa ou propriedade
+             * @example Sítio Boa Vista
+             */
+            nomeIniciativa: string;
+            /**
+             * @description Responsável pela iniciativa (RN09)
+             * @example Maria das Graças
+             */
+            nomeResponsavel: string;
+            /**
+             * @description E-mail da conta
+             * @example maria@exemplo.com
+             */
+            email: string;
+            /**
+             * @description Localidade
+             * @example Cafuringa
+             */
+            localidade: string;
+            /**
+             * @description DDD + número; ausente se não informado
+             * @example 61999990000
+             */
+            telefone?: string;
+            /**
+             * @description Categoria ofertada
+             * @enum {string}
+             */
+            categoriaOfertada: "Produtos" | "Experiências" | "Produtos e Experiências";
+            /**
+             * @description Formas de pagamento aceitas
+             * @example [
+             *       "PIX"
+             *     ]
+             */
+            formasPagamento: string[];
+            /**
+             * @description Perfil de acesso (RN01)
+             * @enum {string}
+             */
+            perfil: "CONSUMIDOR" | "PRODUTOR" | "ADMINISTRADOR";
+            /**
+             * @description CPF mascarado
+             * @example ***.982.247-**
+             */
+            cpf?: string;
+        };
+        LoginDto: {
+            /**
+             * @description E-mail cadastrado (sem distinção de maiúsculas)
+             * @example maria@exemplo.com
+             */
+            email: string;
             /** @example SenhaForte123 */
             senha: string;
         };
@@ -727,6 +850,59 @@ export interface operations {
             };
         };
     };
+    usersCreateProducer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateProducerDto"];
+            };
+        };
+        responses: {
+            /** @description Produtor criado */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProducerResponse"];
+                };
+            };
+            /** @description Dados inválidos ou campos obrigatórios ausentes */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description E-mail, CPF ou CNPJ já cadastrado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Muitas tentativas */
+            429: {
+                headers: {
+                    /** @description Segundos até a próxima tentativa ser aceita */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     authLogin: {
         parameters: {
             query?: never;
@@ -758,7 +934,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description CPF ou senha inválidos */
+            /** @description E-mail ou senha inválidos */
             401: {
                 headers: {
                     [name: string]: unknown;

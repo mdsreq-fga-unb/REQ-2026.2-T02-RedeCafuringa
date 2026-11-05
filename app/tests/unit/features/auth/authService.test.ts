@@ -50,7 +50,7 @@ afterEach(() => {
 });
 
 describe("authService.login", () => {
-    it("envia CPF e senha ao contrato real (POST /auth/login com `senha`) e converte a resposta", async () => {
+    it("envia e-mail e senha ao contrato real (POST /auth/login com `senha`) e converte a resposta", async () => {
         const fetchMock = vi
             .fn<typeof fetch>()
             .mockResolvedValue(jsonResponse(backendLogin("PRODUTOR")));
@@ -58,7 +58,7 @@ describe("authService.login", () => {
         const { login } = await load();
 
         const result = await login({
-            cpf: "52998224725",
+            email: "maria@exemplo.com",
             password: "senha123",
         });
 
@@ -66,7 +66,7 @@ describe("authService.login", () => {
         expect(String(url)).toBe(`${API}/auth/login`);
         expect(init?.method).toBe("POST");
         expect(JSON.parse(String(init?.body))).toEqual({
-            cpf: "52998224725",
+            email: "maria@exemplo.com",
             senha: "senha123",
         });
         expect(
@@ -118,7 +118,7 @@ describe("authService.login", () => {
         const { login, InvalidCredentialsError } = await load();
 
         await expect(
-            login({ cpf: "52998224725", password: "errada" }),
+            login({ email: "maria@exemplo.com", password: "errada" }),
         ).rejects.toBeInstanceOf(InvalidCredentialsError);
     });
 
@@ -139,7 +139,7 @@ describe("authService.login", () => {
             const { login, InvalidCredentialsError } = await load();
 
             const error = await login({
-                cpf: "52998224725",
+                email: "maria@exemplo.com",
                 password: "senha123",
             }).catch((caught: unknown) => caught);
 
@@ -158,7 +158,7 @@ describe("authService.login", () => {
         const { login, InvalidCredentialsError } = await load();
 
         const error = await login({
-            cpf: "52998224725",
+            email: "maria@exemplo.com",
             password: "senha123",
         }).catch((caught: unknown) => caught);
 

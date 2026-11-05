@@ -14,7 +14,7 @@ vi.mock("@/features/auth/authService");
 
 async function signInAsConsumer() {
     const user = userEvent.setup();
-    await user.type(await screen.findByLabelText("CPF"), "52998224725");
+    await user.type(await screen.findByLabelText("E-mail"), "ana@exemplo.com");
     await user.type(screen.getByLabelText("Senha"), "senha123");
     await user.click(screen.getByRole("button", { name: "Entrar" }));
 }
@@ -125,6 +125,47 @@ describe("fluxo de contato da aplicação", () => {
             expect(window.location.hash).toBe(route);
             expect(screen.getByRole("heading", { name: title })).toBeTruthy();
             expect(localStorage.getItem("cafuringa-conversations")).toBeNull();
+        },
+    );
+});
+
+describe("entrada e acesso público", () => {
+    it("abre a seleção de perfil primeiro e permite navegar como visitante", async () => {
+        const user = userEvent.setup();
+        window.location.hash = "";
+        render(<App />);
+
+        expect(
+            await screen.findByRole("heading", { name: "Entre em sua conta" }),
+        ).toBeTruthy();
+
+        await user.click(
+            screen.getByRole("button", { name: "Cafuringa, início" }),
+        );
+        expect(
+            await screen.findByRole("heading", { name: "Dona Maria" }),
+        ).toBeTruthy();
+        await user.click(
+            screen.getByRole("button", { name: "Ver catálogo desse perfil" }),
+        );
+        expect(
+            await screen.findByRole("heading", { name: "Catálogo do perfil" }),
+        ).toBeTruthy();
+    });
+
+    it.each(["Notificações", "Pré-reservas"])(
+        "pede seleção de perfil ao visitante que abre %s",
+        async (tab) => {
+            const user = userEvent.setup();
+            render(<App />);
+
+            await user.click(screen.getByRole("button", { name: tab }));
+
+            expect(
+                await screen.findByRole("heading", {
+                    name: "Entre em sua conta",
+                }),
+            ).toBeTruthy();
         },
     );
 });

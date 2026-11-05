@@ -2,7 +2,7 @@ process.env.AUTH_THROTTLE_LIMIT = '2';
 
 import { createTestApp, TestApp } from './utils/test-app.js';
 
-const credentials = { cpf: '52998224725', senha: 'SenhaErrada123' };
+const credentials = { email: 'maria@exemplo.com', senha: 'SenhaErrada123' };
 
 describe('Rate limit da autenticação (e2e)', () => {
   let t: TestApp;

@@ -3,16 +3,17 @@ import type { components } from "../../shared/api/schema";
 import type { AuthResult, Role } from "../../shared/types";
 import { InvalidCredentialsError } from "./errors";
 import { loginMock } from "./mockAuth";
+import { isMockAuthEnabled } from "./authMode";
+
+export { isMockAuthEnabled } from "./authMode";
 
 // Tipos vêm do contrato OpenAPI do backend (shared/openapi.json, via npm run api:types):
 // se o backend mudar a rota ou os campos, o typecheck quebra aqui.
 type LoginRequest = components["schemas"]["LoginDto"];
 type LoginResponse = components["schemas"]["LoginResponse"];
 
-export const isMockAuthEnabled = import.meta.env.VITE_USE_MOCK_AUTH === "true";
-
 export type Credentials = {
-    cpf: string;
+    email: string;
     password: string;
 };
 
@@ -40,13 +41,13 @@ export function toAuthResult(response: LoginResponse): AuthResult {
     };
 }
 
-// POST /auth/login  { cpf, senha }  ->  200 { accessToken, tokenType, expiresIn, usuario }
+// POST /auth/login  { email, senha }  ->  200 { accessToken, tokenType, expiresIn, usuario }
 //   401 credenciais inválidas | 403 conta desativada | 429 muitas tentativas
 export async function login(credentials: Credentials): Promise<AuthResult> {
     if (isMockAuthEnabled) return loginMock(credentials);
 
     const body: LoginRequest = {
-        cpf: credentials.cpf,
+        email: credentials.email.trim().toLowerCase(),
         senha: credentials.password,
     };
 

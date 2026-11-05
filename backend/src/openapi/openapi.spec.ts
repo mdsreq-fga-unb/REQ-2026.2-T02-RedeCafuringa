@@ -66,6 +66,7 @@ describe('contrato OpenAPI', () => {
       'GET /api/v1/health/ready',
       'POST /api/v1/auth/login',
       'POST /api/v1/users/consumers',
+      'POST /api/v1/users/producers',
     ]);
   });
 
@@ -118,7 +119,7 @@ describe('contrato OpenAPI', () => {
       string,
       { properties?: Record<string, { description?: string }> }
     >;
-    for (const out of ['UserResponse', 'LoginResponse']) {
+    for (const out of ['UserResponse', 'ProducerResponse', 'LoginResponse']) {
       expect(Object.keys(schemas[out].properties ?? {})).not.toContain('senha');
       expect(Object.keys(schemas[out].properties ?? {})).not.toContain('hash');
     }

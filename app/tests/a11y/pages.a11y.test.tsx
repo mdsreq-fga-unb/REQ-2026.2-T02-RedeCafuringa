@@ -3,6 +3,7 @@ import axe from "axe-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
 import { login } from "@/features/auth/authService";
+import userEvent from "@testing-library/user-event";
 
 vi.mock("@/features/auth/authService");
 
@@ -15,6 +16,7 @@ const ROUTES = [
     "/perfil",
     "/catalogo",
     "/entrar",
+    "/cadastro",
     "/conta",
     "/oferta/queijos",
     "/oferta/mel",
@@ -63,8 +65,40 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
         window.location.hash = "#/entrar";
         const { container } = render(<App />);
 
-        expect(await screen.findByLabelText("CPF")).toBeTruthy();
+        expect(await screen.findByLabelText("E-mail")).toBeTruthy();
         expect(screen.getByLabelText("Senha")).toBeTruthy();
+        expect(await violationsIn(container)).toEqual([]);
+    });
+
+    it("o formulário de cadastro tem rótulos e campos acessíveis", async () => {
+        window.location.hash = "#/cadastro";
+        const { container } = render(<App />);
+
+        expect(await screen.findByLabelText("Nome da iniciativa")).toBeTruthy();
+        expect(screen.getByLabelText("CPF")).toBeTruthy();
+        expect(screen.getByLabelText("Telefone")).toBeTruthy();
+        expect(screen.getByLabelText("E-mail")).toBeTruthy();
+        expect(screen.getByLabelText("Localidade")).toBeTruthy();
+        expect(screen.getByLabelText("Senha")).toBeTruthy();
+        expect(screen.getByLabelText("Confirmar senha")).toBeTruthy();
+        expect(screen.getByLabelText("Data de nascimento")).toBeTruthy();
+        expect(await violationsIn(container)).toEqual([]);
+    });
+
+    it("o cadastro com erros por campo continua sem violações", async () => {
+        window.location.hash = "#/cadastro";
+        const { container } = render(<App />);
+
+        await userEvent
+            .setup()
+            .click(await screen.findByRole("button", { name: "Continuar" }));
+
+        expect(await screen.findByText("Informe o nome.")).toBeTruthy();
+        expect(
+            screen
+                .getByLabelText("Nome da iniciativa")
+                .getAttribute("aria-invalid"),
+        ).toBe("true");
         expect(await violationsIn(container)).toEqual([]);
     });
 

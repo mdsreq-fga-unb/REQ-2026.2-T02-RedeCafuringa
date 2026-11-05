@@ -96,6 +96,7 @@ Classificação: 🔴 alto risco · 🟡 médio · 🟢 baixo
 ### 🔴 D1 — CPF como login × LGPD (RF09, RN08, RNF11, RN12)
 O CPF é o identificador de login. Por isso precisa ser **pesquisável** e, ao mesmo tempo, é dado pessoal sensível. Além disso, o RF14 prevê exibir CPF/CNPJ no perfil público, o que conflita com o RNF11 e a RN12.
 **Abordagem:** guardar um *blind index* (`HMAC-SHA256(cpf, segredo)`) para a busca no login, com índice único, e o CPF cifrado (AES-256-GCM) apenas para exibição ao próprio titular ou ao admin. As respostas públicas usam DTOs de saída explícitos, que nunca serializam o documento do schema.
+**Atualização (HU01–HU03):** a RN05 vigente define o acesso por **e-mail e senha**; o CPF identifica, não autentica. O login passou a buscar por e-mail; o *blind index* permanece para a unicidade do CPF (índice esparso, já que administradores não têm CPF — HU03) e a cifra para exibição mascarada.
 **Ação de requisitos:** levar ao cliente a proposta de **não exibir CPF publicamente** (CNPJ pode ser público) e atualizar o RF14.
 
 ### 🔴 D2 — Busca unificada + proximidade + filtros (RF36, RF37, RF38)

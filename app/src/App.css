@@ -3,10 +3,7 @@
     --ink: #1c332b;
     --muted: #5f716b;
     --orange: #ff8d28;
-    /* WCAG 2.1 AA: a laranja da marca dá só 2,2:1 como texto sobre o fundo claro.
-       --orange-text mantém o matiz e passa (4,6:1 sobre --paper, 4,8:1 sobre o card);
-       --orange-text-strong é o estado ativo (7,1:1). Use --orange para fundos e logo,
-       e --ink como cor do texto sobre fundo laranja ou verde (5,8:1 e 4,9:1). */
+    /* --orange-button preserves the supplied prototype's white-on-orange CTA. */
     --orange-text: #b85600;
     --orange-text-strong: #8a4000;
     --green: #0ab512;
@@ -20,6 +17,7 @@
 
 button,
 input,
+select,
 textarea {
     font: inherit;
 }
@@ -68,7 +66,7 @@ button {
 }
 
 .main-content {
-    width: min(100%, 720px);
+    width: min(100%, 1120px);
     min-height: calc(100svh - 138px);
     margin: 0 auto;
     padding: 0 24px 36px;
@@ -185,7 +183,7 @@ h2 {
 
 .button-orange {
     background: var(--orange);
-    color: var(--ink);
+    color: #fff;
 }
 
 .button-green {
@@ -246,20 +244,30 @@ h2 {
     object-fit: cover;
 }
 
-.offer-card-copy,
-.offer-card-copy small {
+.offer-card-copy {
+    display: grid;
+    min-width: 0;
+    flex: 1 1 0%;
+    gap: 4px;
     color: var(--orange-text);
     font-size: 12px;
 }
 
+.offer-card-copy small {
+    min-width: 0;
+}
+
 .offer-card-copy strong,
 .offer-card-copy > span {
+    display: block;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .card-arrow {
+    flex: 0 0 auto;
     margin-left: auto;
     color: var(--orange-text);
     font-size: 19px;
@@ -315,12 +323,56 @@ h2 {
     margin-bottom: 10px;
 }
 
+.register-page h1 {
+    margin-bottom: 20px;
+    color: var(--orange-text);
+}
+
+.register-page .field-label {
+    margin: 15px 0 10px;
+    font-size: 15px;
+}
+
+.register-page .text-input {
+    min-height: 58px;
+    padding: 14px 16px;
+    border-radius: 15px;
+    background: #fff;
+}
+
+.register-page .choice-group {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.register-page .choice-group .field-label {
+    grid-column: 1 / -1;
+    margin: 0 0 2px;
+}
+
+.register-page .choice-option {
+    min-height: 58px;
+    margin: 0;
+    padding: 12px;
+    border-radius: 15px;
+}
+
+.register-page .signup-field .field-label {
+    margin: 15px 0 10px;
+}
+
 .field-label {
     display: block;
     margin: 22px 0 7px;
     color: var(--ink);
     font-size: 14px;
     font-weight: 700;
+}
+
+.field-label-required::after {
+    color: var(--orange-text);
+    content: " *";
 }
 
 .text-input {
@@ -332,6 +384,61 @@ h2 {
     outline-color: var(--orange-text);
     background: #fffefa;
     color: var(--ink);
+}
+
+.choice-group {
+    min-width: 0;
+    margin: 22px 0 0;
+    padding: 0;
+    border: 0;
+}
+
+.choice-group .field-label {
+    margin-top: 0;
+    padding: 0;
+}
+
+.choice-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    margin-top: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fffefa;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.choice-option input {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: var(--orange-text);
+}
+
+.choice-option:has(input:checked) {
+    border-color: var(--orange-text);
+    box-shadow: inset 0 0 0 1px var(--orange-text);
+}
+
+.choice-option:has(input:focus-visible) {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 2px;
+}
+
+.form-notice {
+    margin: 16px 0 0;
+    padding: 10px 12px;
+    border: 1px solid #b9d7b0;
+    border-radius: 8px;
+    background: #eef7ea;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 700;
 }
 
 .demo-note {
@@ -348,6 +455,55 @@ h2 {
     padding: 20px 0;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
+}
+
+.account-profile-form {
+    display: grid;
+    gap: 0;
+    margin-top: 12px;
+}
+
+.account-field .field-label {
+    margin: 14px 0 10px;
+}
+
+.account-profile-form .text-input {
+    min-height: 58px;
+    padding: 14px 16px;
+    border-radius: 15px;
+    background: #fff;
+    font-size: 16px;
+}
+
+.account-profile-form > .button {
+    width: 100%;
+    margin-top: 16px;
+}
+
+.account-contact-disclosure {
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+}
+
+.account-contact-disclosure summary {
+    padding: 16px 0 8px;
+    color: var(--orange-text);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.account-contact-disclosure[open] summary {
+    padding-bottom: 0;
+}
+
+.button-danger {
+    background: #a83232;
+    color: #fff;
+}
+
+.account-page > .button-danger {
+    width: 100%;
+    margin-top: 16px;
 }
 
 .contact-settings h2,
@@ -433,17 +589,127 @@ h2 {
     }
 
     .topbar {
-        padding-inline: max(28px, calc((100vw - 1080px) / 2));
+        padding-inline: max(28px, calc((100vw - 1120px) / 2));
     }
 
     .main-content {
         min-height: calc(100vh - 61px);
-        padding: 0 32px 42px;
+        padding: 0 clamp(32px, 5vw, 64px) 48px;
+    }
+
+    .main-content:has(.register-page) {
+        width: min(100%, 1200px);
+    }
+
+    .profile-page {
+        max-width: 960px;
+        margin-inline: auto;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: clamp(280px, 38vw, 460px);
+        margin: 0 0 22px;
+    }
+
+    .offer-page {
+        max-width: 900px;
+        margin-inline: auto;
+    }
+
+    .offer-image {
+        width: 100%;
+        height: clamp(280px, 38vw, 440px);
+        margin: 0 0 24px;
+    }
+
+    .catalog-page,
+    .account-page,
+    .login-page:not(.register-page),
+    .signup-page {
+        max-width: 760px;
+        margin-inline: auto;
+    }
+
+    .offer-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .profile-selection-page .profile-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: min(100%, 760px);
+        gap: 24px;
+        margin-top: 48px;
+    }
+
+    .profile-selection-page .profile-selection-actions {
+        width: min(100%, 420px);
+        margin-top: 32px;
+    }
+
+    .register-page {
+        max-width: 960px;
+        margin: 0 auto;
+    }
+
+    .account-page {
+        max-width: 760px;
+        margin-inline: auto;
+    }
+
+    .account-profile-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 28px;
+        align-items: start;
+    }
+
+    .account-profile-form > .button,
+    .account-contact-disclosure {
+        grid-column: 1 / -1;
+    }
+
+    .register-page .register-form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 28px;
+        align-items: start;
+    }
+
+    .register-page .register-document-type {
+        display: grid;
+    }
+
+    .register-page .register-document-type,
+    .register-page .register-form-alert,
+    .register-page .register-form > [data-field="register-payment-methods"],
+    .register-page .register-form > .login-actions {
+        grid-column: 1 / -1;
+    }
+
+    .register-page .register-form > .signup-field {
+        grid-column: 2;
+    }
+
+    .register-page .register-form > [data-field="register-phone"],
+    .register-page .register-form > [data-field="register-password"] {
+        grid-column: 1;
+    }
+
+    .register-page .register-form > [data-field="register-email"],
+    .register-page .register-form > [data-field="register-confirm-password"] {
+        grid-column: 2;
+    }
+
+    .register-page .login-actions {
+        max-width: 480px;
+        justify-self: center;
+        width: 100%;
     }
 
     .bottom-nav {
         position: static;
-        width: min(100%, 720px);
+        width: min(100%, 1120px);
         height: 68px;
         margin: 0 auto;
         border: 1px solid var(--line);
@@ -451,7 +717,13 @@ h2 {
 
     .profile-actions,
     .offer-actions {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1200px) {
+    .offer-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
@@ -482,4 +754,339 @@ h2 {
 
 .text-input[aria-invalid="true"] {
     border-color: #a83232;
+}
+
+.auth-shell {
+    padding-bottom: 0;
+}
+
+.auth-shell .main-content {
+    min-height: calc(100svh - 60px);
+    padding-bottom: 40px;
+}
+
+.signup-page {
+    padding-bottom: 28px;
+}
+
+.profile-selection-page h1,
+.consumer-signup-page h1 {
+    color: var(--orange-text);
+}
+
+.profile-selection-page .body-copy {
+    margin-bottom: 0;
+}
+
+.profile-options {
+    display: grid;
+    width: min(100%, 266px);
+    gap: 42px;
+    margin: 82px auto 0;
+}
+
+.profile-option {
+    display: flex;
+    min-height: 128px;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 16px;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    background: #fffefa;
+    cursor: pointer;
+    text-align: left;
+}
+
+.profile-option[aria-pressed="true"] {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 2px var(--orange);
+}
+
+.profile-option-icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    fill: none;
+    stroke: var(--orange);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.8;
+}
+
+.profile-option-copy {
+    display: grid;
+    gap: 7px;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.profile-option-copy strong {
+    font-size: 14px;
+}
+
+.profile-option-copy > span {
+    color: var(--muted);
+}
+
+.profile-selection-actions {
+    width: min(100%, 266px);
+    margin: 120px auto 0;
+}
+
+.profile-selection-actions .button,
+.signup-submit,
+.signup-success-page > .button {
+    width: 100%;
+}
+
+.consumer-signup-page h1 {
+    margin-bottom: 2px;
+}
+
+.signup-field .field-label {
+    margin: 15px 0 10px;
+}
+
+.signup-field:first-of-type .field-label {
+    margin-top: 8px;
+}
+
+.signup-input {
+    min-height: 58px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #fff;
+    font-size: 16px;
+}
+
+.signup-input::placeholder {
+    color: var(--muted);
+    opacity: 1;
+}
+
+.birth-date-control {
+    position: relative;
+}
+
+.birth-date-control .signup-input {
+    padding-right: 54px;
+}
+
+.birth-calendar-trigger {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    transform: translateY(-50%);
+    border: 0;
+    border-radius: 10px;
+    background: #fff3e7;
+    color: var(--orange-text);
+    cursor: pointer;
+}
+
+.birth-calendar-trigger:hover {
+    background: #ffe4ca;
+}
+
+.birth-calendar-trigger svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+.birth-calendar {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 8px);
+    left: 0;
+    width: min(100%, 340px);
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fffefa;
+    box-shadow: 0 12px 30px rgb(28 51 43 / 16%);
+}
+
+.birth-calendar-header {
+    display: flex;
+    min-height: 38px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: var(--orange-text);
+}
+
+.birth-calendar-header strong {
+    margin-left: auto;
+    text-transform: capitalize;
+}
+
+.birth-calendar-year {
+    min-height: 36px;
+    margin-right: auto;
+    padding: 0 8px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-weight: 700;
+}
+
+.birth-calendar-nav {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1;
+}
+
+.birth-calendar-nav:hover:not(:disabled) {
+    border-color: var(--orange);
+    color: var(--orange-text);
+}
+
+.birth-calendar-nav:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.birth-calendar-weekdays,
+.birth-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+    text-align: center;
+}
+
+.birth-calendar-weekdays {
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.birth-calendar-weekdays span {
+    display: grid;
+    min-height: 28px;
+    place-items: center;
+}
+
+.birth-calendar-day,
+.birth-calendar-empty {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 1;
+    min-width: 0;
+    place-items: center;
+}
+
+.birth-calendar-day {
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.birth-calendar-day:hover:not(:disabled),
+.birth-calendar-day[aria-pressed="true"] {
+    background: var(--orange);
+    color: #fff;
+}
+
+.birth-calendar-day:disabled {
+    color: #aeb8b0;
+    cursor: not-allowed;
+}
+
+.signup-submit {
+    margin-top: 16px;
+}
+
+.signup-consent {
+    margin: 15px 0 0;
+    color: var(--orange-text);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.signup-success-page {
+    padding-top: 0;
+}
+
+.success-check {
+    display: grid;
+    width: 64px;
+    height: 64px;
+    place-items: center;
+    margin: 34px 0 16px;
+    border-radius: 50%;
+    background: #eaf0e8;
+}
+
+.success-check svg {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: var(--orange);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+}
+
+.signup-success-page h1 {
+    margin-bottom: 9px;
+    font-size: 24px;
+}
+
+.signup-success-page .body-copy {
+    margin-bottom: 16px;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+    filter: grayscale(0.1);
+    opacity: 0.65;
+}
+
+@media (max-width: 360px) {
+    .profile-options {
+        gap: 28px;
+        margin-top: 54px;
+    }
+
+    .profile-option {
+        gap: 10px;
+        padding-inline: 12px;
+    }
+
+    .profile-option-icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+    .profile-selection-actions {
+        margin-top: 72px;
+    }
 }

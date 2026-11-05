@@ -11,8 +11,8 @@ import { UsersService } from '../users/users.service.js';
 import { LoginResponse } from './dto/login.response.js';
 import type { JwtPayload } from './types/authenticated-user.js';
 
-// Mesma mensagem para CPF inexistente e senha errada: não revela contas.
-const INVALID_CREDENTIALS = 'CPF ou senha inválidos';
+// Mesma mensagem para e-mail inexistente e senha errada: não revela contas.
+const INVALID_CREDENTIALS = 'E-mail ou senha inválidos';
 
 @Injectable()
 export class AuthService {
@@ -23,9 +23,9 @@ export class AuthService {
     private readonly config: ConfigService,
   ) {}
 
-  /** HU09 / RN08: autentica por CPF e senha e emite o token de acesso. */
-  async login(cpf: string, senha: string): Promise<LoginResponse> {
-    const user = await this.users.findByCpf(cpf);
+  /** HU09 / RN05: autentica por e-mail e senha e emite o token de acesso. */
+  async login(email: string, senha: string): Promise<LoginResponse> {
+    const user = await this.users.findByEmail(email);
     if (!user) {
       await this.hasher.verifyDummy(senha);
       throw new UnauthorizedException(INVALID_CREDENTIALS);

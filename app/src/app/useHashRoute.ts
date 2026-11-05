@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
 
 const getInitialRoute = () => {
-    const requested = window.location.hash.slice(1) || "/perfil";
-    return ["/perfil", "/catalogo", "/entrar", "/conta"].includes(
-        requested.split("?")[0],
-    ) || requested.startsWith("/oferta/")
+    const requested = window.location.hash.slice(1) || "/escolher-perfil";
+    return [
+        "/perfil",
+        "/catalogo",
+        "/entrar",
+        "/conta",
+        "/escolher-perfil",
+        "/login/consumer",
+        "/login/producer",
+        "/cadastro",
+        "/cadastro/consumidor",
+        "/conta-criada/consumer",
+        "/conta-criada/producer",
+        "/notificacoes",
+        "/reservas",
+    ].includes(requested.split("?")[0]) || requested.startsWith("/oferta/")
         ? requested
-        : "/perfil";
+        : "/escolher-perfil";
 };
 
 export function useHashRoute() {

@@ -1,18 +1,20 @@
-import { isValidCpf, onlyDigits } from "./cpf";
-
 export type LoginErrors = {
-    cpf?: string;
+    email?: string;
     password?: string;
 };
 
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function validateLogin(values: {
-    cpf: string;
+    email: string;
     password: string;
 }): LoginErrors {
     const errors: LoginErrors = {};
+    const email = values.email.trim();
 
-    if (!onlyDigits(values.cpf)) errors.cpf = "Informe o CPF.";
-    else if (!isValidCpf(values.cpf)) errors.cpf = "CPF com formato inválido.";
+    if (!email) errors.email = "Informe o e-mail.";
+    else if (!emailPattern.test(email))
+        errors.email = "E-mail com formato inválido.";
 
     if (!values.password) errors.password = "Informe a senha.";
 

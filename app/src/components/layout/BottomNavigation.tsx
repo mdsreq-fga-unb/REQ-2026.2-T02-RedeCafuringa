@@ -31,7 +31,9 @@ export function BottomNavigation({
             </button>
             <button
                 className={path === "/notificacoes" ? "active" : ""}
-                onClick={() => onNavigate("/notificacoes")}
+                onClick={() =>
+                    onNavigate(role ? "/notificacoes" : "/escolher-perfil")
+                }
             >
                 <svg
                     className="nav-icon"
@@ -45,7 +47,9 @@ export function BottomNavigation({
             </button>
             <button
                 className={path === "/reservas" ? "active" : ""}
-                onClick={() => onNavigate("/reservas")}
+                onClick={() =>
+                    onNavigate(role ? "/reservas" : "/escolher-perfil")
+                }
             >
                 <svg
                     className="nav-icon"
@@ -59,7 +63,7 @@ export function BottomNavigation({
             </button>
             <button
                 className={path === "/conta" ? "active" : ""}
-                onClick={() => onNavigate(role ? "/conta" : "/entrar")}
+                onClick={() => onNavigate(role ? "/conta" : "/escolher-perfil")}
             >
                 <svg
                     className="nav-icon"

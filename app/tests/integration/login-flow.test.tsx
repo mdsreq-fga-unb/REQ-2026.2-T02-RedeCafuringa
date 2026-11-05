@@ -9,7 +9,13 @@ vi.mock("@/features/auth/authService");
 
 const consumerAuth: AuthResult = {
     token: "token-consumidor",
-    user: { id: 1, name: "Gabriela Pereira da Silva", role: "consumer" },
+    user: {
+        id: 1,
+        name: "Gabriela Pereira da Silva",
+        role: "consumer",
+        email: "gabriela@exemplo.com",
+        cpf: "52998224725",
+    },
 };
 const producerAuth: AuthResult = {
     token: "token-produtor",
@@ -17,7 +23,10 @@ const producerAuth: AuthResult = {
 };
 
 async function submitLogin(user: ReturnType<typeof userEvent.setup>) {
-    await user.type(await screen.findByLabelText("CPF"), "52998224725");
+    await user.type(
+        await screen.findByLabelText("E-mail"),
+        "gabriela@exemplo.com",
+    );
     await user.type(screen.getByLabelText("Senha"), "senha123");
     await user.click(screen.getByRole("button", { name: "Entrar" }));
 }
@@ -35,6 +44,24 @@ describe("HU09 — fluxo de autenticação no app", () => {
         window.location.hash = "";
     });
 
+    it.each([
+        ["consumer", "Criar conta de consumidor", "Criar conta de produtor"],
+        ["producer", "Criar conta de produtor", "Criar conta de consumidor"],
+    ] as const)(
+        "shows only the %s signup action on its login route",
+        async (profile, signupLabel, otherSignupLabel) => {
+            window.location.hash = `#/login/${profile}`;
+            render(<App />);
+
+            expect(
+                await screen.findByRole("button", { name: signupLabel }),
+            ).toBeTruthy();
+            expect(
+                screen.queryByRole("button", { name: otherSignupLabel }),
+            ).toBeNull();
+        },
+    );
+
     // Critério 2
     it("leva o consumidor autenticado à área da conta com o nome dele", async () => {
         vi.mocked(login).mockResolvedValue(consumerAuth);
@@ -45,9 +72,17 @@ describe("HU09 — fluxo de autenticação no app", () => {
 
         expect(
             await screen.findByRole("heading", {
-                name: "Gabriela Pereira da Silva",
+                name: "Olá, Gabriela",
             }),
         ).toBeTruthy();
+        expect(screen.getByLabelText("E-mail")).toHaveProperty(
+            "value",
+            "gabriela@exemplo.com",
+        );
+        expect(screen.getByLabelText("CPF")).toHaveProperty(
+            "value",
+            "529.982.247-25",
+        );
         expect(window.location.hash).toBe("#/conta");
     });
 
@@ -58,6 +93,12 @@ describe("HU09 — fluxo de autenticação no app", () => {
         render(<App />);
 
         await submitLogin(userEvent.setup());
+
+        await userEvent
+            .setup()
+            .click(
+                screen.getByText("Contato público", { selector: "summary" }),
+            );
 
         expect(
             await screen.findByRole("heading", { name: "Contato público" }),
@@ -72,7 +113,7 @@ describe("HU09 — fluxo de autenticação no app", () => {
         await submitLogin(userEvent.setup());
 
         await screen.findByRole("heading", {
-            name: "Gabriela Pereira da Silva",
+            name: "Olá, Gabriela",
         });
         expect(
             screen.queryByRole("heading", { name: "Contato público" }),
@@ -80,15 +121,15 @@ describe("HU09 — fluxo de autenticação no app", () => {
     });
 
     // Critério 6
-    it("mostra o login quando um visitante abre a área da conta", () => {
+    it("mostra a seleção de perfil quando um visitante abre a área da conta", () => {
         window.location.hash = "#/conta";
         render(<App />);
 
         expect(
-            screen.getByRole("heading", { name: "Que bom ter você aqui" }),
+            screen.getByRole("heading", { name: "Entre em sua conta" }),
         ).toBeTruthy();
         expect(
-            screen.queryByRole("button", { name: "Sair da demonstração" }),
+            screen.queryByRole("button", { name: "Sair da conta" }),
         ).toBeNull();
     });
 
@@ -99,11 +140,11 @@ describe("HU09 — fluxo de autenticação no app", () => {
         render(<App />);
 
         expect(
-            screen.getByRole("heading", { name: "Gabriela Pereira da Silva" }),
+            screen.getByRole("heading", { name: "Olá, Gabriela" }),
         ).toBeTruthy();
     });
 
-    it("ao sair, volta para o perfil público e não fica preso no login", async () => {
+    it("ao sair, volta à seleção de perfil", async () => {
         localStorage.setItem("cafuringa-role", "consumer");
         localStorage.setItem("cafuringa-name", "Gabriela Pereira da Silva");
         window.location.hash = "#/conta";
@@ -111,17 +152,17 @@ describe("HU09 — fluxo de autenticação no app", () => {
 
         await userEvent
             .setup()
-            .click(
-                screen.getByRole("button", { name: "Sair da demonstração" }),
-            );
+            .click(screen.getByRole("button", { name: "Sair da conta" }));
 
-        await waitFor(() => expect(window.location.hash).toBe("#/perfil"));
+        await waitFor(() =>
+            expect(window.location.hash).toBe("#/escolher-perfil"),
+        );
         await waitFor(() =>
             expect(
                 screen.queryByRole("heading", {
-                    name: "Que bom ter você aqui",
+                    name: "Entre em sua conta",
                 }),
-            ).toBeNull(),
+            ).toBeTruthy(),
         );
     });
 });

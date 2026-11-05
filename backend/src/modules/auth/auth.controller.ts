@@ -39,9 +39,9 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Autenticar com CPF e senha',
+    summary: 'Autenticar com e-mail e senha',
     description:
-      'Troca CPF e senha (RN08) por um JWT, válido por `expiresIn` segundos. Rota pública com limite estrito de tentativas por IP.',
+      'Troca e-mail e senha (RN05) por um JWT, válido por `expiresIn` segundos. Rota pública com limite estrito de tentativas por IP.',
   })
   @ApiOkResponse({ type: LoginResponse, description: 'Autenticado' })
   @ApiBadRequestResponse({
@@ -49,7 +49,7 @@ export class AuthController {
     type: ErrorResponse,
   })
   @ApiUnauthorizedResponse({
-    description: 'CPF ou senha inválidos',
+    description: 'E-mail ou senha inválidos',
     type: ErrorResponse,
   })
   @ApiForbiddenResponse({
@@ -62,7 +62,7 @@ export class AuthController {
     headers: RETRY_AFTER_HEADER,
   })
   login(@Body() dto: LoginDto): Promise<LoginResponse> {
-    return this.auth.login(dto.cpf, dto.senha);
+    return this.auth.login(dto.email, dto.senha);
   }
 
   @Get('me')
