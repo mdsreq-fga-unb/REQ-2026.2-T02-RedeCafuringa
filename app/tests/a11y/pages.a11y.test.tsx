@@ -65,7 +65,7 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
         window.location.hash = "#/entrar";
         const { container } = render(<App />);
 
-        expect(await screen.findByLabelText("CPF")).toBeTruthy();
+        expect(await screen.findByLabelText("E-mail")).toBeTruthy();
         expect(screen.getByLabelText("Senha")).toBeTruthy();
         expect(await violationsIn(container)).toEqual([]);
     });

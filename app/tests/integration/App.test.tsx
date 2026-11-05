@@ -14,7 +14,7 @@ vi.mock("@/features/auth/authService");
 
 async function signInAsConsumer() {
     const user = userEvent.setup();
-    await user.type(await screen.findByLabelText("CPF"), "52998224725");
+    await user.type(await screen.findByLabelText("E-mail"), "ana@exemplo.com");
     await user.type(screen.getByLabelText("Senha"), "senha123");
     await user.click(screen.getByRole("button", { name: "Entrar" }));
 }
