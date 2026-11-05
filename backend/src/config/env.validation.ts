@@ -118,15 +118,33 @@ export const envValidationSchema = Joi.object({
   PII_ENCRYPTION_KEY: Joi.string()
     .pattern(/^[0-9a-fA-F]{64}$/)
     .required(),
-}).custom((value: Record<string, unknown>, helpers: Joi.CustomHelpers) => {
-  if (!value.MONGODB_URI && (!value.MONGODB_USER || !value.MONGODB_PASSWORD)) {
-    return helpers.error('any.invalid');
-  }
 
-  // Segredos com finalidades diferentes não podem ser reaproveitados.
-  if (value.JWT_SECRET === value.PII_HMAC_SECRET) {
-    return helpers.error('any.invalid');
-  }
+  // Primeiro administrador (HU03). Opcionais, mas sempre em par; a senha segue
+  // a política do cadastro (8+ caracteres, com letra e número).
+  ADMIN_BOOTSTRAP_EMAIL: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(254)
+    .empty(''),
+  ADMIN_BOOTSTRAP_SENHA: Joi.string()
+    .min(8)
+    .max(128)
+    .pattern(/[A-Za-z]/)
+    .pattern(/\d/)
+    .empty(''),
+})
+  .and('ADMIN_BOOTSTRAP_EMAIL', 'ADMIN_BOOTSTRAP_SENHA')
+  .custom((value: Record<string, unknown>, helpers: Joi.CustomHelpers) => {
+    if (
+      !value.MONGODB_URI &&
+      (!value.MONGODB_USER || !value.MONGODB_PASSWORD)
+    ) {
+      return helpers.error('any.invalid');
+    }
 
-  return value;
-});
+    // Segredos com finalidades diferentes não podem ser reaproveitados.
+    if (value.JWT_SECRET === value.PII_HMAC_SECRET) {
+      return helpers.error('any.invalid');
+    }
+
+    return value;
+  });
