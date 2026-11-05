@@ -3,7 +3,10 @@ import type { FormEvent } from "react";
 import { ActionButton } from "../../components/ui/ActionButton";
 import { BackButton } from "../../components/navigation/BackButton";
 import type { AdminSignupData } from "./registrationService";
+import type { AuthResult } from "../../shared/types";
 import { isMockAuthEnabled } from "./authMode";
+import { login } from "./authService";
+import { InvalidCredentialsError } from "./errors";
 
 type NavigationProps = { onNavigate: (path: string) => void };
 
@@ -247,161 +250,148 @@ export function AdminSignupSuccessPage({ onNavigate }: NavigationProps) {
 }
 
 /** O contrato atual autentica por CPF; login administrativo por e-mail depende do backend. */
-export function AdminLoginPage({ onNavigate }: NavigationProps) {
-    const [entered, setEntered] = useState(false);
+export function AdminLoginPage({
+    onNavigate,
+    onSignIn,
+}: NavigationProps & { onSignIn: (auth: AuthResult) => void }) {
     const [formError, setFormError] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<{ email?: string; password?: string }>(
         {},
     );
+
+    const submit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setFormError("");
+        const next: typeof errors = {};
+        if (!email.trim()) next.email = "Campo obrigatório.";
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+            next.email = "Informe um e-mail válido.";
+        if (!password.trim()) next.password = "Campo obrigatório.";
+        else if (password.length < 8)
+            next.password = "A senha precisa ter ao menos 8 caracteres.";
+        setErrors(next);
+        if (Object.keys(next).length) {
+            document
+                .getElementById(
+                    next.email ? "demo-admin-email" : "demo-admin-password",
+                )
+                ?.focus();
+            return;
+        }
+
+        setLoading(true);
+        let auth: AuthResult;
+        try {
+            auth = await login({ email, password });
+        } catch (error) {
+            setFormError(
+                error instanceof InvalidCredentialsError
+                    ? "E-mail ou senha inválidos"
+                    : "Não foi possível entrar agora. Tente novamente em instantes.",
+            );
+            setLoading(false);
+            return;
+        }
+        setLoading(false);
+        if (auth.user.role !== "admin") {
+            setFormError("Esta conta não é de administrador.");
+            return;
+        }
+        onSignIn(auth);
+        onNavigate("/admin/acesso");
+    };
+
     return (
         <section className="signup-page admin-login-page">
             <BackButton
                 label="Voltar"
                 onClick={() => onNavigate("/admin/acesso")}
             />
-            <h1>{entered ? "Acesso administrativo local" : "Bem-vindo!"}</h1>
-            {!entered && (
-                <p className="body-copy">
-                    Entre para acompanhar os usuários cadastrados na plataforma.
-                </p>
-            )}
-            {entered ? (
-                <>
-                    <p className="body-copy" role="status">
-                        Entrada simulada com sucesso. Use o menu “Explorar
-                        telas” para navegar pelas telas existentes.
+            <h1>Bem-vindo!</h1>
+            <p className="body-copy">
+                Entre para acompanhar os usuários cadastrados na plataforma.
+            </p>
+            <form noValidate onSubmit={(event) => void submit(event)}>
+                {formError && (
+                    <p className="form-alert" role="alert">
+                        {formError}
                     </p>
-                    <ActionButton
-                        variant="orange"
-                        onClick={() => onNavigate("/cadastro/administrador")}
-                    >
-                        Cadastrar adm
-                    </ActionButton>
-                </>
-            ) : (
-                <form
-                    noValidate
-                    onSubmit={(event) => {
-                        event.preventDefault();
-                        setFormError("");
-                        const next: typeof errors = {};
-                        if (!email.trim()) next.email = "Campo obrigatório.";
-                        else if (
-                            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
-                        )
-                            next.email = "Informe um e-mail válido.";
-                        if (!password.trim())
-                            next.password = "Campo obrigatório.";
-                        else if (password.length < 8)
-                            next.password =
-                                "A senha precisa ter ao menos 8 caracteres.";
-                        setErrors(next);
-                        if (Object.keys(next).length) {
-                            document
-                                .getElementById(
-                                    next.email
-                                        ? "demo-admin-email"
-                                        : "demo-admin-password",
-                                )
-                                ?.focus();
-                            return;
-                        }
-                        if (!isMockAuthEnabled) {
-                            setFormError(
-                                "O acesso administrativo por e-mail estará disponível após a integração com o serviço de autenticação.",
-                            );
-                            return;
-                        }
-                        setEntered(true);
-                    }}
+                )}
+                {Object.keys(errors).length > 0 && (
+                    <p className="form-alert" role="alert">
+                        Revise os campos indicados.
+                    </p>
+                )}
+                <label className="field-label" htmlFor="demo-admin-email">
+                    E-mail <span aria-hidden="true">*</span>
+                </label>
+                <input
+                    className="text-input signup-input"
+                    id="demo-admin-email"
+                    aria-label="E-mail"
+                    type="email"
+                    autoComplete="username"
+                    placeholder="admin@exemplo.com"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={
+                        errors.email ? "demo-admin-email-error" : undefined
+                    }
+                    required
+                />
+                {errors.email && (
+                    <p className="field-error" id="demo-admin-email-error">
+                        {errors.email}
+                    </p>
+                )}
+                <label className="field-label" htmlFor="demo-admin-password">
+                    Senha <span aria-hidden="true">*</span>
+                </label>
+                <input
+                    className="text-input signup-input"
+                    id="demo-admin-password"
+                    aria-label="Senha"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    aria-invalid={Boolean(errors.password)}
+                    aria-describedby={
+                        errors.password
+                            ? "demo-admin-password-error"
+                            : undefined
+                    }
+                    minLength={8}
+                    required
+                />
+                {errors.password && (
+                    <p className="field-error" id="demo-admin-password-error">
+                        {errors.password}
+                    </p>
+                )}
+                <ActionButton
+                    variant="orange"
+                    className="signup-submit"
+                    type="submit"
+                    disabled={loading}
                 >
-                    {formError && (
-                        <p className="form-alert" role="alert">
-                            {formError}
-                        </p>
-                    )}
-                    {Object.keys(errors).length > 0 && (
-                        <p className="form-alert" role="alert">
-                            Revise os campos indicados.
-                        </p>
-                    )}
-                    <label className="field-label" htmlFor="demo-admin-email">
-                        E-mail <span aria-hidden="true">*</span>
-                    </label>
-                    <input
-                        className="text-input signup-input"
-                        id="demo-admin-email"
-                        aria-label="E-mail"
-                        type="email"
-                        autoComplete="username"
-                        placeholder="ana@exemplo.com"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        aria-invalid={Boolean(errors.email)}
-                        aria-describedby={
-                            errors.email ? "demo-admin-email-error" : undefined
-                        }
-                        required
-                    />
-                    {errors.email && (
-                        <p className="field-error" id="demo-admin-email-error">
-                            {errors.email}
-                        </p>
-                    )}
-                    <label
-                        className="field-label"
-                        htmlFor="demo-admin-password"
-                    >
-                        Senha <span aria-hidden="true">*</span>
-                    </label>
-                    <input
-                        className="text-input signup-input"
-                        id="demo-admin-password"
-                        aria-label="Senha"
-                        type="password"
-                        placeholder="••••••••"
-                        autoComplete="current-password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        aria-invalid={Boolean(errors.password)}
-                        aria-describedby={
-                            errors.password
-                                ? "demo-admin-password-error"
-                                : undefined
-                        }
-                        minLength={8}
-                        required
-                    />
-                    {errors.password && (
-                        <p
-                            className="field-error"
-                            id="demo-admin-password-error"
-                        >
-                            {errors.password}
-                        </p>
-                    )}
-                    <ActionButton
-                        variant="orange"
-                        className="signup-submit"
-                        type="submit"
-                    >
-                        Entrar
-                    </ActionButton>
-                    {isMockAuthEnabled && (
-                        <p className="demo-note">
-                            Conta de administrador para teste local:
-                            <br />
-                            E-mail: admin@exemplo.com
-                            <br />
-                            Senha: senha123
-                            <br />
-                            Acesso simulado, sem permissões reais.
-                        </p>
-                    )}
-                </form>
-            )}
+                    {loading ? "Entrando…" : "Entrar"}
+                </ActionButton>
+                {isMockAuthEnabled && (
+                    <p className="demo-note">
+                        Conta de administrador para teste local:
+                        <br />
+                        E-mail: admin@exemplo.com
+                        <br />
+                        Senha: senha123
+                    </p>
+                )}
+            </form>
         </section>
     );
 }

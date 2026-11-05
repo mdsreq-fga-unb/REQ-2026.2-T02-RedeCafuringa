@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrandHeader, BottomNavigation } from "@/components";
 import { AccountPage } from "@/features/account";
 import {
@@ -41,6 +42,13 @@ export function App() {
     const query = new URLSearchParams(route.split("?")[1] || "");
     const fromContact = query.has("contato");
     const justRegistered = query.get("cadastro") === "ok";
+    // RN03/RNF08: só administrador autenticado cadastra outro (o backend também exige).
+    const adminOnly =
+        path === "/cadastro/administrador" || path === "/conta-criada/admin";
+    const adminBlocked = adminOnly && role !== "admin";
+    useEffect(() => {
+        if (adminBlocked) navigate("/admin/entrar");
+    }, [adminBlocked]); // eslint-disable-line react-hooks/exhaustive-deps
     const needsProfileSelection =
         role === null &&
         ["/conta", "/notificacoes", "/reservas"].includes(path);
@@ -134,15 +142,15 @@ export function App() {
                     <AdminAccessPage onNavigate={navigate} />
                 )}
                 {path === "/admin/entrar" && (
-                    <AdminLoginPage onNavigate={navigate} />
+                    <AdminLoginPage onNavigate={navigate} onSignIn={signIn} />
                 )}
-                {path === "/cadastro/administrador" && (
+                {path === "/cadastro/administrador" && !adminBlocked && (
                     <AdminSignupPage
                         createAccount={registerAdmin}
                         onNavigate={navigate}
                     />
                 )}
-                {path === "/conta-criada/admin" && (
+                {path === "/conta-criada/admin" && !adminBlocked && (
                     <AdminSignupSuccessPage onNavigate={navigate} />
                 )}
                 {path === "/perfil" && (

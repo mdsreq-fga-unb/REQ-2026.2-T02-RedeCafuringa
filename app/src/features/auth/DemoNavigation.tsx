@@ -43,8 +43,8 @@ export function DemoNavigation({
             window.location.reload();
         }
     };
-    const enter = async (cpf: string) => {
-        onSignIn(await loginMock({ cpf, password: "senha123" }));
+    const enter = async (email: string) => {
+        onSignIn(await loginMock({ email, password: "senha123" }));
         onNavigate("/conta");
     };
     return (
@@ -67,13 +67,13 @@ export function DemoNavigation({
                     ))}
                     <button
                         type="button"
-                        onClick={() => void enter("52998224725")}
+                        onClick={() => void enter("ana@exemplo.com")}
                     >
                         Entrar como consumidor de teste
                     </button>
                     <button
                         type="button"
-                        onClick={() => void enter("11144477735")}
+                        onClick={() => void enter("produtor@exemplo.com")}
                     >
                         Entrar como produtor de teste
                     </button>

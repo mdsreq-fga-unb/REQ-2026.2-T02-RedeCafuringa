@@ -77,7 +77,11 @@ export function AccountPage(props: AccountPageProps) {
             <BackButton label="Voltar" onClick={() => onNavigate("/perfil")} />
             <h1>Olá, {displayName}</h1>
             <p className="eyebrow">
-                {role === "producer" ? "Produtora" : "Consumidora"}
+                {role === "producer"
+                    ? "Produtora"
+                    : role === "admin"
+                      ? "Administrador"
+                      : "Consumidora"}
             </p>
             {role === "producer" && (
                 <>
