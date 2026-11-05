@@ -1,6 +1,11 @@
 import { BrandHeader, BottomNavigation } from "@/components";
 import { AccountPage } from "@/features/account";
 import {
+    AdminAccessPage,
+    AdminSignupPage,
+    AdminSignupSuccessPage,
+    AdminLoginPage,
+    registerAdmin,
     ConsumerProfileSelectionPage,
     ConsumerSignupPage,
     ConsumerSignupSuccessPage,
@@ -22,6 +27,8 @@ import type { AuthResult } from "@/shared/types";
 import { useHashRoute } from "./useHashRoute";
 import { RegisterPage } from "@/features/register";
 import "../App.css";
+import { isMockAuthEnabled } from "@/features/auth/authMode";
+import { DemoNavigation } from "@/features/auth/DemoNavigation";
 
 export function App() {
     const { route, navigate } = useHashRoute();
@@ -44,6 +51,9 @@ export function App() {
     const loginProfile =
         path === "/login/consumer" || fromContact ? "consumer" : "producer";
     const isAuthFlow =
+        path.startsWith("/admin/") ||
+        path === "/cadastro/administrador" ||
+        path === "/conta-criada/admin" ||
         showProfileSelection ||
         showLogin ||
         path === "/cadastro/consumidor" ||
@@ -116,7 +126,25 @@ export function App() {
     return (
         <div className={`app-shell ${isAuthFlow ? "auth-shell" : ""}`}>
             <BrandHeader onHome={() => navigate("/perfil")} />
+            {isMockAuthEnabled && (
+                <DemoNavigation onNavigate={navigate} onSignIn={signIn} />
+            )}
             <main className="main-content">
+                {path === "/admin/acesso" && (
+                    <AdminAccessPage onNavigate={navigate} />
+                )}
+                {path === "/admin/entrar" && (
+                    <AdminLoginPage onNavigate={navigate} />
+                )}
+                {path === "/cadastro/administrador" && (
+                    <AdminSignupPage
+                        createAccount={registerAdmin}
+                        onNavigate={navigate}
+                    />
+                )}
+                {path === "/conta-criada/admin" && (
+                    <AdminSignupSuccessPage onNavigate={navigate} />
+                )}
                 {path === "/perfil" && (
                     <ProfilePage
                         contactAvailable={contactAvailable}

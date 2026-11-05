@@ -5,6 +5,12 @@ export {
     ConsumerSignupSuccessPage,
     ProducerSignupSuccessPage,
 } from "./registration";
-export { registerConsumer } from "./registrationService";
+export { registerConsumer, registerAdmin } from "./registrationService";
+export {
+    AdminAccessPage,
+    AdminSignupPage,
+    AdminSignupSuccessPage,
+    AdminLoginPage,
+} from "./adminRegistration";
 export type { ConsumerSignupData } from "./registrationService";
 export { useDemoSession } from "./useDemoSession";
