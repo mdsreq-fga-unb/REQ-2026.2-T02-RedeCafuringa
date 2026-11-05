@@ -770,6 +770,13 @@ h2 {
     cursor: pointer;
     font-weight: 700;
 }
+
+.demo-tools {
+    margin-top: 16px;
+    padding: 12px;
+    border: 1px solid var(--muted);
+    border-radius: 8px;
+}
 .demo-navigation p {
     margin: 12px 0;
 }

@@ -1,5 +1,15 @@
 # Demonstração local
 
+## Ferramentas de desenvolvedor
+
+Dentro de “Modo local · Explorar telas”:
+
+- **Apagar usuários cadastrados:** remove cadastros locais de consumidor, produtor e administrador e encerra a sessão, preservando configurações.
+- **Encerrar sessão de teste:** remove apenas a sessão atual.
+- **Restaurar demonstração:** remove os cadastros, a sessão e as configurações locais de contato e perfil do produtor.
+
+A exclusão de cadastros pede confirmação. As ações recarregam a página para limpar também os usuários mantidos em memória; as contas padrão de teste continuam disponíveis. Nenhuma ação chama a API ou apaga dados de outros aplicativos. O menu e as funções de limpeza ficam desativados quando `VITE_USE_MOCK_AUTH=false`.
+
 No arquivo `app/.env.local` (ignorado pelo Git), defina `VITE_USE_MOCK_AUTH=true` e rode `npm run dev` dentro de `app`.
 
 O menu “Modo local · Explorar telas” permite abrir as telas existentes e entrar com consumidor ou produtor de teste para acessar a conta. Consumidor: CPF 529.982.247-25; produtor: CPF 111.444.777-35; senha: `senha123`.
