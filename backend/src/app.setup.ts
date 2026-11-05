@@ -57,7 +57,7 @@ export function createOpenApiDocument(app: INestApplication): OpenAPIObject {
         },
         'bearer',
       )
-      .addTag('auth', 'Login e dados da sessão (RN08)')
+      .addTag('auth', 'Login e dados da sessão (RN05)')
       .addTag('users', 'Cadastro de usuários (RN02, RNF15)')
       .addTag('health', 'Saúde do serviço, para o Docker e monitores externos')
       .build(),

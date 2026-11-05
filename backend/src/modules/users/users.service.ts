@@ -115,9 +115,9 @@ export class UsersService {
     }
   }
 
-  /** RN08: o login identifica a conta pelo CPF, via blind index. */
-  findByCpf(cpf: string): Promise<UserDocument | null> {
-    return this.users.findOne({ cpfHash: this.cipher.blindIndex(cpf) }).exec();
+  /** RN05: o login identifica a conta pelo e-mail. */
+  findByEmail(email: string): Promise<UserDocument | null> {
+    return this.users.findOne({ email: email.toLowerCase() }).exec();
   }
 
   async findById(id: string): Promise<UserDocument | null> {
