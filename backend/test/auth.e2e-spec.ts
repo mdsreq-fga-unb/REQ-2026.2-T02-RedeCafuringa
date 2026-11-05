@@ -24,14 +24,14 @@ describe('HU09 — Realizar login para acessar o meu perfil (e2e)', () => {
     await t?.close();
   });
 
-  describe('POST /auth/login (RN08: CPF e senha)', () => {
-    it('autentica com CPF e senha e devolve token Bearer (200)', async () => {
-      const { cpf, senha, user } = await seedUser(t, Role.CONSUMIDOR);
+  describe('POST /auth/login (RN05: e-mail e senha)', () => {
+    it('autentica com e-mail e senha e devolve token Bearer (200)', async () => {
+      const { email, senha, user } = await seedUser(t, Role.CONSUMIDOR);
 
       const response = await t
         .request()
         .post(LOGIN)
-        .send({ cpf, senha })
+        .send({ email, senha })
         .expect(200);
 
       expect(response.body).toEqual({
@@ -45,20 +45,29 @@ describe('HU09 — Realizar login para acessar o meu perfil (e2e)', () => {
       });
     });
 
-    it('aceita CPF com máscara', async () => {
-      const { cpf, senha } = await seedUser(t, Role.CONSUMIDOR);
-      const masked = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    it('ignora maiúsculas no e-mail', async () => {
+      const { email, senha } = await seedUser(t, Role.CONSUMIDOR);
 
-      await t.request().post(LOGIN).send({ cpf: masked, senha }).expect(200);
+      await t
+        .request()
+        .post(LOGIN)
+        .send({ email: email.toUpperCase(), senha })
+        .expect(200);
+    });
+
+    it('RN05: CPF não é credencial de acesso (400)', async () => {
+      const { cpf, senha } = await seedUser(t, Role.CONSUMIDOR);
+
+      await t.request().post(LOGIN).send({ cpf, senha }).expect(400);
     });
 
     it('RNF11: o token não carrega CPF, e-mail nem nome', async () => {
-      const { cpf, senha, user } = await seedUser(t, Role.CONSUMIDOR);
+      const { email, senha, user } = await seedUser(t, Role.CONSUMIDOR);
 
       const response = await t
         .request()
         .post(LOGIN)
-        .send({ cpf, senha })
+        .send({ email, senha })
         .expect(200);
       const payload = JSON.parse(
         Buffer.from(
@@ -77,29 +86,29 @@ describe('HU09 — Realizar login para acessar o meu perfil (e2e)', () => {
     });
 
     it('recusa senha errada com 401 e mensagem genérica', async () => {
-      const { cpf } = await seedUser(t, Role.CONSUMIDOR);
+      const { email } = await seedUser(t, Role.CONSUMIDOR);
 
       const response = await t
         .request()
         .post(LOGIN)
-        .send({ cpf, senha: 'SenhaErrada999' })
+        .send({ email, senha: 'SenhaErrada999' })
         .expect(401);
 
-      expect(response.body.message).toBe('CPF ou senha inválidos');
+      expect(response.body.message).toBe('E-mail ou senha inválidos');
     });
 
-    it('recusa CPF não cadastrado com a mesma resposta (sem enumeração)', async () => {
+    it('recusa e-mail não cadastrado com a mesma resposta (sem enumeração)', async () => {
       const response = await t
         .request()
         .post(LOGIN)
-        .send({ cpf: '52998224725', senha: 'SenhaForte123' })
+        .send({ email: 'nao.existe@exemplo.com', senha: 'SenhaForte123' })
         .expect(401);
 
-      expect(response.body.message).toBe('CPF ou senha inválidos');
+      expect(response.body.message).toBe('E-mail ou senha inválidos');
     });
 
     it('recusa conta desativada com 403', async () => {
-      const { cpf, senha, user } = await seedUser(t, Role.CONSUMIDOR);
+      const { email, senha, user } = await seedUser(t, Role.CONSUMIDOR);
       await t.connection
         .collection('users')
         .updateOne(
@@ -107,13 +116,13 @@ describe('HU09 — Realizar login para acessar o meu perfil (e2e)', () => {
           { $set: { ativo: false } },
         );
 
-      await t.request().post(LOGIN).send({ cpf, senha }).expect(403);
+      await t.request().post(LOGIN).send({ email, senha }).expect(403);
     });
 
     it.each([
-      ['sem senha', { cpf: '52998224725' }],
-      ['CPF inválido', { cpf: '123', senha: 'SenhaForte123' }],
-      ['campo extra', { cpf: '52998224725', senha: 'x', admin: true }],
+      ['sem senha', { email: 'maria@exemplo.com' }],
+      ['e-mail inválido', { email: 'sem-arroba', senha: 'SenhaForte123' }],
+      ['campo extra', { email: 'maria@exemplo.com', senha: 'x', admin: true }],
     ])('RNF03: 400 para payload %s', async (_caso, body) => {
       await t.request().post(LOGIN).send(body).expect(400);
     });
@@ -121,8 +130,8 @@ describe('HU09 — Realizar login para acessar o meu perfil (e2e)', () => {
 
   describe('GET /auth/me (acessar funcionalidades do meu perfil)', () => {
     it('devolve o perfil do usuário autenticado sem dados sensíveis', async () => {
-      const { cpf, senha, user } = await seedUser(t, Role.PRODUTOR);
-      const login = await t.request().post(LOGIN).send({ cpf, senha });
+      const { email, senha, user } = await seedUser(t, Role.PRODUTOR);
+      const login = await t.request().post(LOGIN).send({ email, senha });
 
       const response = await t
         .request()

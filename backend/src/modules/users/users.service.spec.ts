@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException } from '@nestjs/common';
-import { makeConsumer, makeCpf, makeProducer } from '@test/factories';
+import { makeConsumer, makeProducer } from '@test/factories';
 import type { Model } from 'mongoose';
 import { Types } from 'mongoose';
 import type { PasswordHasher } from '../../common/crypto/password-hasher.js';
@@ -273,14 +273,15 @@ describe('UsersService', () => {
     });
   });
 
-  describe('findByCpf (RN08)', () => {
-    it('busca pelo blind index, nunca pelo CPF em texto', async () => {
+  describe('findByEmail (RN05)', () => {
+    it('busca pelo e-mail normalizado em minúsculas', async () => {
       const { service, model } = setup();
-      const cpf = makeCpf();
 
-      await service.findByCpf(cpf);
+      await service.findByEmail('Maria@Exemplo.COM');
 
-      expect(model.findOne).toHaveBeenCalledWith({ cpfHash: `idx:${cpf}` });
+      expect(model.findOne).toHaveBeenCalledWith({
+        email: 'maria@exemplo.com',
+      });
     });
   });
 

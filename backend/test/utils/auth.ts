@@ -46,16 +46,16 @@ export async function seedUser(
   const dto = makeConsumer(overrides);
   const user = await t.app.get(UsersService).create(dto, perfil);
 
-  return { user, cpf: dto.cpf, senha: dto.senha };
+  return { user, cpf: dto.cpf, email: dto.email, senha: dto.senha };
 }
 
 /** Semeia um usuário do perfil informado e devolve o token de acesso. */
 export async function loginAs(t: TestApp, perfil: Role): Promise<string> {
-  const { cpf, senha } = await seedUser(t, perfil);
+  const { email, senha } = await seedUser(t, perfil);
   const response = await t
     .request()
     .post('/api/v1/auth/login')
-    .send({ cpf, senha })
+    .send({ email, senha })
     .expect(200);
 
   return response.body.accessToken as string;
