@@ -81,6 +81,8 @@ services:
       THROTTLE_TTL: ${THROTTLE_TTL:-60}
       THROTTLE_LIMIT: ${THROTTLE_LIMIT:-100}
       METRICS_TOKEN: ${METRICS_TOKEN:-}
+      # Swagger UI desligado por padrão; para ligar, veja docs/backend/operacao.md.
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET é obrigatório}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-900}
       AUTH_THROTTLE_LIMIT: ${AUTH_THROTTLE_LIMIT:-5}
@@ -126,6 +128,9 @@ services:
         condition: service_healthy
     environment:
       API_DOMAIN: ${API_DOMAIN:?API_DOMAIN é obrigatório}
+      SWAGGER_USER: ${SWAGGER_USER:-docs}
+      # Sem hash informado, usa um hash de senha descartada (falha fechada). "$$" é o escape do Compose.
+      SWAGGER_PASSWORD_HASH: ${SWAGGER_PASSWORD_HASH:-$$2a$$14$$gedbXS0LjzLt0Rnnkf2M2.avIhQUj30eynmXg6j1mpdE9uHkgbbXa}
     ports:
       - '80:80'
       - '443:443'

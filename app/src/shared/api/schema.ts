@@ -75,7 +75,7 @@ export interface paths {
         put?: never;
         /**
          * Cadastrar consumidor
-         * @description Cadastro público (HU01): dados obrigatórios (RN02), maioridade (RN15) e senha. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.
+         * @description Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Data de nascimento é obrigatória e exige 18 anos ou mais (RNF15); telefone é opcional. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.
          */
         post: operations["usersCreateConsumer"];
         delete?: never;
@@ -140,11 +140,11 @@ export interface components {
              * @description DDD + número
              * @example 61999990000
              */
-            telefone: string;
+            telefone?: string;
             /** @example maria@exemplo.com */
             email: string;
             /**
-             * @description AAAA-MM-DD
+             * @description AAAA-MM-DD. Exige 18 anos ou mais
              * @example 1990-05-10
              */
             dataNascimento: string;
@@ -155,11 +155,30 @@ export interface components {
             senha: string;
         };
         UserResponse: {
+            /**
+             * @description Identificador do usuário
+             * @example 665f1c2e9b1d4a0012ab34cd
+             */
             id: string;
+            /**
+             * @description Nome completo
+             * @example Maria das Graças
+             */
             nome: string;
+            /**
+             * @description E-mail da conta
+             * @example maria@exemplo.com
+             */
             email: string;
-            telefone: string;
-            /** @enum {string} */
+            /**
+             * @description DDD + número; ausente se não informado
+             * @example 61999990000
+             */
+            telefone?: string;
+            /**
+             * @description Perfil de acesso (RN01)
+             * @enum {string}
+             */
             perfil: "CONSUMIDOR" | "PRODUTOR" | "ADMINISTRADOR";
             /**
              * @description CPF mascarado

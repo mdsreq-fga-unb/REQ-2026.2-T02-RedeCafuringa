@@ -97,6 +97,16 @@ O Docker não reinicia por `unhealthy`; use um monitor externo para alertar.
 - Alertas mínimos: `ready` != 200 por 2 min; 5xx > 1% por 5 min; disco > 80%;
   último backup > 26 h; container reiniciando.
 
+### Swagger UI no ambiente de dev
+
+A UI em `/api/v1/docs` (e o JSON em `/api/v1/docs-json`) vem **desligada** em produção. Para ligá-la no ambiente de dev:
+
+1. Gere o hash da senha: `docker run --rm caddy:2.11.7-alpine caddy hash-password`.
+2. No `deploy/.env`: `SWAGGER_ENABLED=true`, `SWAGGER_USER=docs` e `SWAGGER_PASSWORD_HASH='<hash>'` (aspas simples, por causa dos `$`).
+3. Recrie os serviços: `docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env up -d api caddy`.
+
+O Caddy exige basic auth em `/api/v1/docs*`. Sem `SWAGGER_PASSWORD_HASH`, ele usa um hash de senha descartada, então ninguém entra. Não ligue em produção real: a UI expõe toda a superfície da API e o *Try it out* escreve em dados reais. A referência permanente, sem servidor, é o Swagger UI estático do site (`/api/`).
+
 ## 7. Backup e restore
 
 ### 7.1 Instalação

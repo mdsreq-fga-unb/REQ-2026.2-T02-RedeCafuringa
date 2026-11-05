@@ -83,6 +83,7 @@ export class UsersService {
    * PRODUTOR/ADMINISTRADOR: esses fluxos chegam com as HU02 e HU03.
    */
   async create(dto: CreateConsumerDto, perfil: Role): Promise<UserDocument> {
+    // RNF15: a data de nascimento afere a maioridade e por isso é obrigatória.
     if (!isAdult(new Date(dto.dataNascimento))) {
       throw new BadRequestException(
         'É necessário ter 18 anos ou mais para se cadastrar',

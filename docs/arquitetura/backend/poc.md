@@ -138,7 +138,7 @@ Produtor PF, propriedade, associação e comunidade (CPF **ou** CNPJ, com campos
 **Abordagem:** *discriminators* do Mongoose sobre uma coleção `users`, com validação condicional nos DTOs.
 **Atenção:** desde **jul/2026 a Receita emite CNPJ alfanumérico**. O validador desta PoC já suporta esse formato, mas o campo **nunca** deve ser tratado como numérico.
 
-### 🟢 D10 — ECA Digital e exclusão de conta (RNF15, RF11, RN10, RN15)
+### 🟢 D10 — ECA Digital e exclusão de conta (RNF15, RF11, RN10)
 Coletar a data de nascimento e bloquear menores de 18 anos no MVP, o que evita implementar o fluxo de consentimento parental. A exclusão de conta será **anonimização** (soft delete + remoção de dados pessoais), preservando a integridade de pré-reservas e feedbacks de terceiros.
 
 ### 🟢 D11 — Recuperação de senha (RF10, RN09)

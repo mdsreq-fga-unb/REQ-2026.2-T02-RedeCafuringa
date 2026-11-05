@@ -15,7 +15,7 @@ export const API_PREFIX = 'api/v1';
  * Versão do contrato OpenAPI (SemVer), publicada em `info.version` e em
  * shared/openapi.json. Regras de quando subir cada número: docs/shared/contratos.md.
  */
-export const OPENAPI_VERSION = '0.1.0';
+export const OPENAPI_VERSION = '0.1.1';
 
 const OPENAPI_DESCRIPTION = `API REST da plataforma **Rede Cafuringa**.
 
@@ -58,7 +58,7 @@ export function createOpenApiDocument(app: INestApplication): OpenAPIObject {
         'bearer',
       )
       .addTag('auth', 'Login e dados da sessão (RN08)')
-      .addTag('users', 'Cadastro de usuários (RN02, RN15)')
+      .addTag('users', 'Cadastro de usuários (RN02, RNF15)')
       .addTag('health', 'Saúde do serviço, para o Docker e monitores externos')
       .build(),
     {
@@ -108,7 +108,7 @@ export function configureApp(app: INestApplication): void {
   );
   app.enableShutdownHooks();
 
-  if (config.get<string>('NODE_ENV') !== 'production') {
+  if (config.get<boolean>('SWAGGER_ENABLED', false)) {
     SwaggerModule.setup(`${API_PREFIX}/docs`, app, createOpenApiDocument(app));
   }
 }

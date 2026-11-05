@@ -6,7 +6,7 @@
 |---|---|
 | Backend | É a fonte: os decorators do NestJS (`@ApiOperation`, DTOs) produzem o documento |
 | Frontend | Gera `app/src/shared/api/schema.ts` a partir dele; não escreva DTO de API à mão |
-| Documentação | `docs/shared/api.md` é gerado do mesmo arquivo |
+| Documentação | o Swagger UI do site (`/api/`) é montado a partir deste mesmo arquivo no build do MkDocs |
 
 ## Regenerar
 

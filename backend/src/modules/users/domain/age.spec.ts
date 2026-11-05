@@ -1,6 +1,6 @@
 import { isAdult } from './age.js';
 
-describe('RN15 / RNF15 — confirmação de maioridade', () => {
+describe('RNF15 — confirmação de maioridade', () => {
   const today = new Date('2026-10-28T12:00:00Z');
 
   it('aceita quem completa 18 anos hoje', () => {
