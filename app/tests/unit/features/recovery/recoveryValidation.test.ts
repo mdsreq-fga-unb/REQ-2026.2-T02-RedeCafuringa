@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { validateRecoveryRequest } from "@/features/recovery/recoveryValidation";
 
+
 describe("validateRecoveryRequest — HU10 CA02 e CA06", () => {
     it("aceita um e-mail válido", () => {
         expect(validateRecoveryRequest({ email: "ana@exemplo.com" })).toEqual(
