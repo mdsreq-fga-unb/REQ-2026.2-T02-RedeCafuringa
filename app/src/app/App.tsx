@@ -30,6 +30,8 @@ import { RegisterPage } from "@/features/register";
 import "../App.css";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { DemoNavigation } from "@/features/auth/DemoNavigation";
+import { RecoverAccessPage, ResetPasswordPage } from "@/features/recovery";
+import { getMockRecoveryLink } from "@/features/recovery/mockRecovery";
 
 export function App() {
     const { route, navigate } = useHashRoute();
@@ -42,6 +44,8 @@ export function App() {
     const query = new URLSearchParams(route.split("?")[1] || "");
     const fromContact = query.has("contato");
     const justRegistered = query.get("cadastro") === "ok";
+    const justRecovered = query.get("recuperacao") === "ok";
+    const recoveryToken = query.get("token");
     // RN03/RNF08: só administrador autenticado cadastra outro (o backend também exige).
     const adminOnly =
         path === "/cadastro/administrador" || path === "/conta-criada/admin";
@@ -67,6 +71,8 @@ export function App() {
         path === "/cadastro/consumidor" ||
         path === "/conta-criada/consumer" ||
         path === "/conta-criada/producer" ||
+        path === "/recuperar-acesso" ||
+        path === "/redefinir-senha" ||
         path === "/cadastro";
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
@@ -180,6 +186,7 @@ export function App() {
                 )}
                 {showLogin && (
                     <LoginPage
+                        recovered={justRecovered}
                         fromContact={fromContact}
                         profile={loginProfile}
                         registered={justRegistered}
@@ -188,6 +195,22 @@ export function App() {
                     />
                 )}
                 {path === "/cadastro" && <RegisterPage onNavigate={navigate} />}
+
+                {path === "/recuperar-acesso" && (
+                    <RecoverAccessPage
+                        onNavigate={navigate}
+                        getDemoLink={
+                            isMockAuthEnabled ? getMockRecoveryLink : undefined
+                        }
+                    />
+                )}
+                {path === "/redefinir-senha" && (
+                    <ResetPasswordPage
+                        token={recoveryToken}
+                        onNavigate={navigate}
+                    />
+                )}
+
                 {path === "/cadastro/consumidor" && (
                     <ConsumerSignupPage
                         createAccount={registerConsumer}
