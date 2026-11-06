@@ -64,10 +64,13 @@ describe('contrato OpenAPI', () => {
       'GET /api/v1/health',
       'GET /api/v1/health/live',
       'GET /api/v1/health/ready',
+      'GET /api/v1/producers/me/trajectory',
+      'GET /api/v1/producers/{id}/trajectory',
       'POST /api/v1/auth/login',
       'POST /api/v1/users/admins',
       'POST /api/v1/users/consumers',
       'POST /api/v1/users/producers',
+      'PUT /api/v1/producers/me/trajectory',
     ]);
   });
 
@@ -90,13 +93,15 @@ describe('contrato OpenAPI', () => {
     }
   });
 
-  it('só /auth/me e o cadastro de administrador exigem Bearer; o resto é público', () => {
+  it('só /auth/me, o cadastro de administrador e a trajetória própria exigem Bearer; o resto é público', () => {
     const protectedOps = operations
       .filter((o) => o.op.security?.some((s) => 'bearer' in s))
       .map((o) => `${o.method} ${o.path}`);
     expect(protectedOps.sort()).toEqual([
       'get /api/v1/auth/me',
+      'get /api/v1/producers/me/trajectory',
       'post /api/v1/users/admins',
+      'put /api/v1/producers/me/trajectory',
     ]);
   });
 

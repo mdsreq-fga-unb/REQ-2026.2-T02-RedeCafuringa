@@ -164,6 +164,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/producers/me/trajectory": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar a própria trajetória
+         * @description HU12 (CA01): devolve a trajetória, as atividades, o telefone e a visibilidade do telefone do produtor autenticado. Exclusivo do perfil PRODUTOR (RN01, RNF08).
+         */
+        get: operations["producerprofileGetOwn"];
+        /**
+         * Registrar a própria trajetória
+         * @description HU12 (CA02-CA04, CA06, CA07): substitui a trajetória e as atividades do produtor autenticado; telefone e visibilidade só mudam se enviados; `telefone: null` remove o telefone cadastrado. Publicar a trajetória torna o perfil público visível. O dono é sempre quem está no token. É idempotente: reenviar o mesmo conteúdo após uma falha de conexão é seguro. Textos são simples (sem HTML) e limitados a 2000 caracteres.
+         */
+        put: operations["producerprofileSave"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/producers/{id}/trajectory": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar a trajetória pública de um produtor
+         * @description HU12 (CA05, RN07, RNF11): aberta a visitantes e consumidores. Traz somente dados destinados à divulgação; o telefone só aparece se o produtor autorizou. O perfil fica oculto (404) até o produtor publicar a trajetória. E-mail, CPF, CNPJ e nome do responsável nunca são expostos.
+         */
+        get: operations["producerprofileGetPublic"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -393,6 +437,88 @@ export interface components {
              */
             expiresIn: number;
             usuario: components["schemas"]["UserResponse"];
+        };
+        OwnTrajectoryResponse: {
+            /**
+             * @description Ausente enquanto o produtor não registrou a trajetória
+             * @example Começamos a plantar café em 1990.
+             */
+            trajetoria?: string;
+            /**
+             * @description Ausente enquanto não houver atividades registradas
+             * @example Horta orgânica e visitas guiadas.
+             */
+            atividades?: string;
+            /**
+             * @description Telefone de contato cadastrado (privado, só o titular vê aqui)
+             * @example 61999990000
+             */
+            telefone?: string;
+            /**
+             * @description Se verdadeiro, o telefone aparece no perfil público
+             * @example false
+             */
+            telefonePublico: boolean;
+            /**
+             * @description Data da última gravação da trajetória
+             * @example 2026-11-06T12:00:00.000Z
+             */
+            atualizadoEm?: string;
+        };
+        SaveTrajectoryDto: {
+            /**
+             * @description Sua história, em texto simples (sem HTML), até 2000 caracteres
+             * @example Começamos a plantar café em 1990, no Núcleo Rural de Planaltina. Hoje a família toda participa da produção.
+             */
+            trajetoria: string;
+            /**
+             * @description Atividades que você desenvolve, em texto simples, até 2000 caracteres. Se omitido, o valor anterior é apagado.
+             * @example Horta orgânica, visitas guiadas e café da manhã rural.
+             */
+            atividades?: string;
+            /**
+             * @description DDD + número, apenas dígitos. Se omitido, o telefone cadastrado não muda. Com `null`, o telefone é removido (e deixa de ser público).
+             * @example 61999990000
+             */
+            telefone?: Record<string, never> | null;
+            /**
+             * @description Se verdadeiro, o telefone aparece no perfil público (RN07). Se omitido, a escolha anterior não muda; por padrão o telefone é privado.
+             * @example true
+             */
+            telefonePublico?: boolean;
+        };
+        PublicTrajectoryResponse: {
+            /**
+             * @description Identificador do produtor
+             * @example 64b0c0ffee0000000000abcd
+             */
+            id: string;
+            /**
+             * @description Nome da iniciativa
+             * @example Horta Comunitária Cafuringa
+             */
+            nomeIniciativa?: string;
+            /**
+             * @description Tipo de oferta do produtor
+             * @example Produtos
+             * @enum {string}
+             */
+            categoriaOfertada?: "Produtos" | "Experiências" | "Produtos e Experiências";
+            /**
+             * @description História do produtor, em texto simples; exiba escapando HTML. Sempre presente: o perfil só é público depois de publicada.
+             * @example Começamos a plantar café em 1990.
+             */
+            trajetoria: string;
+            /**
+             * @description Atividades desenvolvidas, em texto simples. Ausente se vazio.
+             * @example Horta orgânica e visitas guiadas.
+             */
+            atividades?: string;
+            /**
+             * @description Telefone de contato, presente somente quando o produtor autorizou a divulgação
+             * @example 61999990000
+             */
+            telefone?: string;
         };
     };
     responses: never;
@@ -1095,6 +1221,152 @@ export interface operations {
             };
             /** @description Sem token ou token inválido */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileGetOwn: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Trajetória atual */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnTrajectoryResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta de produtor inexistente ou desativada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileSave: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveTrajectoryDto"];
+            };
+        };
+        responses: {
+            /** @description Trajetória gravada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnTrajectoryResponse"];
+                };
+            };
+            /** @description Campos inválidos ou fora do contrato (mensagens em `message`) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta de produtor inexistente ou desativada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileGetPublic: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dados públicos do produtor */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicTrajectoryResponse"];
+                };
+            };
+            /** @description Produtor inexistente, desativado, sem trajetória publicada ou identificador inválido */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

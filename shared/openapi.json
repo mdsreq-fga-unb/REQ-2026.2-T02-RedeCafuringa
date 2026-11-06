@@ -1056,12 +1056,188 @@
           "auth"
         ]
       }
+    },
+    "/api/v1/producers/me/trajectory": {
+      "get": {
+        "description": "HU12 (CA01): devolve a trajetória, as atividades, o telefone e a visibilidade do telefone do produtor autenticado. Exclusivo do perfil PRODUTOR (RN01, RNF08).",
+        "operationId": "producerprofileGetOwn",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Trajetória atual",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnTrajectoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de produtor\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta de produtor inexistente ou desativada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Consultar a própria trajetória",
+        "tags": [
+          "producers"
+        ]
+      },
+      "put": {
+        "description": "HU12 (CA02-CA04, CA06, CA07): substitui a trajetória e as atividades do produtor autenticado; telefone e visibilidade só mudam se enviados; `telefone: null` remove o telefone cadastrado. Publicar a trajetória torna o perfil público visível. O dono é sempre quem está no token. É idempotente: reenviar o mesmo conteúdo após uma falha de conexão é seguro. Textos são simples (sem HTML) e limitados a 2000 caracteres.",
+        "operationId": "producerprofileSave",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveTrajectoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Trajetória gravada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnTrajectoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Campos inválidos ou fora do contrato (mensagens em `message`)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de produtor\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta de produtor inexistente ou desativada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registrar a própria trajetória",
+        "tags": [
+          "producers"
+        ]
+      }
+    },
+    "/api/v1/producers/{id}/trajectory": {
+      "get": {
+        "description": "HU12 (CA05, RN07, RNF11): aberta a visitantes e consumidores. Traz somente dados destinados à divulgação; o telefone só aparece se o produtor autorizou. O perfil fica oculto (404) até o produtor publicar a trajetória. E-mail, CPF, CNPJ e nome do responsável nunca são expostos.",
+        "operationId": "producerprofileGetPublic",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados públicos do produtor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicTrajectoryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produtor inexistente, desativado, sem trajetória publicada ou identificador inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Consultar a trajetória pública de um produtor",
+        "tags": [
+          "producers"
+        ]
+      }
     }
   },
   "info": {
     "title": "Rede Cafuringa API",
     "description": "API REST da plataforma **Rede Cafuringa**.\n\n**Autenticação.** `POST /auth/login` troca CPF e senha por um JWT. Envie-o em `Authorization: Bearer <token>`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).\n\n**Rastreabilidade.** Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`). A API devolve o mesmo id no cabeçalho da resposta e nos logs; sem o cabeçalho, ou com valor inválido, gera um UUID.\n\n**Erros.** Todo erro tem o corpo `ErrorResponse` (`statusCode`, `message`, `error`). Nas falhas de validação (400), `message` é uma lista.\n\n**Limites.** Rotas de login e cadastro têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com `Retry-After` (segundos).\n\n**Dados pessoais.** Respostas nunca trazem hash de senha nem o CPF completo (vem mascarado).\n\n**Versão do contrato.** SemVer, em `info.version`. Veja docs/shared/contratos.md.",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -1080,6 +1256,10 @@
     {
       "name": "health",
       "description": "Saúde do serviço, para o Docker e monitores externos"
+    },
+    {
+      "name": "producers",
+      "description": "Perfil do produtor: trajetória e atividades (HU12, RN07)"
     }
   ],
   "servers": [
@@ -1470,6 +1650,114 @@
           "tokenType",
           "expiresIn",
           "usuario"
+        ]
+      },
+      "OwnTrajectoryResponse": {
+        "type": "object",
+        "properties": {
+          "trajetoria": {
+            "type": "string",
+            "example": "Começamos a plantar café em 1990.",
+            "description": "Ausente enquanto o produtor não registrou a trajetória"
+          },
+          "atividades": {
+            "type": "string",
+            "example": "Horta orgânica e visitas guiadas.",
+            "description": "Ausente enquanto não houver atividades registradas"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "Telefone de contato cadastrado (privado, só o titular vê aqui)"
+          },
+          "telefonePublico": {
+            "type": "boolean",
+            "example": false,
+            "description": "Se verdadeiro, o telefone aparece no perfil público"
+          },
+          "atualizadoEm": {
+            "type": "string",
+            "example": "2026-11-06T12:00:00.000Z",
+            "description": "Data da última gravação da trajetória"
+          }
+        },
+        "required": [
+          "telefonePublico"
+        ]
+      },
+      "SaveTrajectoryDto": {
+        "type": "object",
+        "properties": {
+          "trajetoria": {
+            "type": "string",
+            "example": "Começamos a plantar café em 1990, no Núcleo Rural de Planaltina. Hoje a família toda participa da produção.",
+            "description": "Sua história, em texto simples (sem HTML), até 2000 caracteres",
+            "maxLength": 2000
+          },
+          "atividades": {
+            "type": "string",
+            "example": "Horta orgânica, visitas guiadas e café da manhã rural.",
+            "description": "Atividades que você desenvolve, em texto simples, até 2000 caracteres. Se omitido, o valor anterior é apagado.",
+            "maxLength": 2000
+          },
+          "telefone": {
+            "type": "object",
+            "example": "61999990000",
+            "nullable": true,
+            "description": "DDD + número, apenas dígitos. Se omitido, o telefone cadastrado não muda. Com `null`, o telefone é removido (e deixa de ser público)."
+          },
+          "telefonePublico": {
+            "type": "boolean",
+            "example": true,
+            "description": "Se verdadeiro, o telefone aparece no perfil público (RN07). Se omitido, a escolha anterior não muda; por padrão o telefone é privado."
+          }
+        },
+        "required": [
+          "trajetoria"
+        ]
+      },
+      "PublicTrajectoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000abcd",
+            "description": "Identificador do produtor"
+          },
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Horta Comunitária Cafuringa",
+            "description": "Nome da iniciativa"
+          },
+          "categoriaOfertada": {
+            "type": "string",
+            "enum": [
+              "Produtos",
+              "Experiências",
+              "Produtos e Experiências"
+            ],
+            "example": "Produtos",
+            "description": "Tipo de oferta do produtor"
+          },
+          "trajetoria": {
+            "type": "string",
+            "example": "Começamos a plantar café em 1990.",
+            "description": "História do produtor, em texto simples; exiba escapando HTML. Sempre presente: o perfil só é público depois de publicada."
+          },
+          "atividades": {
+            "type": "string",
+            "example": "Horta orgânica e visitas guiadas.",
+            "description": "Atividades desenvolvidas, em texto simples. Ausente se vazio."
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "Telefone de contato, presente somente quando o produtor autorizou a divulgação"
+          }
+        },
+        "required": [
+          "id",
+          "trajetoria"
         ]
       }
     }
