@@ -50,6 +50,7 @@ O time responde em até 5 dias úteis.
 | Negação por padrão (`JwtAuthGuard` global + `@Public()`) e RBAC (`RolesGuard` + `@Roles()`) | `backend/src/modules/auth/guards` |
 | Senhas com argon2id; política mínima (8–128, letra e número) | `backend/src/common/crypto/password-hasher.ts` |
 | CPF como *blind index* HMAC-SHA256 + cifra AES-256-GCM (D1) | `backend/src/common/crypto/pii-cipher.ts` |
+| Trajetória do produtor (HU12, RN07): perfil público com DTO explícito (sem e-mail, CPF, CNPJ, responsável, localidade); telefone só com `telefonePublico=true`; escrita só na própria conta (`/producers/me`, `@Roles(PRODUTOR)`), `$set` restrito aos campos do contrato; consultas com projeção (senha e dados cifrados nunca são lidos); texto sem controles, invisíveis nem inversões bidirecionais, com limite de 2000 | `backend/src/modules/producer-profile` |
 | Login por e-mail e senha (RN05), sem enumeração (mensagem e custo iguais para e-mail inexistente) | `backend/src/modules/auth/auth.service.ts` |
 | Cadastro de administrador só por administrador (`@Roles(ADMINISTRADOR)`, RN03); 1º admin por `ADMIN_BOOTSTRAP_*` | `backend/src/modules/users/users.controller.ts`, `admin-bootstrap.service.ts` |
 | Rate limit dedicado a login/cadastro (`AUTH_THROTTLE_LIMIT`) | `@AuthThrottle()` |

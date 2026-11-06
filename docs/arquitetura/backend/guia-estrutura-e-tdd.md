@@ -54,6 +54,7 @@ backend/
 │   └── modules/                # UM módulo por característica do produto
 │       ├── auth/               # login JWT, guards globais, @Public/@Roles/@CurrentUser
 │       ├── users/              # contas (consumidor, produtor, administrador)
+│       ├── producer-profile/   # trajetória do produtor e perfil público (HU12)
 │       ├── health/             # live/ready
 │       └── metrics/            # Prometheus
 ├── test/
