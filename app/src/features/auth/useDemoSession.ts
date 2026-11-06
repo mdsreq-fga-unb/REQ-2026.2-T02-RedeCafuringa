@@ -1,4 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { ApiHttpError, getApiClient } from "../../shared/api";
+import type { components } from "../../shared/api/schema";
 import type { AuthResult, Role } from "../../shared/types";
 import { isMockAuthEnabled } from "./authMode";
 
@@ -62,6 +64,41 @@ export function useDemoSession() {
         setCpf("");
         clearStoredSession();
     }, []);
+
+    // Recupera também os dados ausentes de sessões criadas antes da correção
+    // do login. O servidor é a fonte dos dados do titular autenticado.
+    useEffect(() => {
+        const token = localStorage.getItem("cafuringa-token");
+        if (isMockAuthEnabled || !token) return;
+        let active = true;
+        const isCurrentSession = () =>
+            active && localStorage.getItem("cafuringa-token") === token;
+
+        void getApiClient()
+            .get<components["schemas"]["UserResponse"]>("/auth/me")
+            .then((user) => {
+                if (!isCurrentSession()) return;
+                setConsumerName(user.nome);
+                setEmail(user.email);
+                setCpf(user.cpf ?? "");
+                localStorage.setItem("cafuringa-name", user.nome);
+                localStorage.setItem("cafuringa-email", user.email);
+                if (user.cpf) localStorage.setItem("cafuringa-cpf", user.cpf);
+                else localStorage.removeItem("cafuringa-cpf");
+            })
+            .catch((error: unknown) => {
+                if (
+                    isCurrentSession() &&
+                    error instanceof ApiHttpError &&
+                    (error.status === 401 || error.status === 403)
+                )
+                    signOut();
+            });
+
+        return () => {
+            active = false;
+        };
+    }, [signOut]);
 
     return { role, consumerName, email, cpf, signIn, signOut };
 }

@@ -110,46 +110,54 @@ describe("configurações de contato da conta", () => {
         );
     });
 
-    it("exibe os dados do consumidor e permite acessar o login de produtor", () => {
-        const onNavigate = vi.fn();
-        const onSignOut = vi.fn();
+    it.each([
+        ["52998224725", "529.982.247-25"],
+        ["***.982.247-**", "***.982.247-**"],
+    ])(
+        "exibe os dados do consumidor com CPF %s e permite acessar o login de produtor",
+        (cpf, displayedCpf) => {
+            const onNavigate = vi.fn();
+            const onSignOut = vi.fn();
 
-        render(
-            <AccountPage
-                role="consumer"
-                consumerName="Gabriela Pereira da Silva"
-                consumerEmail="gabriela@exemplo.com"
-                consumerCpf="52998224725"
-                settings={{ whatsappNumber: "", authorized: false }}
-                draft={{ whatsappNumber: "", authorized: false }}
-                saved={false}
-                onDraftChange={vi.fn()}
-                onSavedChange={vi.fn()}
-                onSaveContact={vi.fn()}
-                onNavigate={onNavigate}
-                onSignOut={onSignOut}
-            />,
-        );
+            render(
+                <AccountPage
+                    role="consumer"
+                    consumerName="Gabriela Pereira da Silva"
+                    consumerEmail="gabriela@exemplo.com"
+                    consumerCpf={cpf}
+                    settings={{ whatsappNumber: "", authorized: false }}
+                    draft={{ whatsappNumber: "", authorized: false }}
+                    saved={false}
+                    onDraftChange={vi.fn()}
+                    onSavedChange={vi.fn()}
+                    onSaveContact={vi.fn()}
+                    onNavigate={onNavigate}
+                    onSignOut={onSignOut}
+                />,
+            );
 
-        expect(
-            screen.getByRole("heading", { name: "Olá, Gabriela" }),
-        ).toBeTruthy();
-        expect(screen.getByLabelText("E-mail")).toHaveProperty(
-            "value",
-            "gabriela@exemplo.com",
-        );
-        expect(screen.getByLabelText("CPF")).toHaveProperty(
-            "value",
-            "529.982.247-25",
-        );
-        fireEvent.click(
-            screen.getByRole("button", { name: "Acessar como produtor" }),
-        );
-        fireEvent.click(screen.getByRole("button", { name: "Sair da conta" }));
+            expect(
+                screen.getByRole("heading", { name: "Olá, Gabriela" }),
+            ).toBeTruthy();
+            expect(screen.getByLabelText("E-mail")).toHaveProperty(
+                "value",
+                "gabriela@exemplo.com",
+            );
+            expect(screen.getByLabelText("CPF")).toHaveProperty(
+                "value",
+                displayedCpf,
+            );
+            fireEvent.click(
+                screen.getByRole("button", { name: "Acessar como produtor" }),
+            );
+            fireEvent.click(
+                screen.getByRole("button", { name: "Sair da conta" }),
+            );
 
-        expect(onNavigate).toHaveBeenCalledWith("/login/producer");
-        expect(onSignOut).toHaveBeenCalledOnce();
-    });
+            expect(onNavigate).toHaveBeenCalledWith("/login/producer");
+            expect(onSignOut).toHaveBeenCalledOnce();
+        },
+    );
 });
 
 describe("conta do administrador — HU03", () => {

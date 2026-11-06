@@ -240,7 +240,6 @@ export function AccountPage(props: AccountPageProps) {
                             type="email"
                             value={consumerEmail}
                             aria-label="E-mail"
-                            placeholder="ana@exemplo.com"
                             readOnly
                         />
                     </div>
@@ -251,9 +250,12 @@ export function AccountPage(props: AccountPageProps) {
                         <input
                             id="consumer-cpf"
                             className="text-input"
-                            value={consumerCpf ? formatCpf(consumerCpf) : ""}
+                            value={
+                                consumerCpf.includes("*")
+                                    ? consumerCpf
+                                    : formatCpf(consumerCpf)
+                            }
                             aria-label="CPF"
-                            placeholder="000.000.000-00"
                             readOnly
                         />
                     </div>
