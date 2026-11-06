@@ -5,6 +5,7 @@ import { BackButton } from "@/components/navigation/BackButton";
 import { requestAccessRecovery } from "./recoveryService";
 import type { RecoverAccessResult } from "./recoveryService";
 import { validateRecoveryRequest } from "./recoveryValidation";
+import { rateLimitMessage } from "./recoveryMessages";
 
 type RecoverAccessPageProps = {
     onNavigate: (path: string) => void;
@@ -15,10 +16,8 @@ type RecoverAccessPageProps = {
 function failureMessage(
     result: Exclude<RecoverAccessResult, { ok: true }>,
 ): string {
-    if (result.reason === "rate_limit") {
-        return result.retryAfterSeconds
-            ? `Muitas tentativas. Tente novamente em ${result.retryAfterSeconds} segundos.`
-            : "Muitas tentativas. Aguarde alguns instantes e tente novamente.";
+        if (result.reason === "rate_limit") {
+        return rateLimitMessage(result.retryAfterSeconds);
     }
     return "Não foi possível enviar as instruções agora. Tente novamente em instantes.";
 }

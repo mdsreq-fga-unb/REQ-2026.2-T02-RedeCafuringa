@@ -5,6 +5,7 @@ import { BackButton } from "@/components/navigation/BackButton";
 import { resetPassword } from "./recoveryService";
 import { validateNewPassword } from "./recoveryValidation";
 import type { NewPasswordErrors } from "./recoveryValidation";
+import { rateLimitMessage } from "./recoveryMessages";
 
 type ResetPasswordPageProps = {
     /** Token do link de recuperação (`#/redefinir-senha?token=...`); null se faltar. */
@@ -49,9 +50,7 @@ export function ResetPasswordPage({
         }
         setFormError(
             result.reason === "rate_limit"
-                ? result.retryAfterSeconds
-                    ? `Muitas tentativas. Tente novamente em ${result.retryAfterSeconds} segundos.`
-                    : "Muitas tentativas. Aguarde alguns instantes e tente novamente."
+                ? rateLimitMessage(result.retryAfterSeconds)
                 : "Não foi possível redefinir a senha agora. Tente novamente em instantes.",
         );
     };
