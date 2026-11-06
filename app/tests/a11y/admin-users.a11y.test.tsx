@@ -1,10 +1,16 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, screen } from "@testing-library/react";
 import axe from "axe-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { App } from "@/app/App";
+import { renderAdminApp } from "../fixtures/renderAdminApp";
 import { consumer, jsonResponse, userPage } from "../fixtures/adminUsers";
 
 vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: false }));
+vi.mock("@/features/auth/authService", () => ({
+    login: async () => ({
+        token: "session",
+        user: { id: "admin", name: "Administrador", role: "admin" },
+    }),
+}));
 
 afterEach(() => {
     cleanup();
@@ -34,7 +40,7 @@ describe("HU04 — acessibilidade WCAG 2.1 A/AA", () => {
             vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(
                 null,
             );
-            const { container } = render(<App />);
+            const { container } = await renderAdminApp();
             if (detail) await screen.findByText(consumer.email);
             else
                 await screen.findByRole("list", {

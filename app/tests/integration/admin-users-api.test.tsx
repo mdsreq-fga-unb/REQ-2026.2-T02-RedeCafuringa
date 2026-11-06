@@ -1,13 +1,8 @@
-import {
-    cleanup,
-    render,
-    screen,
-    waitFor,
-    within,
-} from "@testing-library/react";
+import { cleanup, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { App } from "@/app/App";
+
+import { renderAdminApp } from "../fixtures/renderAdminApp";
 import {
     admin,
     consumer,
@@ -17,6 +12,12 @@ import {
 } from "../fixtures/adminUsers";
 
 vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: false }));
+vi.mock("@/features/auth/authService", () => ({
+    login: async () => ({
+        token: "admin-session-token",
+        user: { id: "admin", name: "Administrador", role: "admin" },
+    }),
+}));
 
 const fetchMock = vi.fn<typeof fetch>();
 
@@ -51,7 +52,7 @@ function expectVisibleValue(value: string) {
 
 describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
     it("CA01–CA05/CA09: consulta com Bearer e identifica os três perfis", async () => {
-        render(<App />);
+        await renderAdminApp();
         await waitForList();
         for (const item of userPage.itens) {
             expect(
@@ -89,7 +90,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
                     : userPage,
             );
         });
-        render(<App />);
+        await renderAdminApp();
         await waitForList();
         await user.type(
             screen.getByRole("searchbox", { name: /buscar usuário/i }),
@@ -124,7 +125,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
                 pagina: Number(url.searchParams.get("pagina") || 1),
             });
         });
-        render(<App />);
+        await renderAdminApp();
         await waitForList();
         await user.type(
             screen.getByRole("searchbox", { name: /buscar usuário/i }),
@@ -154,7 +155,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
         fetchMock.mockImplementation(async () =>
             jsonResponse({ ...userPage, itens: [], total: 0 }),
         );
-        render(<App />);
+        await renderAdminApp();
         expect(
             await screen.findByText(/nenhum usuário|não há usuários/i),
         ).toBeTruthy();
@@ -163,7 +164,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
     it("RNF03: permite tentar novamente após falha de conexão", async () => {
         const user = userEvent.setup();
         fetchMock.mockRejectedValueOnce(new TypeError("offline"));
-        render(<App />);
+        await renderAdminApp();
         expect(await screen.findByRole("alert")).toBeTruthy();
         await user.click(
             screen.getByRole("button", { name: /tentar novamente/i }),
@@ -180,11 +181,13 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
                     status,
                 ),
             );
-            render(<App />);
+            await renderAdminApp();
             await waitFor(() =>
                 expect(window.location.hash).toBe("#/admin/entrar"),
             );
             expect(screen.queryByText(consumer.nome)).toBeNull();
+            expect(localStorage.getItem("cafuringa-token")).toBeNull();
+            expect(localStorage.getItem("cafuringa-role")).toBeNull();
         },
     );
 
@@ -193,7 +196,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
         async (detail) => {
             window.location.hash = `#/admin/usuarios/${detail.id}`;
             fetchMock.mockImplementation(async () => jsonResponse(detail));
-            render(<App />);
+            await renderAdminApp();
             await waitFor(() => expectVisibleValue(detail.email));
             const [url, init] = fetchMock.mock.calls[0];
             expect(String(url)).toMatch(new RegExp(`/users/${detail.id}$`));
@@ -234,7 +237,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
                 passwordHash: "hash-nao-exibir",
             }),
         );
-        render(<App />);
+        await renderAdminApp();
         await waitFor(() => expectVisibleValue(consumer.email));
         for (const secret of [
             "segredo-nao-exibir",
@@ -256,7 +259,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
                   )
                 : jsonResponse(userPage),
         );
-        render(<App />);
+        await renderAdminApp();
         expect(await screen.findByText(/usuário não encontrado/i)).toBeTruthy();
         await user.click(screen.getByRole("button", { name: /voltar/i }));
         await waitFor(() =>

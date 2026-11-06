@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { BrandHeader, BottomNavigation } from "@/components";
 import { AccountPage } from "@/features/account";
 import {
@@ -36,6 +36,10 @@ export function App() {
     const { route, navigate } = useHashRoute();
     const { role, consumerName, email, cpf, signIn, signOut } =
         useDemoSession();
+    const endAdminSession = useCallback(() => {
+        signOut();
+        navigate("/admin/entrar");
+    }, [signOut, navigate]);
     const { settings, draft, setDraft, saved, setSaved, save } =
         useContactSettings();
 
@@ -157,6 +161,7 @@ export function App() {
                         key={path}
                         id={path.split("/")[3]}
                         onNavigate={navigate}
+                        onUnauthorized={endAdminSession}
                     />
                 )}
                 {path === "/admin/acesso" && (
@@ -200,7 +205,12 @@ export function App() {
                     />
                 )}
                 {showProfileSelection && (
-                    <ConsumerProfileSelectionPage onNavigate={navigate} />
+                    <ConsumerProfileSelectionPage
+                        onNavigate={(nextPath) => {
+                            if (nextPath === "/admin/acesso") signOut();
+                            navigate(nextPath);
+                        }}
+                    />
                 )}
                 {showLogin && (
                     <LoginPage

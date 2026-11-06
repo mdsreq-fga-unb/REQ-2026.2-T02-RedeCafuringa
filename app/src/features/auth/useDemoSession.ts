@@ -1,11 +1,32 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { AuthResult, Role } from "../../shared/types";
+import { isMockAuthEnabled } from "./authMode";
+
+const sessionKeys = [
+    "cafuringa-role",
+    "cafuringa-name",
+    "cafuringa-token",
+    "cafuringa-email",
+    "cafuringa-cpf",
+];
+
+function clearStoredSession() {
+    for (const key of sessionKeys) localStorage.removeItem(key);
+}
 
 const readRole = (): Role | null => {
     const saved = localStorage.getItem("cafuringa-role");
-    return saved === "consumer" || saved === "producer" || saved === "admin"
-        ? saved
-        : null;
+    const token = localStorage.getItem("cafuringa-token");
+    // Administração exige novo login a cada abertura/recarregamento do app.
+    // Uma sessão da demonstração também não autentica o ambiente real.
+    if (
+        saved === "admin" ||
+        (!isMockAuthEnabled && token?.startsWith("mock-token-"))
+    ) {
+        clearStoredSession();
+        return null;
+    }
+    return saved === "consumer" || saved === "producer" ? saved : null;
 };
 
 export function useDemoSession() {
@@ -34,17 +55,13 @@ export function useDemoSession() {
         else localStorage.removeItem("cafuringa-cpf");
     };
 
-    const signOut = () => {
+    const signOut = useCallback(() => {
         setRole(null);
         setConsumerName("");
         setEmail("");
         setCpf("");
-        localStorage.removeItem("cafuringa-role");
-        localStorage.removeItem("cafuringa-name");
-        localStorage.removeItem("cafuringa-token");
-        localStorage.removeItem("cafuringa-email");
-        localStorage.removeItem("cafuringa-cpf");
-    };
+        clearStoredSession();
+    }, []);
 
     return { role, consumerName, email, cpf, signIn, signOut };
 }

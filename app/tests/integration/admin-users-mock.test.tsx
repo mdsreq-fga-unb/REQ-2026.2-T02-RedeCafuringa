@@ -1,7 +1,8 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { App } from "@/app/App";
+
+import { renderAdminApp } from "../fixtures/renderAdminApp";
 import {
     registerMockAdmin,
     registerMockConsumer,
@@ -31,7 +32,7 @@ afterEach(() => {
 
 describe("HU04 — compatibilidade com a demonstração existente", () => {
     it("CA01–CA05: exibe os três perfis sem depender da rede", async () => {
-        render(<App />);
+        await renderAdminApp();
         expect(
             await screen.findByRole("heading", {
                 name: /usuários cadastrados/i,
@@ -60,7 +61,7 @@ describe("HU04 — compatibilidade com a demonstração existente", () => {
             senha: "SegredoAdmin123",
         });
         const user = userEvent.setup();
-        render(<App />);
+        await renderAdminApp();
         await screen.findByRole("heading", { name: /usuários cadastrados/i });
         await user.type(
             screen.getByRole("searchbox", { name: /buscar usuário/i }),
@@ -99,7 +100,7 @@ describe("HU04 — compatibilidade com a demonstração existente", () => {
             senha: "SegredoAdmin123",
         });
         const user = userEvent.setup();
-        render(<App />);
+        await renderAdminApp();
         await screen.findByRole("heading", { name: /usuários cadastrados/i });
         await user.type(
             screen.getByRole("searchbox", { name: /buscar usuário/i }),
@@ -117,7 +118,7 @@ describe("HU04 — compatibilidade com a demonstração existente", () => {
 
     it("CA08: busca sem correspondência informa lista vazia", async () => {
         const user = userEvent.setup();
-        render(<App />);
+        await renderAdminApp();
         await screen.findByRole("heading", { name: /usuários cadastrados/i });
         await user.type(
             screen.getByRole("searchbox", { name: /buscar usuário/i }),

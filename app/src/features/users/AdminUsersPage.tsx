@@ -5,10 +5,14 @@ import { getUser, listUsers, profileLabels } from "./usersService";
 import type { UserDetail, UserList, UserQuery } from "./usersService";
 import "./users.css";
 
-type Props = { id?: string; onNavigate: (path: string) => void };
+type Props = {
+    id?: string;
+    onNavigate: (path: string) => void;
+    onUnauthorized: () => void;
+};
 type Result = { key: string; data?: UserDetail | UserList; error?: string };
 
-export function AdminUsersPage({ id, onNavigate }: Props) {
+export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
     const [busca, setBusca] = useState("");
     const [perfil, setPerfil] = useState<UserQuery["perfil"]>();
     const [pagina, setPagina] = useState(1);
@@ -39,7 +43,7 @@ export function AdminUsersPage({ id, onNavigate }: Props) {
                         key,
                         error: "Entre com uma conta administrativa.",
                     });
-                    onNavigate("/admin/entrar");
+                    onUnauthorized();
                     return;
                 }
                 setResult({
@@ -54,7 +58,7 @@ export function AdminUsersPage({ id, onNavigate }: Props) {
             active = false;
             controller.abort();
         };
-    }, [id, busca, perfil, pagina, retry, key, onNavigate]);
+    }, [id, busca, perfil, pagina, retry, key, onUnauthorized]);
 
     const current = result?.key === key ? result : undefined;
     const list =

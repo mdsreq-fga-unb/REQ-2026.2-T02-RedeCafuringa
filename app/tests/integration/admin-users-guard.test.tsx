@@ -16,7 +16,7 @@ describe("HU04 — CA07/RN01/RN03/RNF08", () => {
         "#/admin/usuarios",
         "#/admin/usuarios/665f1c2e9b1d4a0012ab34c1",
     ]) {
-        it.each([null, "consumer", "producer"])(
+        it.each([null, "consumer", "producer", "admin"])(
             `bloqueia perfil %s em ${route} antes de consultar dados`,
             async (role) => {
                 localStorage.clear();
