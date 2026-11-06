@@ -70,7 +70,9 @@ export function AdminUsersPage({ id, onNavigate }: Props) {
         >
             <BackButton
                 label="Voltar"
-                onClick={() => onNavigate(id ? "/admin/usuarios" : "/conta")}
+                onClick={() =>
+                    onNavigate(id ? "/admin/usuarios" : "/admin/acesso")
+                }
             />
             <h1 id="admin-users-heading">Usuários Cadastrados</h1>
             {!id && (
@@ -225,6 +227,12 @@ function UserDetails({ user }: { user: UserDetail }) {
                         </div>
                     ))}
             </dl>
+            <button
+                type="button"
+                className="button button-danger admin-user-delete"
+            >
+                Excluir conta
+            </button>
         </>
     );
 }

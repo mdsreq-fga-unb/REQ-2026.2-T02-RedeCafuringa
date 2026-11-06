@@ -114,6 +114,10 @@ export function App() {
             "contato",
         );
         signIn(auth);
+        if (nextRole === "admin") {
+            navigate("/admin/acesso");
+            return;
+        }
 
         if (
             nextRole === "consumer" &&

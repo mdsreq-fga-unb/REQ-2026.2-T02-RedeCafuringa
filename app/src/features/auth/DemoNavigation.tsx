@@ -45,8 +45,9 @@ export function DemoNavigation({
         }
     };
     const enter = async (email: string) => {
-        onSignIn(await loginMock({ email, password: "senha123" }));
-        onNavigate("/conta");
+        const auth = await loginMock({ email, password: "senha123" });
+        onSignIn(auth);
+        onNavigate(auth.user.role === "admin" ? "/admin/acesso" : "/conta");
     };
     return (
         <aside className="demo-navigation" aria-label="Demonstração local">

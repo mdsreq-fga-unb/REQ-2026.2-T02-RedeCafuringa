@@ -15,6 +15,32 @@ export function AdminAccessPage({
     authenticated = false,
 }: NavigationProps & { authenticated?: boolean }) {
     const [selection, setSelection] = useState("login");
+    if (authenticated)
+        return (
+            <section className="signup-page admin-functions-page">
+                <BackButton
+                    label="Voltar"
+                    onClick={() => onNavigate("/conta")}
+                />
+                <h1>Funções do administrador</h1>
+                <p className="body-copy">
+                    Gerencie os usuários e os acessos da plataforma.
+                </p>
+                <nav aria-label="Funções administrativas">
+                    <a className="admin-users-entry" href="#/admin/usuarios">
+                        Consultar usuários cadastrados{" "}
+                        <span aria-hidden="true">→</span>
+                    </a>
+                    <a
+                        className="admin-users-entry"
+                        href="#/cadastro/administrador"
+                    >
+                        Cadastrar administrador{" "}
+                        <span aria-hidden="true">→</span>
+                    </a>
+                </nav>
+            </section>
+        );
     return (
         <section className="signup-page profile-selection-page admin-access-page">
             <BackButton
@@ -23,12 +49,6 @@ export function AdminAccessPage({
             />
             <h1>Entre em sua conta</h1>
             <p className="body-copy">Escolha o tipo de perfil para começar.</p>
-            {authenticated && (
-                <a className="admin-users-entry" href="#/admin/usuarios">
-                    Consultar usuários cadastrados{" "}
-                    <span aria-hidden="true">→</span>
-                </a>
-            )}
             <div className="profile-options" aria-label="Acesso administrativo">
                 {[
                     {

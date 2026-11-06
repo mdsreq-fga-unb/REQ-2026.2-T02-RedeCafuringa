@@ -214,9 +214,13 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
                 if (value) expectVisibleValue(value);
             }
             expect(screen.queryByLabelText(/senha/i)).toBeNull();
-            expect(
-                screen.queryByRole("button", { name: /excluir conta/i }),
-            ).toBeNull();
+            const callsBeforeClick = fetchMock.mock.calls.length;
+            await userEvent
+                .setup()
+                .click(screen.getByRole("button", { name: /excluir conta/i }));
+            expect(fetchMock).toHaveBeenCalledTimes(callsBeforeClick);
+            expect(window.location.hash).toBe(`#/admin/usuarios/${detail.id}`);
+            expectVisibleValue(detail.email);
         },
     );
 

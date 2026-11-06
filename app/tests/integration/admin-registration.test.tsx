@@ -27,9 +27,8 @@ afterEach(() => {
 async function openAdminRegistration(user: ReturnType<typeof userEvent.setup>) {
     render(<App />);
     await user.click(
-        await screen.findByRole("button", { name: "Cadastrar adm" }),
+        await screen.findByRole("link", { name: "Cadastrar administrador" }),
     );
-    await user.click(screen.getByRole("button", { name: "Continuar" }));
     expect(
         await screen.findByRole("heading", {
             name: "Cadastro de administrador",
