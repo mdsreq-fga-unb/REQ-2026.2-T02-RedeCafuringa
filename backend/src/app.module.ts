@@ -7,6 +7,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { randomUUID } from 'node:crypto';
 import pino from 'pino';
 import { envValidationSchema } from './config/env.validation.js';
+import { MailModule } from './common/mail/mail.module.js';
 import { resolveMongoUri } from './config/mongo-uri.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import {
@@ -132,6 +133,7 @@ import { UsersModule } from './modules/users/users.module.js';
       }),
     }),
 
+    MailModule,
     HealthModule,
     MetricsModule,
     UsersModule,
