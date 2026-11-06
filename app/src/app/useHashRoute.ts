@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const getInitialRoute = () => {
     const requested = window.location.hash.slice(1) || "/escolher-perfil";
@@ -20,7 +20,9 @@ const getInitialRoute = () => {
         "/conta-criada/producer",
         "/notificacoes",
         "/reservas",
-    ].includes(requested.split("?")[0]) || requested.startsWith("/oferta/")
+    ].includes(requested.split("?")[0]) ||
+        requested.startsWith("/oferta/") ||
+        /^\/admin\/usuarios(?:\/[^/?]+)?$/.test(requested.split("?")[0])
         ? requested
         : "/escolher-perfil";
 };
@@ -34,9 +36,9 @@ export function useHashRoute() {
         return () => window.removeEventListener("hashchange", syncRoute);
     }, []);
 
-    const navigate = (path: string) => {
+    const navigate = useCallback((path: string) => {
         window.location.hash = path;
-    };
+    }, []);
 
     return { route, navigate };
 }

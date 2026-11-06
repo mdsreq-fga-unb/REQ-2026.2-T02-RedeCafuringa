@@ -30,6 +30,7 @@ import { RegisterPage } from "@/features/register";
 import "../App.css";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { DemoNavigation } from "@/features/auth/DemoNavigation";
+import { AdminUsersPage } from "@/features/users/AdminUsersPage";
 
 export function App() {
     const { route, navigate } = useHashRoute();
@@ -42,13 +43,22 @@ export function App() {
     const query = new URLSearchParams(route.split("?")[1] || "");
     const fromContact = query.has("contato");
     const justRegistered = query.get("cadastro") === "ok";
-    // RN03/RNF08: só administrador autenticado cadastra outro (o backend também exige).
+    // RN03/RNF08: cadastro e consulta são exclusivos de administradores.
+    const usersRoute =
+        path === "/admin/usuarios" || path.startsWith("/admin/usuarios/");
     const adminOnly =
-        path === "/cadastro/administrador" || path === "/conta-criada/admin";
-    const adminBlocked = adminOnly && role !== "admin";
+        usersRoute ||
+        path === "/cadastro/administrador" ||
+        path === "/conta-criada/admin";
+    const adminBlocked =
+        adminOnly &&
+        (role !== "admin" ||
+            (usersRoute &&
+                !isMockAuthEnabled &&
+                !localStorage.getItem("cafuringa-token")));
     useEffect(() => {
         if (adminBlocked) navigate("/admin/entrar");
-    }, [adminBlocked]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [adminBlocked, navigate]);
     const needsProfileSelection =
         role === null &&
         ["/conta", "/notificacoes", "/reservas"].includes(path);
@@ -138,8 +148,18 @@ export function App() {
                 <DemoNavigation onNavigate={navigate} onSignIn={signIn} />
             )}
             <main className="main-content">
+                {usersRoute && !adminBlocked && (
+                    <AdminUsersPage
+                        key={path}
+                        id={path.split("/")[3]}
+                        onNavigate={navigate}
+                    />
+                )}
                 {path === "/admin/acesso" && (
-                    <AdminAccessPage onNavigate={navigate} />
+                    <AdminAccessPage
+                        onNavigate={navigate}
+                        authenticated={role === "admin"}
+                    />
                 )}
                 {path === "/admin/entrar" && (
                     <AdminLoginPage onNavigate={navigate} onSignIn={signIn} />

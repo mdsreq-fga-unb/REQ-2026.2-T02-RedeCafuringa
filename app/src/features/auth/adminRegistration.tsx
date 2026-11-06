@@ -10,7 +10,10 @@ import { InvalidCredentialsError } from "./errors";
 
 type NavigationProps = { onNavigate: (path: string) => void };
 
-export function AdminAccessPage({ onNavigate }: NavigationProps) {
+export function AdminAccessPage({
+    onNavigate,
+    authenticated = false,
+}: NavigationProps & { authenticated?: boolean }) {
     const [selection, setSelection] = useState("login");
     return (
         <section className="signup-page profile-selection-page admin-access-page">
@@ -20,6 +23,12 @@ export function AdminAccessPage({ onNavigate }: NavigationProps) {
             />
             <h1>Entre em sua conta</h1>
             <p className="body-copy">Escolha o tipo de perfil para começar.</p>
+            {authenticated && (
+                <a className="admin-users-entry" href="#/admin/usuarios">
+                    Consultar usuários cadastrados{" "}
+                    <span aria-hidden="true">→</span>
+                </a>
+            )}
             <div className="profile-options" aria-label="Acesso administrativo">
                 {[
                     {

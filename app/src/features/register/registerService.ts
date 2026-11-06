@@ -42,6 +42,16 @@ const mockService = createMockRegisterService({
             password: payload.password,
             name: payload.name,
             role: "producer",
+            producerDetails: {
+                nomeIniciativa: payload.name,
+                nomeResponsavel: payload.responsible,
+                cnpj: payload.cnpj,
+                localidade: payload.address,
+                categoriaOfertada:
+                    toCreateProducerBody(payload).categoriaOfertada,
+                formasPagamento: [...payload.paymentMethods],
+                telefone: payload.phone,
+            },
         });
     },
 });

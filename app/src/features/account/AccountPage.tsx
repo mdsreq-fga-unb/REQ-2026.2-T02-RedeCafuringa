@@ -265,6 +265,22 @@ export function AccountPage(props: AccountPageProps) {
                     </ActionButton>
                 </div>
             )}
+            {role === "admin" && (
+                <div className="account-profile-form">
+                    <ActionButton
+                        variant="orange"
+                        onClick={() => onNavigate("/admin/usuarios")}
+                    >
+                        Usuários cadastrados
+                    </ActionButton>
+                    <ActionButton
+                        variant="outline"
+                        onClick={() => onNavigate("/cadastro/administrador")}
+                    >
+                        Cadastrar administrador
+                    </ActionButton>
+                </div>
+            )}
             <button className="button button-danger" onClick={onSignOut}>
                 Sair da conta
             </button>

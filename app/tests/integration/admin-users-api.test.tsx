@@ -1,4 +1,10 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+    cleanup,
+    render,
+    screen,
+    waitFor,
+    within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
@@ -48,14 +54,20 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
         render(<App />);
         await waitForList();
         for (const item of userPage.itens) {
-            expect(await screen.findByText(item.nome)).toBeTruthy();
+            expect(
+                await screen.findByRole("heading", { name: item.nome }),
+            ).toBeTruthy();
         }
         for (const perfil of [
             /^consumidor(a)?$/i,
             /^produtor(a)?$/i,
             /^administrador(a)?$/i,
         ]) {
-            expect(screen.getByText(perfil)).toBeTruthy();
+            expect(
+                within(
+                    screen.getByRole("list", { name: "Usuários cadastrados" }),
+                ).getAllByText(perfil).length,
+            ).toBeGreaterThan(0);
         }
         const [url, init] = fetchMock.mock.calls[0];
         expect(new URL(String(url), window.location.origin).pathname).toMatch(
