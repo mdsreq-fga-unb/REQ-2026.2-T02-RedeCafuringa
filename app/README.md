@@ -13,11 +13,3 @@ Scripts do app (`npm run ...`): `dev`, `build`, `lint`, `format`, `format:check`
 Variáveis de ambiente: veja `.env.example` (tudo com prefixo `VITE_` é público).
 
 Documentação completa: [Frontend: operação](../docs/frontend/operacao.md), [Contrato da API](../docs/shared/contratos.md) e [Como contribuir](../docs/contribuindo.md).
-
-### Consulta administrativa de usuários (HU04)
-
-Após entrar como administrador, acesse **Consultar usuários cadastrados** no acesso administrativo ou **Usuários cadastrados** em sua conta. A rota `#/admin/usuarios` permite buscar por nome, e-mail ou iniciativa, filtrar por perfil e navegar pelas páginas. Cada cartão abre `#/admin/usuarios/:id` com os dados pessoais disponíveis para consulta, documentos mascarados e sem senha. Exclusão de conta pertence à HU05.
-
-Com `VITE_USE_MOCK_AUTH=false`, a consulta usa `GET /users` e `GET /users/:id` na base `VITE_API_URL`, enviando o token da sessão. Falhas de autorização retornam ao login administrativo; falhas de rede permitem tentar novamente.
-
-Com `VITE_USE_MOCK_AUTH=true`, permanece a demonstração sem API: entre com `admin@exemplo.com` / `senha123` ou use **Entrar como administrador de teste** no menu local. A consulta inclui as contas de teste e os cadastros mock existentes (consumidores e administradores em armazenamento local, produtores em memória, conforme o cadastro atual).
