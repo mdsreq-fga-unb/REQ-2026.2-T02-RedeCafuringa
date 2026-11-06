@@ -17,6 +17,7 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from './modules/auth/guards/roles.guard.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { MetricsModule } from './modules/metrics/metrics.module.js';
+import { ProducerProfileModule } from './modules/producer-profile/producer-profile.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 
 @Module({
@@ -136,6 +137,7 @@ import { UsersModule } from './modules/users/users.module.js';
     MetricsModule,
     UsersModule,
     AuthModule,
+    ProducerProfileModule,
   ],
   // A ordem importa: rate limit antes da autenticação (força bruta de token
   // também é limitada) e autenticação antes do papel.

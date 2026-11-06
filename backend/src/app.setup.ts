@@ -15,7 +15,7 @@ export const API_PREFIX = 'api/v1';
  * Versão do contrato OpenAPI (SemVer), publicada em `info.version` e em
  * shared/openapi.json. Regras de quando subir cada número: docs/shared/contratos.md.
  */
-export const OPENAPI_VERSION = '0.2.0';
+export const OPENAPI_VERSION = '0.3.0';
 
 const OPENAPI_DESCRIPTION = `API REST da plataforma **Rede Cafuringa**.
 
@@ -60,6 +60,10 @@ export function createOpenApiDocument(app: INestApplication): OpenAPIObject {
       .addTag('auth', 'Login e dados da sessão (RN05)')
       .addTag('users', 'Cadastro de usuários (RN02, RNF15)')
       .addTag('health', 'Saúde do serviço, para o Docker e monitores externos')
+      .addTag(
+        'producers',
+        'Perfil do produtor: trajetória e atividades (HU12, RN07)',
+      )
       .build(),
     {
       // IDs estáveis e legíveis (authLogin, usersCreateConsumer...), que viram os
