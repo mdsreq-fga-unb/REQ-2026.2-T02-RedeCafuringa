@@ -41,6 +41,8 @@ export function TrajectoryForm({
     const [errors, setErrors] = useState<TrajectoryErrors>({});
     const [busy, setBusy] = useState(false);
     const [preview, setPreview] = useState("");
+    // Trocar a chave recria o campo de arquivo, limpando a seleção.
+    const [photoInputKey, setPhotoInputKey] = useState(0);
     const id = useId();
     const form = useRef<HTMLFormElement>(null);
     const submitting = useRef(false);
@@ -241,8 +243,19 @@ export function TrajectoryForm({
                         <label className="field-label" htmlFor={`${id}-photo`}>
                             Adicionar foto (opcional)
                         </label>
+                        {draft.photoUrl && !draft.photo && (
+                            <img
+                                className="trajectory-photo-preview"
+                                src={draft.photoUrl}
+                                alt="Sua foto de perfil atual"
+                                decoding="async"
+                            />
+                        )}
                         <div className="trajectory-photo-picker">
                             <input
+                                // Recria o campo (limpa a seleção) ao remover
+                                // a foto ou quando a enviada passa a ser a atual.
+                                key={`${photoInputKey}:${draft.photoUrl}`}
                                 id={`${id}-photo`}
                                 data-trajectory-field="photo"
                                 type="file"
@@ -273,7 +286,7 @@ export function TrajectoryForm({
                                 {draft.photo.name}
                             </p>
                         )}
-                        {preview && (
+                        {draft.photo && preview && (
                             <img
                                 className="trajectory-photo-preview"
                                 src={preview}
@@ -284,10 +297,34 @@ export function TrajectoryForm({
                             className="trajectory-photo-help"
                             id={`${id}-photo-help`}
                         >
-                            A foto selecionada é uma prévia nesta sessão. O
-                            envio e a publicação da imagem ainda não estão
-                            disponíveis.
+                            PNG, JPEG ou WebP. Ao salvar, a foto é reduzida e
+                            enviada sem dados de localização, e aparece no
+                            perfil público.
                         </p>
+                        {(draft.photo || draft.photoUrl) && (
+                            <ActionButton
+                                variant="outline"
+                                type="button"
+                                onClick={() => {
+                                    setPreview("");
+                                    setPhotoInputKey((value) => value + 1);
+                                    onChange({
+                                        ...draft,
+                                        photo: null,
+                                        photoUrl: "",
+                                        removePhoto:
+                                            draft.removePhoto ||
+                                            Boolean(draft.photoUrl),
+                                    });
+                                    setErrors((current) => ({
+                                        ...current,
+                                        photo: undefined,
+                                    }));
+                                }}
+                            >
+                                Remover foto
+                            </ActionButton>
+                        )}
                         {errors.photo && (
                             <p
                                 className="field-error"

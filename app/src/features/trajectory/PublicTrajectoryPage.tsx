@@ -3,7 +3,7 @@ import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { ApiHttpError } from "@/shared/api";
 import { formatPhone } from "@/features/register/validators";
-import { getPublicTrajectory } from "./trajectoryService";
+import { getPublicTrajectory, photoSrc } from "./trajectoryService";
 import type { PublicTrajectory } from "./trajectoryService";
 import "./trajectory.css";
 
@@ -62,6 +62,14 @@ export function PublicTrajectoryPage({
             )}
             {data && (
                 <>
+                    {data.fotoUrl && (
+                        <img
+                            className="trajectory-public-photo"
+                            src={photoSrc(data.fotoUrl)}
+                            alt={`Foto de ${data.nomeIniciativa || "produtor"}`}
+                            decoding="async"
+                        />
+                    )}
                     <h1>{data.nomeIniciativa || "Perfil do produtor"}</h1>
                     {data.categoriaOfertada && (
                         <p className="eyebrow">{data.categoriaOfertada}</p>

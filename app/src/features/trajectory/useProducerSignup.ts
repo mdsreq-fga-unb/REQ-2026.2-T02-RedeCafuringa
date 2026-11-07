@@ -6,7 +6,12 @@ import type { RegisterFormValues } from "@/features/register/registerForm";
 import { registerProducer } from "@/features/register/registerService";
 import { emptyTrajectory, trajectoryBody } from "./trajectoryModel";
 import type { TrajectoryDraft } from "./trajectoryModel";
-import { saveTrajectory, trajectoryError } from "./trajectoryService";
+import {
+    photoError,
+    saveTrajectory,
+    syncPhoto,
+    trajectoryError,
+} from "./trajectoryService";
 import { ApiHttpError } from "@/shared/api";
 
 export function useProducerSignup(onSuccess: (auth: AuthResult) => void) {
@@ -49,7 +54,7 @@ export function useProducerSignup(onSuccess: (auth: AuthResult) => void) {
         const currentGeneration = generation.current;
         const isCurrent = () =>
             active.current && generation.current === currentGeneration;
-        let phase: "register" | "login" | "trajectory" = "register";
+        let phase: "register" | "login" | "trajectory" | "photo" = "register";
         try {
             if (!created) {
                 const result = await registerProducer(
@@ -90,6 +95,11 @@ export function useProducerSignup(onSuccess: (auth: AuthResult) => void) {
             }
             phase = "trajectory";
             await saveTrajectory(trajectoryBody(draft), auth.current.token);
+            if (!isCurrent()) return;
+            // A foto vai depois da trajetória; se falhar, repetir reenvia os
+            // textos (idempotente) e a foto, sem recriar a conta (CA07).
+            phase = "photo";
+            await syncPhoto(draft, auth.current.token);
             if (isCurrent()) {
                 const result = auth.current;
                 // O App limpa o rascunho ao sair da rota. Limpá-lo aqui,
@@ -103,11 +113,13 @@ export function useProducerSignup(onSuccess: (auth: AuthResult) => void) {
                 setError(
                     phase === "login"
                         ? "Sua conta foi criada, mas não foi possível entrar para registrar a trajetória. Verifique a conexão e tente novamente."
-                        : cause instanceof Error &&
-                            !("status" in cause) &&
-                            cause.name === "Error"
-                          ? cause.message
-                          : trajectoryError(cause),
+                        : phase === "photo"
+                          ? `Sua conta foi criada e a trajetória foi salva, mas ${photoError(cause)}`
+                          : cause instanceof Error &&
+                              !("status" in cause) &&
+                              cause.name === "Error"
+                            ? cause.message
+                            : trajectoryError(cause),
                 );
             }
         } finally {

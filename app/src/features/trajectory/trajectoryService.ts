@@ -1,7 +1,9 @@
-import { ApiHttpError, getApiClient } from "@/shared/api";
+import { ApiHttpError, apiResourceUrl, getApiClient } from "@/shared/api";
 import type { components } from "@/shared/api/schema";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { readMockUserDetails } from "@/features/auth/mockAuth";
+import { prepareProfilePhoto } from "./photoResize";
+import type { TrajectoryDraft } from "./trajectoryModel";
 
 export type OwnTrajectory = components["schemas"]["OwnTrajectoryResponse"];
 export type PublicTrajectory =
@@ -62,6 +64,7 @@ export async function saveTrajectory(
                 telefone && (body.telefonePublico ?? previous?.telefonePublico),
             ),
             atualizadoEm: new Date().toISOString(),
+            ...(previous?.fotoUrl ? { fotoUrl: previous.fotoUrl } : {}),
         };
         demoTrajectories.set(headers.Authorization, result);
         return result;
@@ -88,12 +91,100 @@ export async function getPublicTrajectory(
             trajetoria: saved.trajetoria,
             atividades: saved.atividades,
             ...(saved.telefonePublico ? { telefone: saved.telefone } : {}),
+            ...(saved.fotoUrl ? { fotoUrl: saved.fotoUrl } : {}),
         };
     }
     return getApiClient().get<PublicTrajectory>(
         `/producers/${encodeURIComponent(id)}/trajectory`,
         { auth: false, signal },
     );
+}
+
+export type PhotoResponse = components["schemas"]["PhotoResponse"];
+
+/** `src` da foto a partir do `fotoUrl` da API; vazio quando não há foto. */
+export function photoSrc(fotoUrl: string | undefined): string {
+    if (!fotoUrl) return "";
+    // Demonstração: a foto fica só no navegador, como blob.
+    if (isMockAuthEnabled && fotoUrl.startsWith("blob:")) return fotoUrl;
+    return apiResourceUrl(fotoUrl);
+}
+
+/** HU12/RF12: envia a foto de perfil (multipart, campo `foto`). */
+export async function uploadPhoto(
+    photo: Blob,
+    token?: string,
+): Promise<PhotoResponse> {
+    const headers = authHeaders(token);
+    if (isMockAuthEnabled) {
+        const fotoUrl = URL.createObjectURL(photo);
+        const previous = demoTrajectories.get(headers.Authorization);
+        demoTrajectories.set(headers.Authorization, {
+            telefonePublico: false,
+            ...previous,
+            fotoUrl,
+        });
+        return { fotoUrl };
+    }
+    const body = new FormData();
+    if (photo instanceof File) body.append("foto", photo);
+    else body.append("foto", photo, "foto.jpg");
+    return getApiClient().put<PhotoResponse>("/producers/me/photo", body, {
+        headers,
+        // Upload em conexão rural pode levar mais que o padrão de 10 s.
+        timeoutMs: 60_000,
+    });
+}
+
+/** HU12/RF12: remove a foto de perfil. */
+export async function deletePhoto(token?: string): Promise<void> {
+    const headers = authHeaders(token);
+    if (isMockAuthEnabled) {
+        const previous = demoTrajectories.get(headers.Authorization);
+        if (previous)
+            demoTrajectories.set(headers.Authorization, {
+                ...previous,
+                fotoUrl: undefined,
+            });
+        return;
+    }
+    await getApiClient().delete<void>("/producers/me/photo", { headers });
+}
+
+/**
+ * Aplica a mudança de foto do rascunho: envia a nova (reduzida no aparelho)
+ * ou remove a atual. Devolve o novo `src` ("" se removida) ou undefined se a
+ * foto não mudou.
+ */
+export async function syncPhoto(
+    draft: Pick<TrajectoryDraft, "photo" | "removePhoto">,
+    token?: string,
+): Promise<string | undefined> {
+    if (draft.photo) {
+        const prepared = await prepareProfilePhoto(draft.photo);
+        const { fotoUrl } = await uploadPhoto(prepared, token);
+        return photoSrc(fotoUrl);
+    }
+    if (draft.removePhoto) {
+        await deletePhoto(token);
+        return "";
+    }
+    return undefined;
+}
+
+/** Motivo de uma falha no envio ou na remoção da foto, para o titular. */
+export function photoError(error: unknown, removing = false): string {
+    if (removing)
+        return "a foto não foi removida. Verifique a conexão e tente novamente.";
+    if (error instanceof ApiHttpError) {
+        if (error.status === 413)
+            return "a foto não foi enviada: o arquivo é grande demais (máximo 5 MB). Escolha outra foto.";
+        if (error.status === 415 || error.status === 400)
+            return `a foto não foi enviada: ${error.message}`;
+        if (error.status === 401)
+            return "a foto não foi enviada porque sua sessão expirou. Entre novamente e tente outra vez.";
+    }
+    return "a foto não foi enviada. Verifique a conexão e tente novamente.";
 }
 
 export function trajectoryError(error: unknown, loading = false): string {

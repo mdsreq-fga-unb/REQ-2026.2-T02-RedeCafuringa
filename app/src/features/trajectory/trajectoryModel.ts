@@ -5,7 +5,12 @@ export type TrajectoryDraft = {
     activities: string;
     phone: string;
     phonePublic: boolean;
+    /** Nova foto escolhida, ainda não enviada. */
     photo: File | null;
+    /** `src` da foto já salva ("" se não houver). */
+    photoUrl: string;
+    /** Pedido de remoção da foto salva, aplicado ao salvar. */
+    removePhoto: boolean;
 };
 export const emptyTrajectory: TrajectoryDraft = {
     story: "",
@@ -13,6 +18,8 @@ export const emptyTrajectory: TrajectoryDraft = {
     phone: "",
     phonePublic: false,
     photo: null,
+    photoUrl: "",
+    removePhoto: false,
 };
 export type TrajectoryErrors = Partial<Record<keyof TrajectoryDraft, string>>;
 export const TEXT_LIMIT = 2000;

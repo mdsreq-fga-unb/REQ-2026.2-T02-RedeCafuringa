@@ -3,7 +3,10 @@ import { emptyTrajectory, trajectoryBody } from "./trajectoryModel";
 import type { TrajectoryDraft } from "./trajectoryModel";
 import {
     getOwnTrajectory,
+    photoError,
+    photoSrc,
     saveTrajectory,
+    syncPhoto,
     trajectoryError,
 } from "./trajectoryService";
 import { TrajectoryForm } from "./TrajectoryForm";
@@ -39,6 +42,7 @@ export function TrajectoryPage({
                     activities: data.atividades ?? "",
                     phone: data.telefone ?? "",
                     phonePublic: data.telefonePublico,
+                    photoUrl: photoSrc(data.fotoUrl),
                 });
             })
             .catch((cause: unknown) => {
@@ -57,9 +61,28 @@ export function TrajectoryPage({
         setSaved(false);
         try {
             await saveTrajectory(trajectoryBody(draft));
-            if (active.current) setSaved(true);
         } catch (cause) {
             if (active.current) setError(trajectoryError(cause));
+            return;
+        }
+        // A foto vai depois dos textos: se falhar, a trajetória já está salva
+        // e a seleção continua no formulário para tentar de novo (CA07).
+        try {
+            const photoUrl = await syncPhoto(draft);
+            if (!active.current) return;
+            if (photoUrl !== undefined)
+                setDraft((current) => ({
+                    ...current,
+                    photo: null,
+                    removePhoto: false,
+                    photoUrl,
+                }));
+            setSaved(true);
+        } catch (cause) {
+            if (active.current)
+                setError(
+                    `A trajetória foi salva, mas ${photoError(cause, !draft.photo)}`,
+                );
         }
     };
     return (
