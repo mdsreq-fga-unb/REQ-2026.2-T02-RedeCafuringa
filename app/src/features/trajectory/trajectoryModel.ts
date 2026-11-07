@@ -30,10 +30,7 @@ export function normalizeTrajectoryText(value: string) {
         .trim();
 }
 
-export function validateTrajectory(
-    draft: TrajectoryDraft,
-    requirePhoto: boolean,
-): TrajectoryErrors {
+export function validateTrajectory(draft: TrajectoryDraft): TrajectoryErrors {
     const errors: TrajectoryErrors = {};
     for (const [key, label] of [
         ["story", "Trajetória"],
@@ -51,8 +48,6 @@ export function validateTrajectory(
     )
         errors.phone =
             "Telefone inválido. Informe o DDD e o número (10 ou 11 dígitos).";
-    if (requirePhoto && !draft.photo)
-        errors.photo = "Selecione uma foto para continuar.";
     if (
         draft.photo &&
         !["image/png", "image/jpeg", "image/webp"].includes(draft.photo.type)

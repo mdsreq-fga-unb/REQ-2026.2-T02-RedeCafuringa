@@ -68,7 +68,7 @@ export function TrajectoryForm({
     const submit = async (event: FormEvent) => {
         event.preventDefault();
         if (submitting.current || loading || loadFailed) return;
-        const nextErrors = validateTrajectory(draft, signup);
+        const nextErrors = validateTrajectory(draft);
         setErrors(nextErrors);
         if (Object.keys(nextErrors).length) {
             const key = Object.keys(nextErrors)[0];
@@ -239,15 +239,13 @@ export function TrajectoryForm({
                     </div>
                     <div className="trajectory-field">
                         <label className="field-label" htmlFor={`${id}-photo`}>
-                            Adicionar foto{" "}
-                            {signup && <span aria-hidden="true">*</span>}
+                            Adicionar foto (opcional)
                         </label>
                         <div className="trajectory-photo-picker">
                             <input
                                 id={`${id}-photo`}
                                 data-trajectory-field="photo"
                                 type="file"
-                                required={signup}
                                 accept="image/png,image/jpeg,image/webp"
                                 onChange={(event) =>
                                     change(

@@ -21,7 +21,7 @@ As rotas de interface propostas pelos testes são `#/cadastro/trajetoria` (segun
 
 ## Diferenças entre o protótipo e a API
 
-- A foto aparece como obrigatória no protótipo, mas **nenhum endpoint ou campo de foto existe no contrato HU12**. Os testes cobrem seleção local com rótulo acessível e bloqueio da conclusão sem foto, sem inventar upload, formato de armazenamento, tamanho máximo ou payload de foto. A persistência da foto depende de um contrato de mídia; esta suíte não comprova upload ou persistência da imagem.
+- A foto passou a ser **opcional**, conforme orientação posterior do usuário. Os testes verificam a conclusão do cadastro sem imagem e a seleção local com rótulo acessível. Nenhum endpoint ou campo de foto existe no contrato HU12; a persistência depende de um contrato de mídia, sem upload simulado como se estivesse publicado.
 - `atividades` é opcional na API; na interface desta tela é obrigatório, seguindo o asterisco do protótipo. Trajetória e atividades têm limite de 2000 caracteres pelo contrato.
 - O PUT exige um produtor autenticado. O cenário de cadastro prevê criar a conta e autenticar antes de salvar a trajetória. Se o PUT falhar após a criação, a tentativa seguinte deve reutilizar a conta criada e reenviar o PUT, sem repetir o POST de cadastro.
 - A opção de consentimento do contato complementa o protótipo conforme `telefonePublico` e RN07. O telefone é privado por padrão.

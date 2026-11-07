@@ -151,28 +151,22 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
         expect(callsTo(api, "/api/v1/auth/login", "POST")).toHaveLength(2);
     });
-    it("CA03/protótipo: exige selecionar uma foto antes de concluir o cadastro", async () => {
+    it("permite concluir o cadastro sem selecionar uma foto", async () => {
         const api = mockTrajectoryApi();
         const user = await continueSignup();
         fillTrajectory();
         expect(screen.getByLabelText(/^Adicionar foto/i)).toHaveProperty(
             "required",
-            true,
+            false,
         );
-        const form = screen
-            .getByLabelText(/^Minha Trajetória/i)
-            .closest("form");
-        expect(form).not.toBeNull();
-        fireEvent.submit(form!);
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
         expect(
-            screen
-                .getAllByRole("alert")
-                .map((item) => item.textContent)
-                .join(" "),
-        ).toMatch(/foto/i);
-        expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(0);
-        expect(callsTo(api, ownPath, "PUT")).toHaveLength(0);
-        await selectPhoto(user);
+            await screen.findByRole("heading", {
+                name: "Você já faz parte da rede",
+            }),
+        ).toBeTruthy();
+        expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
+        expect(callsTo(api, ownPath, "PUT")).toHaveLength(1);
     });
     it("Continuar abre Conte sua história sem concluir o cadastro nem criar a conta antecipadamente", async () => {
         const api = mockTrajectoryApi();

@@ -35,34 +35,30 @@ describe("HU12 — normalização, contato e privacidade", () => {
         });
     });
     it("telefone não informado é opcional, sem impedir a edição de um perfil já existente", () => {
-        expect(validateTrajectory(draft, false)).toEqual({});
+        expect(validateTrajectory(draft)).toEqual({});
     });
-    it("foto é obrigatória na etapa de criação e opcional na edição", () => {
-        expect(validateTrajectory(draft, true).photo).toMatch(/foto/i);
-        expect(validateTrajectory(draft, false).photo).toBeUndefined();
+    it("permite continuar sem selecionar foto", () => {
+        expect(validateTrajectory(draft).photo).toBeUndefined();
     });
     it.each(["image/png", "image/jpeg", "image/webp"])(
         "aceita prévia de foto %s",
         (type) => {
             expect(
-                validateTrajectory(
-                    { ...draft, photo: new File(["image"], "foto", { type }) },
-                    true,
-                ),
+                validateTrajectory({
+                    ...draft,
+                    photo: new File(["image"], "foto", { type }),
+                }),
             ).toEqual({});
         },
     );
     it("recusa arquivos executáveis ou HTML usados como foto", () => {
         expect(
-            validateTrajectory(
-                {
-                    ...draft,
-                    photo: new File(["<script>"], "foto.html", {
-                        type: "text/html",
-                    }),
-                },
-                true,
-            ).photo,
+            validateTrajectory({
+                ...draft,
+                photo: new File(["<script>"], "foto.html", {
+                    type: "text/html",
+                }),
+            }).photo,
         ).toMatch(/PNG, JPEG ou WebP/);
     });
     it("não envia foto ou credenciais no corpo PUT da trajetória", () => {
