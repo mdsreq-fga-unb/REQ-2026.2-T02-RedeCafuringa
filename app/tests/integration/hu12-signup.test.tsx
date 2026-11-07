@@ -244,6 +244,39 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         ).toBeTruthy();
     });
 
+    it("permite soltar uma imagem na caixa e enviá-la ao concluir o cadastro", async () => {
+        const api = mockTrajectoryApi();
+        const user = await continueSignup();
+        fillTrajectory();
+        const input = screen.getByLabelText(/^Adicionar foto/i);
+        const picker = input.parentElement!;
+        const invalid = new File(["texto"], "arquivo.txt", {
+            type: "text/plain",
+        });
+        fireEvent.drop(picker, { dataTransfer: { files: [invalid] } });
+        expect(await screen.findByRole("alert")).toHaveProperty(
+            "textContent",
+            "Escolha uma foto PNG, JPEG ou WebP.",
+        );
+        const file = new File(["imagem"], "foto.png", { type: "image/png" });
+        fireEvent.dragOver(picker, { dataTransfer: { dropEffect: "none" } });
+        expect(picker.classList.contains("is-dragging")).toBe(true);
+        fireEvent.drop(picker, { dataTransfer: { files: [file] } });
+        expect(picker.classList.contains("is-dragging")).toBe(false);
+        await screen.findByRole("img", { name: "Prévia da foto selecionada" });
+        expect(screen.queryByRole("alert")).toBeNull();
+        expect(callsTo(api, photoPath, "PUT")).toHaveLength(0);
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+        await waitFor(() =>
+            expect(callsTo(api, photoPath, "PUT")).toHaveLength(1),
+        );
+        expect(
+            (callsTo(api, photoPath, "PUT")[0][1]?.body as FormData).get(
+                "foto",
+            ),
+        ).toBe(file);
+    });
+
     it("RF12: a foto escolhida no cadastro é enviada com o token do novo titular, depois da trajetória", async () => {
         const api = mockTrajectoryApi();
         const user = await continueSignup();

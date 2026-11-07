@@ -41,6 +41,7 @@ export function TrajectoryForm({
     const [errors, setErrors] = useState<TrajectoryErrors>({});
     const [busy, setBusy] = useState(false);
     const [preview, setPreview] = useState("");
+    const [draggingPhoto, setDraggingPhoto] = useState(false);
     // Trocar a chave recria o campo de arquivo, limpando a seleção.
     const [photoInputKey, setPhotoInputKey] = useState(0);
     const id = useId();
@@ -251,7 +252,44 @@ export function TrajectoryForm({
                                 decoding="async"
                             />
                         )}
-                        <div className="trajectory-photo-picker">
+                        <div
+                            className={`trajectory-photo-picker${draggingPhoto ? " is-dragging" : ""}`}
+                            onDragOver={(event) => {
+                                event.preventDefault();
+                                if (loading || busy || loadFailed) return;
+                                event.dataTransfer.dropEffect = "copy";
+                                setDraggingPhoto(true);
+                            }}
+                            onDragLeave={(event) => {
+                                if (
+                                    !event.currentTarget.contains(
+                                        event.relatedTarget as Node | null,
+                                    )
+                                ) {
+                                    setDraggingPhoto(false);
+                                }
+                            }}
+                            onDrop={(event) => {
+                                event.preventDefault();
+                                setDraggingPhoto(false);
+                                if (loading || busy || loadFailed) return;
+                                const file = event.dataTransfer.files[0];
+                                if (!file) return;
+                                const photoError = validateTrajectory({
+                                    ...draft,
+                                    photo: file,
+                                }).photo;
+                                if (photoError) {
+                                    setErrors((current) => ({
+                                        ...current,
+                                        photo: photoError,
+                                    }));
+                                    return;
+                                }
+                                setPhotoInputKey((current) => current + 1);
+                                change("photo", file);
+                            }}
+                        >
                             <input
                                 // Recria o campo (limpa a seleção) ao remover
                                 // a foto ou quando a enviada passa a ser a atual.
@@ -279,6 +317,14 @@ export function TrajectoryForm({
                                 aria-hidden="true"
                             >
                                 +
+                            </span>
+                            <span
+                                className="trajectory-photo-prompt"
+                                aria-hidden="true"
+                            >
+                                {draggingPhoto
+                                    ? "Solte a imagem aqui"
+                                    : "Arraste uma imagem aqui ou clique para selecionar"}
                             </span>
                         </div>
                         {draft.photo && (

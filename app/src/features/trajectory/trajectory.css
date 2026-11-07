@@ -61,8 +61,25 @@
 }
 .trajectory-photo-picker {
     position: relative;
-    width: 64px;
-    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 100px;
+    padding: 16px;
+    border: 2px dashed var(--muted);
+    border-radius: 12px;
+    transition:
+        background-color 150ms,
+        border-color 150ms;
+}
+.trajectory-photo-picker.is-dragging {
+    border-color: var(--orange-text);
+    background: #fff0a8;
+}
+.trajectory-photo-prompt {
+    color: var(--ink);
+    font-size: 14px;
+    pointer-events: none;
 }
 .trajectory-photo-picker input {
     position: absolute;
@@ -73,6 +90,7 @@
     cursor: pointer;
 }
 .trajectory-photo-add {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
