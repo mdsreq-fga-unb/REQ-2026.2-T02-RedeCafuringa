@@ -937,6 +937,181 @@
         ]
       }
     },
+    "/api/v1/users": {
+      "get": {
+        "description": "HU04: lista consumidores, produtores e administradores em ordem alfabética, com filtro por perfil, busca por nome, e-mail ou iniciativa e paginação (até 50 por página). Nenhum item traz senha nem documentos (RNF11).",
+        "operationId": "usersList",
+        "parameters": [
+          {
+            "name": "perfil",
+            "required": false,
+            "in": "query",
+            "description": "Restringe a consulta a um perfil (CA02, CA03, CA04)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CONSUMIDOR",
+                "PRODUTOR",
+                "ADMINISTRADOR"
+              ]
+            }
+          },
+          {
+            "name": "busca",
+            "required": false,
+            "in": "query",
+            "description": "Trecho do nome, e-mail ou nome da iniciativa",
+            "schema": {
+              "example": "Maria",
+              "type": "string"
+            }
+          },
+          {
+            "name": "pagina",
+            "required": false,
+            "in": "query",
+            "description": "Página desejada, a partir de 1",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Quantidade de usuários por página",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "example": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de usuários; lista vazia quando não há registros",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Filtro ou paginação inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Consultar usuários cadastrados",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "description": "HU04: dados de uma conta para o administrador, com CPF e CNPJ mascarados e sem senha (CA06, RNF11).",
+        "operationId": "usersFindOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Detalhar usuário cadastrado",
+        "tags": [
+          "users"
+        ]
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "description": "Troca e-mail e senha (RN05) por um JWT, válido por `expiresIn` segundos. Rota pública com limite estrito de tentativas por IP.",
@@ -1061,7 +1236,7 @@
   "info": {
     "title": "Rede Cafuringa API",
     "description": "API REST da plataforma **Rede Cafuringa**.\n\n**Autenticação.** `POST /auth/login` troca CPF e senha por um JWT. Envie-o em `Authorization: Bearer <token>`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).\n\n**Rastreabilidade.** Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`). A API devolve o mesmo id no cabeçalho da resposta e nos logs; sem o cabeçalho, ou com valor inválido, gera um UUID.\n\n**Erros.** Todo erro tem o corpo `ErrorResponse` (`statusCode`, `message`, `error`). Nas falhas de validação (400), `message` é uma lista.\n\n**Limites.** Rotas de login e cadastro têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com `Retry-After` (segundos).\n\n**Dados pessoais.** Respostas nunca trazem hash de senha nem o CPF completo (vem mascarado).\n\n**Versão do contrato.** SemVer, em `info.version`. Veja docs/shared/contratos.md.",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -1423,6 +1598,164 @@
         },
         "required": [
           "id",
+          "email",
+          "perfil"
+        ]
+      },
+      "UserSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Nome completo (no produtor, o responsável)"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail da conta"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR",
+              "ADMINISTRADOR"
+            ],
+            "description": "Perfil de acesso (RN01, CA05)"
+          },
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Sítio Boa Vista",
+            "description": "Nome da iniciativa; só em produtores"
+          }
+        },
+        "required": [
+          "id",
+          "nome",
+          "email",
+          "perfil"
+        ]
+      },
+      "UserListResponse": {
+        "type": "object",
+        "properties": {
+          "itens": {
+            "description": "Usuários da página, em ordem alfabética; vazio quando não há registros (CA08)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserSummaryResponse"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 42,
+            "description": "Total de usuários que atendem aos filtros"
+          },
+          "pagina": {
+            "type": "number",
+            "example": 1,
+            "description": "Página devolvida"
+          },
+          "limite": {
+            "type": "number",
+            "example": 20,
+            "description": "Tamanho da página"
+          }
+        },
+        "required": [
+          "itens",
+          "total",
+          "pagina",
+          "limite"
+        ]
+      },
+      "UserDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Nome completo (no produtor, o responsável)"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail da conta"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR",
+              "ADMINISTRADOR"
+            ],
+            "description": "Perfil de acesso (RN01, CA05)"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "DDD + número; ausente se não informado"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "***.982.247-**",
+            "description": "CPF mascarado; ausente em contas administrativas"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "**.222.333/0001-**",
+            "description": "CNPJ mascarado; só em produtores que o informaram"
+          },
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Sítio Boa Vista",
+            "description": "Nome da iniciativa; só em produtores"
+          },
+          "nomeResponsavel": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Responsável pela iniciativa; só em produtores"
+          },
+          "localidade": {
+            "type": "string",
+            "example": "Cafuringa, Brasília/DF",
+            "description": "Localidade; só em produtores"
+          },
+          "categoriaOfertada": {
+            "type": "string",
+            "enum": [
+              "Produtos",
+              "Experiências",
+              "Produtos e Experiências"
+            ],
+            "description": "Categoria ofertada; só em produtores"
+          },
+          "formasPagamento": {
+            "example": [
+              "PIX",
+              "Dinheiro"
+            ],
+            "description": "Formas de pagamento aceitas; só em produtores",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "nome",
           "email",
           "perfil"
         ]

@@ -2,14 +2,20 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
 import { PasswordHasher } from '../../common/crypto/password-hasher.js';
 import { PiiCipher } from '../../common/crypto/pii-cipher.js';
-import { maskCpf } from '../../common/validators/documento.js';
+import { maskCnpj, maskCpf } from '../../common/validators/documento.js';
 import { isAdult } from './domain/age.js';
 import { Role } from './domain/role.js';
+import { buildUserFilter } from './domain/user-filter.js';
+import { DEFAULT_PAGE_SIZE, ListUsersQuery } from './dto/list-users.query.js';
+import { UserDetailResponse } from './dto/user-detail.response.js';
+import { UserListResponse } from './dto/user-list.response.js';
+import { UserSummaryResponse } from './dto/user-summary.response.js';
 import { AdminResponse } from './dto/admin.response.js';
 import { CreateAdminDto } from './dto/create-admin.dto.js';
 import { CreateConsumerDto } from './dto/create-consumer.dto.js';
@@ -19,6 +25,9 @@ import { ProducerResponse } from './dto/producer.response.js';
 import { User, UserDocument } from './schemas/user.schema.js';
 
 const DUPLICATE_KEY = 11000;
+/** CA06/RNF11: a consulta administrativa nem carrega senha e hashes do banco. */
+const DETAIL_EXCLUDED_FIELDS = '-senhaHash -cpfHash -cnpjHash';
+const SUMMARY_EXCLUDED_FIELDS = `${DETAIL_EXCLUDED_FIELDS} -cpfCifrado -cnpjCifrado`;
 /** Conta administrativa só tem e-mail e senha (HU03); o nome é fixo. */
 const ADMIN_DISPLAY_NAME = 'Administrador';
 
@@ -160,6 +169,75 @@ export class UsersService {
   async findById(id: string): Promise<UserDocument | null> {
     if (!isValidObjectId(id)) return null;
     return this.users.findById(id).exec();
+  }
+
+  /** HU04: consulta paginada de todos os perfis, só para administradores. */
+  async list(query: ListUsersQuery): Promise<UserListResponse> {
+    const pagina = query.pagina ?? 1;
+    const limite = query.limite ?? DEFAULT_PAGE_SIZE;
+    const filter = buildUserFilter(query);
+
+    const [users, total] = await Promise.all([
+      this.users
+        .find(filter)
+        .select(SUMMARY_EXCLUDED_FIELDS)
+        .sort({ nome: 1, _id: 1 })
+        .collation({ locale: 'pt', strength: 1 })
+        .skip((pagina - 1) * limite)
+        .limit(limite)
+        .exec(),
+      this.users.countDocuments(filter).exec(),
+    ]);
+
+    return {
+      itens: users.map((user) => this.toSummary(user)),
+      total,
+      pagina,
+      limite,
+    };
+  }
+
+  /** HU04: detalhe de qualquer conta para o administrador. */
+  async findDetail(id: string): Promise<UserDetailResponse> {
+    const user = isValidObjectId(id)
+      ? await this.users.findById(id).select(DETAIL_EXCLUDED_FIELDS).exec()
+      : null;
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+    return this.toDetail(user);
+  }
+
+  toSummary(user: UserDocument): UserSummaryResponse {
+    return {
+      id: user.id as string,
+      nome: user.nome,
+      email: user.email,
+      perfil: user.perfil,
+      ...(user.nomeIniciativa ? { nomeIniciativa: user.nomeIniciativa } : {}),
+    };
+  }
+
+  toDetail(user: UserDocument): UserDetailResponse {
+    const optional = {
+      telefone: user.telefone,
+      cpf: user.cpfCifrado && maskCpf(this.cipher.decrypt(user.cpfCifrado)),
+      cnpj: user.cnpjCifrado && maskCnpj(this.cipher.decrypt(user.cnpjCifrado)),
+      nomeIniciativa: user.nomeIniciativa,
+      nomeResponsavel: user.nomeResponsavel,
+      localidade: user.localidade,
+      categoriaOfertada: user.categoriaOfertada,
+      formasPagamento: user.formasPagamento,
+    };
+
+    return {
+      id: user.id as string,
+      nome: user.nome,
+      email: user.email,
+      perfil: user.perfil,
+      // Campos que não se aplicam ao perfil ficam fora da resposta.
+      ...Object.fromEntries(
+        Object.entries(optional).filter(([, value]) => value !== undefined),
+      ),
+    };
   }
 
   toResponseProducer(user: UserDocument): ProducerResponse {

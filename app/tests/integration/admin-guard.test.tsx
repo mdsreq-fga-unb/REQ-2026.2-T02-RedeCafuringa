@@ -50,8 +50,22 @@ describe("área administrativa — RN03/RNF08/CA06", () => {
         await waitFor(() =>
             expect(window.location.hash).toBe("#/admin/acesso"),
         );
-
-        window.location.hash = "#/cadastro/administrador";
+        expect(
+            await screen.findByRole("heading", {
+                name: "Funções do administrador",
+            }),
+        ).toBeTruthy();
+        expect(
+            screen.getByRole("link", {
+                name: /consultar usuários cadastrados/i,
+            }),
+        ).toBeTruthy();
+        expect(
+            screen.queryByRole("button", { name: "Entrar como adm" }),
+        ).toBeNull();
+        await user.click(
+            screen.getByRole("link", { name: /cadastrar administrador/i }),
+        );
         expect(
             await screen.findByRole("heading", {
                 name: "Cadastro de administrador",
@@ -69,5 +83,26 @@ describe("área administrativa — RN03/RNF08/CA06", () => {
                 name: "Usuário admin cadastrado com sucesso!",
             }),
         ).toBeTruthy();
+    });
+
+    it("atalho de administrador de teste também abre diretamente as funções", async () => {
+        const user = userEvent.setup();
+        window.location.hash = "#/escolher-perfil";
+        render(<App />);
+        await user.click(screen.getByText("Modo local · Explorar telas"));
+        await user.click(
+            screen.getByRole("button", {
+                name: "Entrar como administrador de teste",
+            }),
+        );
+        expect(
+            await screen.findByRole("heading", {
+                name: "Funções do administrador",
+            }),
+        ).toBeTruthy();
+        expect(window.location.hash).toBe("#/admin/acesso");
+        expect(
+            screen.queryByRole("button", { name: "Entrar como adm" }),
+        ).toBeNull();
     });
 });

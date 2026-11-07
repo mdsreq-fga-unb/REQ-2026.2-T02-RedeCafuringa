@@ -7,11 +7,41 @@ import type { AuthResult } from "../../shared/types";
 import { isMockAuthEnabled } from "./authMode";
 import { login } from "./authService";
 import { InvalidCredentialsError } from "./errors";
+import { ApiHttpError, ApiNetworkError, ApiTimeoutError } from "@/shared/api";
 
 type NavigationProps = { onNavigate: (path: string) => void };
 
-export function AdminAccessPage({ onNavigate }: NavigationProps) {
+export function AdminAccessPage({
+    onNavigate,
+    authenticated = false,
+}: NavigationProps & { authenticated?: boolean }) {
     const [selection, setSelection] = useState("login");
+    if (authenticated)
+        return (
+            <section className="signup-page admin-functions-page">
+                <BackButton
+                    label="Voltar"
+                    onClick={() => onNavigate("/conta")}
+                />
+                <h1>Funções do administrador</h1>
+                <p className="body-copy">
+                    Gerencie os usuários e os acessos da plataforma.
+                </p>
+                <nav aria-label="Funções administrativas">
+                    <a className="admin-users-entry" href="#/admin/usuarios">
+                        Consultar usuários cadastrados{" "}
+                        <span aria-hidden="true">→</span>
+                    </a>
+                    <a
+                        className="admin-users-entry"
+                        href="#/cadastro/administrador"
+                    >
+                        Cadastrar administrador{" "}
+                        <span aria-hidden="true">→</span>
+                    </a>
+                </nav>
+            </section>
+        );
     return (
         <section className="signup-page profile-selection-page admin-access-page">
             <BackButton
@@ -249,7 +279,7 @@ export function AdminSignupSuccessPage({ onNavigate }: NavigationProps) {
     );
 }
 
-/** O contrato atual autentica por CPF; login administrativo por e-mail depende do backend. */
+/** Autentica o administrador por e-mail e senha no backend (ou no modo mock explícito). */
 export function AdminLoginPage({
     onNavigate,
     onSignIn,
@@ -287,10 +317,19 @@ export function AdminLoginPage({
         try {
             auth = await login({ email, password });
         } catch (error) {
+            const cause =
+                error instanceof Error && error.cause ? error.cause : error;
             setFormError(
                 error instanceof InvalidCredentialsError
                     ? "E-mail ou senha inválidos"
-                    : "Não foi possível entrar agora. Tente novamente em instantes.",
+                    : cause instanceof ApiNetworkError ||
+                        cause instanceof ApiTimeoutError
+                      ? "Não foi possível conectar ao servidor. Tente novamente em instantes."
+                      : cause instanceof ApiHttpError && cause.status === 429
+                        ? "Muitas tentativas de login. Aguarde alguns instantes e tente novamente."
+                        : cause instanceof ApiHttpError && cause.status === 403
+                          ? "Esta conta está desativada. Entre em contato com a administração."
+                          : "Não foi possível entrar agora. Tente novamente em instantes.",
             );
             setLoading(false);
             return;

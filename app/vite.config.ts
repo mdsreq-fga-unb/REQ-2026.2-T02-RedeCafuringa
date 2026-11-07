@@ -13,6 +13,15 @@ export default defineConfig(({ mode }) => {
     const apiRule = apiCacheRule(env.VITE_API_URL ?? "");
 
     return {
+        server: {
+            proxy: {
+                "/api": {
+                    target:
+                        process.env.API_PROXY_TARGET || "http://localhost:3000",
+                    changeOrigin: true,
+                },
+            },
+        },
         resolve: {
             alias: {
                 "@": fileURLToPath(new URL("./src", import.meta.url)),

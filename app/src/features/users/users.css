@@ -1,0 +1,217 @@
+.admin-users-page {
+    max-width: 760px;
+    margin-inline: auto;
+    padding-bottom: 32px;
+}
+
+.admin-users-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 56px;
+    margin-top: 24px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: white;
+    color: var(--orange-text);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.admin-functions-page {
+    max-width: 560px;
+    margin-inline: auto;
+}
+
+.admin-functions-page h1 {
+    color: var(--orange-text);
+}
+
+.admin-functions-page nav {
+    display: grid;
+    gap: 16px;
+    margin-top: 28px;
+}
+
+.admin-functions-page .admin-users-entry {
+    margin-top: 0;
+}
+
+.admin-users-entry:focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 4px;
+}
+
+.admin-users-page h1 {
+    margin: 0 0 16px;
+    color: var(--orange-text);
+    font-size: 24px;
+}
+
+.admin-users-tools {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.admin-users-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 56px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: white;
+}
+
+.admin-users-search svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: #276348;
+    stroke-width: 1.8;
+}
+
+.admin-users-search input {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+}
+
+.admin-users-search input::placeholder {
+    color: var(--muted);
+}
+.admin-users-filter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+}
+.admin-users-filter select {
+    min-height: 44px;
+    max-width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: white;
+    color: var(--ink);
+}
+
+.admin-users-list {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.admin-user-card {
+    padding: 18px 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: white;
+    overflow-wrap: anywhere;
+}
+.admin-user-role {
+    margin: 0 0 14px;
+    color: var(--orange-text);
+    text-transform: uppercase;
+    font-size: 13px;
+}
+.admin-user-card h2 {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+.admin-user-card a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 44px;
+    color: var(--orange-text);
+    font-weight: 700;
+    text-decoration: none;
+}
+.admin-user-card a:hover {
+    text-decoration: underline;
+}
+.admin-users-page :is(a, select):focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 4px;
+}
+.admin-users-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 24px;
+}
+.admin-users-pagination .button {
+    min-height: 44px;
+    padding: 10px 12px;
+}
+.admin-users-pagination span {
+    font-size: 13px;
+    text-align: center;
+}
+.admin-users-feedback {
+    margin: 24px 0;
+    color: var(--muted);
+    line-height: 1.6;
+}
+.admin-user-detail {
+    max-width: 560px;
+}
+.admin-user-detail .admin-user-name {
+    margin: 24px 0 8px;
+    font-size: 24px;
+}
+.admin-user-detail .admin-user-role {
+    margin-bottom: 28px;
+}
+.admin-user-fields {
+    display: grid;
+    gap: 18px;
+    margin: 0;
+}
+
+.admin-user-delete {
+    width: 100%;
+    margin-top: 50px;
+}
+.admin-user-fields dt {
+    margin-bottom: 12px;
+    font-weight: 700;
+    font-size: 15px;
+}
+.admin-user-fields dd {
+    display: flex;
+    align-items: center;
+    min-height: 58px;
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: white;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+@media (min-width: 700px) {
+    .admin-users-tools {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    .admin-users-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .admin-users-page .back-row {
+        height: 64px;
+    }
+}

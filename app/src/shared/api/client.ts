@@ -255,6 +255,8 @@ let defaultClient: ApiClient | undefined;
 
 /** Cliente configurado com VITE_API_URL. Criado no primeiro uso. */
 export function getApiClient(): ApiClient {
-    defaultClient ??= createApiClient({ baseUrl: loadEnv().apiUrl });
+    defaultClient ??= createApiClient({
+        baseUrl: loadEnv().apiUrl || "/api/v1",
+    });
     return defaultClient;
 }
