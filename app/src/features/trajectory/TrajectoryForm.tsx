@@ -46,7 +46,14 @@ export function TrajectoryForm({
     const [photoInputKey, setPhotoInputKey] = useState(0);
     const id = useId();
     const form = useRef<HTMLFormElement>(null);
+    const successDialog = useRef<HTMLDialogElement>(null);
     const submitting = useRef(false);
+    useEffect(() => {
+        const dialog = successDialog.current;
+        if (!dialog) return;
+        if (saved) dialog.showModal();
+        else if (dialog.open) dialog.close();
+    }, [saved]);
     useEffect(() => {
         if (!draft.photo) {
             return;
@@ -395,11 +402,6 @@ export function TrajectoryForm({
                           ? "Criar conta"
                           : "Salvar trajetória"}
                 </ActionButton>
-                {saved && (
-                    <p className="save-status" role="status">
-                        Trajetória salva com sucesso.
-                    </p>
-                )}
                 {saved && publicUrl && onNavigate && (
                     <ActionButton
                         variant="outline"
@@ -410,6 +412,46 @@ export function TrajectoryForm({
                     </ActionButton>
                 )}
             </form>
+            {saved && (
+                <dialog
+                    ref={successDialog}
+                    className="trajectory-success-dialog"
+                    aria-labelledby={`${id}-success-title`}
+                    aria-describedby={`${id}-success-description`}
+                >
+                    <span
+                        className="trajectory-success-icon"
+                        aria-hidden="true"
+                    >
+                        ✓
+                    </span>
+                    <h2 id={`${id}-success-title`}>
+                        Trajetória salva com sucesso!
+                    </h2>
+                    <p id={`${id}-success-description`} role="status">
+                        Suas alterações foram salvas. Sua história e suas
+                        informações já estão atualizadas no perfil público.
+                    </p>
+                    <div className="trajectory-success-actions">
+                        {publicUrl && onNavigate && (
+                            <ActionButton
+                                variant="outline"
+                                type="button"
+                                onClick={() => onNavigate(publicUrl)}
+                            >
+                                Ver perfil público
+                            </ActionButton>
+                        )}
+                        <ActionButton
+                            variant="orange"
+                            type="button"
+                            onClick={() => successDialog.current?.close()}
+                        >
+                            Continuar editando
+                        </ActionButton>
+                    </div>
+                </dialog>
+            )}
         </section>
     );
 }

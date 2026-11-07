@@ -7,6 +7,48 @@
 .trajectory-page h1 {
     color: var(--orange-text);
 }
+.trajectory-success-dialog {
+    width: min(460px, calc(100% - 32px));
+    max-height: calc(100dvh - 48px);
+    padding: 32px;
+    border: 0;
+    border-radius: 24px;
+    background: #fff;
+    color: var(--ink);
+    text-align: center;
+    box-shadow: 0 24px 80px #0003;
+}
+.trajectory-success-dialog::backdrop {
+    background: #102a24a6;
+    backdrop-filter: blur(4px);
+}
+.trajectory-success-icon {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: #e1f5e8;
+    color: #21643a;
+    font-size: 40px;
+    font-weight: 700;
+}
+.trajectory-success-dialog h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    line-height: 1.25;
+}
+.trajectory-success-dialog p {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--muted);
+}
+.trajectory-success-actions {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+}
 .trajectory-notice {
     margin: 12px 0 18px;
     padding: 16px;

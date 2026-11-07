@@ -30,6 +30,21 @@ import {
 
 vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: false }));
 beforeEach(() => {
+    // jsdom não implementa a abertura e o fechamento nativos de dialog.
+    Object.defineProperties(HTMLDialogElement.prototype, {
+        showModal: {
+            configurable: true,
+            value(this: HTMLDialogElement) {
+                this.open = true;
+            },
+        },
+        close: {
+            configurable: true,
+            value(this: HTMLDialogElement) {
+                this.open = false;
+            },
+        },
+    });
     localStorage.clear();
     sessionStorage.clear();
     window.location.hash = "";
@@ -309,6 +324,32 @@ describe("HU12 — acesso, formulário e contrato HTTP", () => {
             ).toBeNull();
         },
     );
+
+    it("mostra um popup de sucesso que pode ser fechado e reaparece ao salvar novamente", async () => {
+        seedSession();
+        mockTrajectoryApi();
+        const { user } = await openEditor();
+        fillTrajectory();
+        await user.click(
+            screen.getByRole("button", { name: "Salvar trajetória" }),
+        );
+        const dialog = await screen.findByRole("dialog", {
+            name: "Trajetória salva com sucesso!",
+        });
+        expect((dialog as HTMLDialogElement).open).toBe(true);
+        await user.click(
+            screen.getByRole("button", { name: "Continuar editando" }),
+        );
+        expect(screen.queryByRole("dialog")).toBeNull();
+        await user.click(
+            screen.getByRole("button", { name: "Salvar trajetória" }),
+        );
+        expect(
+            await screen.findByRole("dialog", {
+                name: "Trajetória salva com sucesso!",
+            }),
+        ).toBeTruthy();
+    });
 
     it("RF12: selecionar a foto não envia nada antes de salvar", async () => {
         seedSession();
