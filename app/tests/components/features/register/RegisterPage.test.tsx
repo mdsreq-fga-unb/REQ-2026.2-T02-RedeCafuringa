@@ -46,6 +46,10 @@ type FormInput = {
 };
 
 async function fillForm(user: User, input: FormInput = {}) {
+    await user.click(screen.getByRole("checkbox", { name: "Pix" }));
+    await user.click(
+        screen.getByRole("checkbox", { name: "Cartão de crédito" }),
+    );
     const values = {
         birthDate: "10051990",
         name: "Horta da Maria",
@@ -140,10 +144,12 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
                 .getAllByRole("checkbox")
                 .map((item) => (item as HTMLInputElement).value),
         ).toEqual(["Pix", "Dinheiro", "Cartão de débito", "Cartão de crédito"]);
-        expect(box("Pix").checked).toBe(true);
-        expect(box("Cartão de crédito").checked).toBe(true);
+        for (const item of within(group).getAllByRole("checkbox")) {
+            expect(item).toHaveProperty("checked", false);
+        }
 
         await user.click(box("Dinheiro"));
+        await user.click(box("Pix"));
         await user.click(box("Pix"));
 
         expect(box("Dinheiro").checked).toBe(true);

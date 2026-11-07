@@ -7,6 +7,7 @@ import { registerProducer } from "@/features/register/registerService";
 vi.mock("@/features/register/registerService");
 
 async function fillAndSubmit(user: ReturnType<typeof userEvent.setup>) {
+    await user.click(screen.getByRole("checkbox", { name: "Pix" }));
     await user.type(
         screen.getByLabelText("Nome da iniciativa"),
         "Maria da Silva",

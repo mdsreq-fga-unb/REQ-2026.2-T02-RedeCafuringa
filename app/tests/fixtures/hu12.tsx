@@ -168,6 +168,7 @@ export async function selectPhoto(user: ReturnType<typeof userEvent.setup>) {
 }
 
 export async function fillProducerDetails() {
+    fireEvent.click(screen.getByRole("checkbox", { name: "Pix" }));
     const fields = [
         ["Nome da iniciativa", "Horta da Maria"],
         ["Responsável", "Maria da Silva"],

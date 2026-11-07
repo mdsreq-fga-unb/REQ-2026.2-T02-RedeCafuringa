@@ -19,6 +19,7 @@ const newCpf = "39053344705";
 const newPassword = "senha-segura-1";
 
 async function fillRegisterForm(user: ReturnType<typeof userEvent.setup>) {
+    await user.click(screen.getByRole("checkbox", { name: "Pix" }));
     await user.type(screen.getByLabelText("Nome da iniciativa"), "Seu João");
     await user.type(screen.getByLabelText("Responsável"), "Seu João");
     await user.type(screen.getByLabelText("CPF"), newCpf);

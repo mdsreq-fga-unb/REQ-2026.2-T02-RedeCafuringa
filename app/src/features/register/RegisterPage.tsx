@@ -32,7 +32,7 @@ const INITIAL_VALUES: RegisterFormValues = {
     document: "",
     cnpj: "",
     category: "Produtos",
-    paymentMethods: ["Pix", "Cartão de crédito"],
+    paymentMethods: [],
     phone: "",
     email: "",
     address: "",
