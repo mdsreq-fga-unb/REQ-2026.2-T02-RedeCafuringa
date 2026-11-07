@@ -89,6 +89,16 @@ describe('ProducerProfileService', () => {
       });
     });
 
+    it('RF12: inclui o caminho versionado da foto quando houver', async () => {
+      const { service, model } = setup();
+      const doc = producerDoc({ fotoVersao: 'abc123' });
+      model.findOne.mockReturnValue(query(doc));
+
+      const result = await service.getOwn(doc.id);
+
+      expect(result.fotoUrl).toBe(`/producers/${doc.id}/photo?v=abc123`);
+    });
+
     it('produtor ainda sem trajetória: devolve só o estado atual', async () => {
       const { service, model } = setup();
       const doc = producerDoc();
@@ -339,6 +349,16 @@ describe('ProducerProfileService', () => {
         trajetoria: 'História',
         atividades: 'Atuação',
       });
+    });
+
+    it('RF12: inclui a foto pública quando o produtor tem uma', async () => {
+      const { service, model } = setup();
+      const doc = producerDoc({ trajetoria: 'História', fotoVersao: 'v9' });
+      model.findOne.mockReturnValue(query(doc));
+
+      const result = await service.getPublic(doc.id);
+
+      expect(result.fotoUrl).toBe(`/producers/${doc.id}/photo?v=v9`);
     });
 
     it('nunca vaza dado privado, mesmo que o documento os tenha', async () => {
