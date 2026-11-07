@@ -248,6 +248,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/producers/me/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Enviar a própria foto de perfil
+         * @description HU12/RF12: substitui a foto do produtor autenticado. O formato é conferido pelo conteúdo do arquivo (PNG, JPEG ou WebP; até 5 MB e 50 megapixels). A imagem é regravada em WebP de no máximo 960 px, já na orientação correta e **sem metadados** (EXIF, GPS), para não expor a localização da propriedade (RNF11). Reenviar a mesma foto é seguro (CA07). Recomenda-se reduzir a foto no aparelho antes de enviar (RNF06).
+         */
+        put: operations["producerprofileSavePhoto"];
+        post?: never;
+        /**
+         * Remover a própria foto de perfil
+         * @description HU12/RF12: apaga a foto do produtor autenticado. Idempotente: remover sem ter foto também devolve 204.
+         */
+        delete: operations["producerprofileRemovePhoto"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/producers/{id}/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Foto pública de um produtor
+         * @description HU12/RF12 (CA05, RN07): visível nas mesmas condições do perfil público (produtor ativo e trajetória publicada). Use o caminho de `fotoUrl`. Responde com `ETag` e aceita `If-None-Match`.
+         */
+        get: operations["producerprofileGetPhoto"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -615,6 +659,11 @@ export interface components {
              * @example 2026-11-06T12:00:00.000Z
              */
             atualizadoEm?: string;
+            /**
+             * @description Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.
+             * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
+             */
+            fotoUrl?: string;
         };
         SaveTrajectoryDto: {
             /**
@@ -670,6 +719,18 @@ export interface components {
              * @example 61999990000
              */
             telefone?: string;
+            /**
+             * @description Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.
+             * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
+             */
+            fotoUrl?: string;
+        };
+        PhotoResponse: {
+            /**
+             * @description Caminho da foto, relativo à URL base da API (ex.: prefixe com `VITE_API_URL`). Muda a cada nova foto, então pode ficar em cache indefinidamente.
+             * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
+             */
+            fotoUrl: string;
         };
     };
     responses: never;
@@ -1628,6 +1689,184 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileSavePhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description PNG, JPEG ou WebP de até 5 MB
+                     */
+                    foto: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Foto gravada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PhotoResponse"];
+                };
+            };
+            /** @description Arquivo ausente, ilegível ou com dimensões fora do limite */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta de produtor inexistente ou desativada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Arquivo acima de 5 MB */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Arquivo que não é PNG, JPEG ou WebP */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileRemovePhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Foto removida */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta de produtor inexistente ou desativada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileGetPhoto: {
+        parameters: {
+            query?: {
+                /** @description Versão da foto, como vem em `fotoUrl`. Com a versão atual a resposta fica em cache para sempre; sem ela, o navegador revalida. */
+                v?: unknown;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Imagem WebP sem metadados */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": string;
+                };
+            };
+            /** @description O navegador já tem esta versão */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Produtor inexistente, desativado, sem trajetória publicada, sem foto ou identificador inválido */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": components["schemas"]["ErrorResponse"];
                 };
             };
         };

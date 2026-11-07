@@ -1407,6 +1407,216 @@
           "producers"
         ]
       }
+    },
+    "/api/v1/producers/me/photo": {
+      "put": {
+        "description": "HU12/RF12: substitui a foto do produtor autenticado. O formato é conferido pelo conteúdo do arquivo (PNG, JPEG ou WebP; até 5 MB e 50 megapixels). A imagem é regravada em WebP de no máximo 960 px, já na orientação correta e **sem metadados** (EXIF, GPS), para não expor a localização da propriedade (RNF11). Reenviar a mesma foto é seguro (CA07). Recomenda-se reduzir a foto no aparelho antes de enviar (RNF06).",
+        "operationId": "producerprofileSavePhoto",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "foto"
+                ],
+                "properties": {
+                  "foto": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "PNG, JPEG ou WebP de até 5 MB"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Foto gravada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhotoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Arquivo ausente, ilegível ou com dimensões fora do limite",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de produtor\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta de produtor inexistente ou desativada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Arquivo acima de 5 MB",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Arquivo que não é PNG, JPEG ou WebP",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Enviar a própria foto de perfil",
+        "tags": [
+          "producers"
+        ]
+      },
+      "delete": {
+        "description": "HU12/RF12: apaga a foto do produtor autenticado. Idempotente: remover sem ter foto também devolve 204.",
+        "operationId": "producerprofileRemovePhoto",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Foto removida"
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de produtor\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta de produtor inexistente ou desativada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remover a própria foto de perfil",
+        "tags": [
+          "producers"
+        ]
+      }
+    },
+    "/api/v1/producers/{id}/photo": {
+      "get": {
+        "description": "HU12/RF12 (CA05, RN07): visível nas mesmas condições do perfil público (produtor ativo e trajetória publicada). Use o caminho de `fotoUrl`. Responde com `ETag` e aceita `If-None-Match`.",
+        "operationId": "producerprofileGetPhoto",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "v",
+            "required": false,
+            "in": "query",
+            "description": "Versão da foto, como vem em `fotoUrl`. Com a versão atual a resposta fica em cache para sempre; sem ela, o navegador revalida.",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Imagem WebP sem metadados",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "O navegador já tem esta versão"
+          },
+          "404": {
+            "description": "Produtor inexistente, desativado, sem trajetória publicada, sem foto ou identificador inválido",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Foto pública de um produtor",
+        "tags": [
+          "producers"
+        ]
+      }
     }
   },
   "info": {
@@ -2012,6 +2222,11 @@
             "type": "string",
             "example": "2026-11-06T12:00:00.000Z",
             "description": "Data da última gravação da trajetória"
+          },
+          "fotoUrl": {
+            "type": "string",
+            "example": "/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90",
+            "description": "Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto."
           }
         },
         "required": [
@@ -2086,11 +2301,29 @@
             "type": "string",
             "example": "61999990000",
             "description": "Telefone de contato, presente somente quando o produtor autorizou a divulgação"
+          },
+          "fotoUrl": {
+            "type": "string",
+            "example": "/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90",
+            "description": "Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto."
           }
         },
         "required": [
           "id",
           "trajetoria"
+        ]
+      },
+      "PhotoResponse": {
+        "type": "object",
+        "properties": {
+          "fotoUrl": {
+            "type": "string",
+            "example": "/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90",
+            "description": "Caminho da foto, relativo à URL base da API (ex.: prefixe com `VITE_API_URL`). Muda a cada nova foto, então pode ficar em cache indefinidamente."
+          }
+        },
+        "required": [
+          "fotoUrl"
         ]
       }
     }
