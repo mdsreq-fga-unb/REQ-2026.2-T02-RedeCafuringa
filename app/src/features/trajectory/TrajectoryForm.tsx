@@ -164,6 +164,7 @@ export function TrajectoryForm({
                                 className="text-input"
                                 required
                                 rows={3}
+                                maxLength={TEXT_LIMIT}
                                 value={draft[key]}
                                 placeholder={placeholder}
                                 onChange={(event) =>
