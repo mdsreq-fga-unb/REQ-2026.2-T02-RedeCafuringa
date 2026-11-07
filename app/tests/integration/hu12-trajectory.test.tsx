@@ -40,7 +40,7 @@ afterEach(() => {
     vi.unstubAllGlobals();
 });
 
-describe("HU12 — acesso, formulário e contrato HTTP (TDD RED)", () => {
+describe("HU12 — acesso, formulário e contrato HTTP", () => {
     it("CA01: a conta do produtor oferece Minha trajetória e abre o formulário", async () => {
         seedSession();
         mockTrajectoryApi();

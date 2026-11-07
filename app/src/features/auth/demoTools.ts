@@ -8,6 +8,7 @@ const sessionKeys = [
     "cafuringa-token",
     "cafuringa-email",
     "cafuringa-cpf",
+    "cafuringa-user-id",
 ];
 const userKeys = ["cafuringa-mock-users", "cafuringa-mock-admin-emails"];
 const settingsKeys = [

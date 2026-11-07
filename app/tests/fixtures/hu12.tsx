@@ -53,6 +53,8 @@ export function mockTrajectoryApi(
         getOwn?: Handler;
         save?: Handler;
         getPublic?: Handler;
+        register?: Handler;
+        login?: Handler;
     } = {},
 ) {
     const fetchMock = vi
@@ -69,19 +71,24 @@ export function mockTrajectoryApi(
                     cpf: "***.982.247-**",
                 });
             if (path === "/api/v1/users/producers" && method === "POST")
-                return json({ id: producerId }, 201);
+                return (
+                    options.register?.(init) ?? json({ id: producerId }, 201)
+                );
             if (path === "/api/v1/auth/login" && method === "POST")
-                return json({
-                    accessToken: token,
-                    tokenType: "Bearer",
-                    expiresIn: 900,
-                    usuario: {
-                        id: producerId,
-                        nome: "Horta da Maria",
-                        email: "maria@example.com",
-                        perfil: "PRODUTOR",
-                    },
-                } satisfies components["schemas"]["LoginResponse"]);
+                return (
+                    options.login?.(init) ??
+                    json({
+                        accessToken: token,
+                        tokenType: "Bearer",
+                        expiresIn: 900,
+                        usuario: {
+                            id: producerId,
+                            nome: "Horta da Maria",
+                            email: "maria@example.com",
+                            perfil: "PRODUTOR",
+                        },
+                    } satisfies components["schemas"]["LoginResponse"])
+                );
             if (path === ownPath && method === "GET")
                 return (
                     options.getOwn?.(init) ?? json(options.own ?? ownTrajectory)
@@ -124,6 +131,12 @@ export async function openEditor() {
     const rendered = render(<App />);
     // A ausência desta tela é a falha funcional esperada na fase RED.
     expectHeading();
+    // O usuário só pode editar depois do carregamento: os campos ficam
+    // desabilitados enquanto a consulta inicial está pendente.
+    await waitFor(() => {
+        if (screen.queryByText("Carregando sua trajetória…"))
+            throw new Error("Aguardando o carregamento da trajetória");
+    });
     return { ...rendered, user: userEvent.setup() };
 }
 

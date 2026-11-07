@@ -6,7 +6,7 @@ type BackButtonProps = {
 export function BackButton({ label, onClick }: BackButtonProps) {
     return (
         <div className="back-row">
-            <button onClick={onClick}>
+            <button onClick={onClick} aria-label={label}>
                 ← <span>{label}</span>
             </button>
         </div>

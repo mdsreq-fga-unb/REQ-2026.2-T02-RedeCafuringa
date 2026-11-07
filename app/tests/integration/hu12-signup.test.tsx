@@ -1,4 +1,10 @@
-import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
+import {
+    act,
+    cleanup,
+    fireEvent,
+    screen,
+    waitFor,
+} from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
     activities,
@@ -29,7 +35,122 @@ afterEach(() => {
     vi.unstubAllGlobals();
 });
 
-describe("HU12 — etapa de trajetória após os dados do produtor (TDD RED)", () => {
+describe("HU12 — etapa de trajetória após os dados do produtor", () => {
+    it("não permite alterar as credenciais pelo Voltar do navegador depois de criar a conta", async () => {
+        const api = mockTrajectoryApi({
+            save: () => json({ statusCode: 500, message: "Falha" }, 500),
+        });
+        const user = await continueSignup();
+        fillTrajectory();
+        await selectPhoto(user);
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+        await screen.findByRole("alert");
+        await act(async () => {
+            window.location.hash = "#/cadastro";
+        });
+        await waitFor(() => expect(window.location.hash).toBe(signupRoute));
+        expect(screen.queryByLabelText("Senha")).toBeNull();
+        expect(screen.getByLabelText(/^Minha Trajetória/i)).toHaveProperty(
+            "value",
+            story,
+        );
+        expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
+    });
+
+    it("renova a autenticação se o token expirar antes de gravar, sem repetir o cadastro", async () => {
+        let attempts = 0;
+        const api = mockTrajectoryApi({
+            save: () =>
+                ++attempts === 1
+                    ? json({ statusCode: 401, message: "Sessão expirada" }, 401)
+                    : json({
+                          trajetoria: story,
+                          atividades: activities,
+                          telefonePublico: false,
+                      }),
+        });
+        const user = await continueSignup();
+        fillTrajectory();
+        await selectPhoto(user);
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+        expect(await screen.findByRole("alert")).toHaveProperty(
+            "textContent",
+            expect.stringMatching(/sessão expirou/i),
+        );
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+        expect(
+            await screen.findByRole("heading", {
+                name: "Você já faz parte da rede",
+            }),
+        ).toBeTruthy();
+        expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
+        expect(callsTo(api, "/api/v1/auth/login", "POST")).toHaveLength(2);
+    });
+    it.each([
+        [409, "E-mail já cadastrado", /e-mail já cadastrado/i],
+        [409, "CPF já cadastrado", /cpf/i],
+        [409, "CNPJ já cadastrado", /cnpj/i],
+        [400, "Dados de cadastro inválidos", /inválidos/i],
+        [429, "Muitas tentativas", /muitas tentativas/i],
+        [500, "Erro interno", /não foi possível concluir/i],
+    ])(
+        "falha %i no cadastro preserva a segunda etapa sem autenticar ou publicar (%s)",
+        async (status, message, expected) => {
+            const api = mockTrajectoryApi({
+                register: () => json({ statusCode: status, message }, status),
+            });
+            const user = await continueSignup();
+            fillTrajectory();
+            await selectPhoto(user);
+            await user.click(
+                screen.getByRole("button", { name: "Criar conta" }),
+            );
+            expect(await screen.findByRole("alert")).toHaveProperty(
+                "textContent",
+                expect.stringMatching(expected),
+            );
+            expect(screen.getByLabelText(/^Minha Trajetória/i)).toHaveProperty(
+                "value",
+                story,
+            );
+            expect(callsTo(api, "/api/v1/auth/login", "POST")).toHaveLength(0);
+            expect(callsTo(api, ownPath, "PUT")).toHaveLength(0);
+        },
+    );
+
+    it("falha na autenticação após criar a conta repete o login sem recriar a conta", async () => {
+        let attempts = 0;
+        const api = mockTrajectoryApi({
+            login: () => {
+                if (++attempts === 1) throw new TypeError("Failed to fetch");
+                return json({
+                    accessToken: token,
+                    tokenType: "Bearer",
+                    expiresIn: 900,
+                    usuario: {
+                        id: "64b0c0ffee0000000000abcd",
+                        nome: "Horta da Maria",
+                        email: "maria@example.com",
+                        perfil: "PRODUTOR",
+                    },
+                });
+            },
+        });
+        const user = await continueSignup();
+        fillTrajectory();
+        await selectPhoto(user);
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+        expect(await screen.findByRole("alert")).toBeTruthy();
+        expect(callsTo(api, ownPath, "PUT")).toHaveLength(0);
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+        expect(
+            await screen.findByRole("heading", {
+                name: "Você já faz parte da rede",
+            }),
+        ).toBeTruthy();
+        expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
+        expect(callsTo(api, "/api/v1/auth/login", "POST")).toHaveLength(2);
+    });
     it("CA03/protótipo: exige selecionar uma foto antes de concluir o cadastro", async () => {
         const api = mockTrajectoryApi();
         const user = await continueSignup();

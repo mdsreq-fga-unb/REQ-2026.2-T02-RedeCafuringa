@@ -2,6 +2,9 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
+import { fillTrajectory, selectPhoto } from "../fixtures/hu12";
+
+vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: true }));
 
 // Cadastro e login usam o modo mock: o cadastro real (registerService) grava a
 // conta onde o login mock (loginMock) procura.
@@ -113,6 +116,13 @@ describe("HU02 — do cadastro à área do produtor", () => {
         await user.click(screen.getByRole("button", { name: "Continuar" }));
 
         expect(
+            await screen.findByRole("heading", { name: "Conte sua história" }),
+        ).toBeTruthy();
+        fillTrajectory();
+        await selectPhoto(user);
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+
+        expect(
             await screen.findByRole("heading", {
                 name: "Você já faz parte da rede",
             }),
@@ -123,6 +133,6 @@ describe("HU02 — do cadastro à área do produtor", () => {
             screen.getByRole("button", { name: "Entrar na minha conta" }),
         );
 
-        expect(window.location.hash).toBe("#/login/producer");
+        expect(window.location.hash).toBe("#/conta");
     }, 15000);
 });

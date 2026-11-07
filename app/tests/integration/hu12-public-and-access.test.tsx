@@ -27,7 +27,7 @@ afterEach(() => {
     vi.unstubAllGlobals();
 });
 
-describe("HU12 — CA05/CA06 e privacidade do perfil (TDD RED)", () => {
+describe("HU12 — CA05/CA06 e privacidade do perfil", () => {
     it.each([null, "consumer", "admin"] as const)(
         "perfil %s não pode abrir o editor nem consultar a trajetória privada",
         async (role) => {

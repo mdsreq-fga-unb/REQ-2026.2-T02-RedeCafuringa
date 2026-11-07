@@ -20,6 +20,8 @@ import { formatCnpj, formatPhone } from "./validators";
 
 type RegisterPageProps = {
     onNavigate: (path: string) => void;
+    initialValues?: RegisterFormValues;
+    onContinue?: (values: RegisterFormValues) => void;
 };
 
 const INITIAL_VALUES: RegisterFormValues = {
@@ -279,8 +281,14 @@ function FailureAlert({
     }
 }
 
-export function RegisterPage({ onNavigate }: RegisterPageProps) {
-    const [values, setValues] = useState<RegisterFormValues>(INITIAL_VALUES);
+export function RegisterPage({
+    onNavigate,
+    initialValues,
+    onContinue,
+}: RegisterPageProps) {
+    const [values, setValues] = useState<RegisterFormValues>(
+        initialValues ?? INITIAL_VALUES,
+    );
     const [errors, setErrors] = useState<RegisterFormErrors>({});
     const [loading, setLoading] = useState(false);
     const [failure, setFailure] = useState<RegisterFailure | null>(null);
@@ -326,6 +334,11 @@ export function RegisterPage({ onNavigate }: RegisterPageProps) {
         );
         if (firstInvalid) {
             requestFocus(firstInvalid[1]);
+            return;
+        }
+
+        if (onContinue) {
+            onContinue(values);
             return;
         }
 

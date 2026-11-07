@@ -15,6 +15,8 @@ const getInitialRoute = () => {
         "/login/consumer",
         "/login/producer",
         "/cadastro",
+        "/cadastro/trajetoria",
+        "/minha-trajetoria",
         "/cadastro/consumidor",
         "/conta-criada/consumer",
         "/conta-criada/producer",
@@ -22,6 +24,7 @@ const getInitialRoute = () => {
         "/reservas",
     ].includes(requested.split("?")[0]) ||
         requested.startsWith("/oferta/") ||
+        /^\/produtor\/[^/?]+$/.test(requested.split("?")[0]) ||
         /^\/admin\/usuarios(?:\/[^/?]+)?$/.test(requested.split("?")[0])
         ? requested
         : "/escolher-perfil";

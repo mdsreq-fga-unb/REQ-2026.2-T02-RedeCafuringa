@@ -547,15 +547,24 @@ export function ConsumerSignupSuccessPage({
 
 export function ProducerSignupSuccessPage({
     onNavigate,
-}: ConsumerProfileSelectionPageProps) {
-    return <SignupSuccessPage profile="producer" onNavigate={onNavigate} />;
+    authenticated = false,
+}: ConsumerProfileSelectionPageProps & { authenticated?: boolean }) {
+    return (
+        <SignupSuccessPage
+            profile="producer"
+            onNavigate={onNavigate}
+            authenticated={authenticated}
+        />
+    );
 }
 
 function SignupSuccessPage({
     profile,
     onNavigate,
+    authenticated = false,
 }: ConsumerProfileSelectionPageProps & {
     profile: "consumer" | "producer";
+    authenticated?: boolean;
 }) {
     const isConsumer = profile === "consumer";
 
@@ -565,7 +574,11 @@ function SignupSuccessPage({
                 label="Voltar"
                 onClick={() =>
                     onNavigate(
-                        isConsumer ? "/cadastro/consumidor" : "/cadastro",
+                        authenticated
+                            ? "/conta"
+                            : isConsumer
+                              ? "/cadastro/consumidor"
+                              : "/cadastro",
                     )
                 }
             />
@@ -576,14 +589,19 @@ function SignupSuccessPage({
             </div>
             <h1>Você já faz parte da rede</h1>
             <p className="body-copy">
-                Seu perfil foi criado. Use suas credenciais para acessar a
-                plataforma.
+                {authenticated
+                    ? "Seu perfil e sua trajetória foram registrados. Você já pode acessar sua conta."
+                    : "Seu perfil foi criado. Use suas credenciais para acessar a plataforma."}
             </p>
             <ActionButton
                 variant="orange"
                 onClick={() =>
                     onNavigate(
-                        isConsumer ? "/login/consumer" : "/login/producer",
+                        authenticated
+                            ? "/conta"
+                            : isConsumer
+                              ? "/login/consumer"
+                              : "/login/producer",
                     )
                 }
             >

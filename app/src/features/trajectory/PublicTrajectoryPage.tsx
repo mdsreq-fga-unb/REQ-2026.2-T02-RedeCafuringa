@@ -1,0 +1,93 @@
+import { useEffect, useState } from "react";
+import { BackButton } from "@/components/navigation/BackButton";
+import { ActionButton } from "@/components/ui/ActionButton";
+import { ApiHttpError } from "@/shared/api";
+import { formatPhone } from "@/features/register/validators";
+import { getPublicTrajectory } from "./trajectoryService";
+import type { PublicTrajectory } from "./trajectoryService";
+import "./trajectory.css";
+
+export function PublicTrajectoryPage({
+    id,
+    onNavigate,
+}: {
+    id: string;
+    onNavigate: (path: string) => void;
+}) {
+    const [data, setData] = useState<PublicTrajectory | null>(null);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [attempt, setAttempt] = useState(0);
+    useEffect(() => {
+        const controller = new AbortController();
+        void getPublicTrajectory(id, controller.signal)
+            .then((profile) => {
+                if (!controller.signal.aborted) setData(profile);
+            })
+            .catch((cause: unknown) => {
+                if (!controller.signal.aborted)
+                    setError(
+                        cause instanceof ApiHttpError && cause.status === 404
+                            ? "Perfil indisponível ou não encontrado."
+                            : "Não foi possível carregar este perfil. Verifique a conexão e tente novamente.",
+                    );
+            })
+            .finally(() => {
+                if (!controller.signal.aborted) setLoading(false);
+            });
+        return () => controller.abort();
+    }, [id, attempt]);
+    return (
+        <section className="trajectory-page public-trajectory-page">
+            <BackButton label="Voltar" onClick={() => onNavigate("/perfil")} />
+            {loading && <p role="status">Carregando perfil…</p>}
+            {error && (
+                <>
+                    <h1>Perfil do produtor</h1>
+                    <p className="form-alert" role="alert">
+                        {error}
+                    </p>
+                    <ActionButton
+                        variant="outline"
+                        onClick={() => {
+                            setData(null);
+                            setLoading(true);
+                            setError("");
+                            setAttempt((value) => value + 1);
+                        }}
+                    >
+                        Tentar novamente
+                    </ActionButton>
+                </>
+            )}
+            {data && (
+                <>
+                    <h1>{data.nomeIniciativa || "Perfil do produtor"}</h1>
+                    {data.categoriaOfertada && (
+                        <p className="eyebrow">{data.categoriaOfertada}</p>
+                    )}
+                    <h2>Minha Trajetória</h2>
+                    <p className="body-copy trajectory-public-text">
+                        {data.trajetoria}
+                    </p>
+                    {data.atividades && (
+                        <>
+                            <h2>Produção / Experiências / Eventos</h2>
+                            <p className="body-copy trajectory-public-text">
+                                {data.atividades}
+                            </p>
+                        </>
+                    )}
+                    {data.telefone && (
+                        <>
+                            <h2>Número de Contato</h2>
+                            <p className="body-copy">
+                                {formatPhone(data.telefone)}
+                            </p>
+                        </>
+                    )}
+                </>
+            )}
+        </section>
+    );
+}

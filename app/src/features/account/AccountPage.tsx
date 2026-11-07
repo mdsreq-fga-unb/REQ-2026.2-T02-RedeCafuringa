@@ -85,6 +85,12 @@ export function AccountPage(props: AccountPageProps) {
             </p>
             {role === "producer" && (
                 <>
+                    <ActionButton
+                        variant="orange"
+                        onClick={() => onNavigate("/minha-trajetoria")}
+                    >
+                        Minha trajetória
+                    </ActionButton>
                     <form
                         className="account-profile-form"
                         onSubmit={saveProducerProfile}
