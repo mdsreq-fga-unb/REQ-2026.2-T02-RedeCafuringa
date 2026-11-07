@@ -78,6 +78,8 @@ describe("authService.login", () => {
                 id: "665f1c2e9b1e8a0012345678",
                 name: "Dona Maria",
                 role: "producer",
+                email: "maria@exemplo.com",
+                cpf: "***.982.247-**",
             },
         });
     });

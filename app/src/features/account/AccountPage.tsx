@@ -240,7 +240,6 @@ export function AccountPage(props: AccountPageProps) {
                             type="email"
                             value={consumerEmail}
                             aria-label="E-mail"
-                            placeholder="ana@exemplo.com"
                             readOnly
                         />
                     </div>
@@ -251,9 +250,12 @@ export function AccountPage(props: AccountPageProps) {
                         <input
                             id="consumer-cpf"
                             className="text-input"
-                            value={consumerCpf ? formatCpf(consumerCpf) : ""}
+                            value={
+                                consumerCpf.includes("*")
+                                    ? consumerCpf
+                                    : formatCpf(consumerCpf)
+                            }
                             aria-label="CPF"
-                            placeholder="000.000.000-00"
                             readOnly
                         />
                     </div>
@@ -262,6 +264,22 @@ export function AccountPage(props: AccountPageProps) {
                         onClick={() => onNavigate("/login/producer")}
                     >
                         Acessar como produtor
+                    </ActionButton>
+                </div>
+            )}
+            {role === "admin" && (
+                <div className="account-profile-form">
+                    <ActionButton
+                        variant="orange"
+                        onClick={() => onNavigate("/admin/usuarios")}
+                    >
+                        Usuários cadastrados
+                    </ActionButton>
+                    <ActionButton
+                        variant="outline"
+                        onClick={() => onNavigate("/cadastro/administrador")}
+                    >
+                        Cadastrar administrador
                     </ActionButton>
                 </div>
             )}

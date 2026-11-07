@@ -33,6 +33,19 @@ afterEach(() => {
 });
 
 describe("registrationService.registerConsumer", () => {
+    it("sem VITE_API_URL, cadastra pela rota /api/v1 da mesma origem", async () => {
+        vi.stubEnv("VITE_API_URL", "");
+        const fetchMock = vi
+            .fn<typeof fetch>()
+            .mockResolvedValue(jsonResponse({ id: "consumer-1" }, 201));
+        vi.stubGlobal("fetch", fetchMock);
+        const { registerConsumer } = await load();
+        await registerConsumer(consumer);
+        expect(String(fetchMock.mock.calls[0][0])).toBe(
+            "/api/v1/users/consumers",
+        );
+        expect(fetchMock.mock.calls[0][1]?.method).toBe("POST");
+    });
     it("envia os campos do protótipo normalizados para cadastro público", async () => {
         const fetchMock = vi
             .fn<typeof fetch>()

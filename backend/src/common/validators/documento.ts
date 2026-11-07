@@ -61,3 +61,13 @@ export function maskCpf(value: string): string {
   if (!/^\d{11}$/.test(cpf)) return '***.***.***-**';
   return `***.${cpf.slice(3, 6)}.${cpf.slice(6, 9)}-**`;
 }
+
+/**
+ * Mascara o CNPJ (numérico ou alfanumérico) para a consulta administrativa
+ * (HU04, RNF11): esconde os 2 primeiros caracteres e os dígitos verificadores.
+ */
+export function maskCnpj(value: string): string {
+  const cnpj = onlyDocumentChars(value);
+  if (!/^[0-9A-Z]{12}\d{2}$/.test(cnpj)) return '**.***.***/****-**';
+  return `**.${cnpj.slice(2, 5)}.${cnpj.slice(5, 8)}/${cnpj.slice(8, 12)}-**`;
+}

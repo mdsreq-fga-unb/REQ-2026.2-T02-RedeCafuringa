@@ -4,6 +4,7 @@ import {
   cpfCheckDigits,
   isValidCnpj,
   isValidCpf,
+  maskCnpj,
   maskCpf,
   onlyDocumentChars,
 } from './documento.js';
@@ -82,6 +83,21 @@ describe('maskCpf (RNF11)', () => {
 
   it('não devolve nada legível para valor que não é CPF', () => {
     expect(maskCpf('123')).toBe('***.***.***-**');
+  });
+});
+
+describe('maskCnpj (RNF11, HU04)', () => {
+  it('exibe apenas a raiz central e a filial do CNPJ', () => {
+    expect(maskCnpj('11222333000181')).toBe('**.222.333/0001-**');
+    expect(maskCnpj('11.222.333/0001-81')).toBe('**.222.333/0001-**');
+  });
+
+  it('mascara CNPJ alfanumérico', () => {
+    expect(maskCnpj('12ABC34501DE35')).toBe('**.ABC.345/01DE-**');
+  });
+
+  it('não devolve nada legível para valor que não é CNPJ', () => {
+    expect(maskCnpj('123')).toBe('**.***.***/****-**');
   });
 });
 

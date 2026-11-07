@@ -11,6 +11,7 @@ const screens = [
     ["Cadastro produtor", "/cadastro"],
     ["Acesso administrador", "/admin/acesso"],
     ["Login administrador", "/admin/entrar"],
+    ["Usuários cadastrados", "/admin/usuarios"],
     ["Cadastro administrador", "/cadastro/administrador"],
     ["Sucesso administrador", "/conta-criada/admin"],
     ["Sucesso consumidor", "/conta-criada/consumer"],
@@ -44,8 +45,9 @@ export function DemoNavigation({
         }
     };
     const enter = async (email: string) => {
-        onSignIn(await loginMock({ email, password: "senha123" }));
-        onNavigate("/conta");
+        const auth = await loginMock({ email, password: "senha123" });
+        onSignIn(auth);
+        onNavigate(auth.user.role === "admin" ? "/admin/acesso" : "/conta");
     };
     return (
         <aside className="demo-navigation" aria-label="Demonstração local">
@@ -70,6 +72,12 @@ export function DemoNavigation({
                         onClick={() => void enter("ana@exemplo.com")}
                     >
                         Entrar como consumidor de teste
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => void enter("admin@exemplo.com")}
+                    >
+                        Entrar como administrador de teste
                     </button>
                     <button
                         type="button"

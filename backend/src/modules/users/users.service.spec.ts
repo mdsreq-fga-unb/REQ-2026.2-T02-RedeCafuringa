@@ -1,4 +1,8 @@
-import { BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { makeConsumer, makeProducer } from '@test/factories';
 import type { Model } from 'mongoose';
 import { Types } from 'mongoose';
@@ -12,8 +16,32 @@ function query<T>(value: T) {
   return { exec: vi.fn().mockResolvedValue(value) };
 }
 
+/** Consulta encadeável do Mongoose (find().select().sort()...exec()). */
+function chainQuery<T>(value: T) {
+  const chain = {
+    select: vi.fn<(fields: string) => unknown>(),
+    sort: vi.fn<(order: Record<string, number>) => unknown>(),
+    collation: vi.fn<(options: object) => unknown>(),
+    skip: vi.fn<(count: number) => unknown>(),
+    limit: vi.fn<(count: number) => unknown>(),
+    exec: vi.fn().mockResolvedValue(value),
+  };
+  for (const step of [
+    chain.select,
+    chain.sort,
+    chain.collation,
+    chain.skip,
+    chain.limit,
+  ]) {
+    step.mockReturnValue(chain);
+  }
+  return chain;
+}
+
 function setup() {
   const model = {
+    find: vi.fn().mockReturnValue(chainQuery([])),
+    countDocuments: vi.fn().mockReturnValue(query(0)),
     exists: vi.fn().mockReturnValue(query(null)),
     create: vi.fn(async (data: Record<string, unknown>) => ({
       id: new Types.ObjectId().toHexString(),
@@ -395,6 +423,200 @@ describe('UsersService', () => {
         perfil: Role.CONSUMIDOR,
         cpf: '***.982.247-**',
       });
+    });
+  });
+
+  describe('list (HU04)', () => {
+    const consumer = {
+      id: 'c1',
+      nome: 'Maria',
+      email: 'maria@exemplo.com',
+      perfil: Role.CONSUMIDOR,
+    };
+    const producer = {
+      id: 'p1',
+      nome: 'João',
+      email: 'joao@exemplo.com',
+      perfil: Role.PRODUTOR,
+      nomeIniciativa: 'Horta Cafuringa',
+    };
+
+    it('CA09: devolve a página com os usuários e o total', async () => {
+      const { service, model } = setup();
+      model.find.mockReturnValue(chainQuery([consumer, producer]));
+      model.countDocuments.mockReturnValue(query(2));
+
+      const page = await service.list({});
+
+      expect(page).toEqual({
+        itens: [
+          {
+            id: 'c1',
+            nome: 'Maria',
+            email: 'maria@exemplo.com',
+            perfil: Role.CONSUMIDOR,
+          },
+          {
+            id: 'p1',
+            nome: 'João',
+            email: 'joao@exemplo.com',
+            perfil: Role.PRODUTOR,
+            nomeIniciativa: 'Horta Cafuringa',
+          },
+        ],
+        total: 2,
+        pagina: 1,
+        limite: 20,
+      });
+    });
+
+    it('CA08: sem registros, devolve lista vazia e total zero', async () => {
+      const { service } = setup();
+
+      await expect(service.list({})).resolves.toMatchObject({
+        itens: [],
+        total: 0,
+      });
+    });
+
+    it('aplica o mesmo filtro de perfil e busca na página e na contagem', async () => {
+      const { service, model } = setup();
+
+      await service.list({ perfil: Role.PRODUTOR, busca: 'horta' });
+
+      const filter = model.find.mock.calls[0][0];
+      expect(filter).toMatchObject({ perfil: Role.PRODUTOR });
+      expect(filter.$or).toHaveLength(3);
+      expect(model.countDocuments).toHaveBeenCalledWith(filter);
+    });
+
+    it('pagina com skip/limit e ordena por nome', async () => {
+      const { service, model } = setup();
+      const chain = chainQuery([]);
+      model.find.mockReturnValue(chain);
+
+      const page = await service.list({ pagina: 3, limite: 10 });
+
+      expect(chain.skip).toHaveBeenCalledWith(20);
+      expect(chain.limit).toHaveBeenCalledWith(10);
+      expect(chain.sort).toHaveBeenCalledWith({ nome: 1, _id: 1 });
+      expect(page).toMatchObject({ pagina: 3, limite: 10 });
+    });
+
+    it('CA06/RNF11: não carrega senha, hashes nem documentos do banco', async () => {
+      const { service, model } = setup();
+      const chain = chainQuery([]);
+      model.find.mockReturnValue(chain);
+
+      await service.list({});
+
+      const [projection] = chain.select.mock.calls[0];
+      for (const field of [
+        'senhaHash',
+        'cpfHash',
+        'cpfCifrado',
+        'cnpjHash',
+        'cnpjCifrado',
+      ]) {
+        expect(projection).toContain(`-${field}`);
+      }
+    });
+  });
+
+  describe('findDetail (HU04)', () => {
+    it('devolve o produtor com documentos mascarados e sem senha', async () => {
+      const { service, model } = setup();
+      const id = new Types.ObjectId().toHexString();
+      model.findById.mockReturnValue(
+        chainQuery({
+          id,
+          nome: 'João',
+          email: 'joao@exemplo.com',
+          telefone: '61999990000',
+          perfil: Role.PRODUTOR,
+          cpfCifrado: 'enc:52998224725',
+          cnpjCifrado: 'enc:11222333000181',
+          nomeIniciativa: 'Horta',
+          nomeResponsavel: 'João',
+          localidade: 'Cafuringa',
+          categoriaOfertada: 'Produtos',
+          formasPagamento: ['PIX'],
+          senhaHash: 'hash',
+        }),
+      );
+
+      const detail = await service.findDetail(id);
+
+      expect(detail).toEqual({
+        id,
+        nome: 'João',
+        email: 'joao@exemplo.com',
+        telefone: '61999990000',
+        perfil: Role.PRODUTOR,
+        cpf: '***.982.247-**',
+        cnpj: '**.222.333/0001-**',
+        nomeIniciativa: 'Horta',
+        nomeResponsavel: 'João',
+        localidade: 'Cafuringa',
+        categoriaOfertada: 'Produtos',
+        formasPagamento: ['PIX'],
+      });
+    });
+
+    it('CA04: administrador não tem documentos nem campos de produtor', async () => {
+      const { service, model } = setup();
+      const id = new Types.ObjectId().toHexString();
+      model.findById.mockReturnValue(
+        chainQuery({
+          id,
+          nome: 'Administrador',
+          email: 'admin@exemplo.com',
+          perfil: Role.ADMINISTRADOR,
+        }),
+      );
+
+      await expect(service.findDetail(id)).resolves.toEqual({
+        id,
+        nome: 'Administrador',
+        email: 'admin@exemplo.com',
+        perfil: Role.ADMINISTRADOR,
+      });
+    });
+
+    it('CA06: não carrega senha nem hashes do banco', async () => {
+      const { service, model } = setup();
+      const chain = chainQuery({
+        id: 'x',
+        nome: 'Maria',
+        email: 'maria@exemplo.com',
+        perfil: Role.CONSUMIDOR,
+      });
+      model.findById.mockReturnValue(chain);
+
+      await service.findDetail(new Types.ObjectId().toHexString());
+
+      const [projection] = chain.select.mock.calls[0];
+      expect(projection).toContain('-senhaHash');
+      expect(projection).toContain('-cpfHash');
+      expect(projection).toContain('-cnpjHash');
+    });
+
+    it('responde 404 para usuário inexistente', async () => {
+      const { service, model } = setup();
+      model.findById.mockReturnValue(chainQuery(null));
+
+      await expect(
+        service.findDetail(new Types.ObjectId().toHexString()),
+      ).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it('responde 404 para id malformado sem consultar o banco', async () => {
+      const { service, model } = setup();
+
+      await expect(service.findDetail('abc')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
+      expect(model.findById).not.toHaveBeenCalled();
     });
   });
 });

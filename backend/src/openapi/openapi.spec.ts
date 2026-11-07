@@ -6,6 +6,9 @@ import { ErrorResponse } from '../common/dto/error.response.js';
 import { LoginDto } from '../modules/auth/dto/login.dto.js';
 import { LoginResponse } from '../modules/auth/dto/login.response.js';
 import { CreateConsumerDto } from '../modules/users/dto/create-consumer.dto.js';
+import { UserDetailResponse } from '../modules/users/dto/user-detail.response.js';
+import { UserListResponse } from '../modules/users/dto/user-list.response.js';
+import { UserSummaryResponse } from '../modules/users/dto/user-summary.response.js';
 import { UserResponse } from '../modules/users/dto/user.response.js';
 import { generateOpenApiDocument } from './generate-openapi.js';
 
@@ -66,6 +69,8 @@ describe('contrato OpenAPI', () => {
       'GET /api/v1/health/ready',
       'GET /api/v1/producers/me/trajectory',
       'GET /api/v1/producers/{id}/trajectory',
+      'GET /api/v1/users',
+      'GET /api/v1/users/{id}',
       'POST /api/v1/auth/login',
       'POST /api/v1/users/admins',
       'POST /api/v1/users/consumers',
@@ -93,13 +98,15 @@ describe('contrato OpenAPI', () => {
     }
   });
 
-  it('só /auth/me, o cadastro de administrador e a trajetória própria exigem Bearer; o resto é público', () => {
+  it('só /auth/me, as rotas administrativas e a trajetória própria exigem Bearer; o resto é público', () => {
     const protectedOps = operations
       .filter((o) => o.op.security?.some((s) => 'bearer' in s))
       .map((o) => `${o.method} ${o.path}`);
     expect(protectedOps.sort()).toEqual([
       'get /api/v1/auth/me',
       'get /api/v1/producers/me/trajectory',
+      'get /api/v1/users',
+      'get /api/v1/users/{id}',
       'post /api/v1/users/admins',
       'put /api/v1/producers/me/trajectory',
     ]);
@@ -133,11 +140,21 @@ describe('contrato OpenAPI', () => {
       'ProducerResponse',
       'AdminResponse',
       'LoginResponse',
+      'UserSummaryResponse',
+      'UserDetailResponse',
     ]) {
       expect(Object.keys(schemas[out].properties ?? {})).not.toContain('senha');
       expect(Object.keys(schemas[out].properties ?? {})).not.toContain('hash');
     }
     expect(schemas.UserResponse.properties?.cpf.description).toMatch(
+      /mascarado/i,
+    );
+    // HU04: a consulta administrativa só expõe documentos mascarados.
+    expect(schemas.UserSummaryResponse.properties).not.toHaveProperty('cpf');
+    expect(schemas.UserDetailResponse.properties?.cpf.description).toMatch(
+      /mascarado/i,
+    );
+    expect(schemas.UserDetailResponse.properties?.cnpj.description).toMatch(
       /mascarado/i,
     );
   });
@@ -202,6 +219,9 @@ describe('contrato OpenAPI', () => {
       LoginResponse,
       CreateConsumerDto,
       UserResponse,
+      UserListResponse,
+      UserSummaryResponse,
+      UserDetailResponse,
     ]) {
       expect(names).toContain(dto.name);
     }
