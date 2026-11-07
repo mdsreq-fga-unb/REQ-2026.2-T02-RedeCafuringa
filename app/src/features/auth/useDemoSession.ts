@@ -75,7 +75,9 @@ export function useDemoSession() {
             active && localStorage.getItem("cafuringa-token") === token;
 
         void getApiClient()
-            .get<components["schemas"]["UserResponse"]>("/auth/me")
+            .get<components["schemas"]["UserResponse"]>("/auth/me", {
+                headers: { Authorization: `Bearer ${token}` },
+            })
             .then((user) => {
                 if (!isCurrentSession()) return;
                 setConsumerName(user.nome);

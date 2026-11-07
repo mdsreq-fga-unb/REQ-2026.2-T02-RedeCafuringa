@@ -25,7 +25,9 @@ it("recupera email e CPF da API para uma sessão antiga sem esses dados", async 
     });
     const { result } = renderHook(() => useDemoSession());
     await waitFor(() => expect(result.current.email).toBe("maria@example.com"));
-    expect(get).toHaveBeenCalledWith("/auth/me");
+    expect(get).toHaveBeenCalledWith("/auth/me", {
+        headers: { Authorization: "Bearer jwt-existing" },
+    });
     expect(result.current.cpf).toBe("***.982.247-**");
     expect(localStorage.getItem("cafuringa-cpf")).toBe("***.982.247-**");
 });
