@@ -105,6 +105,19 @@ describe("createApiClient: requisição", () => {
         expect(headers["Content-Type"]).toBe("application/json");
     });
 
+    it("envia FormData sem serializar e deixa o navegador definir o multipart", async () => {
+        const { client, fetchMock } = setup(async () => jsonResponse({}));
+        const form = new FormData();
+        form.append("foto", new Blob(["x"], { type: "image/jpeg" }), "f.jpg");
+
+        await client.put("/producers/me/photo", form);
+
+        const { headers, init } = lastCall(fetchMock);
+        expect(init.body).toBe(form);
+        // O boundary do multipart só existe se o navegador montar o cabeçalho.
+        expect(headers["Content-Type"]).toBeUndefined();
+    });
+
     it("envia Authorization só quando há token e a chamada não pede auth:false", async () => {
         const { client, fetchMock } = setup(async () => jsonResponse({}), {
             getAccessToken: () => "tok-abc",
