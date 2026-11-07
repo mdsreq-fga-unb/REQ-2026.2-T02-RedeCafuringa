@@ -95,7 +95,7 @@ describe("configurações de contato da conta", () => {
         ).toBeTruthy();
         expect(screen.getByLabelText("Nome da iniciativa")).toHaveProperty(
             "placeholder",
-            "Flor do campo",
+            "Ex.: Sítio Raízes",
         );
         fireEvent.change(screen.getByLabelText("Nome da iniciativa"), {
             target: { value: "Sítio Raízes" },

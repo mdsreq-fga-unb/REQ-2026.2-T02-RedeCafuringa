@@ -394,7 +394,7 @@ export function RegisterPage({
                     required
                     type="text"
                     autoComplete="name"
-                    placeholder="Sítio Raízes"
+                    placeholder="Ex.: Sítio Raízes"
                     value={values.name}
                     error={errors.name}
                     onChange={(value) => setField("name", value)}
@@ -406,7 +406,7 @@ export function RegisterPage({
                     required
                     type="text"
                     autoComplete="name"
-                    placeholder="Maria Silva"
+                    placeholder="Nome completo do responsável"
                     value={values.responsible}
                     error={errors.responsible}
                     onChange={(value) => setField("responsible", value)}
@@ -490,7 +490,7 @@ export function RegisterPage({
                     label="Localidade"
                     type="text"
                     autoComplete="street-address"
-                    placeholder="Cafuringa, Brasília, DF"
+                    placeholder="Ex.: Chácara 12, Núcleo Rural, Brasília"
                     value={values.address}
                     error={errors.address}
                     onChange={(value) => setField("address", value)}
@@ -509,7 +509,7 @@ export function RegisterPage({
                     type="tel"
                     inputMode="tel"
                     autoComplete="tel"
-                    placeholder="(00) 00000-0000"
+                    placeholder="Ex.: (61) 99999-9999"
                     value={values.phone}
                     error={errors.phone}
                     onChange={(value) => setField("phone", formatPhone(value))}
@@ -521,7 +521,7 @@ export function RegisterPage({
                     required
                     type="email"
                     autoComplete="email"
-                    placeholder="raizes@exemplo.com"
+                    placeholder="Ex.: nome@exemplo.com"
                     value={values.email}
                     error={errors.email}
                     onChange={(value) => setField("email", value)}
@@ -533,7 +533,7 @@ export function RegisterPage({
                     required
                     type="password"
                     autoComplete="new-password"
-                    placeholder="••••••••"
+                    placeholder="8+ caracteres, com letras e números"
                     value={values.password}
                     error={errors.password}
                     onChange={(value) => setField("password", value)}
@@ -541,6 +541,7 @@ export function RegisterPage({
 
                 <TextField
                     id="register-confirm-password"
+                    placeholder="Repita a senha criada"
                     label="Confirmar senha"
                     required
                     type="password"

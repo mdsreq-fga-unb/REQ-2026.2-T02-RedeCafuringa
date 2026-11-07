@@ -142,12 +142,12 @@ export function TrajectoryForm({
                             [
                                 "story",
                                 "Minha Trajetória",
-                                "Somos uma iniciativa familiar que conecta os saberes do campo à cidade.",
+                                "Conte como sua iniciativa começou, quem participa e sua relação com a região.",
                             ],
                             [
                                 "activities",
                                 "Produção / Experiências / Eventos",
-                                "Hortaliças da estação, cestas agroecológicas e visitas guiadas.",
+                                "Ex.: cultivo de hortaliças, venda de cestas e visitas guiadas à propriedade.",
                             ],
                         ] as const
                     ).map(([key, label, placeholder]) => (
@@ -207,7 +207,7 @@ export function TrajectoryForm({
                             autoComplete="tel-national"
                             inputMode="tel"
                             value={draft.phone}
-                            placeholder="(61) 99999-9999"
+                            placeholder="Ex.: (61) 99999-9999"
                             onChange={(event) =>
                                 change("phone", formatPhone(event.target.value))
                             }

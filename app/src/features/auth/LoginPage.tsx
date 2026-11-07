@@ -101,7 +101,7 @@ export function LoginPage({
                     type="email"
                     inputMode="email"
                     autoComplete="username"
-                    placeholder="seu@email.com"
+                    placeholder="E-mail usado no cadastro"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     aria-invalid={Boolean(errors.email)}
@@ -120,6 +120,7 @@ export function LoginPage({
                 </label>
                 <input
                     id="login-password"
+                    placeholder="Digite sua senha"
                     className="text-input"
                     type="password"
                     autoComplete="current-password"
