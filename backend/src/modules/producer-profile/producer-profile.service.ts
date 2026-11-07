@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { isObjectIdOrHexString, Model } from 'mongoose';
 import { Role } from '../users/domain/role.js';
 import { User } from '../users/schemas/user.schema.js';
+import { photoPath } from './domain/profile-photo.js';
 import { publicPhone } from './domain/trajectory.js';
 import type { SaveTrajectoryDto } from './dto/save-trajectory.dto.js';
 import type {
@@ -17,9 +18,9 @@ const NOT_FOUND = 'Produtor não encontrado';
  * nunca são lidos do banco aqui (RNF11), nem por acidente.
  */
 const OWN_FIELDS =
-  'trajetoria atividades telefone telefonePublico trajetoriaAtualizadaEm';
+  'trajetoria atividades telefone telefonePublico trajetoriaAtualizadaEm fotoVersao';
 const PUBLIC_FIELDS =
-  'nomeIniciativa categoriaOfertada trajetoria atividades telefone telefonePublico';
+  'nomeIniciativa categoriaOfertada trajetoria atividades telefone telefonePublico fotoVersao';
 
 type OwnFields = Pick<
   User,
@@ -28,6 +29,7 @@ type OwnFields = Pick<
   | 'telefone'
   | 'telefonePublico'
   | 'trajetoriaAtualizadaEm'
+  | 'fotoVersao'
 >;
 type PublicFields = Pick<
   User,
@@ -37,6 +39,7 @@ type PublicFields = Pick<
   | 'atividades'
   | 'telefone'
   | 'telefonePublico'
+  | 'fotoVersao'
 > & { _id: unknown };
 
 @Injectable()
@@ -51,7 +54,7 @@ export class ProducerProfileService {
       .lean<OwnFields>()
       .exec();
     if (!user) throw new NotFoundException(NOT_FOUND);
-    return this.toOwn(user);
+    return this.toOwn(userId, user);
   }
 
   /**
@@ -89,7 +92,7 @@ export class ProducerProfileService {
       .lean<OwnFields>()
       .exec();
     if (!user) throw new NotFoundException(NOT_FOUND);
-    return this.toOwn(user);
+    return this.toOwn(userId, user);
   }
 
   /** CA05/RN07: o que consumidores e visitantes podem ver. */
@@ -114,6 +117,9 @@ export class ProducerProfileService {
       trajetoria: user.trajetoria,
       ...(user.atividades ? { atividades: user.atividades } : {}),
       ...(telefone ? { telefone } : {}),
+      ...(user.fotoVersao
+        ? { fotoUrl: photoPath(String(user._id), user.fotoVersao) }
+        : {}),
     };
   }
 
@@ -121,7 +127,7 @@ export class ProducerProfileService {
     return { _id: id, perfil: Role.PRODUTOR, ativo: true };
   }
 
-  private toOwn(user: OwnFields): OwnTrajectoryResponse {
+  private toOwn(userId: string, user: OwnFields): OwnTrajectoryResponse {
     return {
       ...(user.trajetoria ? { trajetoria: user.trajetoria } : {}),
       ...(user.atividades ? { atividades: user.atividades } : {}),
@@ -129,6 +135,9 @@ export class ProducerProfileService {
       telefonePublico: user.telefonePublico === true,
       ...(user.trajetoriaAtualizadaEm
         ? { atualizadoEm: user.trajetoriaAtualizadaEm.toISOString() }
+        : {}),
+      ...(user.fotoVersao
+        ? { fotoUrl: photoPath(userId, user.fotoVersao) }
         : {}),
     };
   }

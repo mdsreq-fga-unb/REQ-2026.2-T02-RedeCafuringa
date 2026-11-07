@@ -33,6 +33,13 @@ export class OwnTrajectoryResponse {
     description: 'Data da última gravação da trajetória',
   })
   atualizadoEm?: string;
+
+  @ApiPropertyOptional({
+    example: '/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90',
+    description:
+      'Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.',
+  })
+  fotoUrl?: string;
 }
 
 /** Trajetória como consumidores e visitantes a veem (RN07: só dados públicos). */
@@ -76,4 +83,11 @@ export class PublicTrajectoryResponse {
       'Telefone de contato, presente somente quando o produtor autorizou a divulgação',
   })
   telefone?: string;
+
+  @ApiPropertyOptional({
+    example: '/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90',
+    description:
+      'Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.',
+  })
+  fotoUrl?: string;
 }

@@ -65,6 +65,13 @@ export class User {
   @Prop()
   trajetoriaAtualizadaEm?: Date;
 
+  /**
+   * HU12/RF12: versão da foto de perfil (o binário fica em `producer_photos`).
+   * Ausente quando o produtor não tem foto.
+   */
+  @Prop()
+  fotoVersao?: string;
+
   @Prop({ required: true })
   senhaHash: string;
 
