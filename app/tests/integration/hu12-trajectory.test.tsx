@@ -15,11 +15,13 @@ import {
     callsTo,
     editorRoute,
     fillTrajectory,
+    fotoUrl,
     json,
     mockTrajectoryApi,
     openEditor,
     ownPath,
     ownTrajectory,
+    photoPath,
     seedSession,
     selectPhoto,
     story,
@@ -308,7 +310,7 @@ describe("HU12 — acesso, formulário e contrato HTTP", () => {
         },
     );
 
-    it("protótipo: seleciona uma foto com nome acessível, sem inventar upload no contrato da trajetória", async () => {
+    it("RF12: selecionar a foto não envia nada antes de salvar", async () => {
         seedSession();
         const api = mockTrajectoryApi();
         const { user } = await openEditor();
@@ -317,8 +319,95 @@ describe("HU12 — acesso, formulário e contrato HTTP", () => {
             (screen.getByLabelText(/^Adicionar foto/i) as HTMLInputElement)
                 .files?.[0],
         ).toBe(file);
+        expect(callsTo(api, photoPath, "PUT")).toHaveLength(0);
         expect(callsTo(api, ownPath, "PUT")).toHaveLength(0);
     });
+
+    it("RF12: ao salvar, grava a trajetória e envia a foto em multipart com Bearer", async () => {
+        seedSession();
+        const api = mockTrajectoryApi();
+        const { user } = await openEditor();
+        const file = await selectPhoto(user);
+        await screen.findByRole("img", { name: "Prévia da foto selecionada" });
+        await user.click(
+            screen.getByRole("button", { name: "Salvar trajetória" }),
+        );
+        expect(
+            await screen.findByText(/trajetória salva com sucesso/i),
+        ).toBeTruthy();
+        // Depois do envio, só a foto salva aparece: a prévia sai de cena.
+        expect(
+            screen.queryByRole("img", { name: "Prévia da foto selecionada" }),
+        ).toBeNull();
+        const [, init] = callsTo(api, photoPath, "PUT")[0];
+        expect(init?.headers).toMatchObject({
+            Authorization: `Bearer ${token}`,
+        });
+        expect(init?.body).toBeInstanceOf(FormData);
+        expect((init?.body as FormData).get("foto")).toBe(file);
+        // O PUT da trajetória continua só com os textos (JSON).
+        expect(
+            JSON.parse(String(callsTo(api, ownPath, "PUT")[0][1]?.body)),
+        ).not.toHaveProperty("foto");
+        expect(
+            screen
+                .getByRole("img", { name: "Sua foto de perfil atual" })
+                .getAttribute("src"),
+        ).toBe(`/api/v1${fotoUrl}`);
+    });
+
+    it("RF12: mostra a foto atual e permite removê-la ao salvar", async () => {
+        seedSession();
+        const api = mockTrajectoryApi({ own: { ...ownTrajectory, fotoUrl } });
+        const { user } = await openEditor();
+        expect(
+            screen
+                .getByRole("img", { name: "Sua foto de perfil atual" })
+                .getAttribute("src"),
+        ).toBe(`/api/v1${fotoUrl}`);
+        await user.click(screen.getByRole("button", { name: "Remover foto" }));
+        expect(
+            screen.queryByRole("img", { name: "Sua foto de perfil atual" }),
+        ).toBeNull();
+        expect(callsTo(api, photoPath, "DELETE")).toHaveLength(0);
+        await user.click(
+            screen.getByRole("button", { name: "Salvar trajetória" }),
+        );
+        await waitFor(() =>
+            expect(callsTo(api, photoPath, "DELETE")).toHaveLength(1),
+        );
+        expect(callsTo(api, photoPath, "PUT")).toHaveLength(0);
+    });
+
+    it.each([
+        [
+            415,
+            { message: "Envie uma foto em PNG, JPEG ou WebP." },
+            /PNG, JPEG ou WebP/,
+        ],
+        [413, { message: "File too large" }, /máximo 5 MB/],
+    ])(
+        "RF12/CA07: foto recusada (%i) informa o motivo, avisa que a trajetória foi salva e mantém a seleção",
+        async (status, body, message) => {
+            seedSession();
+            const api = mockTrajectoryApi({
+                uploadPhoto: () => json(body, status),
+            });
+            const { user } = await openEditor();
+            const file = await selectPhoto(user);
+            await user.click(
+                screen.getByRole("button", { name: "Salvar trajetória" }),
+            );
+            const alert = await screen.findByRole("alert");
+            expect(alert.textContent).toMatch(/trajetória foi salva/i);
+            expect(alert.textContent).toMatch(message);
+            expect(
+                (screen.getByLabelText(/^Adicionar foto/i) as HTMLInputElement)
+                    .files?.[0],
+            ).toBe(file);
+            expect(callsTo(api, ownPath, "PUT")).toHaveLength(1);
+        },
+    );
 
     it("RNF04: formulário sem violações automáticas WCAG A/AA", async () => {
         seedSession();

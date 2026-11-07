@@ -5,6 +5,7 @@ import {
     activities,
     callsTo,
     editorRoute,
+    fotoUrl,
     json,
     mockTrajectoryApi,
     ownPath,
@@ -69,6 +70,24 @@ describe("HU12 — CA05/CA06 e privacidade do perfil", () => {
             ).toBeNull();
         },
     );
+
+    it("RF12: exibe a foto do produtor com texto alternativo quando houver", async () => {
+        mockTrajectoryApi({ publicData: { ...publicTrajectory, fotoUrl } });
+        window.location.hash = publicRoute;
+        render(<App />);
+        const photo = await screen.findByRole("img", {
+            name: "Foto de Horta da Maria",
+        });
+        expect(photo.getAttribute("src")).toBe(`/api/v1${fotoUrl}`);
+    });
+
+    it("RF12: sem foto, não exibe imagem quebrada", async () => {
+        mockTrajectoryApi();
+        window.location.hash = publicRoute;
+        render(<App />);
+        await screen.findByRole("heading", { name: "Horta da Maria" });
+        expect(screen.queryByRole("img", { name: /foto de/i })).toBeNull();
+    });
 
     it("RN07/RNF11: telefone ausente na resposta pública não é recuperado dos dados locais", async () => {
         seedSession();

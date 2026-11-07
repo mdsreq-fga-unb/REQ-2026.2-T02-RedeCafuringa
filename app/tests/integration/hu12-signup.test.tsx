@@ -14,6 +14,7 @@ import {
     json,
     mockTrajectoryApi,
     ownPath,
+    photoPath,
     selectPhoto,
     signupRoute,
     story,
@@ -241,6 +242,59 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
                 name: "Você já faz parte da rede",
             }),
         ).toBeTruthy();
+    });
+
+    it("RF12: a foto escolhida no cadastro é enviada com o token do novo titular, depois da trajetória", async () => {
+        const api = mockTrajectoryApi();
+        const user = await continueSignup();
+        fillTrajectory();
+        const file = await selectPhoto(user);
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+        expect(
+            await screen.findByRole("heading", {
+                name: "Você já faz parte da rede",
+            }),
+        ).toBeTruthy();
+        const [, init] = callsTo(api, photoPath, "PUT")[0];
+        expect(init?.headers).toMatchObject({
+            Authorization: `Bearer ${token}`,
+        });
+        expect((init?.body as FormData).get("foto")).toBe(file);
+        const order = api.mock.calls.map(
+            ([input, req]) =>
+                `${req?.method ?? "GET"} ${new URL(String(input), "http://localhost").pathname}`,
+        );
+        expect(order.indexOf(`PUT ${ownPath}`)).toBeLessThan(
+            order.indexOf(`PUT ${photoPath}`),
+        );
+    });
+
+    it("RF12/CA07: se a foto falhar no cadastro, informa e permite repetir sem recriar a conta", async () => {
+        let failPhoto = true;
+        const api = mockTrajectoryApi({
+            uploadPhoto: () =>
+                failPhoto
+                    ? json(
+                          { message: "Envie uma foto em PNG, JPEG ou WebP." },
+                          415,
+                      )
+                    : json({ fotoUrl: "/producers/x/photo?v=1" }),
+        });
+        const user = await continueSignup();
+        fillTrajectory();
+        await selectPhoto(user);
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+        const alert = await screen.findByRole("alert");
+        expect(alert.textContent).toMatch(/PNG, JPEG ou WebP/);
+        failPhoto = false;
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+        expect(
+            await screen.findByRole("heading", {
+                name: "Você já faz parte da rede",
+            }),
+        ).toBeTruthy();
+        expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
+        expect(callsTo(api, photoPath, "PUT")).toHaveLength(2);
     });
 
     it("CA07: se a conta foi criada mas a trajetória falhou, preserva o rascunho e repete somente o PUT", async () => {

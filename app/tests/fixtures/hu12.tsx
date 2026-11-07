@@ -8,6 +8,8 @@ export const producerId = "64b0c0ffee0000000000abcd";
 export const token = "hu12-producer-token";
 export const ownPath = "/api/v1/producers/me/trajectory";
 export const publicPath = `/api/v1/producers/${producerId}/trajectory`;
+export const photoPath = "/api/v1/producers/me/photo";
+export const fotoUrl = `/producers/${producerId}/photo?v=Q2FmdXJpbmdhRm90`;
 export const editorRoute = "#/minha-trajetoria";
 export const signupRoute = "#/cadastro/trajetoria";
 export const publicRoute = `#/produtor/${producerId}`;
@@ -53,6 +55,8 @@ export function mockTrajectoryApi(
         getOwn?: Handler;
         save?: Handler;
         getPublic?: Handler;
+        uploadPhoto?: Handler;
+        deletePhoto?: Handler;
         register?: Handler;
         login?: Handler;
     } = {},
@@ -100,6 +104,13 @@ export function mockTrajectoryApi(
                         ...JSON.parse(String(init.body)),
                         atualizadoEm: "2026-11-06T12:00:00.000Z",
                     })
+                );
+            if (path === photoPath && method === "PUT")
+                return options.uploadPhoto?.(init) ?? json({ fotoUrl });
+            if (path === photoPath && method === "DELETE")
+                return (
+                    options.deletePhoto?.(init) ??
+                    new Response(null, { status: 204 })
                 );
             if (path === publicPath && method === "GET")
                 return (
@@ -155,7 +166,7 @@ export function fillTrajectory(text = story, work = activities) {
 }
 
 export async function selectPhoto(user: ReturnType<typeof userEvent.setup>) {
-    // PNG válido de 1 × 1: só testa a seleção local, não inventa upload no backend.
+    // PNG válido de 1 × 1. O jsdom não decodifica imagens: o arquivo segue original.
     const bytes = Uint8Array.from(
         atob(
             "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aD1sAAAAASUVORK5CYII=",
