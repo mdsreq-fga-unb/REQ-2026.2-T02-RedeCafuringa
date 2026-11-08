@@ -72,7 +72,7 @@ export function App() {
         path === "/conta-criada/consumer" ||
         path === "/conta-criada/producer" ||
         path === "/recuperar-acesso" ||
-        path === "/redefinir-senha" ||
+        path === "/nova-senha" ||
         path === "/cadastro";
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
@@ -204,7 +204,7 @@ export function App() {
                         }
                     />
                 )}
-                {path === "/redefinir-senha" && (
+                {path === "/nova-senha" && (
                     <ResetPasswordPage
                         token={recoveryToken}
                         onNavigate={navigate}

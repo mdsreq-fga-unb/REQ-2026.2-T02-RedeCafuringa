@@ -6,7 +6,10 @@ import { ApiHttpError } from "@/shared/api";
 
 type ConsumerData = Parameters<typeof registerMockConsumer>[0];
 
-function httpError(status: number, extra: { retryAfterSeconds?: number } = {}) {
+function httpError(
+    status: number,
+    extra: { retryAfterSeconds?: number; details?: string[] } = {},
+) {
     return Object.assign(Object.create(ApiHttpError.prototype), {
         status,
         message: `HTTP ${status}`,
@@ -38,11 +41,12 @@ describe("recoveryService — API real (HU10)", () => {
         const { service, post } = createService();
         post.mockResolvedValue(undefined);
 
-        const result = await service.requestAccessRecovery("  Ana@Exemplo.com ");
+        const result =
+            await service.requestAccessRecovery("  Ana@Exemplo.com ");
 
         expect(result).toEqual({ ok: true });
         expect(post).toHaveBeenCalledWith(
-            "/auth/recuperar-acesso",
+            "/auth/password-reset/request",
             { email: "ana@exemplo.com" },
             { auth: false },
         );
@@ -81,7 +85,7 @@ describe("recoveryService — API real (HU10)", () => {
 
         expect(result).toEqual({ ok: true });
         expect(post).toHaveBeenCalledWith(
-            "/auth/redefinir-senha",
+            "/auth/password-reset/confirm",
             { token: "abc123", novaSenha: "novaSenha1" },
             { auth: false },
         );
@@ -94,6 +98,19 @@ describe("recoveryService — API real (HU10)", () => {
         await expect(
             service.resetPassword({ token: "velho", password: "novaSenha1" }),
         ).resolves.toEqual({ ok: false, reason: "invalid_token" });
+    });
+
+    it("não trata o 400 de senha fora da política como link inválido (o link segue valendo)", async () => {
+        const { service, post } = createService();
+        post.mockRejectedValue(
+            httpError(400, {
+                details: ["A senha deve ter ao menos 8 caracteres."],
+            }),
+        );
+
+        await expect(
+            service.resetPassword({ token: "abc123", password: "curta" }),
+        ).resolves.toEqual({ ok: false, reason: "error" });
     });
 
     it("informa o limite de tentativas ao redefinir a senha", async () => {

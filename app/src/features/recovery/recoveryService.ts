@@ -1,7 +1,12 @@
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { ApiHttpError, getApiClient } from "@/shared/api";
 import { requestMockRecovery, resetMockPassword } from "./mockRecovery";
-import { toRecoverAccessBody, toResetPasswordBody } from "./recoveryApi";
+import {
+    CONFIRM_RESET_PATH,
+    REQUEST_RECOVERY_PATH,
+    toRecoverAccessBody,
+    toResetPasswordBody,
+} from "./recoveryApi";
 
 export type RecoverAccessResult =
     | { ok: true }
@@ -23,9 +28,11 @@ export type RecoveryServiceDeps = {
 
 export function createRecoveryService(deps: RecoveryServiceDeps) {
     return {
-        // POST /auth/recuperar-acesso { email } -> 202 (sempre, exista a conta ou não)
-        //   429 muitas tentativas
-        async requestAccessRecovery(email: string): Promise<RecoverAccessResult> {
+        // POST /auth/password-reset/request { email } -> 202 (sempre, exista a conta ou não)
+        //   400 e-mail inválido | 429 muitas tentativas
+        async requestAccessRecovery(
+            email: string,
+        ): Promise<RecoverAccessResult> {
             if (deps.useMock) {
                 await requestMockRecovery(email);
                 return { ok: true };
@@ -35,7 +42,7 @@ export function createRecoveryService(deps: RecoveryServiceDeps) {
                 await deps
                     .getClient()
                     .post<unknown>(
-                        "/auth/recuperar-acesso",
+                        REQUEST_RECOVERY_PATH,
                         toRecoverAccessBody({ email }),
                         { auth: false },
                     );
@@ -52,8 +59,9 @@ export function createRecoveryService(deps: RecoveryServiceDeps) {
             }
         },
 
-        // POST /auth/redefinir-senha { token, novaSenha } -> 204
-        //   400 token inválido ou expirado | 429 muitas tentativas
+        // POST /auth/password-reset/confirm { token, novaSenha } -> 200
+        //   400 link inválido/expirado (mensagem única) ou senha fora da política (lista de
+        //   mensagens; nesse caso o link continua valendo) | 429 muitas tentativas
         async resetPassword(input: {
             token: string;
             password: string;
@@ -68,7 +76,7 @@ export function createRecoveryService(deps: RecoveryServiceDeps) {
                 await deps
                     .getClient()
                     .post<unknown>(
-                        "/auth/redefinir-senha",
+                        CONFIRM_RESET_PATH,
                         toResetPasswordBody(input),
                         { auth: false },
                     );
@@ -76,7 +84,11 @@ export function createRecoveryService(deps: RecoveryServiceDeps) {
             } catch (error) {
                 if (error instanceof ApiHttpError) {
                     if (error.status === 400) {
-                        return { ok: false, reason: "invalid_token" };
+                        // Lista de mensagens = senha recusada pela política: o link
+                        // ainda vale, então não pode ser mostrado como link inválido.
+                        return error.details.length > 0
+                            ? { ok: false, reason: "error" }
+                            : { ok: false, reason: "invalid_token" };
                     }
                     if (error.status === 429) {
                         return {

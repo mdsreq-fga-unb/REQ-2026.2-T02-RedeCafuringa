@@ -177,7 +177,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         expect(screen.queryByRole("status")).toBeNull();
     });
 
-        // HU10, critério 1 (acesso à recuperação a partir do login)
+    // HU10, critério 1 (acesso à recuperação a partir do login)
     it("oferece o caminho para recuperar o acesso sem tentar entrar", async () => {
         const { onNavigate, user } = renderLogin();
 

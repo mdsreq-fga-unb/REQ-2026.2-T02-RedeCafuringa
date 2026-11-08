@@ -66,7 +66,7 @@ export function getMockRecoveryLink(email: string): string | null {
     const found = readTokens().find(
         (item) => item.email === target && item.expiresAt >= now,
     );
-    return found ? `#/redefinir-senha?token=${found.token}` : null;
+    return found ? `#/nova-senha?token=${found.token}` : null;
 }
 
 /** true quando o token era válido e a senha foi trocada; o token é de uso único. */

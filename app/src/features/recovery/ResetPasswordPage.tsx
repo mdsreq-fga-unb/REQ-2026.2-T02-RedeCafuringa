@@ -8,7 +8,7 @@ import type { NewPasswordErrors } from "./recoveryValidation";
 import { rateLimitMessage } from "./recoveryMessages";
 
 type ResetPasswordPageProps = {
-    /** Token do link de recuperação (`#/redefinir-senha?token=...`); null se faltar. */
+    /** Token do link de recuperação (`#/nova-senha?token=...`); null se faltar. */
     token: string | null;
     onNavigate: (path: string) => void;
 };
@@ -87,7 +87,9 @@ export function ResetPasswordPage({
         <section className="login-page recovery-page">
             <BackButton label="Voltar" onClick={() => onNavigate("/entrar")} />
             <h1>Crie uma nova senha</h1>
-            <p className="body-copy">Etapa acessada pelo link de recuperação.</p>
+            <p className="body-copy">
+                Etapa acessada pelo link de recuperação.
+            </p>
 
             <form className="login-form" onSubmit={handleSubmit} noValidate>
                 {formError && (
@@ -135,7 +137,10 @@ export function ResetPasswordPage({
                     }
                 />
                 {errors.confirmPassword && (
-                    <p id="reset-confirm-password-error" className="field-error">
+                    <p
+                        id="reset-confirm-password-error"
+                        className="field-error"
+                    >
                         {errors.confirmPassword}
                     </p>
                 )}

@@ -24,8 +24,8 @@ const ROUTES = [
     "/oferta/queijos",
     "/oferta/mel",
     "/recuperar-acesso",
-    "/redefinir-senha?token=abc123",
-    "/redefinir-senha",
+    "/nova-senha?token=abc123",
+    "/nova-senha",
 ];
 
 async function violationsIn(container: HTMLElement) {
@@ -126,7 +126,7 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
         expect(found.some((v) => v.startsWith("label"))).toBe(true);
     });
 
-        it("o formulário de recuperação de acesso tem rótulo e campo acessíveis", async () => {
+    it("o formulário de recuperação de acesso tem rótulo e campo acessíveis", async () => {
         window.location.hash = "#/recuperar-acesso";
         const { container } = render(<App />);
 
@@ -138,13 +138,11 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
         window.location.hash = "#/recuperar-acesso";
         const { container } = render(<App />);
 
-        await userEvent
-            .setup()
-            .click(
-                await screen.findByRole("button", {
-                    name: "Enviar instruções",
-                }),
-            );
+        await userEvent.setup().click(
+            await screen.findByRole("button", {
+                name: "Enviar instruções",
+            }),
+        );
 
         expect(await screen.findByText("Informe o e-mail.")).toBeTruthy();
         expect(
@@ -173,7 +171,7 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
     });
 
     it("o formulário de nova senha tem rótulos e campos acessíveis", async () => {
-        window.location.hash = "#/redefinir-senha?token=abc123";
+        window.location.hash = "#/nova-senha?token=abc123";
         const { container } = render(<App />);
 
         expect(await screen.findByLabelText("Nova senha")).toBeTruthy();
@@ -182,7 +180,7 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
     });
 
     it("a nova senha com erros por campo continua sem violações", async () => {
-        window.location.hash = "#/redefinir-senha?token=abc123";
+        window.location.hash = "#/nova-senha?token=abc123";
         const { container } = render(<App />);
 
         await userEvent

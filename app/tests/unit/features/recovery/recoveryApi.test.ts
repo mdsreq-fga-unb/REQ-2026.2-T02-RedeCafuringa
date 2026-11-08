@@ -19,7 +19,10 @@ describe("recoveryApi — contrato da HU10", () => {
 
     it("remove espaços das pontas do token", () => {
         expect(
-            toResetPasswordBody({ token: "  abc123  ", password: "novaSenha1" }),
+            toResetPasswordBody({
+                token: "  abc123  ",
+                password: "novaSenha1",
+            }),
         ).toEqual({ token: "abc123", novaSenha: "novaSenha1" });
     });
 

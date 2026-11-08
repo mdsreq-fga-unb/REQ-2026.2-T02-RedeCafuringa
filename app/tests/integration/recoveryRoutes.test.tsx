@@ -31,7 +31,7 @@ describe("App — rotas da recuperação de acesso (HU10)", () => {
     });
 
     it("abre a tela de nova senha pelo link com token, também sem a barra inferior", async () => {
-        const { container } = renderAt("/redefinir-senha?token=abc123");
+        const { container } = renderAt("/nova-senha?token=abc123");
 
         expect(
             await screen.findByRole("heading", { name: "Crie uma nova senha" }),
@@ -40,7 +40,7 @@ describe("App — rotas da recuperação de acesso (HU10)", () => {
     });
 
     it("mostra a orientação de link inválido quando o link não tem token", async () => {
-        renderAt("/redefinir-senha");
+        renderAt("/nova-senha");
 
         expect(
             await screen.findByRole("heading", {

@@ -115,11 +115,15 @@ describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
         await sendEmail(user);
         await screen.findByRole("heading", { name: "Confira seu e-mail" });
 
-        await user.click(screen.getByRole("button", { name: "Reenviar e-mail" }));
+        await user.click(
+            screen.getByRole("button", { name: "Reenviar e-mail" }),
+        );
 
         expect(await screen.findByText("E-mail reenviado.")).toBeTruthy();
         expect(requestAccessRecovery).toHaveBeenCalledTimes(2);
-        expect(requestAccessRecovery).toHaveBeenLastCalledWith("ana@exemplo.com");
+        expect(requestAccessRecovery).toHaveBeenLastCalledWith(
+            "ana@exemplo.com",
+        );
     });
 
     it("mantém a confirmação e mostra o erro quando o reenvio falha", async () => {
@@ -131,7 +135,9 @@ describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
             reason: "rate_limit",
         });
 
-        await user.click(screen.getByRole("button", { name: "Reenviar e-mail" }));
+        await user.click(
+            screen.getByRole("button", { name: "Reenviar e-mail" }),
+        );
 
         expect((await screen.findByRole("alert")).textContent).toBe(
             "Muitas tentativas. Aguarde alguns instantes e tente novamente.",
@@ -164,9 +170,9 @@ describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
         expect(
             screen.getByRole("heading", { name: "Vamos recuperar seu acesso" }),
         ).toBeTruthy();
-        expect((screen.getByLabelText("E-mail") as HTMLInputElement).value).toBe(
-            "ana@exemplo.com",
-        );
+        expect(
+            (screen.getByLabelText("E-mail") as HTMLInputElement).value,
+        ).toBe("ana@exemplo.com");
     });
 
     // Critério 6 (falhas do serviço)
@@ -238,7 +244,7 @@ describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
 
     // Demonstração (modo mock)
     it("mostra o link de demonstração quando a página recebe getDemoLink", async () => {
-        const getDemoLink = vi.fn().mockReturnValue("#/redefinir-senha?token=abc");
+        const getDemoLink = vi.fn().mockReturnValue("#/nova-senha?token=abc");
         const { user } = renderPage({ getDemoLink });
 
         await sendEmail(user);
@@ -246,7 +252,7 @@ describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
         const link = await screen.findByRole("link", {
             name: "abrir link de redefinição",
         });
-        expect(link.getAttribute("href")).toBe("#/redefinir-senha?token=abc");
+        expect(link.getAttribute("href")).toBe("#/nova-senha?token=abc");
         expect(getDemoLink).toHaveBeenCalledWith("ana@exemplo.com");
     });
 

@@ -35,7 +35,10 @@ describe("HU10 — fluxo completo de recuperação de acesso", () => {
         await user.click(
             await screen.findByRole("button", { name: "Recuperar acesso" }),
         );
-        await user.type(await screen.findByLabelText("E-mail"), "maria@teste.com");
+        await user.type(
+            await screen.findByLabelText("E-mail"),
+            "maria@teste.com",
+        );
         await user.click(
             screen.getByRole("button", { name: "Enviar instruções" }),
         );
@@ -46,12 +49,17 @@ describe("HU10 — fluxo completo de recuperação de acesso", () => {
                 name: "abrir link de redefinição",
             }),
         );
-        await user.type(await screen.findByLabelText("Nova senha"), "novaSenha1");
+        await user.type(
+            await screen.findByLabelText("Nova senha"),
+            "novaSenha1",
+        );
         await user.type(
             screen.getByLabelText("Confirmar nova senha"),
             "novaSenha1",
         );
-        await user.click(screen.getByRole("button", { name: "Salvar e entrar" }));
+        await user.click(
+            screen.getByRole("button", { name: "Salvar e entrar" }),
+        );
 
         // Login com a senha nova
         expect(

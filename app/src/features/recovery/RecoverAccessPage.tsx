@@ -16,7 +16,7 @@ type RecoverAccessPageProps = {
 function failureMessage(
     result: Exclude<RecoverAccessResult, { ok: true }>,
 ): string {
-        if (result.reason === "rate_limit") {
+    if (result.reason === "rate_limit") {
         return rateLimitMessage(result.retryAfterSeconds);
     }
     return "Não foi possível enviar as instruções agora. Tente novamente em instantes.";
@@ -97,7 +97,8 @@ export function RecoverAccessPage({
 
                 {demoLink && (
                     <p className="demo-note">
-                        Demonstração: <a href={demoLink}>abrir link de redefinição</a>
+                        Demonstração:{" "}
+                        <a href={demoLink}>abrir link de redefinição</a>
                     </p>
                 )}
 

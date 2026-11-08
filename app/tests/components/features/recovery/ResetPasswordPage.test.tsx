@@ -62,9 +62,9 @@ describe("ResetPasswordPage — HU10 Recuperar acesso à conta", () => {
     it("esconde as senhas digitadas", () => {
         renderPage();
 
-        expect(
-            screen.getByLabelText("Nova senha").getAttribute("type"),
-        ).toBe("password");
+        expect(screen.getByLabelText("Nova senha").getAttribute("type")).toBe(
+            "password",
+        );
         expect(
             screen.getByLabelText("Confirmar nova senha").getAttribute("type"),
         ).toBe("password");

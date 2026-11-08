@@ -11,7 +11,7 @@ const getInitialRoute = () => {
         "/catalogo",
         "/entrar",
         "/recuperar-acesso",
-        "/redefinir-senha",
+        "/nova-senha",
         "/conta",
         "/escolher-perfil",
         "/login/consumer",

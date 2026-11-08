@@ -38,7 +38,7 @@ describe("mockRecovery — simulação da recuperação de acesso (HU10)", () =>
         await requestMockRecovery("ana@exemplo.com");
 
         expect(getMockRecoveryLink("ana@exemplo.com")).toMatch(
-            /^#\/redefinir-senha\?token=.+$/,
+            /^#\/nova-senha\?token=.+$/,
         );
     });
 
@@ -111,7 +111,10 @@ describe("mockRecovery — simulação da recuperação de acesso (HU10)", () =>
         await registerConsumer("maria@teste.com", "senhaAntiga1");
 
         await expect(
-            resetMockPassword({ token: "token-inexistente", password: "novaSenha1" }),
+            resetMockPassword({
+                token: "token-inexistente",
+                password: "novaSenha1",
+            }),
         ).resolves.toBe(false);
 
         await expect(

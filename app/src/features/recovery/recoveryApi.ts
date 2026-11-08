@@ -1,12 +1,16 @@
-// Contrato proposto para a HU10 (ainda não existe no backend / shared/openapi.json).
-// Quando o backend publicar as rotas, estes tipos passam a vir de components["schemas"].
+import type { components } from "@/shared/api/schema";
 
-// POST /auth/recuperar-acesso  { email }  ->  202 (sempre, exista a conta ou não)
-export type RecoverAccessBody = { email: string };
+// Contrato publicado pelo backend (shared/openapi.json, tag `auth`):
+//   POST /auth/password-reset/request  { email }            -> 202 (sempre, exista a conta ou não) | 400 | 429
+//   POST /auth/password-reset/confirm  { token, novaSenha } -> 200 | 400 (link inválido ou senha fora da política) | 429
+// Os corpos vêm dos tipos gerados: se o contrato mudar, o typecheck acusa.
+export type RecoverAccessBody =
+    components["schemas"]["RequestPasswordResetDto"];
+export type ResetPasswordBody =
+    components["schemas"]["ConfirmPasswordResetDto"];
 
-// POST /auth/redefinir-senha  { token, novaSenha }  ->  204
-//   400 token inválido ou expirado | 429 muitas tentativas
-export type ResetPasswordBody = { token: string; novaSenha: string };
+export const REQUEST_RECOVERY_PATH = "/auth/password-reset/request";
+export const CONFIRM_RESET_PATH = "/auth/password-reset/confirm";
 
 export function toRecoverAccessBody(input: {
     email: string;
