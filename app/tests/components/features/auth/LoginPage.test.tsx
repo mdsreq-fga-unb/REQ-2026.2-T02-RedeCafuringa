@@ -3,7 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { LoginPage } from "@/features/auth";
 import { login } from "@/features/auth/authService";
-import { InvalidCredentialsError } from "@/features/auth/errors";
+import {
+    AccountDisabledError,
+    InvalidCredentialsError,
+    TooManyAttemptsError,
+} from "@/features/auth/errors";
 import type { AuthResult } from "@/shared/types";
 
 vi.mock("@/features/auth/authService");
@@ -91,6 +95,42 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
 
         const alert = await screen.findByRole("alert");
         expect(alert.textContent).toContain("Não foi possível entrar agora");
+    });
+
+    it("orienta a procurar a administração quando a conta está desativada", async () => {
+        vi.mocked(login).mockRejectedValue(new AccountDisabledError());
+        const { onSignIn, user } = renderLogin();
+
+        await fillAndSubmit(user, { email: validEmail, password: "senha123" });
+
+        const alert = await screen.findByRole("alert");
+        expect(alert.textContent).toContain("Conta desativada");
+        expect(alert.textContent).toContain("administração");
+        expect(alert.textContent).not.toContain("Tente novamente em instantes");
+        expect(onSignIn).not.toHaveBeenCalled();
+    });
+
+    it("informa quanto esperar quando há tentativas demais", async () => {
+        vi.mocked(login).mockRejectedValue(new TooManyAttemptsError(90));
+        const { onSignIn, user } = renderLogin();
+
+        await fillAndSubmit(user, { email: validEmail, password: "senha123" });
+
+        const alert = await screen.findByRole("alert");
+        expect(alert.textContent).toContain("Muitas tentativas");
+        expect(alert.textContent).toContain("2 minutos");
+        expect(onSignIn).not.toHaveBeenCalled();
+    });
+
+    it("pede para aguardar sem inventar um tempo quando o servidor não informa a espera", async () => {
+        vi.mocked(login).mockRejectedValue(new TooManyAttemptsError());
+        const { user } = renderLogin();
+
+        await fillAndSubmit(user, { email: validEmail, password: "senha123" });
+
+        const alert = await screen.findByRole("alert");
+        expect(alert.textContent).toContain("Muitas tentativas");
+        expect(alert.textContent).toContain("alguns instantes");
     });
 
     // Critério 5
