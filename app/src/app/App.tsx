@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { BrandHeader, BottomNavigation } from "@/components";
 import { AccountPage } from "@/features/account";
 import {
@@ -32,11 +32,16 @@ import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { DemoNavigation } from "@/features/auth/DemoNavigation";
 import { RecoverAccessPage, ResetPasswordPage } from "@/features/recovery";
 import { getMockRecoveryLink } from "@/features/recovery/mockRecovery";
+import { AdminUsersPage } from "@/features/users/AdminUsersPage";
 
 export function App() {
     const { route, navigate } = useHashRoute();
     const { role, consumerName, email, cpf, signIn, signOut } =
         useDemoSession();
+    const endAdminSession = useCallback(() => {
+        signOut();
+        navigate("/admin/entrar");
+    }, [signOut, navigate]);
     const { settings, draft, setDraft, saved, setSaved, save } =
         useContactSettings();
 
@@ -46,13 +51,22 @@ export function App() {
     const justRegistered = query.get("cadastro") === "ok";
     const justRecovered = query.get("recuperacao") === "ok";
     const recoveryToken = query.get("token");
-    // RN03/RNF08: só administrador autenticado cadastra outro (o backend também exige).
+    // RN03/RNF08: cadastro e consulta são exclusivos de administradores.
+    const usersRoute =
+        path === "/admin/usuarios" || path.startsWith("/admin/usuarios/");
     const adminOnly =
-        path === "/cadastro/administrador" || path === "/conta-criada/admin";
-    const adminBlocked = adminOnly && role !== "admin";
+        usersRoute ||
+        path === "/cadastro/administrador" ||
+        path === "/conta-criada/admin";
+    const adminBlocked =
+        adminOnly &&
+        (role !== "admin" ||
+            (usersRoute &&
+                !isMockAuthEnabled &&
+                !localStorage.getItem("cafuringa-token")));
     useEffect(() => {
         if (adminBlocked) navigate("/admin/entrar");
-    }, [adminBlocked]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [adminBlocked, navigate]);
     const needsProfileSelection =
         role === null &&
         ["/conta", "/notificacoes", "/reservas"].includes(path);
@@ -110,6 +124,10 @@ export function App() {
             "contato",
         );
         signIn(auth);
+        if (nextRole === "admin") {
+            navigate("/admin/acesso");
+            return;
+        }
 
         if (
             nextRole === "consumer" &&
@@ -144,8 +162,19 @@ export function App() {
                 <DemoNavigation onNavigate={navigate} onSignIn={signIn} />
             )}
             <main className="main-content">
+                {usersRoute && !adminBlocked && (
+                    <AdminUsersPage
+                        key={path}
+                        id={path.split("/")[3]}
+                        onNavigate={navigate}
+                        onUnauthorized={endAdminSession}
+                    />
+                )}
                 {path === "/admin/acesso" && (
-                    <AdminAccessPage onNavigate={navigate} />
+                    <AdminAccessPage
+                        onNavigate={navigate}
+                        authenticated={role === "admin"}
+                    />
                 )}
                 {path === "/admin/entrar" && (
                     <AdminLoginPage onNavigate={navigate} onSignIn={signIn} />
@@ -182,7 +211,12 @@ export function App() {
                     />
                 )}
                 {showProfileSelection && (
-                    <ConsumerProfileSelectionPage onNavigate={navigate} />
+                    <ConsumerProfileSelectionPage
+                        onNavigate={(nextPath) => {
+                            if (nextPath === "/admin/acesso") signOut();
+                            navigate(nextPath);
+                        }}
+                    />
                 )}
                 {showLogin && (
                     <LoginPage

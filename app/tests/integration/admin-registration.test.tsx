@@ -1,7 +1,13 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { App } from "@/app/App";
+import { renderAdminApp } from "../fixtures/renderAdminApp";
+vi.mock("@/features/auth/authService", () => ({
+    login: async () => ({
+        token: "session-token",
+        user: { id: "admin", name: "Administrador", role: "admin" },
+    }),
+}));
 import { registerAdmin } from "@/features/auth/registrationService";
 
 vi.mock("@/features/auth/registrationService", () => ({
@@ -25,11 +31,10 @@ afterEach(() => {
 });
 
 async function openAdminRegistration(user: ReturnType<typeof userEvent.setup>) {
-    render(<App />);
+    await renderAdminApp("#/admin/acesso");
     await user.click(
-        await screen.findByRole("button", { name: "Cadastrar adm" }),
+        await screen.findByRole("link", { name: "Cadastrar administrador" }),
     );
-    await user.click(screen.getByRole("button", { name: "Continuar" }));
     expect(
         await screen.findByRole("heading", {
             name: "Cadastro de administrador",

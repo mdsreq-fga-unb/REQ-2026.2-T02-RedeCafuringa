@@ -4,6 +4,19 @@ import type { AuthResult, Role } from "../../shared/types";
 import { producerName } from "../offers/offerData";
 import { InvalidCredentialsError } from "./errors";
 import type { ConsumerSignupData } from "./registrationService";
+import type { components } from "../../shared/api/schema";
+
+type UserDetail = components["schemas"]["UserDetailResponse"];
+type ProducerDetails = Pick<
+    UserDetail,
+    | "nomeIniciativa"
+    | "nomeResponsavel"
+    | "cnpj"
+    | "localidade"
+    | "categoriaOfertada"
+    | "formasPagamento"
+    | "telefone"
+>;
 
 type MockUser = {
     // Administrador não tem CPF (HU03).
@@ -11,6 +24,7 @@ type MockUser = {
     password: string;
     email: string;
     user: AuthResult["user"];
+    producerDetails?: ProducerDetails;
 };
 
 const mockUsers: MockUser[] = [
@@ -29,6 +43,13 @@ const mockUsers: MockUser[] = [
         email: "produtor@exemplo.com",
         password: "senha123",
         user: { id: 2, name: producerName, role: "producer" },
+        producerDetails: {
+            nomeIniciativa: "Flor do campo",
+            nomeResponsavel: producerName,
+            localidade: "Cafuringa, Brasília, DF",
+            categoriaOfertada: "Produtos",
+            formasPagamento: ["Pix", "Cartão de crédito"],
+        },
     },
     {
         email: "admin@exemplo.com",
@@ -165,6 +186,7 @@ export function registerMockUser(account: {
     password: string;
     name: string;
     role: Role;
+    producerDetails?: ProducerDetails;
 }): AuthResult["user"] {
     const numericIds = mockUsers
         .map((item) => Number(item.user.id))
@@ -180,6 +202,7 @@ export function registerMockUser(account: {
         email: account.email.trim().toLowerCase(),
         password: account.password,
         user,
+        producerDetails: account.producerDetails,
     });
     return user;
 }
@@ -252,4 +275,59 @@ export function updateMockPassword(
     }
 
     return updated;
+}
+
+/** Projeção de consulta: nunca retorna as senhas usadas pelo login de demonstração. */
+export function readMockUserDetails(): UserDetail[] {
+    const perfilByRole = {
+        consumer: "CONSUMIDOR",
+        producer: "PRODUTOR",
+        admin: "ADMINISTRADOR",
+    } as const;
+    const maskCpf = (value?: string) => {
+        const digits = value?.replace(/\D/g, "");
+        return digits?.length === 11
+            ? `***.${digits.slice(3, 6)}.${digits.slice(6, 9)}-**`
+            : undefined;
+    };
+    const maskCnpj = (value?: string) => {
+        const digits = value?.replace(/\D/g, "");
+        return digits?.length === 14
+            ? `**.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-**`
+            : undefined;
+    };
+    return [
+        ...mockUsers,
+        ...readRegisteredUsers(),
+        ...readMockAdmins().map((item, index): MockUser => ({
+            ...item,
+            user: {
+                id: `admin-${index + 1}`,
+                name: "Administrador",
+                role: "admin",
+            },
+        })),
+    ].map((item) => {
+        const details = item.producerDetails;
+        return {
+            id: String(item.user.id),
+            nome: details?.nomeResponsavel || item.user.name,
+            email: item.email,
+            perfil: perfilByRole[item.user.role],
+            cpf: maskCpf(item.cpf),
+            ...(item.user.role === "producer" && details
+                ? {
+                      nomeIniciativa: details.nomeIniciativa,
+                      nomeResponsavel: details.nomeResponsavel,
+                      cnpj: maskCnpj(details.cnpj),
+                      localidade: details.localidade,
+                      categoriaOfertada: details.categoriaOfertada,
+                      formasPagamento: details.formasPagamento
+                          ? [...details.formasPagamento]
+                          : undefined,
+                      telefone: details.telefone,
+                  }
+                : {}),
+        };
+    });
 }

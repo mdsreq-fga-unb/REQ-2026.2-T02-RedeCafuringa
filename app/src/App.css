@@ -584,7 +584,20 @@ h2 {
 }
 
 @media (min-width: 700px) {
+    /* Mantém a rolagem disponível sem a barra visual no desktop. */
+    html {
+        scrollbar-width: none;
+    }
+
+    html::-webkit-scrollbar {
+        display: none;
+    }
+
     .app-shell {
+        padding-bottom: 68px;
+    }
+
+    .app-shell.auth-shell {
         padding-bottom: 0;
     }
 
@@ -593,7 +606,7 @@ h2 {
     }
 
     .main-content {
-        min-height: calc(100vh - 61px);
+        min-height: calc(100svh - 128px);
         padding: 0 clamp(32px, 5vw, 64px) 48px;
     }
 
@@ -708,7 +721,7 @@ h2 {
     }
 
     .bottom-nav {
-        position: static;
+        position: fixed;
         width: min(100%, 1120px);
         height: 68px;
         margin: 0 auto;

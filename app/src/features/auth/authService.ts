@@ -36,6 +36,8 @@ export function toAuthResult(response: LoginResponse): AuthResult {
             id: response.usuario.id,
             name: response.usuario.nome,
             role,
+            email: response.usuario.email,
+            cpf: response.usuario.cpf,
         },
     };
 }

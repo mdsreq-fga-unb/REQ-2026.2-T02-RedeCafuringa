@@ -124,6 +124,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar usuários cadastrados
+         * @description HU04: lista consumidores, produtores e administradores em ordem alfabética, com filtro por perfil, busca por nome, e-mail ou iniciativa e paginação (até 50 por página). Nenhum item traz senha nem documentos (RNF11).
+         */
+        get: operations["usersList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalhar usuário cadastrado
+         * @description HU04: dados de uma conta para o administrador, com CPF e CNPJ mascarados e sem senha (CA06, RNF11).
+         */
+        get: operations["usersFindOne"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/login": {
         parameters: {
             query?: never;
@@ -432,6 +472,117 @@ export interface components {
              * @enum {string}
              */
             perfil: "CONSUMIDOR" | "PRODUTOR" | "ADMINISTRADOR";
+        };
+        UserSummaryResponse: {
+            /**
+             * @description Identificador do usuário
+             * @example 665f1c2e9b1d4a0012ab34cd
+             */
+            id: string;
+            /**
+             * @description Nome completo (no produtor, o responsável)
+             * @example Maria das Graças
+             */
+            nome: string;
+            /**
+             * @description E-mail da conta
+             * @example maria@exemplo.com
+             */
+            email: string;
+            /**
+             * @description Perfil de acesso (RN01, CA05)
+             * @enum {string}
+             */
+            perfil: "CONSUMIDOR" | "PRODUTOR" | "ADMINISTRADOR";
+            /**
+             * @description Nome da iniciativa; só em produtores
+             * @example Sítio Boa Vista
+             */
+            nomeIniciativa?: string;
+        };
+        UserListResponse: {
+            /** @description Usuários da página, em ordem alfabética; vazio quando não há registros (CA08) */
+            itens: components["schemas"]["UserSummaryResponse"][];
+            /**
+             * @description Total de usuários que atendem aos filtros
+             * @example 42
+             */
+            total: number;
+            /**
+             * @description Página devolvida
+             * @example 1
+             */
+            pagina: number;
+            /**
+             * @description Tamanho da página
+             * @example 20
+             */
+            limite: number;
+        };
+        UserDetailResponse: {
+            /**
+             * @description Identificador do usuário
+             * @example 665f1c2e9b1d4a0012ab34cd
+             */
+            id: string;
+            /**
+             * @description Nome completo (no produtor, o responsável)
+             * @example Maria das Graças
+             */
+            nome: string;
+            /**
+             * @description E-mail da conta
+             * @example maria@exemplo.com
+             */
+            email: string;
+            /**
+             * @description Perfil de acesso (RN01, CA05)
+             * @enum {string}
+             */
+            perfil: "CONSUMIDOR" | "PRODUTOR" | "ADMINISTRADOR";
+            /**
+             * @description DDD + número; ausente se não informado
+             * @example 61999990000
+             */
+            telefone?: string;
+            /**
+             * @description CPF mascarado; ausente em contas administrativas
+             * @example ***.982.247-**
+             */
+            cpf?: string;
+            /**
+             * @description CNPJ mascarado; só em produtores que o informaram
+             * @example **.222.333/0001-**
+             */
+            cnpj?: string;
+            /**
+             * @description Nome da iniciativa; só em produtores
+             * @example Sítio Boa Vista
+             */
+            nomeIniciativa?: string;
+            /**
+             * @description Responsável pela iniciativa; só em produtores
+             * @example Maria das Graças
+             */
+            nomeResponsavel?: string;
+            /**
+             * @description Localidade; só em produtores
+             * @example Cafuringa, Brasília/DF
+             */
+            localidade?: string;
+            /**
+             * @description Categoria ofertada; só em produtores
+             * @enum {string}
+             */
+            categoriaOfertada?: "Produtos" | "Experiências" | "Produtos e Experiências";
+            /**
+             * @description Formas de pagamento aceitas; só em produtores
+             * @example [
+             *       "PIX",
+             *       "Dinheiro"
+             *     ]
+             */
+            formasPagamento?: string[];
         };
         LoginDto: {
             /**
@@ -1111,6 +1262,111 @@ export interface operations {
             };
             /** @description E-mail já cadastrado */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersList: {
+        parameters: {
+            query?: {
+                /** @description Restringe a consulta a um perfil (CA02, CA03, CA04) */
+                perfil?: "CONSUMIDOR" | "PRODUTOR" | "ADMINISTRADOR";
+                /** @description Trecho do nome, e-mail ou nome da iniciativa */
+                busca?: string;
+                /** @description Página desejada, a partir de 1 */
+                pagina?: number;
+                /** @description Quantidade de usuários por página */
+                limite?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Página de usuários; lista vazia quando não há registros */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserListResponse"];
+                };
+            };
+            /** @description Filtro ou paginação inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: ADMINISTRADOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersFindOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Usuário */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserDetailResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: ADMINISTRADOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Usuário não encontrado */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
