@@ -1,7 +1,11 @@
 import { ApiHttpError, getApiClient } from "../../shared/api";
 import type { components } from "../../shared/api/schema";
 import type { AuthResult, Role } from "../../shared/types";
-import { InvalidCredentialsError } from "./errors";
+import {
+    AccountDisabledError,
+    InvalidCredentialsError,
+    TooManyAttemptsError,
+} from "./errors";
 import { loginMock } from "./mockAuth";
 import { isMockAuthEnabled } from "./authMode";
 
@@ -43,7 +47,7 @@ export function toAuthResult(response: LoginResponse): AuthResult {
 }
 
 // POST /auth/login  { email, senha }  ->  200 { accessToken, tokenType, expiresIn, usuario }
-//   401 credenciais inválidas | 403 conta desativada | 429 muitas tentativas
+//   401 credenciais inválidas | 403 conta desativada (senha correta) | 429 muitas tentativas
 export async function login(credentials: Credentials): Promise<AuthResult> {
     if (isMockAuthEnabled) return loginMock(credentials);
 
@@ -60,8 +64,12 @@ export async function login(credentials: Credentials): Promise<AuthResult> {
             { auth: false },
         );
     } catch (error) {
-        if (error instanceof ApiHttpError && error.status === 401) {
-            throw new InvalidCredentialsError();
+        if (error instanceof ApiHttpError) {
+            if (error.status === 401) throw new InvalidCredentialsError();
+            if (error.status === 403) throw new AccountDisabledError();
+            if (error.status === 429) {
+                throw new TooManyAttemptsError(error.retryAfterSeconds);
+            }
         }
         throw new Error("Falha ao autenticar", { cause: error });
     }
