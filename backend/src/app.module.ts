@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { randomUUID } from 'node:crypto';
 import pino from 'pino';
+import { RetryAfterThrottlerGuard } from './common/throttler/retry-after-throttler.guard.js';
 import { envValidationSchema } from './config/env.validation.js';
 import { resolveMongoUri } from './config/mongo-uri.js';
 import { AuthModule } from './modules/auth/auth.module.js';
@@ -145,7 +146,7 @@ import { UsersModule } from './modules/users/users.module.js';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard,
+      useClass: RetryAfterThrottlerGuard,
     },
     {
       provide: APP_GUARD,
