@@ -9,7 +9,7 @@ import { createTestApp, TestApp } from './utils/test-app.js';
 const LOGIN = '/api/v1/auth/login';
 const ME = '/api/v1/auth/me';
 
-describe('HU09 — Realizar login para acessar o meu perfil (e2e)', () => {
+describe('HU09 — Autenticar usuário (e2e)', () => {
   let t: TestApp;
 
   beforeAll(async () => {
