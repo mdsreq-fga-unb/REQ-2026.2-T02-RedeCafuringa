@@ -89,7 +89,7 @@ export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
                         <input
                             type="search"
                             aria-label="Buscar usuário"
-                            placeholder="Buscar usuário."
+                            placeholder="Busque por nome, e-mail ou iniciativa"
                             maxLength={100}
                             value={busca}
                             onChange={(event) => {

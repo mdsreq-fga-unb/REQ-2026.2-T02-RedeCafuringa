@@ -474,6 +474,7 @@ export function ConsumerSignupPage({
                 )}
                 <SignupFieldInput
                     id="signup-name"
+                    placeholder="Ex.: Maria da Silva"
                     label="Nome completo"
                     value={values.nome}
                     error={errors.nome}
@@ -496,7 +497,7 @@ export function ConsumerSignupPage({
                     error={errors.email}
                     type="email"
                     autoComplete="email"
-                    placeholder="ana@exemplo.com"
+                    placeholder="Ex.: nome@exemplo.com"
                     onChange={(value) => updateField("email", value)}
                 />
                 <BirthDateField
@@ -506,6 +507,7 @@ export function ConsumerSignupPage({
                 />
                 <SignupFieldInput
                     id="signup-password"
+                    placeholder="8+ caracteres, com letras e números"
                     label="Senha"
                     value={values.senha}
                     error={errors.senha}
@@ -515,6 +517,7 @@ export function ConsumerSignupPage({
                 />
                 <SignupFieldInput
                     id="signup-confirm-password"
+                    placeholder="Repita a senha criada"
                     label="Confirmar senha"
                     value={values.confirmarSenha}
                     error={errors.confirmarSenha}
@@ -547,15 +550,24 @@ export function ConsumerSignupSuccessPage({
 
 export function ProducerSignupSuccessPage({
     onNavigate,
-}: ConsumerProfileSelectionPageProps) {
-    return <SignupSuccessPage profile="producer" onNavigate={onNavigate} />;
+    authenticated = false,
+}: ConsumerProfileSelectionPageProps & { authenticated?: boolean }) {
+    return (
+        <SignupSuccessPage
+            profile="producer"
+            onNavigate={onNavigate}
+            authenticated={authenticated}
+        />
+    );
 }
 
 function SignupSuccessPage({
     profile,
     onNavigate,
+    authenticated = false,
 }: ConsumerProfileSelectionPageProps & {
     profile: "consumer" | "producer";
+    authenticated?: boolean;
 }) {
     const isConsumer = profile === "consumer";
 
@@ -565,7 +577,11 @@ function SignupSuccessPage({
                 label="Voltar"
                 onClick={() =>
                     onNavigate(
-                        isConsumer ? "/cadastro/consumidor" : "/cadastro",
+                        authenticated
+                            ? "/conta"
+                            : isConsumer
+                              ? "/cadastro/consumidor"
+                              : "/cadastro",
                     )
                 }
             />
@@ -576,14 +592,19 @@ function SignupSuccessPage({
             </div>
             <h1>Você já faz parte da rede</h1>
             <p className="body-copy">
-                Seu perfil foi criado. Use suas credenciais para acessar a
-                plataforma.
+                {authenticated
+                    ? "Seu perfil e sua trajetória foram registrados. Você já pode acessar sua conta."
+                    : "Seu perfil foi criado. Use suas credenciais para acessar a plataforma."}
             </p>
             <ActionButton
                 variant="orange"
                 onClick={() =>
                     onNavigate(
-                        isConsumer ? "/login/consumer" : "/login/producer",
+                        authenticated
+                            ? "/conta"
+                            : isConsumer
+                              ? "/login/consumer"
+                              : "/login/producer",
                     )
                 }
             >

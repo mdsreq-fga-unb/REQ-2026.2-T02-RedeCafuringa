@@ -211,8 +211,10 @@ export function AdminSignupPage({
                             }
                             placeholder={
                                 field === "email"
-                                    ? "ana@exemplo.com"
-                                    : "••••••••"
+                                    ? "Ex.: nome@exemplo.com"
+                                    : field === "senha"
+                                      ? "8+ caracteres, com letras e números"
+                                      : "Repita a senha criada"
                             }
                             value={values[field]}
                             readOnly={loading}
@@ -373,7 +375,7 @@ export function AdminLoginPage({
                     aria-label="E-mail"
                     type="email"
                     autoComplete="username"
-                    placeholder="admin@exemplo.com"
+                    placeholder="E-mail de administrador cadastrado"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     aria-invalid={Boolean(errors.email)}
@@ -395,7 +397,7 @@ export function AdminLoginPage({
                     id="demo-admin-password"
                     aria-label="Senha"
                     type="password"
-                    placeholder="••••••••"
+                    placeholder="Digite sua senha"
                     autoComplete="current-password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}

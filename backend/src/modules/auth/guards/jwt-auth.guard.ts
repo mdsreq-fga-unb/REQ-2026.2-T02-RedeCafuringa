@@ -7,7 +7,9 @@ import {
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { isRole } from '../../users/domain/role.js';
+import { UsersService } from '../../users/users.service.js';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
+import { isSessionValid } from '../domain/session.js';
 import type {
   AuthenticatedUser,
   JwtPayload,
@@ -27,6 +29,7 @@ export class JwtAuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly jwt: JwtService,
+    private readonly users: UsersService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -51,6 +54,20 @@ export class JwtAuthGuard implements CanActivate {
 
     if (typeof payload.sub !== 'string' || !isRole(payload.perfil)) {
       throw new UnauthorizedException('Token inválido ou expirado');
+    }
+
+    // Revogação (HU10): senha trocada, conta desativada/removida ou perfil
+    // alterado encerram as sessões abertas, mesmo com o token na validade.
+    const account = await this.users.findSessionState(payload.sub);
+    const session = {
+      iat: payload.iat,
+      sat: payload.sat,
+      perfil: payload.perfil,
+    };
+    if (!isSessionValid(session, account)) {
+      throw new UnauthorizedException(
+        'Sessão encerrada. Faça login novamente.',
+      );
     }
 
     request.user = { id: payload.sub, perfil: payload.perfil };

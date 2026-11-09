@@ -50,6 +50,28 @@ export class User {
   @Prop({ type: [String], default: undefined })
   formasPagamento?: string[];
 
+  /** HU12: história do produtor, exibida no perfil público (RN07). Texto simples. */
+  @Prop()
+  trajetoria?: string;
+
+  /** HU12: atividades que o produtor desenvolve. Texto simples. */
+  @Prop()
+  atividades?: string;
+
+  /** HU12/RN07: o telefone só aparece no perfil público se o produtor autorizar. */
+  @Prop({ default: false })
+  telefonePublico: boolean;
+
+  @Prop()
+  trajetoriaAtualizadaEm?: Date;
+
+  /**
+   * HU12/RF12: versão da foto de perfil (o binário fica em `producer_photos`).
+   * Ausente quando o produtor não tem foto.
+   */
+  @Prop()
+  fotoVersao?: string;
+
   @Prop({ required: true })
   senhaHash: string;
 
@@ -58,6 +80,13 @@ export class User {
 
   @Prop({ default: true })
   ativo: boolean;
+
+  /**
+   * HU10: momento da última troca de senha. JWTs emitidos antes disso deixam
+   * de valer (o JwtAuthGuard compara com o `iat` do token).
+   */
+  @Prop()
+  credenciaisAlteradasEm?: Date;
 }
 
 export type UserDocument = HydratedDocument<User>;

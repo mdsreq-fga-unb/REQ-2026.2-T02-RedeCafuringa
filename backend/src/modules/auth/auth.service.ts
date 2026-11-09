@@ -41,7 +41,13 @@ export class AuthService {
       );
     }
 
-    const payload: JwtPayload = { sub: user.id as string, perfil: user.perfil };
+    // `sat` (ms) permite encerrar, na troca de senha, até as sessões abertas
+    // no mesmo segundo (o `iat` do JWT só tem resolução de segundos).
+    const payload: JwtPayload = {
+      sub: user.id as string,
+      perfil: user.perfil,
+      sat: Date.now(),
+    };
 
     return {
       accessToken: await this.jwt.signAsync(payload),

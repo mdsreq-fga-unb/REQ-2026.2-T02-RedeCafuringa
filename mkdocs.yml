@@ -50,6 +50,22 @@ nav:
     - 13. Referências Bibliográficas: visao/referencias.md
     - 14. Vídeo de Apresentação: visao/videos.md
 
+  - AUP - Iterações:
+    - Concepção:
+      - Iteração 1: visao/evidencias/iteracao1.md
+      - Iteração 2: visao/evidencias/iteracao2.md
+    - Elaboração:
+      - Iteração 3: visao/evidencias/iteracao3.md
+      - Iteração 4: visao/evidencias/iteracao4.md
+    - Construção:
+      - Iteração 5: visao/evidencias/iteracao5.md
+      - Iteração 6: visao/evidencias/iteracao6.md
+      - Iteração 7: visao/evidencias/iteracao7.md
+      - Iteração 8: visao/evidencias/iteracao8.md
+    - Transição:
+      - Iteração 9: visao/evidencias/iteracao9.md
+      - Iteração 10: visao/evidencias/iteracao10.md
+
   - Arquitetura:
     - Backend:
         - POC: arquitetura/backend/poc.md
@@ -58,14 +74,17 @@ nav:
         - Segurança e auditoria: arquitetura/backend/seguranca.md
         - Implementação das HUs:
             - HU09 — Autenticar usuário: arquitetura/backend/implementacao/HU09.md
+            - HU10 — Recuperar acesso: arquitetura/backend/implementacao/HU10.md
+            - HU12 — Trajetória do produtor: arquitetura/backend/implementacao/HU12.md
     - Frontend:
-        - Operação: frontend/operacao.md
+        - Operação: arquitetura/frontend/operacao.md
     - Engenharia:
-        - Como contribuir: contribuindo.md
-        - Infraestrutura: infra/visao-geral.md
+        - Como contribuir: arquitetura/contribuindo.md
+        - Padrão de Pull Request: arquitetura/pull-requests.md
+        - Infraestrutura: arquitetura/infra/visao-geral.md
     - Contrato da API:
-        - Referência da API (Swagger): shared/api.md
-        - Versionamento e contrato: shared/contratos.md
+        - Referência da API (Swagger): arquitetura/shared/api.md
+        - Versionamento e contrato: arquitetura/shared/contratos.md
 
 hooks:
   - scripts/mkdocs_hooks.py

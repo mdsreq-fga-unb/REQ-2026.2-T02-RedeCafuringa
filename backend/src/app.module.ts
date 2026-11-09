@@ -8,6 +8,7 @@ import { randomUUID } from 'node:crypto';
 import pino from 'pino';
 import { RetryAfterThrottlerGuard } from './common/throttler/retry-after-throttler.guard.js';
 import { envValidationSchema } from './config/env.validation.js';
+import { MailModule } from './common/mail/mail.module.js';
 import { resolveMongoUri } from './config/mongo-uri.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import {
@@ -18,6 +19,7 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from './modules/auth/guards/roles.guard.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { MetricsModule } from './modules/metrics/metrics.module.js';
+import { ProducerProfileModule } from './modules/producer-profile/producer-profile.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 
 @Module({
@@ -136,10 +138,12 @@ import { UsersModule } from './modules/users/users.module.js';
       }),
     }),
 
+    MailModule,
     HealthModule,
     MetricsModule,
     UsersModule,
     AuthModule,
+    ProducerProfileModule,
   ],
   // A ordem importa: rate limit antes da autenticação (força bruta de token
   // também é limitada) e autenticação antes do papel.

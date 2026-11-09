@@ -5,10 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId, Model } from 'mongoose';
+import { isValidObjectId, Model, Types } from 'mongoose';
 import { PasswordHasher } from '../../common/crypto/password-hasher.js';
 import { PiiCipher } from '../../common/crypto/pii-cipher.js';
 import { maskCnpj, maskCpf } from '../../common/validators/documento.js';
+import type { SessionState } from '../auth/domain/session.js';
 import { isAdult } from './domain/age.js';
 import { Role } from './domain/role.js';
 import { buildUserFilter } from './domain/user-filter.js';
@@ -164,6 +165,41 @@ export class UsersService {
   /** RN05: o login identifica a conta pelo e-mail. */
   findByEmail(email: string): Promise<UserDocument | null> {
     return this.users.findOne({ email: email.toLowerCase() }).exec();
+  }
+
+  /**
+   * HU10: grava a nova senha (somente o hash argon2id) e registra a troca, o que
+   * encerra as sessões abertas antes dela.
+   */
+  async setPassword(id: Types.ObjectId, senha: string): Promise<void> {
+    const senhaHash = await this.hasher.hash(senha);
+    await this.users
+      .updateOne(
+        { _id: id },
+        { $set: { senhaHash, credenciaisAlteradasEm: new Date() } },
+      )
+      .exec();
+  }
+
+  /** O mínimo para o JwtAuthGuard decidir se a sessão do token ainda vale. */
+  async findSessionState(id: string): Promise<SessionState | null> {
+    if (!isValidObjectId(id)) return null;
+    const doc = await this.users
+      .findById(id)
+      .select('ativo perfil credenciaisAlteradasEm')
+      .lean<Partial<SessionState> & Pick<SessionState, 'perfil'>>()
+      .exec();
+    if (!doc) return null;
+
+    // `.lean()` não aplica o default do schema: sem o campo, a conta é ativa,
+    // como o login (documento hidratado) já a trata.
+    return {
+      perfil: doc.perfil,
+      ativo: doc.ativo !== false,
+      ...(doc.credenciaisAlteradasEm
+        ? { credenciaisAlteradasEm: doc.credenciaisAlteradasEm }
+        : {}),
+    };
   }
 
   async findById(id: string): Promise<UserDocument | null> {

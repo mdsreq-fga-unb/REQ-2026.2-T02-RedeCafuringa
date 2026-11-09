@@ -63,16 +63,25 @@ describe('contrato OpenAPI', () => {
     expect(
       operations.map((o) => `${o.method.toUpperCase()} ${o.path}`).sort(),
     ).toEqual([
+      'DELETE /api/v1/producers/me/photo',
       'GET /api/v1/auth/me',
       'GET /api/v1/health',
       'GET /api/v1/health/live',
       'GET /api/v1/health/ready',
+      'GET /api/v1/producers/me/trajectory',
+      'GET /api/v1/producers/{id}/photo',
+      'GET /api/v1/producers/{id}/trajectory',
       'GET /api/v1/users',
       'GET /api/v1/users/{id}',
       'POST /api/v1/auth/login',
+      'POST /api/v1/auth/password-reset/confirm',
+      'POST /api/v1/auth/password-reset/request',
+      'POST /api/v1/auth/password-reset/validate',
       'POST /api/v1/users/admins',
       'POST /api/v1/users/consumers',
       'POST /api/v1/users/producers',
+      'PUT /api/v1/producers/me/photo',
+      'PUT /api/v1/producers/me/trajectory',
     ]);
   });
 
@@ -95,15 +104,19 @@ describe('contrato OpenAPI', () => {
     }
   });
 
-  it('só /auth/me e as rotas administrativas exigem Bearer; o resto é público', () => {
+  it('só /auth/me, as rotas administrativas e a trajetória e a foto próprias exigem Bearer; o resto é público', () => {
     const protectedOps = operations
       .filter((o) => o.op.security?.some((s) => 'bearer' in s))
       .map((o) => `${o.method} ${o.path}`);
     expect(protectedOps.sort()).toEqual([
+      'delete /api/v1/producers/me/photo',
       'get /api/v1/auth/me',
+      'get /api/v1/producers/me/trajectory',
       'get /api/v1/users',
       'get /api/v1/users/{id}',
       'post /api/v1/users/admins',
+      'put /api/v1/producers/me/photo',
+      'put /api/v1/producers/me/trajectory',
     ]);
   });
 

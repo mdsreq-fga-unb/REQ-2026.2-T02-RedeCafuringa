@@ -2,6 +2,7 @@ export {
     DEFAULT_TIMEOUT_MS,
     createApiClient,
     generateRequestId,
+    apiResourceUrl,
     getApiClient,
 } from "./client";
 export type {

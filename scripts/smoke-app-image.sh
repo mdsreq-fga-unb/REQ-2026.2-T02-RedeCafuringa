@@ -7,6 +7,11 @@
 # Portável: evita `curl -o /dev/null`, que falha no curl.exe do Windows (Git Bash).
 set -euo pipefail
 
+# No Git Bash (MSYS), argumentos como "--tmpfs /tmp" viram caminhos do Windows
+# ("C:/Users/.../Temp") e o Docker recusa o mount. Desliga essa conversão: o
+# script não passa caminhos do host para o docker. Sem efeito no Linux/CI.
+export MSYS_NO_PATHCONV=1
+
 IMAGE="${1:?uso: $0 <imagem> [porta]}"
 PORT="${2:-18080}"
 NAME="app-smoke-$$"

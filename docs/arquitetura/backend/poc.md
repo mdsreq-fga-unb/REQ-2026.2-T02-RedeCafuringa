@@ -52,7 +52,8 @@ O que esta PoC **comprova com código executável** (código em `backend/`, na `
 | **Implementado (2026-10-24)** - rate limit | `@nestjs/throttler` | Proteção do login e da recuperação de senha |
 | **A adicionar** — e-mail | `nodemailer` + SMTP gratuito (ex.: Brevo, 300/dia) | RF10, RF34, RF48 |
 | **A adicionar** — tarefas agendadas | `@nestjs/schedule` | Fila de e-mails sem Redis (RNF13) |
-| **A adicionar** — imagens | OCI Object Storage (20 GB grátis) + `sharp` | Fotos de produtos e experiências |
+| **Adotado** — processamento de imagens | `sharp` | Foto de perfil do produtor (HU12), guardada no MongoDB por ser uma por produtor; ver [HU12](implementacao/HU12.md) |
+| **A adicionar** — armazenamento de imagens | OCI Object Storage (20 GB grátis) | Fotos de produtos e experiências |
 
 ---
 

@@ -204,6 +204,154 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/password-reset/request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Solicitar recuperação de acesso
+         * @description HU10 (CA02/CA03, RN05): se o e-mail pertencer a uma conta ativa, envia a ele um link de uso único, válido por tempo limitado. A resposta é sempre a mesma, exista ou não a conta, para não revelar quem está cadastrado. Pedidos seguidos para a mesma conta respeitam um intervalo mínimo e cada novo pedido invalida o link anterior.
+         */
+        post: operations["passwordresetRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/password-reset/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validar link de recuperação
+         * @description HU10 (CA04): confirma se o token do link ainda permite redefinir a senha, para o front decidir se mostra a etapa de nova senha. Não consome o link. O token vai no corpo, nunca na URL, para não parar em logs de acesso.
+         */
+        post: operations["passwordresetValidate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/password-reset/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Redefinir a senha
+         * @description HU10 (CA05/CA06): troca a senha da conta dona do link e o consome. A nova senha segue a política do cadastro. Uma senha inválida não consome o link; link inválido, expirado ou já usado responde 400 com orientação para solicitar outro.
+         */
+        post: operations["passwordresetConfirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/producers/me/trajectory": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar a própria trajetória
+         * @description HU12 (CA01): devolve a trajetória, as atividades, o telefone e a visibilidade do telefone do produtor autenticado. Exclusivo do perfil PRODUTOR (RN01, RNF08).
+         */
+        get: operations["producerprofileGetOwn"];
+        /**
+         * Registrar a própria trajetória
+         * @description HU12 (CA02-CA04, CA06, CA07): substitui a trajetória e as atividades do produtor autenticado; telefone e visibilidade só mudam se enviados; `telefone: null` remove o telefone cadastrado. Publicar a trajetória torna o perfil público visível. O dono é sempre quem está no token. É idempotente: reenviar o mesmo conteúdo após uma falha de conexão é seguro. Textos são simples (sem HTML) e limitados a 2000 caracteres.
+         */
+        put: operations["producerprofileSave"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/producers/{id}/trajectory": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar a trajetória pública de um produtor
+         * @description HU12 (CA05, RN07, RNF11): aberta a visitantes e consumidores. Traz somente dados destinados à divulgação; o telefone só aparece se o produtor autorizou. O perfil fica oculto (404) até o produtor publicar a trajetória. E-mail, CPF, CNPJ e nome do responsável nunca são expostos.
+         */
+        get: operations["producerprofileGetPublic"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/producers/me/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Enviar a própria foto de perfil
+         * @description HU12/RF12: substitui a foto do produtor autenticado. O formato é conferido pelo conteúdo do arquivo (PNG, JPEG ou WebP; até 5 MB e 50 megapixels). A imagem é regravada em WebP de no máximo 960 px, já na orientação correta e **sem metadados** (EXIF, GPS), para não expor a localização da propriedade (RNF11). Reenviar a mesma foto é seguro (CA07). Recomenda-se reduzir a foto no aparelho antes de enviar (RNF06).
+         */
+        put: operations["producerprofileSavePhoto"];
+        post?: never;
+        /**
+         * Remover a própria foto de perfil
+         * @description HU12/RF12: apaga a foto do produtor autenticado. Idempotente: remover sem ter foto também devolve 204.
+         */
+        delete: operations["producerprofileRemovePhoto"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/producers/{id}/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Foto pública de um produtor
+         * @description HU12/RF12 (CA05, RN07): visível nas mesmas condições do perfil público (produtor ativo e trajetória publicada). Use o caminho de `fotoUrl`. Responde com `ETag` e aceita `If-None-Match`.
+         */
+        get: operations["producerprofileGetPhoto"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -544,6 +692,152 @@ export interface components {
              */
             expiresIn: number;
             usuario: components["schemas"]["UserResponse"];
+        };
+        RequestPasswordResetDto: {
+            /**
+             * @description E-mail cadastrado na conta (sem distinção de maiúsculas)
+             * @example maria@exemplo.com
+             */
+            email: string;
+        };
+        PasswordResetRequestedResponse: {
+            /**
+             * @description Mensagem genérica, igual para e-mails cadastrados ou não
+             * @example Se houver uma conta com esse e-mail, você receberá as instruções para recuperar o acesso.
+             */
+            mensagem: string;
+        };
+        ValidateResetTokenDto: {
+            /**
+             * @description Token do link de recuperação enviado por e-mail (43 caracteres)
+             * @example k3Jf0wX9mQ2vB7nR1tYhA5cL8eZsU4dG6iOpP-_aXyE
+             */
+            token: string;
+        };
+        ResetTokenValidResponse: {
+            /**
+             * @description Sempre true: link inválido ou expirado responde 400
+             * @example true
+             */
+            valido: boolean;
+        };
+        ConfirmPasswordResetDto: {
+            /**
+             * @description Token do link de recuperação enviado por e-mail (43 caracteres)
+             * @example k3Jf0wX9mQ2vB7nR1tYhA5cL8eZsU4dG6iOpP-_aXyE
+             */
+            token: string;
+            /**
+             * @description 8 a 128 caracteres, com pelo menos uma letra e um número
+             * @example SenhaForte123
+             */
+            novaSenha: string;
+        };
+        PasswordResetDoneResponse: {
+            /**
+             * @description Confirmação de que a recuperação foi concluída
+             * @example Recuperação de acesso concluída. Entre com a nova senha.
+             */
+            mensagem: string;
+        };
+        OwnTrajectoryResponse: {
+            /**
+             * @description Ausente enquanto o produtor não registrou a trajetória
+             * @example Começamos a plantar café em 1990.
+             */
+            trajetoria?: string;
+            /**
+             * @description Ausente enquanto não houver atividades registradas
+             * @example Horta orgânica e visitas guiadas.
+             */
+            atividades?: string;
+            /**
+             * @description Telefone de contato cadastrado (privado, só o titular vê aqui)
+             * @example 61999990000
+             */
+            telefone?: string;
+            /**
+             * @description Se verdadeiro, o telefone aparece no perfil público
+             * @example false
+             */
+            telefonePublico: boolean;
+            /**
+             * @description Data da última gravação da trajetória
+             * @example 2026-11-06T12:00:00.000Z
+             */
+            atualizadoEm?: string;
+            /**
+             * @description Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.
+             * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
+             */
+            fotoUrl?: string;
+        };
+        SaveTrajectoryDto: {
+            /**
+             * @description Sua história, em texto simples (sem HTML), até 2000 caracteres
+             * @example Começamos a plantar café em 1990, no Núcleo Rural de Planaltina. Hoje a família toda participa da produção.
+             */
+            trajetoria: string;
+            /**
+             * @description Atividades que você desenvolve, em texto simples, até 2000 caracteres. Se omitido, o valor anterior é apagado.
+             * @example Horta orgânica, visitas guiadas e café da manhã rural.
+             */
+            atividades?: string;
+            /**
+             * @description DDD + número, apenas dígitos. Se omitido, o telefone cadastrado não muda. Com `null`, o telefone é removido (e deixa de ser público).
+             * @example 61999990000
+             */
+            telefone?: Record<string, never> | null;
+            /**
+             * @description Se verdadeiro, o telefone aparece no perfil público (RN07). Se omitido, a escolha anterior não muda; por padrão o telefone é privado.
+             * @example true
+             */
+            telefonePublico?: boolean;
+        };
+        PublicTrajectoryResponse: {
+            /**
+             * @description Identificador do produtor
+             * @example 64b0c0ffee0000000000abcd
+             */
+            id: string;
+            /**
+             * @description Nome da iniciativa
+             * @example Horta Comunitária Cafuringa
+             */
+            nomeIniciativa?: string;
+            /**
+             * @description Tipo de oferta do produtor
+             * @example Produtos
+             * @enum {string}
+             */
+            categoriaOfertada?: "Produtos" | "Experiências" | "Produtos e Experiências";
+            /**
+             * @description História do produtor, em texto simples; exiba escapando HTML. Sempre presente: o perfil só é público depois de publicada.
+             * @example Começamos a plantar café em 1990.
+             */
+            trajetoria: string;
+            /**
+             * @description Atividades desenvolvidas, em texto simples. Ausente se vazio.
+             * @example Horta orgânica e visitas guiadas.
+             */
+            atividades?: string;
+            /**
+             * @description Telefone de contato, presente somente quando o produtor autorizou a divulgação
+             * @example 61999990000
+             */
+            telefone?: string;
+            /**
+             * @description Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.
+             * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
+             */
+            fotoUrl?: string;
+        };
+        PhotoResponse: {
+            /**
+             * @description Caminho da foto, relativo à URL base da API (ex.: prefixe com `VITE_API_URL`). Muda a cada nova foto, então pode ficar em cache indefinidamente.
+             * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
+             */
+            fotoUrl: string;
         };
     };
     responses: never;
@@ -1356,6 +1650,462 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    passwordresetRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestPasswordResetDto"];
+            };
+        };
+        responses: {
+            /** @description Pedido recebido (resposta genérica) */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordResetRequestedResponse"];
+                };
+            };
+            /** @description E-mail em formato inválido */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Muitas tentativas */
+            429: {
+                headers: {
+                    /** @description Segundos até a próxima tentativa ser aceita */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    passwordresetValidate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ValidateResetTokenDto"];
+            };
+        };
+        responses: {
+            /** @description Link válido */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResetTokenValidResponse"];
+                };
+            };
+            /** @description Link inválido, expirado ou já utilizado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Muitas tentativas */
+            429: {
+                headers: {
+                    /** @description Segundos até a próxima tentativa ser aceita */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    passwordresetConfirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmPasswordResetDto"];
+            };
+        };
+        responses: {
+            /** @description Senha redefinida */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordResetDoneResponse"];
+                };
+            };
+            /** @description Senha fora da política ou link inválido, expirado ou usado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Muitas tentativas */
+            429: {
+                headers: {
+                    /** @description Segundos até a próxima tentativa ser aceita */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileGetOwn: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Trajetória atual */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnTrajectoryResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta de produtor inexistente ou desativada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileSave: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveTrajectoryDto"];
+            };
+        };
+        responses: {
+            /** @description Trajetória gravada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnTrajectoryResponse"];
+                };
+            };
+            /** @description Campos inválidos ou fora do contrato (mensagens em `message`) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta de produtor inexistente ou desativada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileGetPublic: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dados públicos do produtor */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicTrajectoryResponse"];
+                };
+            };
+            /** @description Produtor inexistente, desativado, sem trajetória publicada ou identificador inválido */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileSavePhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description PNG, JPEG ou WebP de até 5 MB
+                     */
+                    foto: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Foto gravada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PhotoResponse"];
+                };
+            };
+            /** @description Arquivo ausente, ilegível ou com dimensões fora do limite */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta de produtor inexistente ou desativada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Arquivo acima de 5 MB */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Arquivo que não é PNG, JPEG ou WebP */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileRemovePhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Foto removida */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta de produtor inexistente ou desativada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileGetPhoto: {
+        parameters: {
+            query?: {
+                /** @description Versão da foto, como vem em `fotoUrl`. Com a versão atual a resposta fica em cache para sempre; sem ela, o navegador revalida. */
+                v?: unknown;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Imagem WebP sem metadados */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": string;
+                };
+            };
+            /** @description O navegador já tem esta versão */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Produtor inexistente, desativado, sem trajetória publicada, sem foto ou identificador inválido */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": components["schemas"]["ErrorResponse"];
                 };
             };
         };

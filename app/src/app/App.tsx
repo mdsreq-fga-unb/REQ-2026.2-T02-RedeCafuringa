@@ -30,12 +30,22 @@ import { RegisterPage } from "@/features/register";
 import "../App.css";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { DemoNavigation } from "@/features/auth/DemoNavigation";
+import { RecoverAccessPage, ResetPasswordPage } from "@/features/recovery";
+import { getMockRecoveryLink } from "@/features/recovery/mockRecovery";
 import { AdminUsersPage } from "@/features/users/AdminUsersPage";
+import { TrajectoryPage } from "@/features/trajectory/TrajectoryPage";
+import { TrajectoryForm } from "@/features/trajectory/TrajectoryForm";
+import { PublicTrajectoryPage } from "@/features/trajectory/PublicTrajectoryPage";
+import { useProducerSignup } from "@/features/trajectory/useProducerSignup";
 
 export function App() {
     const { route, navigate } = useHashRoute();
-    const { role, consumerName, email, cpf, signIn, signOut } =
+    const { role, consumerName, email, cpf, userId, signIn, signOut } =
         useDemoSession();
+    const signup = useProducerSignup((auth) => {
+        signIn(auth);
+        navigate("/conta-criada/producer");
+    });
     const endAdminSession = useCallback(() => {
         signOut();
         navigate("/admin/entrar");
@@ -44,9 +54,30 @@ export function App() {
         useContactSettings();
 
     const path = route.split("?")[0];
+    const trajectoryBlocked =
+        path === "/minha-trajetoria" &&
+        (role !== "producer" || !localStorage.getItem("cafuringa-token"));
+    const missingSignup = path === "/cadastro/trajetoria" && !signup.details;
+    const lockedSignup = path === "/cadastro" && signup.created;
+    const { details: signupDetails, reset: resetSignup } = signup;
+    useEffect(() => {
+        if (trajectoryBlocked) navigate(role ? "/conta" : "/login/producer");
+        if (missingSignup) navigate("/cadastro");
+        if (lockedSignup) navigate("/cadastro/trajetoria");
+    }, [trajectoryBlocked, missingSignup, lockedSignup, role, navigate]);
+    useEffect(() => {
+        if (
+            path !== "/cadastro" &&
+            path !== "/cadastro/trajetoria" &&
+            signupDetails
+        )
+            resetSignup();
+    }, [path, signupDetails, resetSignup]);
     const query = new URLSearchParams(route.split("?")[1] || "");
     const fromContact = query.has("contato");
     const justRegistered = query.get("cadastro") === "ok";
+    const justRecovered = query.get("recuperacao") === "ok";
+    const recoveryToken = query.get("token");
     // RN03/RNF08: cadastro e consulta são exclusivos de administradores.
     const usersRoute =
         path === "/admin/usuarios" || path.startsWith("/admin/usuarios/");
@@ -81,6 +112,9 @@ export function App() {
         path === "/cadastro/consumidor" ||
         path === "/conta-criada/consumer" ||
         path === "/conta-criada/producer" ||
+        path === "/cadastro/trajetoria" ||
+        path === "/recuperar-acesso" ||
+        path === "/nova-senha" ||
         path === "/cadastro";
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
@@ -214,6 +248,7 @@ export function App() {
                 )}
                 {showLogin && (
                     <LoginPage
+                        recovered={justRecovered}
                         fromContact={fromContact}
                         profile={loginProfile}
                         registered={justRegistered}
@@ -221,7 +256,53 @@ export function App() {
                         onSignIn={handleSignIn}
                     />
                 )}
-                {path === "/cadastro" && <RegisterPage onNavigate={navigate} />}
+                {path === "/cadastro" && !lockedSignup && (
+                    <RegisterPage
+                        initialValues={signup.details ?? undefined}
+                        onNavigate={navigate}
+                        onContinue={(values) => {
+                            signup.start(values);
+                            navigate("/cadastro/trajetoria");
+                        }}
+                    />
+                )}
+                {path === "/cadastro/trajetoria" && signup.details && (
+                    <TrajectoryForm
+                        signup
+                        draft={signup.draft}
+                        onChange={signup.setDraft}
+                        onSubmit={signup.submit}
+                        error={signup.error}
+                        onBack={() => navigate("/cadastro")}
+                        backDisabled={signup.created}
+                    />
+                )}
+                {path === "/minha-trajetoria" && !trajectoryBlocked && (
+                    <TrajectoryPage onNavigate={navigate} userId={userId} />
+                )}
+                {path.startsWith("/produtor/") && (
+                    <PublicTrajectoryPage
+                        key={path}
+                        id={path.split("/")[2]}
+                        onNavigate={navigate}
+                    />
+                )}
+
+                {path === "/recuperar-acesso" && (
+                    <RecoverAccessPage
+                        onNavigate={navigate}
+                        getDemoLink={
+                            isMockAuthEnabled ? getMockRecoveryLink : undefined
+                        }
+                    />
+                )}
+                {path === "/nova-senha" && (
+                    <ResetPasswordPage
+                        token={recoveryToken}
+                        onNavigate={navigate}
+                    />
+                )}
+
                 {path === "/cadastro/consumidor" && (
                     <ConsumerSignupPage
                         createAccount={registerConsumer}
@@ -232,7 +313,10 @@ export function App() {
                     <ConsumerSignupSuccessPage onNavigate={navigate} />
                 )}
                 {path === "/conta-criada/producer" && (
-                    <ProducerSignupSuccessPage onNavigate={navigate} />
+                    <ProducerSignupSuccessPage
+                        onNavigate={navigate}
+                        authenticated={role === "producer"}
+                    />
                 )}
                 {screenPath === "/conta" && (
                     <AccountPage

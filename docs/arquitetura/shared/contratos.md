@@ -1,6 +1,6 @@
 # Contrato da API (OpenAPI)
 
-O contrato entre backend e frontend é o arquivo [`shared/openapi.json`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/blob/dev/shared/openapi.json), **gerado do código do backend**. A referência legível de cada endpoint é o [Swagger UI](../api/index.html){ target=_blank } do site, montado a partir desse mesmo arquivo (veja [Referência da API](api.md)).
+O contrato entre backend e frontend é o arquivo [`shared/openapi.json`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/blob/dev/shared/openapi.json), **gerado do código do backend**. A referência legível de cada endpoint é o [Swagger UI](../../api/index.html){ target=_blank } do site, montado a partir desse mesmo arquivo (veja [Referência da API](api.md)).
 
 ## Fluxo
 

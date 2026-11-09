@@ -153,7 +153,11 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
             Accept: "application/json",
             "x-request-id": requestId,
         };
-        if (opts.body !== undefined)
+        // FormData (upload de arquivo) vai como está: o navegador monta o
+        // Content-Type multipart com o boundary.
+        const isForm =
+            typeof FormData !== "undefined" && opts.body instanceof FormData;
+        if (opts.body !== undefined && !isForm)
             headers["Content-Type"] = "application/json";
         if (opts.auth !== false) {
             const token = options.getAccessToken?.();
@@ -187,7 +191,9 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
                     body:
                         opts.body === undefined
                             ? undefined
-                            : JSON.stringify(opts.body),
+                            : isForm
+                              ? (opts.body as FormData)
+                              : JSON.stringify(opts.body),
                     // Autenticação é por Bearer; nunca envia cookies.
                     credentials: "omit",
                     signal: controller.signal,
@@ -253,10 +259,19 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
 
 let defaultClient: ApiClient | undefined;
 
+const apiBaseUrl = () => loadEnv().apiUrl || "/api/v1";
+
 /** Cliente configurado com VITE_API_URL. Criado no primeiro uso. */
 export function getApiClient(): ApiClient {
-    defaultClient ??= createApiClient({
-        baseUrl: loadEnv().apiUrl || "/api/v1",
-    });
+    defaultClient ??= createApiClient({ baseUrl: apiBaseUrl() });
     return defaultClient;
+}
+
+/**
+ * URL absoluta de um recurso da API para uso direto pelo navegador, como o
+ * `src` de uma imagem. Aceita só caminhos relativos, pelo mesmo motivo do
+ * cliente: um endereço externo vindo de uma resposta não vira URL da página.
+ */
+export function apiResourceUrl(path: string): string {
+    return buildUrl(apiBaseUrl().replace(/\/+$/, ""), path);
 }
