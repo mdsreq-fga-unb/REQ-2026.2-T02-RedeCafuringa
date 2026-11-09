@@ -95,7 +95,25 @@ describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
             await screen.findByRole("heading", { name: "Confira seu e-mail" }),
         ).toBeTruthy();
         expect(requestAccessRecovery).toHaveBeenCalledWith("ana@exemplo.com");
-        expect(screen.getByText("Enviado para: ana@exemplo.com")).toBeTruthy();
+        expect(
+            screen.getByText("Endereço informado: ana@exemplo.com"),
+        ).toBeTruthy();
+    });
+
+    // Revisão do PR: a tela não pode afirmar envio para um e-mail sem conta,
+    // e deve orientar quem errou o endereço (CA06, RNF03) sem revelar contas.
+    it("não afirma que enviou e orienta quem errou o endereço", async () => {
+        const { user } = renderPage();
+
+        await sendEmail(user);
+
+        await screen.findByRole("heading", { name: "Confira seu e-mail" });
+        expect(screen.queryByText(/^Enviado para/)).toBeNull();
+        expect(
+            screen.getByText(
+                "Não recebeu? Confira se digitou o e-mail certo e olhe a caixa de spam. Se você ainda não tem conta, faça seu cadastro.",
+            ),
+        ).toBeTruthy();
     });
 
     it("usa uma mensagem neutra que não revela se a conta existe", async () => {
