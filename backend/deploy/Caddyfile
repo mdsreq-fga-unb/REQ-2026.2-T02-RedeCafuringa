@@ -26,7 +26,14 @@
 		Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
 	}
 
-	request_body {
+	# JSON nunca passa de 1 MB. A única exceção é o envio da foto de perfil
+	# (HU12/RF12): a API aceita até 5 MB; a margem cobre o envelope multipart.
+	@photoUpload path /api/v1/producers/me/photo
+	request_body @photoUpload {
+		max_size 6MB
+	}
+	@notPhotoUpload not path /api/v1/producers/me/photo
+	request_body @notPhotoUpload {
 		max_size 1MB
 	}
 

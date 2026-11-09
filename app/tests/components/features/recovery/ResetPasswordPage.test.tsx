@@ -73,7 +73,7 @@ describe("ResetPasswordPage — HU10 Recuperar acesso à conta", () => {
     it("volta para a tela de entrada pelo botão Voltar", async () => {
         const { onNavigate, user } = renderPage();
 
-        await user.click(screen.getByRole("button", { name: /^←\s*Voltar$/ }));
+        await user.click(screen.getByRole("button", { name: /^Voltar$/ }));
 
         expect(onNavigate).toHaveBeenCalledWith("/entrar");
     });

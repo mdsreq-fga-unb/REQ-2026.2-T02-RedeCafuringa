@@ -92,6 +92,18 @@ describe("buildCsp", () => {
         ]);
     });
 
+    it("HU12/RF12: libera as fotos de perfil servidas pela origem da API", () => {
+        expect(
+            directive(
+                buildCsp({
+                    apiUrl: "https://api.exemplo.com/api/v1",
+                    imageHosts: [],
+                }),
+                "img-src",
+            ),
+        ).toEqual(["'self'", "data:", "https://api.exemplo.com"]);
+    });
+
     it("não repete diretivas", () => {
         const names = buildCsp({ apiUrl: "https://a.com" })
             .split("; ")

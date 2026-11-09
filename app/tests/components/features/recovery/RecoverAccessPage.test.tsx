@@ -28,7 +28,7 @@ async function sendEmail(
     await user.click(screen.getByRole("button", { name: "Enviar instruções" }));
 }
 
-const backButton = () => screen.getByRole("button", { name: /^←\s*Voltar$/ });
+const backButton = () => screen.getByRole("button", { name: /^Voltar$/ });
 
 describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
     beforeEach(() => {

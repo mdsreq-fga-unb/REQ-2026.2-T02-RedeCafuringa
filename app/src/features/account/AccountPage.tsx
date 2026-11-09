@@ -85,6 +85,12 @@ export function AccountPage(props: AccountPageProps) {
             </p>
             {role === "producer" && (
                 <>
+                    <ActionButton
+                        variant="orange"
+                        onClick={() => onNavigate("/minha-trajetoria")}
+                    >
+                        Minha trajetória
+                    </ActionButton>
                     <form
                         className="account-profile-form"
                         onSubmit={saveProducerProfile}
@@ -102,7 +108,7 @@ export function AccountPage(props: AccountPageProps) {
                                 className="text-input"
                                 value={initiative}
                                 aria-label="Nome da iniciativa"
-                                placeholder="Flor do campo"
+                                placeholder="Ex.: Sítio Raízes"
                                 onChange={(event) => {
                                     setInitiative(event.target.value);
                                     setProfileSaved(false);
@@ -195,7 +201,7 @@ export function AccountPage(props: AccountPageProps) {
                                     });
                                     onSavedChange(false);
                                 }}
-                                placeholder="5561999999999"
+                                placeholder="Ex.: 5561999999999"
                             />
                             <label className="consent-row">
                                 <input
@@ -236,6 +242,7 @@ export function AccountPage(props: AccountPageProps) {
                         </label>
                         <input
                             id="consumer-email"
+                            placeholder="E-mail não disponível"
                             className="text-input"
                             type="email"
                             value={consumerEmail}
@@ -249,6 +256,7 @@ export function AccountPage(props: AccountPageProps) {
                         </label>
                         <input
                             id="consumer-cpf"
+                            placeholder="CPF não disponível"
                             className="text-input"
                             value={
                                 consumerCpf.includes("*")

@@ -44,7 +44,8 @@ export function buildCsp({
         "script-src": ["'self'"],
         // O app não usa estilos inline; o CSS vai num arquivo.
         "style-src": ["'self'"],
-        "img-src": ["'self'", "data:", ...imageHosts],
+        // A API serve as fotos de perfil dos produtores (HU12/RF12).
+        "img-src": ["'self'", "data:", ...imageHosts, ...(api ? [api] : [])],
         "font-src": ["'self'"],
         "connect-src": ["'self'", ...(api ? [api] : [])],
         "manifest-src": ["'self'"],

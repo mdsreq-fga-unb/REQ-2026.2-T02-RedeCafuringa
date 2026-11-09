@@ -56,6 +56,7 @@ backend/
 │       ├── auth/               # login JWT, guards globais, @Public/@Roles/@CurrentUser
 │       │   └── password-reset/ # recuperação de acesso por e-mail (HU10)
 │       ├── users/              # contas (consumidor, produtor, administrador)
+│       ├── producer-profile/   # trajetória do produtor e perfil público (HU12)
 │       ├── health/             # live/ready
 │       └── metrics/            # Prometheus
 ├── test/

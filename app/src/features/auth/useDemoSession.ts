@@ -10,6 +10,7 @@ const sessionKeys = [
     "cafuringa-token",
     "cafuringa-email",
     "cafuringa-cpf",
+    "cafuringa-user-id",
 ];
 
 function clearStoredSession() {
@@ -42,9 +43,14 @@ export function useDemoSession() {
     const [cpf, setCpf] = useState(
         () => localStorage.getItem("cafuringa-cpf") || "",
     );
+    const [userId, setUserId] = useState<string | null>(() =>
+        localStorage.getItem("cafuringa-user-id"),
+    );
 
     const signIn = ({ token, user }: AuthResult) => {
         setRole(user.role);
+        setUserId(String(user.id));
+        localStorage.setItem("cafuringa-user-id", String(user.id));
         setConsumerName(user.name);
         setEmail(user.email ?? "");
         setCpf(user.cpf ?? "");
@@ -59,6 +65,7 @@ export function useDemoSession() {
 
     const signOut = useCallback(() => {
         setRole(null);
+        setUserId(null);
         setConsumerName("");
         setEmail("");
         setCpf("");
@@ -81,6 +88,8 @@ export function useDemoSession() {
             .then((user) => {
                 if (!isCurrentSession()) return;
                 setConsumerName(user.nome);
+                setUserId(user.id);
+                localStorage.setItem("cafuringa-user-id", user.id);
                 setEmail(user.email);
                 setCpf(user.cpf ?? "");
                 localStorage.setItem("cafuringa-name", user.nome);
@@ -102,5 +111,5 @@ export function useDemoSession() {
         };
     }, [signOut]);
 
-    return { role, consumerName, email, cpf, signIn, signOut };
+    return { role, consumerName, email, cpf, userId, signIn, signOut };
 }
