@@ -211,6 +211,72 @@ export function isMockCpfRegistered(cpf: string): boolean {
     return mockUsers.some((item) => item.cpf === cpf);
 }
 
+function normalizeEmail(email: string): string {
+    return email.trim().toLowerCase();
+}
+
+/** Usado pela recuperação de acesso (HU10) para só gerar link quando a conta existe. */
+export function isMockEmailRegistered(email: string): boolean {
+    const target = normalizeEmail(email);
+    return (
+        mockUsers.some((item) => item.email === target) ||
+        readRegisteredUsers().some((item) => item.email === target) ||
+        readMockAdmins().some((item) => item.email === target)
+    );
+}
+
+/**
+ * Troca a senha onde o usuário estiver guardado: usuários fixos e produtores
+ * (memória, valem até recarregar a página), consumidores e administradores
+ * cadastrados (localStorage). Devolve false quando o e-mail não tem conta.
+ */
+export function updateMockPassword(
+    email: string,
+    newPassword: string,
+): boolean {
+    const target = normalizeEmail(email);
+    let updated = false;
+
+    for (const item of mockUsers) {
+        if (item.email === target) {
+            item.password = newPassword;
+            updated = true;
+        }
+    }
+
+    const registered = readRegisteredUsers();
+    if (registered.some((item) => item.email === target)) {
+        localStorage.setItem(
+            registeredUsersKey,
+            JSON.stringify(
+                registered.map((item) =>
+                    item.email === target
+                        ? { ...item, password: newPassword }
+                        : item,
+                ),
+            ),
+        );
+        updated = true;
+    }
+
+    const admins = readMockAdmins();
+    if (admins.some((item) => item.email === target)) {
+        localStorage.setItem(
+            mockAdminsKey,
+            JSON.stringify(
+                admins.map((item) =>
+                    item.email === target
+                        ? { ...item, password: newPassword }
+                        : item,
+                ),
+            ),
+        );
+        updated = true;
+    }
+
+    return updated;
+}
+
 /** Projeção de consulta: nunca retorna as senhas usadas pelo login de demonstração. */
 export function readMockUserDetails(): UserDetail[] {
     const perfilByRole = {

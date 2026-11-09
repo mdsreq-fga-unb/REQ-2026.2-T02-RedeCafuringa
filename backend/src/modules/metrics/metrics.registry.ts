@@ -22,6 +22,7 @@ export class MetricsRegistry {
 
   private readonly httpRequestsTotal: Counter<HttpLabels>;
   private readonly httpRequestDuration: Histogram<HttpLabels>;
+  private readonly mailFailuresTotal: Counter<'purpose'>;
 
   constructor() {
     collectDefaultMetrics({
@@ -43,6 +44,18 @@ export class MetricsRegistry {
       buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5],
       registers: [this.registry],
     });
+
+    this.mailFailuresTotal = new Counter({
+      name: 'cafuringa_mail_delivery_failures_total',
+      help: 'E-mails não entregues depois de todas as tentativas, por finalidade.',
+      labelNames: ['purpose'],
+      registers: [this.registry],
+    });
+  }
+
+  /** HU10: e-mail perdido (SMTP fora mesmo após os reenvios). Base de alerta. */
+  recordMailFailure(purpose: string): void {
+    this.mailFailuresTotal.inc({ purpose });
   }
 
   middleware() {

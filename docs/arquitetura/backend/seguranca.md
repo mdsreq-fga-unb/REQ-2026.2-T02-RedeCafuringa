@@ -54,8 +54,17 @@ O time responde em até 5 dias úteis.
 | Foto de perfil (HU12/RF12): formato pelos bytes (PNG/JPEG/WebP; SVG e arquivos disfarçados dão 415), 5 MB, 50 MP conferidos antes de decodificar (bomba de descompressão), imagem **regravada** em WebP sem EXIF/XMP/GPS; upload em memória (nada em disco); servida com `nosniff` e `CORP: cross-origin` só nas condições do perfil público; só a rota de upload aceita 6 MB no Caddy | `backend/src/modules/producer-profile`, `backend/deploy/Caddyfile` |
 | Login por e-mail e senha (RN05), sem enumeração (mensagem e custo iguais para e-mail inexistente) | `backend/src/modules/auth/auth.service.ts` |
 | Cadastro de administrador só por administrador (`@Roles(ADMINISTRADOR)`, RN03); 1º admin por `ADMIN_BOOTSTRAP_*` | `backend/src/modules/users/users.controller.ts`, `admin-bootstrap.service.ts` |
-| Rate limit dedicado a login/cadastro (`AUTH_THROTTLE_LIMIT`) | `@AuthThrottle()` |
+| Rate limit dedicado a login/cadastro/recuperação de acesso (`AUTH_THROTTLE_LIMIT`) | `@AuthThrottle()` |
 | Bloqueio de cadastro de menores de 18 anos (RNF15) | `backend/src/modules/users/domain/age.ts` |
+| Recuperação de acesso (HU10, RN05, D11): token de 256 bits, uso único, só o hash SHA-256 no banco, TTL de 30 min, consumo atômico | `backend/src/modules/auth/password-reset` |
+| Um pedido por conta (índice único em `userId`) com upsert condicionado ao intervalo mínimo: pedidos simultâneos geram um único link e um único e-mail; novo pedido invalida o anterior | `password-reset.service.ts`, `password-reset-token.schema.ts` |
+| Recuperação sem enumeração: resposta 202 idêntica e imediata (todo o processamento roda depois da resposta), para e-mail existente, inexistente ou de conta desativada | `password-reset.service.ts` (`request` → `processRequest`) |
+| Token no fragmento do link (`/#/nova-senha?token=`, rota por hash do app), que o navegador não envia ao servidor nem no `Referer`; na API, só no corpo de `POST` | `domain/reset-token.ts` (`buildResetLink`) |
+| Índices de `password_reset_tokens` garantidos na subida (`syncIndexes`, idempotente): as proteções por conta não dependem de lembrar do `indexes --prod` | `password-reset.service.ts` (`onModuleInit`) |
+| Pedidos em andamento drenados no desligamento (`beforeApplicationShutdown`), antes de o Mongo fechar | `password-reset.service.ts` |
+| DTOs recusam campos extras e objetos de operador (NoSQL injection) | `password-reset/dto`, `domain/reset-token.ts` |
+| Revogação de sessão: o `JwtAuthGuard` recusa o JWT se a conta foi removida, desativada, mudou de perfil ou trocou a senha depois da emissão (`credenciaisAlteradasEm` × `iat`) | `guards/jwt-auth.guard.ts`, `auth/domain/session.ts` |
+| E-mail: reenvio com espera crescente (`MAIL_RETRY_DELAYS_MS`); e-mail perdido desfaz o pedido e incrementa `cafuringa_mail_delivery_failures_total`; transporte `log` proibido em produção; STARTTLS obrigatório em produção; bloqueio de header injection; HTML escapado | `backend/src/common/mail`, `metrics.registry.ts`, `env.validation.ts` |
 
 ## 4. Auditoria de 2026-10-24 — o que foi encontrado e corrigido
 
@@ -99,9 +108,13 @@ Compose de dev/prod healthy; restore de 1 documento validado; app user negado no
    `docker run`). Nunca usar `down -v` em produção; limpar órfãos com `docker volume prune`.
 7. **Métricas:** o Caddy bloqueia `/metrics` publicamente; o scrape precisa ser interno.
 8. **Autenticação (incremento 1, parcial):**
-   - Não há refresh token nem revogação: o token vale até expirar (15 min). Desativar
-     uma conta bloqueia novos logins e o `/auth/me`, mas tokens já emitidos seguem
-     válidos nas demais rotas até o `exp`.
+   - Não há refresh token nem logout explícito. Desde a HU10, o `JwtAuthGuard`
+     consulta a conta a cada requisição autenticada (busca por `_id` com projeção
+     de 3 campos): conta removida, desativada, com perfil alterado ou com senha
+     trocada depois da emissão do token recebe 401. Custo: uma leitura indexada por
+     requisição autenticada. A comparação usa o claim `sat` (instante do login em
+     ms), então nem um login feito no mesmo segundo, antes da troca, sobrevive.
+     Tokens antigos, sem `sat`, caem para o `iat` e são encerrados na dúvida.
    - O índice único (esparso, HU03) de `cpfHash` só é criado automaticamente fora de
      produção (`autoIndex`). Em produção, criá-lo com `./scripts/dev.sh indexes --prod` **antes** do
      primeiro cadastro (ver [operação, 3.1](operacao.md)).
@@ -109,7 +122,21 @@ Compose de dev/prod healthy; restore de 1 documento validado; app user negado no
      primeiro login.
    - `PII_HMAC_SECRET` e `PII_ENCRYPTION_KEY` não têm rotação: perdê-los torna os
      CPFs ilegíveis/inacessíveis. Guardar junto da chave de backup.
-9. **Docs:** `mkdocs build` tem warnings de links quebrados pré-existentes; não
+9. **Recuperação de acesso (HU10).** Tratados nesta HU (antes eram riscos residuais):
+   troca de senha encerra sessões (item 8), corrida entre pedidos (índice único por
+   conta), enumeração por tempo (resposta antes do processamento), token fora de
+   logs e `Referer` (fragmento `#`) e falha passageira do SMTP (reenvio + métrica).
+   O que ainda resta:
+   - **Fila persistente de e-mail (D6):** o reenvio vive na memória do processo. Se
+     a API reiniciar no meio das tentativas, o e-mail se perde; como o pedido só é
+     gravado antes do envio, a pessoa espera o intervalo mínimo (60 s) para pedir de
+     novo. Alerta: `increase(cafuringa_mail_delivery_failures_total[15m]) > 0`.
+   - **Histórico do navegador:** o fragmento fica no histórico local até o front
+     limpá-lo; o front deve chamar `history.replaceState` logo após ler o token.
+   - **Reinício no meio do reenvio:** o desligamento normal (SIGTERM, deploy) espera os
+     pedidos em andamento; um encerramento forçado (OOM, `kill -9`) ainda pode perder
+     o e-mail, caso coberto pelo item da fila persistente acima.
+10. **Docs:** `mkdocs build` tem warnings de links quebrados pré-existentes; não
    bloqueiam o build, mas devem ser corrigidos à parte.
 
 ## 6. Checklist antes de publicar/entregar

@@ -73,6 +73,58 @@ autenticado. O primeiro nasce das variáveis `ADMIN_BOOTSTRAP_EMAIL` e
 na subida se o e-mail ainda não existir. Depois de entrar com ela, cadastre os
 demais administradores pela API e **remova a senha do `.env`**.
 
+### 3.2 E-mail e recuperação de acesso (HU10)
+
+A recuperação de senha envia um link de uso único ao e-mail cadastrado. Em
+produção a API **não sobe** sem estas variáveis no `deploy/.env`:
+
+| Variável | Exemplo | Observação |
+|---|---|---|
+| `APP_PUBLIC_URL` | `https://rede-cafuringa.pages.dev` | Origem do front, só HTTPS, sem caminho. O link vai para `<APP_PUBLIC_URL>/#/nova-senha?token=...` (rota por hash do app; o token fica no fragmento, que não chega ao servidor do front) |
+| `MAIL_FROM` | `Rede Cafuringa <nao-responda@dominio>` | Remetente autorizado no provedor (SPF/DKIM do domínio) |
+| `SMTP_HOST`, `SMTP_PORT` | `smtp-relay.brevo.com`, `587` | 587 exige STARTTLS; 465 usa TLS direto |
+| `SMTP_USER`, `SMTP_PASSWORD` | — | Segredos: mesmo cuidado dos demais (`.env` com `600`) |
+| `PASSWORD_RESET_TTL_MINUTES` | `30` | Validade do link (5 a 1440) |
+| `PASSWORD_RESET_COOLDOWN_SECONDS` | `60` | Intervalo mínimo entre pedidos da mesma conta |
+| `MAIL_RETRY_DELAYS_MS` | `2000,10000` | Opcional. Esperas entre os reenvios após falha do SMTP (até 5, cada uma até 10 min; vazio desliga) |
+
+**Alerta de e-mail:** o contador `cafuringa_mail_delivery_failures_total{purpose="password_reset"}`
+(em `/api/v1/metrics`) sobe quando um e-mail não sai nem depois dos reenvios.
+Regra sugerida: `increase(cafuringa_mail_delivery_failures_total[15m]) > 0`.
+Nesse caso o pedido é desfeito, e a pessoa pode pedir de novo na hora.
+
+O compose de produção fixa `MAIL_TRANSPORT=smtp`. O transporte `log` (padrão em
+desenvolvimento) escreve o e-mail, com o link, no log da API e por isso é
+recusado em produção. Depois de configurar, valide de ponta a ponta:
+
+```bash
+./scripts/dev.sh indexes --prod   # índices únicos (userId, tokenHash) e TTL de password_reset_tokens
+curl -fsS -X POST https://$API_DOMAIN/api/v1/auth/password-reset/request \
+  -H 'content-type: application/json' -d '{"email":"<conta-de-teste>"}'
+# confira a caixa de entrada da conta de teste; a resposta é 202 exista ou não a conta
+```
+
+**Desenvolvimento local:** com `MAIL_TRANSPORT=log`, o link aparece em
+`./scripts/dev.sh logs api` (linha `[e-mail de desenvolvimento]`). Para testar o
+envio SMTP real sem provedor, suba um Mailpit e aponte a API para ele:
+
+```bash
+docker run -d --name mailpit -p 127.0.0.1:1025:1025 -p 127.0.0.1:8025:8025 axllent/mailpit
+MAIL_TRANSPORT=smtp SMTP_HOST=host.docker.internal SMTP_PORT=1025 \
+  docker compose up -d --no-deps --force-recreate api
+# caixa de entrada em http://localhost:8025
+```
+
+Os tokens ficam na coleção `password_reset_tokens`, só como hash SHA-256, com no
+máximo um pedido por conta (índice único em `userId`, que também impede dois links
+gerados por pedidos simultâneos). O índice TTL em `expiresAt` apaga cada pedido
+quando ele vence, e o índice único em `tokenHash` garante que não haja dois tokens
+iguais. A API garante esses três índices na subida (`syncIndexes`, idempotente),
+então a proteção por conta existe mesmo que o `indexes --prod` seja esquecido.
+
+A troca de senha grava `credenciaisAlteradasEm` na conta. A partir daí, todo JWT
+emitido antes disso recebe 401 (`Sessão encerrada. Faça login novamente.`).
+
 ## 4. Atualizar e reverter
 
 ```bash
@@ -113,7 +165,8 @@ O Docker não reinicia por `unhealthy`; use um monitor externo para alertar.
       http://127.0.0.1:3000/api/v1/metrics
     ```
 - Rate limit global: `THROTTLE_TTL` (segundos) e `THROTTLE_LIMIT` (requisições).
-  Rotas de login/reset devem receber `@Throttle` mais restritivo quando existirem.
+  Login, cadastro e as três rotas de recuperação de acesso usam o limite mais
+  restrito `AUTH_THROTTLE_LIMIT` (`@AuthThrottle()`), contado por IP e por rota.
 - Alertas mínimos: `ready` != 200 por 2 min; 5xx > 1% por 5 min; disco > 80%;
   último backup > 26 h; container reiniciando.
 
@@ -217,6 +270,7 @@ docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env exec -T 
 - `.env` com `600`, dono do usuário de deploy.
 - `MONGO_APP_PASSWORD`: criar/trocar no Mongo, atualizar `.env`, recriar `api`, validar `ready`, remover usuário antigo.
 - `METRICS_TOKEN`: `openssl rand -hex 32`, atualizar `.env`, recriar `api`.
+- `SMTP_PASSWORD`: trocar no provedor, atualizar `.env`, recriar `api` e pedir uma recuperação de teste (seção 3.2).
 - Root do Mongo: `db.changeUserPassword` em janela + atualizar `.env`.
 - OCI Vault é a evolução; `.env` é o mínimo aceitável no free tier.
 

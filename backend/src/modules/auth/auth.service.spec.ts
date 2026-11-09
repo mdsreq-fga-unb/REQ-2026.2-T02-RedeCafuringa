@@ -51,15 +51,19 @@ describe('AuthService', () => {
       });
     });
 
-    it('RNF11: o token carrega só id e perfil (sem CPF/e-mail)', async () => {
+    it('RNF11: o token carrega só id, perfil e o instante do login em ms (sem CPF/e-mail)', async () => {
       const { service, jwt } = setup();
+      vi.useFakeTimers({ toFake: ['Date'] });
+      vi.setSystemTime(new Date('2026-11-06T12:00:00.250Z'));
 
       await service.login('maria@exemplo.com', 'Senha123');
 
       expect(jwt.signAsync).toHaveBeenCalledWith({
         sub: user.id,
         perfil: Role.PRODUTOR,
+        sat: new Date('2026-11-06T12:00:00.250Z').getTime(),
       });
+      vi.useRealTimers();
     });
 
     it('recusa senha errada com 401 genérico', async () => {

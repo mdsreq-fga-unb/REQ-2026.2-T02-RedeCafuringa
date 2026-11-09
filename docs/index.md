@@ -149,7 +149,8 @@ Beatriz Lins |
 
 ## Documentação técnica
 
-- [Como contribuir](contribuindo.md): fluxo de branches, PRs e checks.
-- [Infraestrutura: visão geral](infra/visao-geral.md): CI/CD, imagens e registro de decisões.
-- [Backend](backend/operacao.md) e [Frontend](frontend/operacao.md): operação.
-- [Referência da API](shared/api.md) e [contrato](shared/contratos.md).
+- [Como contribuir](arquitetura/contribuindo.md): fluxo de branches, commits e checks.
+- [Padrão de Pull Request](arquitetura/pull-requests.md): modelo único para todos os PRs, com o que preencher em cada seção.
+- [Infraestrutura: visão geral](arquitetura/infra/visao-geral.md): CI/CD, imagens e registro de decisões.
+- [Backend](arquitetura/backend/operacao.md) e [Frontend](arquitetura/frontend/operacao.md): operação.
+- [Referência da API](arquitetura/shared/api.md) e [contrato](arquitetura/shared/contratos.md).

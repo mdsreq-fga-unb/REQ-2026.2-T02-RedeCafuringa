@@ -76,13 +76,16 @@ describe('HU09 — Realizar login para acessar o meu perfil (e2e)', () => {
         ).toString(),
       );
 
+      // `sat` (HU10) é só o instante do login em ms, base da revogação.
       expect(Object.keys(payload).sort()).toEqual([
         'exp',
         'iat',
         'perfil',
+        'sat',
         'sub',
       ]);
       expect(payload.sub).toBe(user.id);
+      expect(typeof payload.sat).toBe('number');
     });
 
     it('recusa senha errada com 401 e mensagem genérica', async () => {
@@ -197,6 +200,33 @@ describe('HU09 — Realizar login para acessar o meu perfil (e2e)', () => {
         .request()
         .get(ME)
         .set('Authorization', `Bearer ${token}`)
+        .expect(401);
+    });
+
+    it('RNF08: conta desativada perde o acesso também nas rotas por perfil, mesmo com token válido', async () => {
+      const { email, senha, user } = await seedUser(t, Role.ADMINISTRADOR);
+      const login = await t.request().post(LOGIN).send({ email, senha });
+      await t.connection
+        .collection('users')
+        .updateOne({ _id: user._id }, { $set: { ativo: false } });
+
+      await t
+        .request()
+        .post('/api/v1/users/admins')
+        .set('Authorization', `Bearer ${login.body.accessToken}`)
+        .send({ email: 'outro.admin@exemplo.com', senha: 'SenhaForte123' })
+        .expect(401);
+    });
+
+    it('RNF08: token com perfil diferente do atual da conta é recusado', async () => {
+      const { user } = await seedUser(t, Role.CONSUMIDOR);
+      const token = forgeToken({ sub: user.id, perfil: 'ADMINISTRADOR' });
+
+      await t
+        .request()
+        .post('/api/v1/users/admins')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ email: 'outro.admin@exemplo.com', senha: 'SenhaForte123' })
         .expect(401);
     });
 

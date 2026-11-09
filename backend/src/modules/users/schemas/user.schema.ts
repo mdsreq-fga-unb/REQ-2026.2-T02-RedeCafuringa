@@ -80,6 +80,13 @@ export class User {
 
   @Prop({ default: true })
   ativo: boolean;
+
+  /**
+   * HU10: momento da última troca de senha. JWTs emitidos antes disso deixam
+   * de valer (o JwtAuthGuard compara com o `iat` do token).
+   */
+  @Prop()
+  credenciaisAlteradasEm?: Date;
 }
 
 export type UserDocument = HydratedDocument<User>;

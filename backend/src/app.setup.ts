@@ -15,17 +15,17 @@ export const API_PREFIX = 'api/v1';
  * Versão do contrato OpenAPI (SemVer), publicada em `info.version` e em
  * shared/openapi.json. Regras de quando subir cada número: docs/shared/contratos.md.
  */
-export const OPENAPI_VERSION = '0.3.0';
+export const OPENAPI_VERSION = '0.5.0';
 
 const OPENAPI_DESCRIPTION = `API REST da plataforma **Rede Cafuringa**.
 
-**Autenticação.** \`POST /auth/login\` troca CPF e senha por um JWT. Envie-o em \`Authorization: Bearer <token>\`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).
+**Autenticação.** \`POST /auth/login\` troca e-mail e senha por um JWT (RN05). Quem esqueceu a senha usa \`/auth/password-reset/*\`. Envie-o em \`Authorization: Bearer <token>\`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).
 
 **Rastreabilidade.** Envie \`x-request-id\` (1 a 128 caracteres de \`A-Za-z0-9._-\`). A API devolve o mesmo id no cabeçalho da resposta e nos logs; sem o cabeçalho, ou com valor inválido, gera um UUID.
 
 **Erros.** Todo erro tem o corpo \`ErrorResponse\` (\`statusCode\`, \`message\`, \`error\`). Nas falhas de validação (400), \`message\` é uma lista.
 
-**Limites.** Rotas de login e cadastro têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com \`Retry-After\` (segundos).
+**Limites.** Rotas de login, cadastro e recuperação de acesso têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com \`Retry-After\` (segundos).
 
 **Dados pessoais.** Respostas nunca trazem hash de senha nem o CPF completo (vem mascarado).
 
@@ -57,7 +57,7 @@ export function createOpenApiDocument(app: INestApplication): OpenAPIObject {
         },
         'bearer',
       )
-      .addTag('auth', 'Login e dados da sessão (RN05)')
+      .addTag('auth', 'Login, dados da sessão e recuperação de acesso (RN05)')
       .addTag('users', 'Cadastro de usuários (RN02, RNF15)')
       .addTag('health', 'Saúde do serviço, para o Docker e monitores externos')
       .addTag(

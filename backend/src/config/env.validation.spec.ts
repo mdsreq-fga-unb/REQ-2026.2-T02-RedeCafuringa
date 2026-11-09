@@ -7,6 +7,13 @@ const base = {
   PII_ENCRYPTION_KEY: 'a'.repeat(64),
 };
 
+/** Em produção a HU10 exige e-mail real (SMTP) e a URL pública do app. */
+const productionMail = {
+  APP_PUBLIC_URL: 'https://example.com',
+  MAIL_TRANSPORT: 'smtp',
+  SMTP_HOST: 'smtp.example.com',
+};
+
 describe('envValidationSchema', () => {
   it('aceita a configuração mínima de desenvolvimento', () => {
     const { error, value } = envValidationSchema.validate(base);
@@ -76,6 +83,7 @@ describe('envValidationSchema', () => {
   it('em produção aceita HTTPS', () => {
     const { error } = envValidationSchema.validate({
       ...base,
+      ...productionMail,
       NODE_ENV: 'production',
       CORS_ORIGINS: 'https://example.com',
     });
@@ -93,6 +101,7 @@ describe('envValidationSchema', () => {
     it('desliga por padrão em produção', () => {
       const { value } = envValidationSchema.validate({
         ...base,
+        ...productionMail,
         NODE_ENV: 'production',
         CORS_ORIGINS: 'https://example.com',
       });
@@ -103,6 +112,7 @@ describe('envValidationSchema', () => {
     it('em produção só liga se pedido explicitamente', () => {
       const { value } = envValidationSchema.validate({
         ...base,
+        ...productionMail,
         NODE_ENV: 'production',
         CORS_ORIGINS: 'https://example.com',
         SWAGGER_ENABLED: 'true',

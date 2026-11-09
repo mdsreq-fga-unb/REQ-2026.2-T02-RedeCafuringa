@@ -1232,6 +1232,192 @@
         ]
       }
     },
+    "/api/v1/auth/password-reset/request": {
+      "post": {
+        "description": "HU10 (CA02/CA03, RN05): se o e-mail pertencer a uma conta ativa, envia a ele um link de uso único, válido por tempo limitado. A resposta é sempre a mesma, exista ou não a conta, para não revelar quem está cadastrado. Pedidos seguidos para a mesma conta respeitam um intervalo mínimo e cada novo pedido invalida o link anterior.",
+        "operationId": "passwordresetRequest",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Pedido recebido (resposta genérica)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasswordResetRequestedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "E-mail em formato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Muitas tentativas",
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Solicitar recuperação de acesso",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/password-reset/validate": {
+      "post": {
+        "description": "HU10 (CA04): confirma se o token do link ainda permite redefinir a senha, para o front decidir se mostra a etapa de nova senha. Não consome o link. O token vai no corpo, nunca na URL, para não parar em logs de acesso.",
+        "operationId": "passwordresetValidate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateResetTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Link válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetTokenValidResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Link inválido, expirado ou já utilizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Muitas tentativas",
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Validar link de recuperação",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/password-reset/confirm": {
+      "post": {
+        "description": "HU10 (CA05/CA06): troca a senha da conta dona do link e o consome. A nova senha segue a política do cadastro. Uma senha inválida não consome o link; link inválido, expirado ou já usado responde 400 com orientação para solicitar outro.",
+        "operationId": "passwordresetConfirm",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmPasswordResetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Senha redefinida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasswordResetDoneResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Senha fora da política ou link inválido, expirado ou usado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Muitas tentativas",
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Redefinir a senha",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/v1/producers/me/trajectory": {
       "get": {
         "description": "HU12 (CA01): devolve a trajetória, as atividades, o telefone e a visibilidade do telefone do produtor autenticado. Exclusivo do perfil PRODUTOR (RN01, RNF08).",
@@ -1621,8 +1807,8 @@
   },
   "info": {
     "title": "Rede Cafuringa API",
-    "description": "API REST da plataforma **Rede Cafuringa**.\n\n**Autenticação.** `POST /auth/login` troca CPF e senha por um JWT. Envie-o em `Authorization: Bearer <token>`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).\n\n**Rastreabilidade.** Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`). A API devolve o mesmo id no cabeçalho da resposta e nos logs; sem o cabeçalho, ou com valor inválido, gera um UUID.\n\n**Erros.** Todo erro tem o corpo `ErrorResponse` (`statusCode`, `message`, `error`). Nas falhas de validação (400), `message` é uma lista.\n\n**Limites.** Rotas de login e cadastro têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com `Retry-After` (segundos).\n\n**Dados pessoais.** Respostas nunca trazem hash de senha nem o CPF completo (vem mascarado).\n\n**Versão do contrato.** SemVer, em `info.version`. Veja docs/shared/contratos.md.",
-    "version": "0.3.0",
+    "description": "API REST da plataforma **Rede Cafuringa**.\n\n**Autenticação.** `POST /auth/login` troca e-mail e senha por um JWT (RN05). Quem esqueceu a senha usa `/auth/password-reset/*`. Envie-o em `Authorization: Bearer <token>`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).\n\n**Rastreabilidade.** Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`). A API devolve o mesmo id no cabeçalho da resposta e nos logs; sem o cabeçalho, ou com valor inválido, gera um UUID.\n\n**Erros.** Todo erro tem o corpo `ErrorResponse` (`statusCode`, `message`, `error`). Nas falhas de validação (400), `message` é uma lista.\n\n**Limites.** Rotas de login, cadastro e recuperação de acesso têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com `Retry-After` (segundos).\n\n**Dados pessoais.** Respostas nunca trazem hash de senha nem o CPF completo (vem mascarado).\n\n**Versão do contrato.** SemVer, em `info.version`. Veja docs/shared/contratos.md.",
+    "version": "0.5.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -1632,7 +1818,7 @@
   "tags": [
     {
       "name": "auth",
-      "description": "Login e dados da sessão (RN05)"
+      "description": "Login, dados da sessão e recuperação de acesso (RN05)"
     },
     {
       "name": "users",
@@ -2193,6 +2379,90 @@
           "tokenType",
           "expiresIn",
           "usuario"
+        ]
+      },
+      "RequestPasswordResetDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail cadastrado na conta (sem distinção de maiúsculas)"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "PasswordResetRequestedResponse": {
+        "type": "object",
+        "properties": {
+          "mensagem": {
+            "type": "string",
+            "example": "Se houver uma conta com esse e-mail, você receberá as instruções para recuperar o acesso.",
+            "description": "Mensagem genérica, igual para e-mails cadastrados ou não"
+          }
+        },
+        "required": [
+          "mensagem"
+        ]
+      },
+      "ValidateResetTokenDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "k3Jf0wX9mQ2vB7nR1tYhA5cL8eZsU4dG6iOpP-_aXyE",
+            "description": "Token do link de recuperação enviado por e-mail (43 caracteres)"
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "ResetTokenValidResponse": {
+        "type": "object",
+        "properties": {
+          "valido": {
+            "type": "boolean",
+            "example": true,
+            "description": "Sempre true: link inválido ou expirado responde 400"
+          }
+        },
+        "required": [
+          "valido"
+        ]
+      },
+      "ConfirmPasswordResetDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "k3Jf0wX9mQ2vB7nR1tYhA5cL8eZsU4dG6iOpP-_aXyE",
+            "description": "Token do link de recuperação enviado por e-mail (43 caracteres)"
+          },
+          "novaSenha": {
+            "type": "string",
+            "example": "SenhaForte123",
+            "description": "8 a 128 caracteres, com pelo menos uma letra e um número"
+          }
+        },
+        "required": [
+          "token",
+          "novaSenha"
+        ]
+      },
+      "PasswordResetDoneResponse": {
+        "type": "object",
+        "properties": {
+          "mensagem": {
+            "type": "string",
+            "example": "Recuperação de acesso concluída. Entre com a nova senha.",
+            "description": "Confirmação de que a recuperação foi concluída"
+          }
+        },
+        "required": [
+          "mensagem"
         ]
       },
       "OwnTrajectoryResponse": {

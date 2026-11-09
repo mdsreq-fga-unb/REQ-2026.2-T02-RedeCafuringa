@@ -19,6 +19,7 @@ function renderLogin(
         fromContact?: boolean;
         profile?: "consumer" | "producer";
         registered?: boolean;
+        recovered?: boolean;
     } = {},
 ) {
     const onSignIn = vi.fn();
@@ -30,6 +31,7 @@ function renderLogin(
             fromContact={props.fromContact}
             profile={props.profile}
             registered={props.registered}
+            recovered={props.recovered}
         />,
     );
     return { onSignIn, onNavigate, user: userEvent.setup() };
@@ -173,5 +175,40 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         renderLogin();
 
         expect(screen.queryByRole("status")).toBeNull();
+    });
+
+    // HU10, critério 1 (acesso à recuperação a partir do login)
+    it("oferece o caminho para recuperar o acesso sem tentar entrar", async () => {
+        const { onNavigate, user } = renderLogin();
+
+        await user.click(
+            screen.getByRole("button", { name: "Recuperar acesso" }),
+        );
+
+        expect(onNavigate).toHaveBeenCalledWith("/recuperar-acesso");
+        expect(login).not.toHaveBeenCalled();
+    });
+
+    it("oferece a recuperação de acesso também no login do consumidor", () => {
+        renderLogin({ profile: "consumer" });
+
+        expect(
+            screen.getByRole("button", { name: "Recuperar acesso" }),
+        ).toBeTruthy();
+    });
+
+    // HU10, critério 5 (depois de redefinir, o usuário segue para o login)
+    it("avisa que a senha foi redefinida quando o usuário vem da recuperação", () => {
+        renderLogin({ recovered: true });
+
+        expect(screen.getByRole("status").textContent).toBe(
+            "Senha redefinida. Entre com seu e-mail e a nova senha.",
+        );
+    });
+
+    it("não mostra o aviso de redefinição nos demais casos", () => {
+        renderLogin();
+
+        expect(screen.queryByText(/Senha redefinida/)).toBeNull();
     });
 });

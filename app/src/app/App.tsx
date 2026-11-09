@@ -30,6 +30,8 @@ import { RegisterPage } from "@/features/register";
 import "../App.css";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { DemoNavigation } from "@/features/auth/DemoNavigation";
+import { RecoverAccessPage, ResetPasswordPage } from "@/features/recovery";
+import { getMockRecoveryLink } from "@/features/recovery/mockRecovery";
 import { AdminUsersPage } from "@/features/users/AdminUsersPage";
 import { TrajectoryPage } from "@/features/trajectory/TrajectoryPage";
 import { TrajectoryForm } from "@/features/trajectory/TrajectoryForm";
@@ -74,6 +76,8 @@ export function App() {
     const query = new URLSearchParams(route.split("?")[1] || "");
     const fromContact = query.has("contato");
     const justRegistered = query.get("cadastro") === "ok";
+    const justRecovered = query.get("recuperacao") === "ok";
+    const recoveryToken = query.get("token");
     // RN03/RNF08: cadastro e consulta são exclusivos de administradores.
     const usersRoute =
         path === "/admin/usuarios" || path.startsWith("/admin/usuarios/");
@@ -109,6 +113,8 @@ export function App() {
         path === "/conta-criada/consumer" ||
         path === "/conta-criada/producer" ||
         path === "/cadastro/trajetoria" ||
+        path === "/recuperar-acesso" ||
+        path === "/nova-senha" ||
         path === "/cadastro";
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
@@ -242,6 +248,7 @@ export function App() {
                 )}
                 {showLogin && (
                     <LoginPage
+                        recovered={justRecovered}
                         fromContact={fromContact}
                         profile={loginProfile}
                         registered={justRegistered}
@@ -280,6 +287,22 @@ export function App() {
                         onNavigate={navigate}
                     />
                 )}
+
+                {path === "/recuperar-acesso" && (
+                    <RecoverAccessPage
+                        onNavigate={navigate}
+                        getDemoLink={
+                            isMockAuthEnabled ? getMockRecoveryLink : undefined
+                        }
+                    />
+                )}
+                {path === "/nova-senha" && (
+                    <ResetPasswordPage
+                        token={recoveryToken}
+                        onNavigate={navigate}
+                    />
+                )}
+
                 {path === "/cadastro/consumidor" && (
                     <ConsumerSignupPage
                         createAccount={registerConsumer}

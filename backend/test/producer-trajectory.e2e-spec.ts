@@ -539,11 +539,6 @@ describe('HU12 — Registrar trajetória do produtor (e2e)', () => {
       );
     });
 
-    // Sem a revogação de sessão da HU10, o service responde 404; com ela, o
-    // JwtAuthGuard encerra a sessão antes (401). O invariante é não gravar.
-    // Depois de integrar a HU10, apertar para só 401 (ver HU12.md, seção 7).
-    const SESSION_GONE = [401, 404];
-
     it('token de conta desativada deixa de gravar', async () => {
       const { auth, dto } = await producer();
       await t.connection
@@ -552,7 +547,7 @@ describe('HU12 — Registrar trajetória do produtor (e2e)', () => {
 
       const response = await save(auth, { trajetoria: 'x' });
 
-      expect(SESSION_GONE).toContain(response.status);
+      expect(response.status).toBe(401);
       const stored = await t.connection
         .collection('users')
         .findOne({ email: dto.email.toLowerCase() });
@@ -565,7 +560,7 @@ describe('HU12 — Registrar trajetória do produtor (e2e)', () => {
 
       const response = await save(auth, { trajetoria: 'x' });
 
-      expect(SESSION_GONE).toContain(response.status);
+      expect(response.status).toBe(401);
       expect(await t.connection.collection('users').countDocuments()).toBe(0);
     });
   });

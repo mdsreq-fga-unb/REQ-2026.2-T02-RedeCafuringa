@@ -13,7 +13,7 @@ git push -u origin feat/cadastro-produtor        # abra o PR para a dev
 
 1. **Branch curta** a partir da `dev`, no formato `<tipo>/<descricao>` em minúsculas. Tipos: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `ci`, `style`, `perf`.
 2. **Commits pequenos e atômicos**, um assunto por commit, listando os arquivos (nada de `git add -A`). Mensagens no padrão Conventional Commits, em português: `<tipo>(escopo): descrição`.
-3. **PR para a `dev`** com título no mesmo padrão. A descrição diz o que muda, por quê, como foi verificado e o que fica de fora.
+3. **PR para a `dev`** com título no mesmo padrão. O GitHub já abre a descrição com o modelo do repositório: preencha todas as seções, conforme o [Padrão de Pull Request](pull-requests.md) (o que muda, por quê, critérios de aceitação, como foi verificado, guia de teste manual, riscos e o que fica de fora).
 4. **Checks verdes**: o GitHub **bloqueia o merge** enquanto os 7 checks da tabela abaixo não passarem. Integre com **merge commit**, que preserva os commits e a autoria. A branch é apagada sozinha depois do merge.
 5. A `main` recebe a `dev` por PR, quando houver entrega.
 

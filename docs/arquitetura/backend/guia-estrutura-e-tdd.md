@@ -50,9 +50,11 @@ backend/
 │   │   └── mongo-uri.ts        # monta a URI a partir dos componentes
 │   ├── common/                 # código transversal, sem regra de domínio específica
 │   │   ├── crypto/             # hash de senha (argon2id) e cifra/blind index do CPF
+│   │   ├── mail/               # MailService: SMTP (nodemailer) ou log em dev (HU10)
 │   │   └── validators/         # ex.: CPF/CNPJ, @IsCpf() (+ seus .spec.ts)
 │   └── modules/                # UM módulo por característica do produto
 │       ├── auth/               # login JWT, guards globais, @Public/@Roles/@CurrentUser
+│       │   └── password-reset/ # recuperação de acesso por e-mail (HU10)
 │       ├── users/              # contas (consumidor, produtor, administrador)
 │       ├── producer-profile/   # trajetória do produtor e perfil público (HU12)
 │       ├── health/             # live/ready
@@ -354,6 +356,8 @@ create(@CurrentUser() user: AuthenticatedUser, @Body() dto: CreateProdutoDto) {
 | `MongoServerError`/`ECONNREFUSED` | Mongo não está de pé | `docker compose up -d mongo` e confira `docker compose ps` |
 | `featureCompatibilityVersion 8.3` | volume criado por Mongo 8.3, imagem atual é 8.0 LTS | recrie o volume de dev ou faça dump/restore (ver [operação](operacao.md#75-volume-criado-por-mongo-83)) |
 | `Config validation error: "JWT_SECRET" is required` | `.env` criado antes da autenticação | copie as variáveis de autenticação do `.env.example` para o seu `.env` |
+| `"MAIL_TRANSPORT" must be [smtp]` ou `"APP_PUBLIC_URL" is required` | API em `NODE_ENV=production` sem a configuração de e-mail da HU10 | preencha a seção de recuperação de acesso do `deploy/.env` (ver [operação, 3.2](operacao.md)) |
+| Link de recuperação não chega em dev | `MAIL_TRANSPORT=log` (padrão) só escreve no log | procure `[e-mail de desenvolvimento]` em `./scripts/dev.sh logs api` |
 | `vitest: command not found` | `node_modules` ausente/incompleto | `npm ci` na pasta `backend/` |
 | primeiro `test:e2e` demora | `mongodb-memory-server` baixando o binário | aguarde; depois fica em cache |
 | `docker` não mostra os containers no WSL | contexto diferente do Docker Desktop | use o PowerShell/Docker Desktop para o Docker do projeto |
