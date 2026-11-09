@@ -90,6 +90,18 @@ services:
       PII_ENCRYPTION_KEY: ${PII_ENCRYPTION_KEY:?PII_ENCRYPTION_KEY é obrigatório}
       ADMIN_BOOTSTRAP_EMAIL: ${ADMIN_BOOTSTRAP_EMAIL:-}
       ADMIN_BOOTSTRAP_SENHA: ${ADMIN_BOOTSTRAP_SENHA:-}
+      # Recuperação de acesso (HU10): em produção o e-mail sai por SMTP e o link
+      # aponta para o front em HTTPS. Sem estas variáveis a API não sobe.
+      APP_PUBLIC_URL: ${APP_PUBLIC_URL:?APP_PUBLIC_URL é obrigatório}
+      MAIL_TRANSPORT: smtp
+      MAIL_FROM: ${MAIL_FROM:?MAIL_FROM é obrigatório}
+      SMTP_HOST: ${SMTP_HOST:?SMTP_HOST é obrigatório}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:?SMTP_USER é obrigatório}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:?SMTP_PASSWORD é obrigatório}
+      PASSWORD_RESET_TTL_MINUTES: ${PASSWORD_RESET_TTL_MINUTES:-30}
+      PASSWORD_RESET_COOLDOWN_SECONDS: ${PASSWORD_RESET_COOLDOWN_SECONDS:-60}
+      MAIL_RETRY_DELAYS_MS: ${MAIL_RETRY_DELAYS_MS:-2000,10000}
     networks:
       - edge
       - internal

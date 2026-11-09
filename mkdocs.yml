@@ -56,14 +56,17 @@ nav:
         - Guia de estrutura e TDD: arquitetura/backend/guia-estrutura-e-tdd.md
         - Operação e infraestrutura: arquitetura/backend/operacao.md
         - Segurança e auditoria: arquitetura/backend/seguranca.md
+        - Implementação das HUs:
+            - HU10 — Recuperar acesso: arquitetura/backend/implementacao/HU10.md
     - Frontend:
-        - Operação: frontend/operacao.md
+        - Operação: arquitetura/frontend/operacao.md
     - Engenharia:
-        - Como contribuir: contribuindo.md
-        - Infraestrutura: infra/visao-geral.md
+        - Como contribuir: arquitetura/contribuindo.md
+        - Padrão de Pull Request: arquitetura/pull-requests.md
+        - Infraestrutura: arquitetura/infra/visao-geral.md
     - Contrato da API:
-        - Referência da API (Swagger): shared/api.md
-        - Versionamento e contrato: shared/contratos.md
+        - Referência da API (Swagger): arquitetura/shared/api.md
+        - Versionamento e contrato: arquitetura/shared/contratos.md
 
 hooks:
   - scripts/mkdocs_hooks.py

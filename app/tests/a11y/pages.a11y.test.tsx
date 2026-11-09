@@ -4,7 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
 import { login } from "@/features/auth/authService";
 import userEvent from "@testing-library/user-event";
+import { requestAccessRecovery } from "@/features/recovery/recoveryService";
 
+vi.mock("@/features/auth/authService");
+vi.mock("@/features/recovery/recoveryService");
 vi.mock("@/features/auth/authService");
 
 // WCAG 2.1 níveis A e AA. O color-contrast fica de fora porque o jsdom não calcula
@@ -20,6 +23,9 @@ const ROUTES = [
     "/conta",
     "/oferta/queijos",
     "/oferta/mel",
+    "/recuperar-acesso",
+    "/nova-senha?token=abc123",
+    "/nova-senha",
 ];
 
 async function violationsIn(container: HTMLElement) {
@@ -42,6 +48,7 @@ beforeEach(() => {
         token: "token-falso",
         user: { id: 1, name: "Gabriela", role: "consumer" },
     });
+    vi.mocked(requestAccessRecovery).mockResolvedValue({ ok: true });
     localStorage.clear();
 });
 
@@ -117,5 +124,75 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
         expect(found.some((v) => v.startsWith("image-alt"))).toBe(true);
         expect(found.some((v) => v.startsWith("button-name"))).toBe(true);
         expect(found.some((v) => v.startsWith("label"))).toBe(true);
+    });
+
+    it("o formulário de recuperação de acesso tem rótulo e campo acessíveis", async () => {
+        window.location.hash = "#/recuperar-acesso";
+        const { container } = render(<App />);
+
+        expect(await screen.findByLabelText("E-mail")).toBeTruthy();
+        expect(await violationsIn(container)).toEqual([]);
+    });
+
+    it("a recuperação com erro no e-mail continua sem violações", async () => {
+        window.location.hash = "#/recuperar-acesso";
+        const { container } = render(<App />);
+
+        await userEvent.setup().click(
+            await screen.findByRole("button", {
+                name: "Enviar instruções",
+            }),
+        );
+
+        expect(await screen.findByText("Informe o e-mail.")).toBeTruthy();
+        expect(
+            screen.getByLabelText("E-mail").getAttribute("aria-invalid"),
+        ).toBe("true");
+        expect(await violationsIn(container)).toEqual([]);
+    });
+
+    it("a confirmação de envio do e-mail de recuperação não tem violações", async () => {
+        window.location.hash = "#/recuperar-acesso";
+        const { container } = render(<App />);
+        const user = userEvent.setup();
+
+        await user.type(
+            await screen.findByLabelText("E-mail"),
+            "ana@exemplo.com",
+        );
+        await user.click(
+            screen.getByRole("button", { name: "Enviar instruções" }),
+        );
+
+        expect(
+            await screen.findByRole("heading", { name: "Confira seu e-mail" }),
+        ).toBeTruthy();
+        expect(await violationsIn(container)).toEqual([]);
+    });
+
+    it("o formulário de nova senha tem rótulos e campos acessíveis", async () => {
+        window.location.hash = "#/nova-senha?token=abc123";
+        const { container } = render(<App />);
+
+        expect(await screen.findByLabelText("Nova senha")).toBeTruthy();
+        expect(screen.getByLabelText("Confirmar nova senha")).toBeTruthy();
+        expect(await violationsIn(container)).toEqual([]);
+    });
+
+    it("a nova senha com erros por campo continua sem violações", async () => {
+        window.location.hash = "#/nova-senha?token=abc123";
+        const { container } = render(<App />);
+
+        await userEvent
+            .setup()
+            .click(
+                await screen.findByRole("button", { name: "Salvar e entrar" }),
+            );
+
+        expect(await screen.findByText("Informe a nova senha.")).toBeTruthy();
+        expect(
+            screen.getByLabelText("Nova senha").getAttribute("aria-invalid"),
+        ).toBe("true");
+        expect(await violationsIn(container)).toEqual([]);
     });
 });

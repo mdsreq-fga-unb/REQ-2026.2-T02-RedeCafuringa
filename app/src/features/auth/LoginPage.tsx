@@ -13,6 +13,7 @@ type LoginPageProps = {
     fromContact?: boolean;
     profile?: "consumer" | "producer";
     registered?: boolean;
+    recovered?: boolean;
     onNavigate: (path: string) => void;
     onSignIn: (auth: AuthResult) => void;
 };
@@ -21,6 +22,7 @@ export function LoginPage({
     fromContact = false,
     profile = "producer",
     registered = false,
+    recovered = false,
     onNavigate,
     onSignIn,
 }: LoginPageProps) {
@@ -85,6 +87,12 @@ export function LoginPage({
                 </p>
             )}
 
+            {recovered && (
+                <p className="form-notice" role="status">
+                    Senha redefinida. Entre com seu e-mail e a nova senha.
+                </p>
+            )}
+
             <form className="login-form" onSubmit={handleSubmit} noValidate>
                 {formError && (
                     <p className="form-alert" role="alert">
@@ -135,6 +143,14 @@ export function LoginPage({
                         {errors.password}
                     </p>
                 )}
+
+                <button
+                    type="button"
+                    className="link-button"
+                    onClick={() => onNavigate("/recuperar-acesso")}
+                >
+                    Recuperar acesso
+                </button>
 
                 <div className="login-actions">
                     <ActionButton

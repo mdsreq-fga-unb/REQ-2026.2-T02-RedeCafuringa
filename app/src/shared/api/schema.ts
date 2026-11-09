@@ -204,6 +204,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/password-reset/request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Solicitar recuperação de acesso
+         * @description HU10 (CA02/CA03, RN05): se o e-mail pertencer a uma conta ativa, envia a ele um link de uso único, válido por tempo limitado. A resposta é sempre a mesma, exista ou não a conta, para não revelar quem está cadastrado. Pedidos seguidos para a mesma conta respeitam um intervalo mínimo e cada novo pedido invalida o link anterior.
+         */
+        post: operations["passwordresetRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/password-reset/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validar link de recuperação
+         * @description HU10 (CA04): confirma se o token do link ainda permite redefinir a senha, para o front decidir se mostra a etapa de nova senha. Não consome o link. O token vai no corpo, nunca na URL, para não parar em logs de acesso.
+         */
+        post: operations["passwordresetValidate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/password-reset/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Redefinir a senha
+         * @description HU10 (CA05/CA06): troca a senha da conta dona do link e o consome. A nova senha segue a política do cadastro. Uma senha inválida não consome o link; link inválido, expirado ou já usado responde 400 com orientação para solicitar outro.
+         */
+        post: operations["passwordresetConfirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -544,6 +604,53 @@ export interface components {
              */
             expiresIn: number;
             usuario: components["schemas"]["UserResponse"];
+        };
+        RequestPasswordResetDto: {
+            /**
+             * @description E-mail cadastrado na conta (sem distinção de maiúsculas)
+             * @example maria@exemplo.com
+             */
+            email: string;
+        };
+        PasswordResetRequestedResponse: {
+            /**
+             * @description Mensagem genérica, igual para e-mails cadastrados ou não
+             * @example Se houver uma conta com esse e-mail, você receberá as instruções para recuperar o acesso.
+             */
+            mensagem: string;
+        };
+        ValidateResetTokenDto: {
+            /**
+             * @description Token do link de recuperação enviado por e-mail (43 caracteres)
+             * @example k3Jf0wX9mQ2vB7nR1tYhA5cL8eZsU4dG6iOpP-_aXyE
+             */
+            token: string;
+        };
+        ResetTokenValidResponse: {
+            /**
+             * @description Sempre true: link inválido ou expirado responde 400
+             * @example true
+             */
+            valido: boolean;
+        };
+        ConfirmPasswordResetDto: {
+            /**
+             * @description Token do link de recuperação enviado por e-mail (43 caracteres)
+             * @example k3Jf0wX9mQ2vB7nR1tYhA5cL8eZsU4dG6iOpP-_aXyE
+             */
+            token: string;
+            /**
+             * @description 8 a 128 caracteres, com pelo menos uma letra e um número
+             * @example SenhaForte123
+             */
+            novaSenha: string;
+        };
+        PasswordResetDoneResponse: {
+            /**
+             * @description Confirmação de que a recuperação foi concluída
+             * @example Recuperação de acesso concluída. Entre com a nova senha.
+             */
+            mensagem: string;
         };
     };
     responses: never;
@@ -1352,6 +1459,138 @@ export interface operations {
             /** @description Sem token ou token inválido */
             401: {
                 headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    passwordresetRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestPasswordResetDto"];
+            };
+        };
+        responses: {
+            /** @description Pedido recebido (resposta genérica) */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordResetRequestedResponse"];
+                };
+            };
+            /** @description E-mail em formato inválido */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Muitas tentativas */
+            429: {
+                headers: {
+                    /** @description Segundos até a próxima tentativa ser aceita */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    passwordresetValidate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ValidateResetTokenDto"];
+            };
+        };
+        responses: {
+            /** @description Link válido */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResetTokenValidResponse"];
+                };
+            };
+            /** @description Link inválido, expirado ou já utilizado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Muitas tentativas */
+            429: {
+                headers: {
+                    /** @description Segundos até a próxima tentativa ser aceita */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    passwordresetConfirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmPasswordResetDto"];
+            };
+        };
+        responses: {
+            /** @description Senha redefinida */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordResetDoneResponse"];
+                };
+            };
+            /** @description Senha fora da política ou link inválido, expirado ou usado */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Muitas tentativas */
+            429: {
+                headers: {
+                    /** @description Segundos até a próxima tentativa ser aceita */
+                    "Retry-After"?: number;
                     [name: string]: unknown;
                 };
                 content: {
