@@ -50,6 +50,22 @@ nav:
     - 13. Referências Bibliográficas: visao/referencias.md
     - 14. Vídeo de Apresentação: visao/videos.md
 
+  - AUP - Iterações:
+    - Concepção:
+      - Iteração 1: visao/evidencias/iteracao1.md
+      - Iteração 2: visao/evidencias/iteracao2.md
+    - Elaboração:
+      - Iteração 3: visao/evidencias/iteracao3.md
+      - Iteração 4: visao/evidencias/iteracao4.md
+    - Construção:
+      - Iteração 5: visao/evidencias/iteracao5.md
+      - Iteração 6: visao/evidencias/iteracao6.md
+      - Iteração 7: visao/evidencias/iteracao7.md
+      - Iteração 8: visao/evidencias/iteracao8.md
+    - Transição:
+      - Iteração 9: visao/evidencias/iteracao9.md
+      - Iteração 10: visao/evidencias/iteracao10.md
+
   - Arquitetura:
     - Backend:
         - POC: arquitetura/backend/poc.md
