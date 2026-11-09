@@ -4,10 +4,36 @@ import { ActionButton } from "../../components/ui/ActionButton";
 import { BackButton } from "../../components/navigation/BackButton";
 import type { AuthResult } from "../../shared/types";
 import { isMockAuthEnabled, login } from "./authService";
-import { InvalidCredentialsError } from "./errors";
+import {
+    AccountDisabledError,
+    InvalidCredentialsError,
+    TooManyAttemptsError,
+} from "./errors";
 import { demoHint } from "./mockAuth";
 import { validateLogin } from "./validateLogin";
 import type { LoginErrors } from "./validateLogin";
+
+function waitText(seconds?: number): string {
+    if (!seconds || seconds <= 0) return "alguns instantes";
+    if (seconds < 60)
+        return seconds === 1 ? "1 segundo" : `${seconds} segundos`;
+    const minutes = Math.ceil(seconds / 60);
+    return minutes === 1 ? "1 minuto" : `${minutes} minutos`;
+}
+
+/** Mensagem orientativa por causa da falha (RNF03): o que aconteceu e o que fazer. */
+function loginErrorMessage(error: unknown): string {
+    if (error instanceof InvalidCredentialsError) {
+        return "E-mail ou senha inválidos";
+    }
+    if (error instanceof AccountDisabledError) {
+        return "Conta desativada. Procure a administração da Rede Cafuringa.";
+    }
+    if (error instanceof TooManyAttemptsError) {
+        return `Muitas tentativas de login. Aguarde ${waitText(error.retryAfterSeconds)} e tente novamente.`;
+    }
+    return "Não foi possível entrar agora. Tente novamente em instantes.";
+}
 
 type LoginPageProps = {
     fromContact?: boolean;
@@ -51,11 +77,7 @@ export function LoginPage({
         try {
             auth = await login({ email, password });
         } catch (error) {
-            setFormError(
-                error instanceof InvalidCredentialsError
-                    ? "E-mail ou senha inválidos"
-                    : "Não foi possível entrar agora. Tente novamente em instantes.",
-            );
+            setFormError(loginErrorMessage(error));
             setLoading(false);
             return;
         }

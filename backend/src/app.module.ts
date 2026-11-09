@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { randomUUID } from 'node:crypto';
 import pino from 'pino';
+import { RetryAfterThrottlerGuard } from './common/throttler/retry-after-throttler.guard.js';
 import { envValidationSchema } from './config/env.validation.js';
 import { MailModule } from './common/mail/mail.module.js';
 import { resolveMongoUri } from './config/mongo-uri.js';
@@ -55,6 +56,9 @@ import { UsersModule } from './modules/users/users.module.js';
               'req.headers.cookie',
               'res.headers["set-cookie"]',
               'req.body.password',
+              'req.body.senha',
+              'req.body.novaSenha',
+              'req.body.token',
               'req.body.cpf',
               'req.body.email',
               'req.query.cpf',
@@ -146,7 +150,7 @@ import { UsersModule } from './modules/users/users.module.js';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard,
+      useClass: RetryAfterThrottlerGuard,
     },
     {
       provide: APP_GUARD,
