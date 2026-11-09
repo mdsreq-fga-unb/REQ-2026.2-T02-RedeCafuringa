@@ -1304,3 +1304,40 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   }
 }
 /* FIM: ajuste-responsivo-filtros-hu */
+
+.hu-button-container {
+    margin: 12px 0 4px;
+}
+
+.hu-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 12px 20px;
+    background-color: #D97736;
+    color: #FFFFFF !important;
+    border-radius: 8px;
+    text-decoration: none !important;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.hu-button:hover {
+    background-color: #BD6128;
+    color: #FFFFFF !important;
+    transform: translateY(-2px);
+}
+
+.hu-button,
+.hu-button:visited,
+.hu-button:hover,
+.hu-button:focus,
+.hu-button:active {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+
+.hu-button span {
+    color: #FFFFFF !important;
+}

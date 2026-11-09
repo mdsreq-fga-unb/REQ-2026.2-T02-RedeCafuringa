@@ -34,7 +34,7 @@
       </select>
     </div>
     <div class="hu-filters__field">
-      <label for="hu-sort-filter">Ordenar pela priorização</label>
+      <label for="hu-sort-filter">Priorização</label>
       <select id="hu-sort-filter">
         <option value="">Ordem original (HU)</option>
         <option value="asc">Crescente (1º → 20º)</option>
