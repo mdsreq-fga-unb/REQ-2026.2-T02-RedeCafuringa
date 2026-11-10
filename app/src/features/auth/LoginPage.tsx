@@ -188,6 +188,23 @@ export function LoginPage({
                 </div>
             </form>
 
+                {!fromContact && (
+                <button
+                    type="button"
+                    className="profile-switch"
+                    onClick={() =>
+                        onNavigate(
+                            profile === "consumer"
+                                ? "/login/producer"
+                                : "/login/consumer",
+                        )
+                    }
+                >
+                    {profile === "consumer" ? "Sou produtor" : "Sou consumidor"}{" "}
+                    <span aria-hidden="true">→</span>
+                </button>
+            )}
+
             {isMockAuthEnabled && <p className="demo-note">{demoHint}</p>}
         </section>
     );

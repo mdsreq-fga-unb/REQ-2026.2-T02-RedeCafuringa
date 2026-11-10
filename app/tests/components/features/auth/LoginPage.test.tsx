@@ -251,4 +251,27 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
 
         expect(screen.queryByText(/Senha redefinida/)).toBeNull();
     });
+
+        // Protótipo do login: troca de perfil
+    it("oferece a troca para o login de consumidor a partir do login de produtor", async () => {
+        const { onNavigate, user } = renderLogin({ profile: "producer" });
+
+        await user.click(screen.getByRole("button", { name: "Sou consumidor" }));
+
+        expect(onNavigate).toHaveBeenCalledWith("/login/consumer");
+    });
+
+    it("oferece a troca para o login de produtor a partir do login de consumidor", async () => {
+        const { onNavigate, user } = renderLogin({ profile: "consumer" });
+
+        await user.click(screen.getByRole("button", { name: "Sou produtor" }));
+
+        expect(onNavigate).toHaveBeenCalledWith("/login/producer");
+    });
+
+    it("não oferece a troca de perfil quando o login veio de um pedido de contato", () => {
+        renderLogin({ fromContact: true, profile: "consumer" });
+
+        expect(screen.queryByRole("button", { name: /^Sou / })).toBeNull();
+    });
 });

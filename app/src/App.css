@@ -1195,6 +1195,25 @@ h2 {
     color: var(--orange-text);
 }
 
+.profile-switch {
+    display: block;
+    width: fit-content;
+    margin-top: 16px;
+    padding: 8px 0;
+    border: 0;
+    background: none;
+    color: var(--orange-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.profile-switch:focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 2px;
+}
+
 @media (max-width: 360px) {
     .profile-options {
         gap: 28px;
