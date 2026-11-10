@@ -60,6 +60,12 @@ export function LoginPage({
     const signupPath =
         profile === "consumer" ? "/cadastro/consumidor" : "/cadastro";
 
+    const subtitle = fromContact
+    ? "Acesse sua conta para continuar para o WhatsApp."
+    : profile === "consumer"
+        ? "Entre para acompanhar as novidades."
+        : "Entre para divulgar seus produtos e serviços.";
+
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setFormError("");
@@ -93,11 +99,7 @@ export function LoginPage({
                     ? "Entre para falar com o responsável"
                     : "Que bom ter você aqui"}
             </h1>
-            <p className="body-copy">
-                {fromContact
-                    ? "Acesse sua conta para continuar para o WhatsApp."
-                    : "Entre com seu e-mail e sua senha."}
-            </p>
+            <p className="body-copy">{subtitle}</p>
 
             {registered && (
                 <p className="form-notice" role="status">

@@ -294,4 +294,34 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
             }).className,
         ).toContain("login-title-accent");
     });
+
+        // Protótipo do login: subtítulo por perfil
+    it("mostra o subtítulo do produtor no login de produtor", () => {
+        renderLogin({ profile: "producer" });
+
+        expect(
+            screen.getByText("Entre para divulgar seus produtos e serviços."),
+        ).toBeTruthy();
+    });
+
+    it("mostra o subtítulo do consumidor no login de consumidor", () => {
+        renderLogin({ profile: "consumer" });
+
+        expect(
+            screen.getByText("Entre para acompanhar as novidades."),
+        ).toBeTruthy();
+    });
+
+    it("mantém o subtítulo do WhatsApp quando o login veio de um pedido de contato", () => {
+        renderLogin({ fromContact: true, profile: "consumer" });
+
+        expect(
+            screen.getByText(
+                "Acesse sua conta para continuar para o WhatsApp.",
+            ),
+        ).toBeTruthy();
+        expect(
+            screen.queryByText("Entre para acompanhar as novidades."),
+        ).toBeNull();
+    });
 });
