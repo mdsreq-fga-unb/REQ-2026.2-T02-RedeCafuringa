@@ -274,4 +274,24 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
 
         expect(screen.queryByRole("button", { name: /^Sou / })).toBeNull();
     });
+
+        // Protótipo do login: título em laranja
+    it("destaca o título do login com o estilo de destaque do protótipo", () => {
+        renderLogin();
+
+        expect(
+            screen.getByRole("heading", { name: "Que bom ter você aqui" })
+                .className,
+        ).toContain("login-title-accent");
+    });
+
+    it("mantém o destaque no título do login vindo de um pedido de contato", () => {
+        renderLogin({ fromContact: true });
+
+        expect(
+            screen.getByRole("heading", {
+                name: "Entre para falar com o responsável",
+            }).className,
+        ).toContain("login-title-accent");
+    });
 });

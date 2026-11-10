@@ -88,7 +88,7 @@ export function LoginPage({
                     onNavigate(fromContact ? "/perfil" : "/escolher-perfil")
                 }
             />
-            <h1>
+            <h1 className="login-title-accent">
                 {fromContact
                     ? "Entre para falar com o responsável"
                     : "Que bom ter você aqui"}
