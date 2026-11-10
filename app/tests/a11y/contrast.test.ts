@@ -103,3 +103,11 @@ describe("contraste dos tokens de cor (WCAG 2.1 AA)", () => {
         expect(greenButton).toMatch(/color:\s*var\(--ink\)/);
     });
 });
+
+describe("laranja de texto das telas de recuperação (HU10)", () => {
+    it("o check do ícone de e-mail enviado tem contraste de elemento gráfico (3:1) sobre o círculo", () => {
+        const accent = token("orange-text");
+
+        expect(contrast(accent, "#eef7ea")).toBeGreaterThanOrEqual(AA_UI);
+    });
+});

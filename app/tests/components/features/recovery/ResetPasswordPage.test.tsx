@@ -278,4 +278,24 @@ describe("ResetPasswordPage — HU10 Recuperar acesso à conta", () => {
             "Não foi possível redefinir a senha agora",
         );
     });
+
+        // Protótipo 10: título em laranja
+    it("destaca o título da nova senha com o estilo de destaque do protótipo", () => {
+        renderPage();
+
+        expect(
+            screen.getByRole("heading", { name: "Crie uma nova senha" })
+                .className,
+        ).toContain("recovery-title-accent");
+    });
+
+    it("não aplica o destaque ao título de link inválido", () => {
+        renderPage({ token: null });
+
+        expect(
+            screen.getByRole("heading", {
+                name: "Link de recuperação inválido",
+            }).className,
+        ).not.toContain("recovery-title-accent");
+    });
 });
