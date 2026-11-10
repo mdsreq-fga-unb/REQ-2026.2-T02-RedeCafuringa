@@ -18,7 +18,7 @@ describe("Entrada do cadastro de consumidor — HU01", () => {
         );
 
         await user.click(
-            screen.getByRole("button", { name: "Criar conta de consumidor" }),
+            screen.getByRole("button", { name: "Criar uma conta" }),
         );
 
         expect(onNavigate).toHaveBeenCalledWith("/cadastro/consumidor");

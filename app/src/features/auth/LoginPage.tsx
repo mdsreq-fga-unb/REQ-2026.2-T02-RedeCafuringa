@@ -59,10 +59,6 @@ export function LoginPage({
     const [loading, setLoading] = useState(false);
     const signupPath =
         profile === "consumer" ? "/cadastro/consumidor" : "/cadastro";
-    const signupLabel =
-        profile === "consumer"
-            ? "Criar conta de consumidor"
-            : "Criar conta de produtor";
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -187,7 +183,7 @@ export function LoginPage({
                         type="button"
                         onClick={() => onNavigate(signupPath)}
                     >
-                        {signupLabel}
+                        Criar uma conta
                     </ActionButton>
                 </div>
             </form>

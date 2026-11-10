@@ -177,29 +177,29 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         ).toBeTruthy();
     });
 
-    // HU02, critério 1 (acesso ao cadastro sem conta)
+        // HU02, critério 1 (acesso ao cadastro sem conta)
     it("oferece o caminho para criar uma conta", async () => {
         const { onNavigate, user } = renderLogin();
 
-        await user.click(
-            screen.getByRole("button", { name: "Criar conta de produtor" }),
-        );
+        await user.click(screen.getByRole("button", { name: "Criar uma conta" }));
 
         expect(onNavigate).toHaveBeenCalledWith("/cadastro");
     });
 
-    it("mostra somente a ação de cadastro do perfil selecionado", () => {
+    it("leva o consumidor ao cadastro de consumidor pela mesma ação", async () => {
+        const { onNavigate, user } = renderLogin({ profile: "consumer" });
+
+        await user.click(screen.getByRole("button", { name: "Criar uma conta" }));
+
+        expect(onNavigate).toHaveBeenCalledWith("/cadastro/consumidor");
+    });
+
+    it("mostra uma única ação de cadastro", () => {
         renderLogin({ profile: "consumer" });
 
         expect(
-            screen.getAllByRole("button", { name: /Criar conta de/ }),
+            screen.getAllByRole("button", { name: "Criar uma conta" }),
         ).toHaveLength(1);
-        expect(
-            screen.getByRole("button", { name: "Criar conta de consumidor" }),
-        ).toBeTruthy();
-        expect(
-            screen.queryByRole("button", { name: "Criar conta de produtor" }),
-        ).toBeNull();
     });
 
     // HU02, critério 9 (depois do cadastro, o usuário segue para o login)
