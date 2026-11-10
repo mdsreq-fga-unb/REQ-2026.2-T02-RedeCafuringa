@@ -81,7 +81,7 @@ export function RecoverAccessPage({
                     instruções para recuperar o acesso.
                 </p>
 
-                <p className="form-notice" role="status">
+                <p className="recovery-sent" role="status">
                     {`Endereço informado: ${sentTo}`}
                 </p>
                 <p className="body-copy">

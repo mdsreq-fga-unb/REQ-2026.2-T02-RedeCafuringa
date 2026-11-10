@@ -1196,6 +1196,17 @@ h2 {
     font-size: 1.5rem;
 }
 
+.recovery-sent {
+    margin: 16px 0 0;
+    padding: 12px;
+    border: 1px solid #e3d27a;
+    border-radius: 8px;
+    background: #fff6b3;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 700;
+}
+
 @media (max-width: 360px) {
     .profile-options {
         gap: 28px;
