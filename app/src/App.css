@@ -1167,22 +1167,6 @@ h2 {
     opacity: 0.65;
 }
 /* HU10 — recuperação de acesso */
-.link-button {
-    align-self: flex-start;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: inherit;
-    font: inherit;
-    font-weight: 600;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.link-button:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-}
 
 .recovery-icon {
     display: grid;

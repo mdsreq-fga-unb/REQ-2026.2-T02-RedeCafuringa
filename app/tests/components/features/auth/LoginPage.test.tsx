@@ -222,7 +222,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         const { onNavigate, user } = renderLogin();
 
         await user.click(
-            screen.getByRole("button", { name: "Recuperar acesso" }),
+            screen.getByRole("button", { name: "Esqueci minha senha" }),
         );
 
         expect(onNavigate).toHaveBeenCalledWith("/recuperar-acesso");
@@ -233,7 +233,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         renderLogin({ profile: "consumer" });
 
         expect(
-            screen.getByRole("button", { name: "Recuperar acesso" }),
+            screen.getByRole("button", { name: "Esqueci minha senha" }),
         ).toBeTruthy();
     });
 

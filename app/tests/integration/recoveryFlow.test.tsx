@@ -33,7 +33,7 @@ describe("HU10 — fluxo completo de recuperação de acesso", () => {
 
         // Telas 08 e 09: pedir o link
         await user.click(
-            await screen.findByRole("button", { name: "Recuperar acesso" }),
+            await screen.findByRole("button", { name: "Esqueci minha senha" }),
         );
         await user.type(
             await screen.findByLabelText("E-mail"),

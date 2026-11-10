@@ -167,14 +167,6 @@ export function LoginPage({
                     </p>
                 )}
 
-                <button
-                    type="button"
-                    className="link-button"
-                    onClick={() => onNavigate("/recuperar-acesso")}
-                >
-                    Recuperar acesso
-                </button>
-
                 <div className="login-actions">
                     <ActionButton
                         variant="orange"
@@ -182,6 +174,13 @@ export function LoginPage({
                         disabled={loading}
                     >
                         {loading ? "Entrando…" : "Entrar"}
+                    </ActionButton>
+                    <ActionButton
+                        variant="outline"
+                        type="button"
+                        onClick={() => onNavigate("/recuperar-acesso")}
+                    >
+                        Esqueci minha senha
                     </ActionButton>
                     <ActionButton
                         variant="outline"
