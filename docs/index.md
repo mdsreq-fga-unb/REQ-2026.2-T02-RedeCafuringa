@@ -144,3 +144,13 @@ Beatriz Lins |
 | 12/10/26 | 4.8 | Atualização do documento de lições aprendidas da Unidade 2. | Pedro Augusto |
 | 12/10/26 | 4.9 | Correção do cronograma na unidade 2 e adição de dor e dod para todas as iterações da fase de construção | Beatriz Lins |
 | 12/10/26 | 5.0 | Validação e realização de pequenos ajustes na unidade 2, deixando a entrega totalmente revisada | Equipe ByteLab |
+
+---
+
+## Documentação técnica
+
+- [Como contribuir](arquitetura/contribuindo.md): fluxo de branches, commits e checks.
+- [Padrão de Pull Request](arquitetura/pull-requests.md): modelo único para todos os PRs, com o que preencher em cada seção.
+- [Infraestrutura: visão geral](arquitetura/infra/visao-geral.md): CI/CD, imagens e registro de decisões.
+- [Backend](arquitetura/backend/operacao.md) e [Frontend](arquitetura/frontend/operacao.md): operação.
+- [Referência da API](arquitetura/shared/api.md) e [contrato](arquitetura/shared/contratos.md).

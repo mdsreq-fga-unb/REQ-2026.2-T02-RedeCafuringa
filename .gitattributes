@@ -1,0 +1,21 @@
+# Fim de linha: LF no repositório e no working tree, em qualquer sistema.
+# Evita "bad interpreter" em scripts .sh e diffs gigantes por CRLF no Windows.
+* text=auto eol=lf
+
+# Scripts e arquivos que precisam ser LF para rodar em Linux/containers
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Binários (sem conversão nem diff textual)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.mp4 binary
+*.pdf binary
+*.woff binary
+*.woff2 binary

@@ -1,0 +1,11 @@
+[Unit]
+Description=Agenda o backup diário do MongoDB da Rede Cafuringa
+
+[Timer]
+OnCalendar=*-*-* 03:15:00 UTC
+Persistent=true
+RandomizedDelaySec=15m
+Unit=cafuringa-backup.service
+
+[Install]
+WantedBy=timers.target

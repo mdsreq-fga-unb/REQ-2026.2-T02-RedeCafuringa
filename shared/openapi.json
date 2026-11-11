@@ -1,0 +1,2601 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "description": "Responde 200 só quando o MongoDB está acessível.",
+        "operationId": "healthReady",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Health Check is successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "degraded"
+                      ],
+                      "example": "ok"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {},
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The Health Check is not successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error",
+                        "shutting_down"
+                      ],
+                      "example": "error"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect",
+                          "responseTime": 3005
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        },
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect",
+                          "responseTime": 3005
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Prontidão (alias de /health/ready)",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/health/ready": {
+      "get": {
+        "description": "Responde 200 só quando o MongoDB está acessível. Usado pelo proxy (tráfego) e por monitores externos.",
+        "operationId": "healthReadyAlias",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Health Check is successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "degraded"
+                      ],
+                      "example": "ok"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {},
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The Health Check is not successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error",
+                        "shutting_down"
+                      ],
+                      "example": "error"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect",
+                          "responseTime": 3005
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        },
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect",
+                          "responseTime": 3005
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Prontidão",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/health/live": {
+      "get": {
+        "description": "Responde 200 enquanto o processo está de pé, sem consultar o banco. Usado pelo HEALTHCHECK do Docker.",
+        "operationId": "healthLive",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Health Check is successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "degraded"
+                      ],
+                      "example": "ok"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {},
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The Health Check is not successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "error",
+                        "shutting_down"
+                      ],
+                      "example": "error"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect",
+                          "responseTime": 3005
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up",
+                          "responseTime": 12
+                        },
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect",
+                          "responseTime": 3005
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": [
+                          "status"
+                        ],
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "degraded",
+                              "down"
+                            ]
+                          },
+                          "responseTime": {
+                            "type": "number",
+                            "description": "Time the health indicator took to respond, in ms"
+                          }
+                        },
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Vivacidade",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/users/consumers": {
+      "post": {
+        "description": "Cadastro público (HU01): nome completo, CPF, e-mail e senha (RF01). Data de nascimento é obrigatória e exige 18 anos ou mais (RNF15); telefone é opcional. O CPF é validado, normalizado e guardado cifrado; a resposta traz o CPF mascarado.",
+        "operationId": "usersCreateConsumer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateConsumerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Consumidor criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou menor de 18 anos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CPF já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Muitas tentativas",
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cadastrar consumidor",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/v1/users/producers": {
+      "post": {
+        "description": "Cadastro público da HU02. Documentos, e-mail e senha são protegidos conforme RNF11; o CPF é retornado mascarado.",
+        "operationId": "usersCreateProducer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProducerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Produtor criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProducerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou campos obrigatórios ausentes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "E-mail, CPF ou CNPJ já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Muitas tentativas",
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cadastrar produtor",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/v1/users/admins": {
+      "post": {
+        "description": "HU03: só um administrador autenticado cria outra conta administrativa, informando e-mail e senha. O primeiro administrador vem de ADMIN_BOOTSTRAP_EMAIL/ADMIN_BOOTSTRAP_SENHA.",
+        "operationId": "usersCreateAdmin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Administrador criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "E-mail ou senha inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "E-mail já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cadastrar administrador",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "description": "HU04: lista consumidores, produtores e administradores em ordem alfabética, com filtro por perfil, busca por nome, e-mail ou iniciativa e paginação (até 50 por página). Nenhum item traz senha nem documentos (RNF11).",
+        "operationId": "usersList",
+        "parameters": [
+          {
+            "name": "perfil",
+            "required": false,
+            "in": "query",
+            "description": "Restringe a consulta a um perfil (CA02, CA03, CA04)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CONSUMIDOR",
+                "PRODUTOR",
+                "ADMINISTRADOR"
+              ]
+            }
+          },
+          {
+            "name": "busca",
+            "required": false,
+            "in": "query",
+            "description": "Trecho do nome, e-mail ou nome da iniciativa",
+            "schema": {
+              "example": "Maria",
+              "type": "string"
+            }
+          },
+          {
+            "name": "pagina",
+            "required": false,
+            "in": "query",
+            "description": "Página desejada, a partir de 1",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Quantidade de usuários por página",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "example": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de usuários; lista vazia quando não há registros",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Filtro ou paginação inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Consultar usuários cadastrados",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "description": "HU04: dados de uma conta para o administrador, com CPF e CNPJ mascarados e sem senha (CA06, RNF11).",
+        "operationId": "usersFindOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Detalhar usuário cadastrado",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "description": "Troca e-mail e senha (RN05) por um JWT, válido por `expiresIn` segundos. Rota pública com limite estrito de tentativas por IP.",
+        "operationId": "authLogin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Payload inválido (as mensagens vêm em `message`)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "E-mail ou senha inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Conta desativada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Muitas tentativas",
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Autenticar com e-mail e senha",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "description": "Devolve o perfil de quem é dono do token. CPF sempre mascarado.",
+        "operationId": "authMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Perfil do usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Dados do usuário autenticado",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/password-reset/request": {
+      "post": {
+        "description": "HU10 (CA02/CA03, RN05): se o e-mail pertencer a uma conta ativa, envia a ele um link de uso único, válido por tempo limitado. A resposta é sempre a mesma, exista ou não a conta, para não revelar quem está cadastrado. Pedidos seguidos para a mesma conta respeitam um intervalo mínimo e cada novo pedido invalida o link anterior.",
+        "operationId": "passwordresetRequest",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Pedido recebido (resposta genérica)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasswordResetRequestedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "E-mail em formato inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Muitas tentativas",
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Solicitar recuperação de acesso",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/password-reset/validate": {
+      "post": {
+        "description": "HU10 (CA04): confirma se o token do link ainda permite redefinir a senha, para o front decidir se mostra a etapa de nova senha. Não consome o link. O token vai no corpo, nunca na URL, para não parar em logs de acesso.",
+        "operationId": "passwordresetValidate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateResetTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Link válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetTokenValidResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Link inválido, expirado ou já utilizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Muitas tentativas",
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Validar link de recuperação",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/password-reset/confirm": {
+      "post": {
+        "description": "HU10 (CA05/CA06): troca a senha da conta dona do link e o consome. A nova senha segue a política do cadastro. Uma senha inválida não consome o link; link inválido, expirado ou já usado responde 400 com orientação para solicitar outro.",
+        "operationId": "passwordresetConfirm",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmPasswordResetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Senha redefinida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasswordResetDoneResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Senha fora da política ou link inválido, expirado ou usado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Muitas tentativas",
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Redefinir a senha",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/producers/me/trajectory": {
+      "get": {
+        "description": "HU12 (CA01): devolve a trajetória, as atividades, o telefone e a visibilidade do telefone do produtor autenticado. Exclusivo do perfil PRODUTOR (RN01, RNF08).",
+        "operationId": "producerprofileGetOwn",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Trajetória atual",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnTrajectoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de produtor\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta de produtor inexistente ou desativada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Consultar a própria trajetória",
+        "tags": [
+          "producers"
+        ]
+      },
+      "put": {
+        "description": "HU12 (CA02-CA04, CA06, CA07): substitui a trajetória e as atividades do produtor autenticado; telefone e visibilidade só mudam se enviados; `telefone: null` remove o telefone cadastrado. Publicar a trajetória torna o perfil público visível. O dono é sempre quem está no token. É idempotente: reenviar o mesmo conteúdo após uma falha de conexão é seguro. Textos são simples (sem HTML) e limitados a 2000 caracteres.",
+        "operationId": "producerprofileSave",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveTrajectoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Trajetória gravada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnTrajectoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Campos inválidos ou fora do contrato (mensagens em `message`)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de produtor\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta de produtor inexistente ou desativada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registrar a própria trajetória",
+        "tags": [
+          "producers"
+        ]
+      }
+    },
+    "/api/v1/producers/{id}/trajectory": {
+      "get": {
+        "description": "HU12 (CA05, RN07, RNF11): aberta a visitantes e consumidores. Traz somente dados destinados à divulgação; o telefone só aparece se o produtor autorizou. O perfil fica oculto (404) até o produtor publicar a trajetória. E-mail, CPF, CNPJ e nome do responsável nunca são expostos.",
+        "operationId": "producerprofileGetPublic",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados públicos do produtor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicTrajectoryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produtor inexistente, desativado, sem trajetória publicada ou identificador inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Consultar a trajetória pública de um produtor",
+        "tags": [
+          "producers"
+        ]
+      }
+    },
+    "/api/v1/producers/me/photo": {
+      "put": {
+        "description": "HU12/RF12: substitui a foto do produtor autenticado. O formato é conferido pelo conteúdo do arquivo (PNG, JPEG ou WebP; até 5 MB e 50 megapixels). A imagem é regravada em WebP de no máximo 960 px, já na orientação correta e **sem metadados** (EXIF, GPS), para não expor a localização da propriedade (RNF11). Reenviar a mesma foto é seguro (CA07). Recomenda-se reduzir a foto no aparelho antes de enviar (RNF06).",
+        "operationId": "producerprofileSavePhoto",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "foto"
+                ],
+                "properties": {
+                  "foto": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "PNG, JPEG ou WebP de até 5 MB"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Foto gravada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhotoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Arquivo ausente, ilegível ou com dimensões fora do limite",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de produtor\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta de produtor inexistente ou desativada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Arquivo acima de 5 MB",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Arquivo que não é PNG, JPEG ou WebP",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Enviar a própria foto de perfil",
+        "tags": [
+          "producers"
+        ]
+      },
+      "delete": {
+        "description": "HU12/RF12: apaga a foto do produtor autenticado. Idempotente: remover sem ter foto também devolve 204.",
+        "operationId": "producerprofileRemovePhoto",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Foto removida"
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de produtor\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta de produtor inexistente ou desativada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remover a própria foto de perfil",
+        "tags": [
+          "producers"
+        ]
+      }
+    },
+    "/api/v1/producers/{id}/photo": {
+      "get": {
+        "description": "HU12/RF12 (CA05, RN07): visível nas mesmas condições do perfil público (produtor ativo e trajetória publicada). Use o caminho de `fotoUrl`. Responde com `ETag` e aceita `If-None-Match`.",
+        "operationId": "producerprofileGetPhoto",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "v",
+            "required": false,
+            "in": "query",
+            "description": "Versão da foto, como vem em `fotoUrl`. Com a versão atual a resposta fica em cache para sempre; sem ela, o navegador revalida.",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Imagem WebP sem metadados",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "O navegador já tem esta versão"
+          },
+          "404": {
+            "description": "Produtor inexistente, desativado, sem trajetória publicada, sem foto ou identificador inválido",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Foto pública de um produtor",
+        "tags": [
+          "producers"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Rede Cafuringa API",
+    "description": "API REST da plataforma **Rede Cafuringa**.\n\n**Autenticação.** `POST /auth/login` troca e-mail e senha por um JWT (RN05). Quem esqueceu a senha usa `/auth/password-reset/*`. Envie-o em `Authorization: Bearer <token>`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).\n\n**Rastreabilidade.** Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`). A API devolve o mesmo id no cabeçalho da resposta e nos logs; sem o cabeçalho, ou com valor inválido, gera um UUID.\n\n**Erros.** Todo erro tem o corpo `ErrorResponse` (`statusCode`, `message`, `error`). Nas falhas de validação (400), `message` é uma lista.\n\n**Limites.** Rotas de login, cadastro e recuperação de acesso têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com `Retry-After` (segundos).\n\n**Dados pessoais.** Respostas nunca trazem hash de senha nem o CPF completo (vem mascarado).\n\n**Versão do contrato.** SemVer, em `info.version`. Veja docs/shared/contratos.md.",
+    "version": "0.5.0",
+    "contact": {
+      "name": "Equipe Bytelab",
+      "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
+      "email": ""
+    }
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Login, dados da sessão e recuperação de acesso (RN05)"
+    },
+    {
+      "name": "users",
+      "description": "Cadastro de usuários (RN02, RNF15)"
+    },
+    {
+      "name": "health",
+      "description": "Saúde do serviço, para o Docker e monitores externos"
+    },
+    {
+      "name": "producers",
+      "description": "Perfil do produtor: trajetória e atividades (HU12, RN07)"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Desenvolvimento local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "JWT obtido em POST /auth/login"
+      }
+    },
+    "schemas": {
+      "CreateConsumerDto": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "Maria das Graças"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "529.982.247-25",
+            "description": "Com ou sem máscara"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "DDD + número"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com"
+          },
+          "dataNascimento": {
+            "type": "string",
+            "example": "1990-05-10",
+            "description": "AAAA-MM-DD. Exige 18 anos ou mais"
+          },
+          "senha": {
+            "type": "string",
+            "example": "SenhaForte123",
+            "description": "8 a 128 caracteres, com pelo menos uma letra e um número"
+          }
+        },
+        "required": [
+          "nome",
+          "cpf",
+          "email",
+          "dataNascimento",
+          "senha"
+        ]
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Nome completo"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail da conta"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "DDD + número; ausente se não informado"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR",
+              "ADMINISTRADOR"
+            ],
+            "description": "Perfil de acesso (RN01)"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "***.982.247-**",
+            "description": "CPF mascarado; ausente em contas administrativas"
+          }
+        },
+        "required": [
+          "id",
+          "nome",
+          "email",
+          "perfil"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "example": 400,
+            "description": "Mesmo valor do status HTTP"
+          },
+          "message": {
+            "description": "Texto do erro. Nas falhas de validação (400) é uma lista, uma mensagem por campo inválido.",
+            "oneOf": [
+              {
+                "type": "string",
+                "example": "Unauthorized"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "CPF inválido",
+                  "Senha é obrigatória"
+                ]
+              }
+            ]
+          },
+          "error": {
+            "type": "string",
+            "example": "Bad Request",
+            "description": "Nome do status HTTP"
+          }
+        },
+        "required": [
+          "statusCode",
+          "message",
+          "error"
+        ]
+      },
+      "CreateProducerDto": {
+        "type": "object",
+        "properties": {
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Horta Comunitária Cafuringa"
+          },
+          "nomeResponsavel": {
+            "type": "string",
+            "example": "João da Silva"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "529.982.247-25",
+            "description": "Com ou sem máscara"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "12.345.678/0001-95",
+            "description": "Com ou sem máscara; opcional quando não houver CNPJ"
+          },
+          "localidade": {
+            "type": "string",
+            "example": "Fazenda da Cafuringa, Núcleo Rural de Planaltina"
+          },
+          "categoriaOfertada": {
+            "type": "string",
+            "enum": [
+              "Produtos",
+              "Experiências",
+              "Produtos e Experiências"
+            ],
+            "example": "Produtos e Experiências",
+            "description": "Tipo de oferta do produtor"
+          },
+          "formasPagamento": {
+            "example": [
+              "PIX",
+              "Dinheiro"
+            ],
+            "description": "Formas de pagamento aceitas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "DDD + número, apenas dígitos; contato do produtor"
+          },
+          "email": {
+            "type": "string",
+            "example": "produtor@exemplo.com"
+          },
+          "senha": {
+            "type": "string",
+            "example": "SenhaForte123",
+            "description": "8 a 128 caracteres, com pelo menos uma letra e um número"
+          }
+        },
+        "required": [
+          "nomeIniciativa",
+          "nomeResponsavel",
+          "cpf",
+          "localidade",
+          "categoriaOfertada",
+          "formasPagamento",
+          "email",
+          "senha"
+        ]
+      },
+      "ProducerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Nome do responsável"
+          },
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Sítio Boa Vista",
+            "description": "Nome da iniciativa ou propriedade"
+          },
+          "nomeResponsavel": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Responsável pela iniciativa (RN09)"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail da conta"
+          },
+          "localidade": {
+            "type": "string",
+            "example": "Cafuringa",
+            "description": "Localidade"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "DDD + número; ausente se não informado"
+          },
+          "categoriaOfertada": {
+            "type": "string",
+            "enum": [
+              "Produtos",
+              "Experiências",
+              "Produtos e Experiências"
+            ],
+            "description": "Categoria ofertada"
+          },
+          "formasPagamento": {
+            "example": [
+              "PIX"
+            ],
+            "description": "Formas de pagamento aceitas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR",
+              "ADMINISTRADOR"
+            ],
+            "description": "Perfil de acesso (RN01)"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "***.982.247-**",
+            "description": "CPF mascarado"
+          }
+        },
+        "required": [
+          "id",
+          "nome",
+          "nomeIniciativa",
+          "nomeResponsavel",
+          "email",
+          "localidade",
+          "categoriaOfertada",
+          "formasPagamento",
+          "perfil"
+        ]
+      },
+      "CreateAdminDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "admin@exemplo.com",
+            "description": "E-mail de acesso do novo administrador"
+          },
+          "senha": {
+            "type": "string",
+            "example": "SenhaForte123",
+            "description": "8 a 128 caracteres, com pelo menos uma letra e um número"
+          }
+        },
+        "required": [
+          "email",
+          "senha"
+        ]
+      },
+      "AdminResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
+          },
+          "email": {
+            "type": "string",
+            "example": "admin@exemplo.com",
+            "description": "E-mail da conta"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR",
+              "ADMINISTRADOR"
+            ],
+            "example": "ADMINISTRADOR",
+            "description": "Perfil de acesso (RN01)"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "perfil"
+        ]
+      },
+      "UserSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Nome completo (no produtor, o responsável)"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail da conta"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR",
+              "ADMINISTRADOR"
+            ],
+            "description": "Perfil de acesso (RN01, CA05)"
+          },
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Sítio Boa Vista",
+            "description": "Nome da iniciativa; só em produtores"
+          }
+        },
+        "required": [
+          "id",
+          "nome",
+          "email",
+          "perfil"
+        ]
+      },
+      "UserListResponse": {
+        "type": "object",
+        "properties": {
+          "itens": {
+            "description": "Usuários da página, em ordem alfabética; vazio quando não há registros (CA08)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserSummaryResponse"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 42,
+            "description": "Total de usuários que atendem aos filtros"
+          },
+          "pagina": {
+            "type": "number",
+            "example": 1,
+            "description": "Página devolvida"
+          },
+          "limite": {
+            "type": "number",
+            "example": 20,
+            "description": "Tamanho da página"
+          }
+        },
+        "required": [
+          "itens",
+          "total",
+          "pagina",
+          "limite"
+        ]
+      },
+      "UserDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "665f1c2e9b1d4a0012ab34cd",
+            "description": "Identificador do usuário"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Nome completo (no produtor, o responsável)"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail da conta"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR",
+              "ADMINISTRADOR"
+            ],
+            "description": "Perfil de acesso (RN01, CA05)"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "DDD + número; ausente se não informado"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "***.982.247-**",
+            "description": "CPF mascarado; ausente em contas administrativas"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "**.222.333/0001-**",
+            "description": "CNPJ mascarado; só em produtores que o informaram"
+          },
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Sítio Boa Vista",
+            "description": "Nome da iniciativa; só em produtores"
+          },
+          "nomeResponsavel": {
+            "type": "string",
+            "example": "Maria das Graças",
+            "description": "Responsável pela iniciativa; só em produtores"
+          },
+          "localidade": {
+            "type": "string",
+            "example": "Cafuringa, Brasília/DF",
+            "description": "Localidade; só em produtores"
+          },
+          "categoriaOfertada": {
+            "type": "string",
+            "enum": [
+              "Produtos",
+              "Experiências",
+              "Produtos e Experiências"
+            ],
+            "description": "Categoria ofertada; só em produtores"
+          },
+          "formasPagamento": {
+            "example": [
+              "PIX",
+              "Dinheiro"
+            ],
+            "description": "Formas de pagamento aceitas; só em produtores",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "nome",
+          "email",
+          "perfil"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail cadastrado (sem distinção de maiúsculas)"
+          },
+          "senha": {
+            "type": "string",
+            "example": "SenhaForte123"
+          }
+        },
+        "required": [
+          "email",
+          "senha"
+        ]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT a enviar em Authorization: Bearer <token>"
+          },
+          "tokenType": {
+            "type": "string",
+            "example": "Bearer"
+          },
+          "expiresIn": {
+            "type": "number",
+            "example": 900,
+            "description": "Validade do token, em segundos"
+          },
+          "usuario": {
+            "$ref": "#/components/schemas/UserResponse"
+          }
+        },
+        "required": [
+          "accessToken",
+          "tokenType",
+          "expiresIn",
+          "usuario"
+        ]
+      },
+      "RequestPasswordResetDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "maria@exemplo.com",
+            "description": "E-mail cadastrado na conta (sem distinção de maiúsculas)"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "PasswordResetRequestedResponse": {
+        "type": "object",
+        "properties": {
+          "mensagem": {
+            "type": "string",
+            "example": "Se houver uma conta com esse e-mail, você receberá as instruções para recuperar o acesso.",
+            "description": "Mensagem genérica, igual para e-mails cadastrados ou não"
+          }
+        },
+        "required": [
+          "mensagem"
+        ]
+      },
+      "ValidateResetTokenDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "k3Jf0wX9mQ2vB7nR1tYhA5cL8eZsU4dG6iOpP-_aXyE",
+            "description": "Token do link de recuperação enviado por e-mail (43 caracteres)"
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "ResetTokenValidResponse": {
+        "type": "object",
+        "properties": {
+          "valido": {
+            "type": "boolean",
+            "example": true,
+            "description": "Sempre true: link inválido ou expirado responde 400"
+          }
+        },
+        "required": [
+          "valido"
+        ]
+      },
+      "ConfirmPasswordResetDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "k3Jf0wX9mQ2vB7nR1tYhA5cL8eZsU4dG6iOpP-_aXyE",
+            "description": "Token do link de recuperação enviado por e-mail (43 caracteres)"
+          },
+          "novaSenha": {
+            "type": "string",
+            "example": "SenhaForte123",
+            "description": "8 a 128 caracteres, com pelo menos uma letra e um número"
+          }
+        },
+        "required": [
+          "token",
+          "novaSenha"
+        ]
+      },
+      "PasswordResetDoneResponse": {
+        "type": "object",
+        "properties": {
+          "mensagem": {
+            "type": "string",
+            "example": "Recuperação de acesso concluída. Entre com a nova senha.",
+            "description": "Confirmação de que a recuperação foi concluída"
+          }
+        },
+        "required": [
+          "mensagem"
+        ]
+      },
+      "OwnTrajectoryResponse": {
+        "type": "object",
+        "properties": {
+          "trajetoria": {
+            "type": "string",
+            "example": "Começamos a plantar café em 1990.",
+            "description": "Ausente enquanto o produtor não registrou a trajetória"
+          },
+          "atividades": {
+            "type": "string",
+            "example": "Horta orgânica e visitas guiadas.",
+            "description": "Ausente enquanto não houver atividades registradas"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "Telefone de contato cadastrado (privado, só o titular vê aqui)"
+          },
+          "telefonePublico": {
+            "type": "boolean",
+            "example": false,
+            "description": "Se verdadeiro, o telefone aparece no perfil público"
+          },
+          "atualizadoEm": {
+            "type": "string",
+            "example": "2026-11-06T12:00:00.000Z",
+            "description": "Data da última gravação da trajetória"
+          },
+          "fotoUrl": {
+            "type": "string",
+            "example": "/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90",
+            "description": "Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto."
+          }
+        },
+        "required": [
+          "telefonePublico"
+        ]
+      },
+      "SaveTrajectoryDto": {
+        "type": "object",
+        "properties": {
+          "trajetoria": {
+            "type": "string",
+            "example": "Começamos a plantar café em 1990, no Núcleo Rural de Planaltina. Hoje a família toda participa da produção.",
+            "description": "Sua história, em texto simples (sem HTML), até 2000 caracteres",
+            "maxLength": 2000
+          },
+          "atividades": {
+            "type": "string",
+            "example": "Horta orgânica, visitas guiadas e café da manhã rural.",
+            "description": "Atividades que você desenvolve, em texto simples, até 2000 caracteres. Se omitido, o valor anterior é apagado.",
+            "maxLength": 2000
+          },
+          "telefone": {
+            "type": "object",
+            "example": "61999990000",
+            "nullable": true,
+            "description": "DDD + número, apenas dígitos. Se omitido, o telefone cadastrado não muda. Com `null`, o telefone é removido (e deixa de ser público)."
+          },
+          "telefonePublico": {
+            "type": "boolean",
+            "example": true,
+            "description": "Se verdadeiro, o telefone aparece no perfil público (RN07). Se omitido, a escolha anterior não muda; por padrão o telefone é privado."
+          }
+        },
+        "required": [
+          "trajetoria"
+        ]
+      },
+      "PublicTrajectoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000abcd",
+            "description": "Identificador do produtor"
+          },
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Horta Comunitária Cafuringa",
+            "description": "Nome da iniciativa"
+          },
+          "categoriaOfertada": {
+            "type": "string",
+            "enum": [
+              "Produtos",
+              "Experiências",
+              "Produtos e Experiências"
+            ],
+            "example": "Produtos",
+            "description": "Tipo de oferta do produtor"
+          },
+          "trajetoria": {
+            "type": "string",
+            "example": "Começamos a plantar café em 1990.",
+            "description": "História do produtor, em texto simples; exiba escapando HTML. Sempre presente: o perfil só é público depois de publicada."
+          },
+          "atividades": {
+            "type": "string",
+            "example": "Horta orgânica e visitas guiadas.",
+            "description": "Atividades desenvolvidas, em texto simples. Ausente se vazio."
+          },
+          "telefone": {
+            "type": "string",
+            "example": "61999990000",
+            "description": "Telefone de contato, presente somente quando o produtor autorizou a divulgação"
+          },
+          "fotoUrl": {
+            "type": "string",
+            "example": "/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90",
+            "description": "Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto."
+          }
+        },
+        "required": [
+          "id",
+          "trajetoria"
+        ]
+      },
+      "PhotoResponse": {
+        "type": "object",
+        "properties": {
+          "fotoUrl": {
+            "type": "string",
+            "example": "/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90",
+            "description": "Caminho da foto, relativo à URL base da API (ex.: prefixe com `VITE_API_URL`). Muda a cada nova foto, então pode ficar em cache indefinidamente."
+          }
+        },
+        "required": [
+          "fotoUrl"
+        ]
+      }
+    }
+  }
+}

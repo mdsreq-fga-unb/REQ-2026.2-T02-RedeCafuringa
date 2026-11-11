@@ -1,6 +1,6 @@
 <span class="version-badge">Unidade 02</span>
 
-## 9.1 Critérios de Priorização do Backlog
+## 10.1 Critérios de Priorização do Backlog
 
 Para a priorização do backlog, foram utilizados os seguintes critérios:
 
@@ -53,62 +53,7 @@ A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**
 
 ---
 
-## 9.2 Resultados da Priorização do Backlog
-
-| HU   | Requisito funcional                         | VN | ES | CX | CAP | ET   | Média | Prioridade |
-| ---- | ------------------------------------------- | -- | -- | -- | --- | ---- | ----- | ---------- |
-| HU01 | RF01 — Cadastrar perfil de consumidor       | 4  | 1  | 1  | 1   | 1,00 | 2,50  | Média      |
-| HU02 | RF02 — Cadastrar perfil de produtor         | 4  | 1  | 1  | 1   | 1,00 | 2,50  | Média      |
-| HU03 | RF03 — Cadastrar usuário administrador      | 4  | 1  | 1  | 1   | 1,00 | 2,50  | Média      |
-| HU04 | RF04 — Consultar usuários cadastrados       | 4  | 2  | 2  | 2   | 2,00 | 3,00  | Alta       |
-| HU05 | RF05 — Excluir usuário                      | 2  | 2  | 2  | 2   | 2,00 | 2,00  | Baixa      |
-| HU06 | RF06 — Consultar conteúdos cadastrados      | 4  | 2  | 2  | 2   | 2,00 | 3,00  | Alta       |
-| HU07 | RF07 — Remover conteúdo inadequado          | 2  | 2  | 2  | 2   | 2,00 | 2,00  | Baixa      |
-| HU08 | RF08 — Atualizar informações institucionais | 2  | 2  | 2  | 2   | 2,00 | 2,00  | Baixa      |
-| HU09 | RF09 — Autenticar usuário                   | 4  | 2  | 2  | 2   | 2,00 | 3,00  | Alta       |
-| HU10 | RF10 — Recuperar acesso à conta             | 4  | 2  | 3  | 1   | 2,00 | 3,00  | Alta       |
-| HU11 | RF11 — Excluir própria conta                | 2  | 2  | 2  | 2   | 2,00 | 2,00  | Baixa      |
-| HU12 | RF12 — Registrar trajetória do produtor     | 3  | 1  | 1  | 1   | 1,00 | 2,00  | Baixa      |
-| HU13 | RF13 — Atualizar perfil de produtor         | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-| HU14 | RF14 — Consultar perfil de produtor         | 4  | 2  | 2  | 2   | 2,00 | 3,00  | Alta       |
-| HU15 | RF15 — Cadastrar produto                    | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-| HU16 | RF16 — Atualizar produto                    | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-| HU17 | RF17 — Excluir produto                      | 2  | 2  | 2  | 2   | 2,00 | 2,00  | Baixa      |
-| HU18 | RF18 — Informar disponibilidade de produto  | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-| HU19 | RF19 — Consultar catálogo de produtos       | 4  | 2  | 2  | 2   | 2,00 | 3,00  | Alta       |
-| HU20 | RF20 — Consultar detalhes do produto        | 4  | 2  | 2  | 2   | 2,00 | 3,00  | Alta       |
-| HU21 | RF21 — Cadastrar experiência                | 4  | 2  | 2  | 2   | 2,00 | 3,00  | Alta       |
-| HU22 | RF22 — Atualizar experiência                | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-| HU23 | RF23 — Excluir experiência                  | 2  | 2  | 2  | 2   | 2,00 | 2,00  | Baixa      |
-| HU24 | RF24 — Consultar catálogo de experiências   | 4  | 2  | 2  | 2   | 2,00 | 3,00  | Alta       |
-| HU25 | RF25 — Consultar detalhes da experiência    | 4  | 2  | 2  | 2   | 2,00 | 3,00  | Alta       |
-| HU26 | RF26 — Cadastrar evento                     | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-| HU27 | RF27 — Atualizar evento                     | 2  | 2  | 2  | 2   | 2,00 | 2,00  | Baixa      |
-| HU28 | RF28 — Excluir evento                       | 2  | 2  | 2  | 2   | 2,00 | 2,00  | Baixa      |
-| HU29 | RF29 — Consultar catálogo de eventos        | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-| HU30 | RF30 — Consultar detalhes do evento         | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-| HU31 | RF31 — Auxiliar cadastro de ofertas         | 3  | 4  | 4  | 3   | 3,67 | 3,33  | Alta       |
-| HU32 | RF32 — Apresentar informações da Cafuringa  | 3  | 1  | 1  | 1   | 1,00 | 2,00  | Baixa      |
-| HU33 | RF33 — Consultar guia de boas práticas      | 2  | 1  | 1  | 1   | 1,00 | 1,50  | Baixa      |
-| HU34 | RF34 — Notificar novos eventos              | 2  | 3  | 3  | 2   | 2,67 | 2,33  | Baixa      |
-| HU35 | RF35 — Visualizar ofertas no mapa           | 3  | 3  | 4  | 2   | 3,00 | 3,00  | Alta       |
-| HU36 | RF36 — Buscar ofertas                       | 3  | 3  | 4  | 2   | 3,00 | 3,00  | Alta       |
-| HU37 | RF37 — Filtrar ofertas                      | 3  | 2  | 3  | 2   | 2,33 | 2,67  | Média      |
-| HU38 | RF38 — Buscar ofertas por localização       | 3  | 3  | 3  | 2   | 2,67 | 2,83  | Média      |
-| HU39 | RF39 — Disponibilizar contato direto        | 3  | 3  | 4  | 2   | 3,00 | 3,00  | Alta       |
-| HU40 | RF40 — Enviar feedback                      | 2  | 3  | 3  | 2   | 2,67 | 2,33  | Baixa      |
-| HU41 | RF41 — Visualizar feedback                  | 2  | 2  | 2  | 2   | 2,00 | 2,00  | Baixa      |
-| HU42 | RF42 — Editar feedback                      | 1  | 2  | 2  | 2   | 2,00 | 1,50  | Baixa      |
-| HU43 | RF43 — Excluir feedback                     | 1  | 2  | 2  | 2   | 2,00 | 1,50  | Baixa      |
-| HU44 | RF44 — Solicitar pré-reserva de experiência | 3  | 3  | 3  | 3   | 3,00 | 3,00  | Alta       |
-| HU45 | RF45 — Consultar pré-reserva                | 3  | 3  | 3  | 3   | 3,00 | 3,00  | Alta       |
-| HU46 | RF46 — Cancelar pré-reserva                 | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-| HU47 | RF47 — Responder pré-reserva de experiência | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-| HU48 | RF48 — Notificar alteração de pré-reserva   | 3  | 2  | 2  | 2   | 2,00 | 2,50  | Média      |
-
----
-
-## 9.3 Requisitos do MVP
+## 10.2 Requisitos do MVP
 
 | RF | Requisito funcional | História de usuário correspondente | CP | Prioridade |
 |---|---|---|---|---|
@@ -135,7 +80,7 @@ A partir desses critérios, foi gerada a tabela de **Backlog Priorizado do MVP**
 
 ---
 
-## 9.4 Observações Importantes
+## 10.3 Observações Importantes
 
 No total, ficaram 20 requisitos funcionais no MVP da Rede Cafuringa.
 
