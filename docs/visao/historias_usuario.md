@@ -34,6 +34,15 @@
       </select>
     </div>
     <div class="hu-filters__field">
+      <label for="hu-iteration-filter">Iteração</label>
+      <select id="hu-iteration-filter">
+        <option value="">Todas as iterações</option>
+        <option value="6">Iteração 6</option>
+        <option value="7">Iteração 7</option>
+        <option value="8">Iteração 8</option>
+      </select>
+    </div>
+    <div class="hu-filters__field">
       <label for="hu-sort-filter">Priorização</label>
       <select id="hu-sort-filter">
         <option value="">Ordem original (HU)</option>
@@ -50,53 +59,57 @@
 
 <div class="section-cards hu-catalog">
 
-<a class="hu-card" data-priority-order="1" data-iteration="6" href="../historias/HU1/">
+<div class="hu-card" data-priority-order="1" data-iteration="6" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">1º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao6/" title="Ver evidências da Iteração 6">Iteração 6</a>
     </div>
-    <h3>HU01 — Cadastrar perfil de consumidor</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU1/">HU01 — Cadastrar perfil de consumidor</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="2" data-iteration="6" href="../historias/HU2/">
+<div class="hu-card" data-priority-order="2" data-iteration="6" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">2º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao6/" title="Ver evidências da Iteração 6">Iteração 6</a>
     </div>
-    <h3>HU02 — Cadastrar perfil de produtor</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU2/">HU02 — Cadastrar perfil de produtor</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="3" data-iteration="6" href="../historias/HU3/">
+<div class="hu-card" data-priority-order="3" data-iteration="6" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">3º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao6/" title="Ver evidências da Iteração 6">Iteração 6</a>
     </div>
-    <h3>HU03 — Cadastrar usuário administrador</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU3/">HU03 — Cadastrar usuário administrador</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="4" data-iteration="6" href="../historias/HU4/">
+<div class="hu-card" data-priority-order="4" data-iteration="6" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">4º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao6/" title="Ver evidências da Iteração 6">Iteração 6</a>
     </div>
-    <h3>HU04 — Consultar usuários cadastrados</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU4/">HU04 — Consultar usuários cadastrados</a></h3>
   </div>
-</a>
+</div>
 
 <a class="hu-card" href="../historias/HU5/">
   <div class="hu-card-header">
@@ -138,29 +151,31 @@
   </div>
 </a>
 
-<a class="hu-card" data-priority-order="5" data-iteration="6" href="../historias/HU9/">
+<div class="hu-card" data-priority-order="5" data-iteration="6" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">5º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao6/" title="Ver evidências da Iteração 6">Iteração 6</a>
     </div>
-    <h3>HU09 — Autenticar usuário</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU9/">HU09 — Autenticar usuário</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="6" data-iteration="6" href="../historias/HU10/">
+<div class="hu-card" data-priority-order="6" data-iteration="6" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">6º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao6/" title="Ver evidências da Iteração 6">Iteração 6</a>
     </div>
-    <h3>HU10 — Recuperar acesso à conta</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU10/">HU10 — Recuperar acesso à conta</a></h3>
   </div>
-</a>
+</div>
 
 <a class="hu-card" href="../historias/HU11/">
   <div class="hu-card-header">
@@ -172,17 +187,18 @@
   </div>
 </a>
 
-<a class="hu-card" data-priority-order="7" data-iteration="6" href="../historias/HU12/">
+<div class="hu-card" data-priority-order="7" data-iteration="6" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Baixa</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">7º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao6/" title="Ver evidências da Iteração 6">Iteração 6</a>
     </div>
-    <h3>HU12 — Registrar trajetória do produtor</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU12/">HU12 — Registrar trajetória do produtor</a></h3>
   </div>
-</a>
+</div>
 
 <a class="hu-card" href="../historias/HU13/">
   <div class="hu-card-header">
@@ -194,29 +210,31 @@
   </div>
 </a>
 
-<a class="hu-card" data-priority-order="8" data-iteration="7" href="../historias/HU14/">
+<div class="hu-card" data-priority-order="8" data-iteration="7" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">8º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao7/" title="Ver evidências da Iteração 7">Iteração 7</a>
     </div>
-    <h3>HU14 — Consultar perfil de produtor</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU14/">HU14 — Consultar perfil de produtor</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="9" data-iteration="7" href="../historias/HU15/">
+<div class="hu-card" data-priority-order="9" data-iteration="7" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">9º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao7/" title="Ver evidências da Iteração 7">Iteração 7</a>
     </div>
-    <h3>HU15 — Cadastrar produto</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU15/">HU15 — Cadastrar produto</a></h3>
   </div>
-</a>
+</div>
 
 <a class="hu-card" href="../historias/HU16/">
   <div class="hu-card-header">
@@ -248,41 +266,44 @@
   </div>
 </a>
 
-<a class="hu-card" data-priority-order="10" data-iteration="7" href="../historias/HU19/">
+<div class="hu-card" data-priority-order="10" data-iteration="7" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">10º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao7/" title="Ver evidências da Iteração 7">Iteração 7</a>
     </div>
-    <h3>HU19 — Consultar catálogo de produtos</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU19/">HU19 — Consultar catálogo de produtos</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="11" data-iteration="7" href="../historias/HU20/">
+<div class="hu-card" data-priority-order="11" data-iteration="7" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">11º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao7/" title="Ver evidências da Iteração 7">Iteração 7</a>
     </div>
-    <h3>HU20 — Consultar detalhes do produto</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU20/">HU20 — Consultar detalhes do produto</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="12" data-iteration="7" href="../historias/HU21/">
+<div class="hu-card" data-priority-order="12" data-iteration="7" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">12º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao7/" title="Ver evidências da Iteração 7">Iteração 7</a>
     </div>
-    <h3>HU21 — Cadastrar experiência</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU21/">HU21 — Cadastrar experiência</a></h3>
   </div>
-</a>
+</div>
 
 <a class="hu-card" href="../historias/HU22/">
   <div class="hu-card-header">
@@ -304,17 +325,18 @@
   </div>
 </a>
 
-<a class="hu-card" data-priority-order="13" data-iteration="7" href="../historias/HU24/">
+<div class="hu-card" data-priority-order="13" data-iteration="7" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">13º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao7/" title="Ver evidências da Iteração 7">Iteração 7</a>
     </div>
-    <h3>HU24 — Consultar catálogo de experiências</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU24/">HU24 — Consultar catálogo de experiências</a></h3>
   </div>
-</a>
+</div>
 
 <a class="hu-card" href="../historias/HU25/">
   <div class="hu-card-header">
@@ -426,17 +448,18 @@
   </div>
 </a>
 
-<a class="hu-card" data-priority-order="14" data-iteration="7" href="../historias/HU36/">
+<div class="hu-card" data-priority-order="14" data-iteration="7" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">14º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao7/" title="Ver evidências da Iteração 7">Iteração 7</a>
     </div>
-    <h3>HU36 — Buscar ofertas</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU36/">HU36 — Buscar ofertas</a></h3>
   </div>
-</a>
+</div>
 
 <a class="hu-card" href="../historias/HU37/">
   <div class="hu-card-header">
@@ -458,17 +481,18 @@
   </div>
 </a>
 
-<a class="hu-card" data-priority-order="15" data-iteration="8" href="../historias/HU39/">
+<div class="hu-card" data-priority-order="15" data-iteration="8" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">15º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
     </div>
-    <h3>HU39 — Disponibilizar contato direto</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU39/">HU39 — Disponibilizar contato direto</a></h3>
   </div>
-</a>
+</div>
 
 <a class="hu-card" href="../historias/HU40/">
   <div class="hu-card-header">
@@ -510,65 +534,70 @@
   </div>
 </a>
 
-<a class="hu-card" data-priority-order="16" data-iteration="8" href="../historias/HU44/">
+<div class="hu-card" data-priority-order="16" data-iteration="8" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">16º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
     </div>
-    <h3>HU44 — Solicitar pré-reserva de experiência</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU44/">HU44 — Solicitar pré-reserva de experiência</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="17" data-iteration="8" href="../historias/HU45/">
+<div class="hu-card" data-priority-order="17" data-iteration="8" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">17º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
     </div>
-    <h3>HU45 — Consultar pré-reserva</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU45/">HU45 — Consultar pré-reserva</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="18" data-iteration="8" href="../historias/HU46/">
+<div class="hu-card" data-priority-order="18" data-iteration="8" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">18º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
     </div>
-    <h3>HU46 — Cancelar pré-reserva</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU46/">HU46 — Cancelar pré-reserva</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="19" data-iteration="8" href="../historias/HU47/">
+<div class="hu-card" data-priority-order="19" data-iteration="8" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">19º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
     </div>
-    <h3>HU47 — Responder pré-reserva de experiência</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU47/">HU47 — Responder pré-reserva de experiência</a></h3>
   </div>
-</a>
+</div>
 
-<a class="hu-card" data-priority-order="20" data-iteration="8" href="../historias/HU48/">
+<div class="hu-card" data-priority-order="20" data-iteration="8" >
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">20º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
     </div>
-    <h3>HU48 — Notificar alteração de pré-reserva</h3>
+    <h3><a class="hu-card-title-link" href="../historias/HU48/">HU48 — Notificar alteração de pré-reserva</a></h3>
   </div>
-</a>
+</div>
 </div>
 
 <p id="hu-empty" class="hu-empty" hidden>Nenhuma história corresponde à busca. Experimente outros termos ou limpe os filtros.</p>

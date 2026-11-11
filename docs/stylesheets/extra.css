@@ -1238,7 +1238,7 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 .hu-catalog .hu-card[hidden] { display: none !important; }
 
 /* INICIO: ajuste-responsivo-filtros-hu */
-/* Ajuste para os 5 campos: busca na primeira linha e os 4 filtros na segunda. */
+/* Busca na primeira linha e 5 filtros combináveis na segunda. */
 .md-typeset .hu-filters {
   box-sizing: border-box;
   width: 100%;
@@ -1251,7 +1251,7 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   display: grid;
   width: 100%;
   min-width: 0;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.85rem;
   align-items: end;
 }
@@ -1340,4 +1340,50 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 
 .hu-button span {
     color: #FFFFFF !important;
+}
+
+/* Backlog: tag clicável da iteração e dois destinos independentes no card MVP. */
+.hu-catalog .hu-card {
+  position: relative;
+}
+.md-typeset .hu-catalog .hu-card-title-link,
+.md-typeset .hu-catalog .hu-card-title-link:visited {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+.md-typeset .hu-catalog .hu-card-title-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.md-typeset .hu-catalog .hu-card:hover .hu-card-title-link {
+  color: #ffe1ac !important;
+}
+.md-typeset .hu-catalog .hu-card-title-link:focus-visible::after {
+  outline: 3px solid #e5ad3c;
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+.md-typeset .hu-catalog .hu-status-iteracao,
+.md-typeset .hu-catalog .hu-status-iteracao:visited {
+  position: relative;
+  z-index: 2;
+  color: #91dbe2 !important;
+  background: rgba(91, 198, 209, 0.12);
+  border-color: rgba(91, 198, 209, 0.45);
+  text-decoration: none !important;
+  font-weight: 700;
+  cursor: pointer;
+}
+.md-typeset .hu-catalog .hu-status-iteracao:hover,
+.md-typeset .hu-catalog .hu-status-iteracao:focus-visible {
+  color: #fff !important;
+  background: rgba(91, 198, 209, 0.30);
+  border-color: #91dbe2;
+  text-decoration: none !important;
+}
+.md-typeset .hu-catalog .hu-status-iteracao:focus-visible {
+  outline: 3px solid #91dbe2;
+  outline-offset: 3px;
 }
