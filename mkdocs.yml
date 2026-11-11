@@ -32,6 +32,7 @@ extra_javascript:
   - javascript/extra.js
   - javascript/hu-filters.js
   - javascript/hu-modal.js
+  - javascript/hu-table.js
 
 nav:
   - Início: index.md

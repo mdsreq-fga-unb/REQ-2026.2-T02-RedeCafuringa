@@ -86,7 +86,7 @@
     if (pageUrl.origin !== window.location.origin) return;
 
     lastTrigger = link;
-    title.textContent = card?.querySelector("h3")?.textContent?.trim() || "História de usuário";
+    title.textContent = card?.querySelector("h3")?.textContent?.trim() || link.textContent?.trim() || "História de usuário";
     fullLink.href = pageUrl.href;
     body.replaceChildren();
     const loading = document.createElement("p");
@@ -139,7 +139,7 @@
   document.addEventListener("click", (event) => {
     if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     if (!(event.target instanceof Element)) return;
-    const link = event.target.closest(".hu-catalog a.hu-card, .hu-catalog a.hu-card-title-link");
+    const link = event.target.closest(".hu-catalog a.hu-card, .hu-catalog a.hu-card-title-link, .hu-catalog a.hu-table-title-link");
     if (!link || !link.href || link.target === "_blank" || link.hasAttribute("download")) return;
     if (new URL(link.href, window.location.href).origin !== window.location.origin) return;
     event.preventDefault();
