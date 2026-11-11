@@ -61,10 +61,10 @@ export function LoginPage({
         profile === "consumer" ? "/cadastro/consumidor" : "/cadastro";
 
     const subtitle = fromContact
-    ? "Acesse sua conta para continuar para o WhatsApp."
-    : profile === "consumer"
-        ? "Entre para acompanhar as novidades."
-        : "Entre para divulgar seus produtos e serviços.";
+        ? "Acesse sua conta para continuar para o WhatsApp."
+        : profile === "consumer"
+          ? "Entre para acompanhar as novidades."
+          : "Entre para divulgar seus produtos e serviços.";
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -190,7 +190,7 @@ export function LoginPage({
                 </div>
             </form>
 
-                {!fromContact && (
+            {!fromContact && (
                 <button
                     type="button"
                     className="profile-switch"

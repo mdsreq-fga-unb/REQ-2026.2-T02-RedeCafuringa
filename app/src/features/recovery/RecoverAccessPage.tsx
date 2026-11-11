@@ -84,7 +84,7 @@ export function RecoverAccessPage({
                 <p className="recovery-sent" role="status">
                     {`Endereço informado: ${sentTo}`}
                 </p>
-                
+
                 {resent && (
                     <p className="form-notice" role="status">
                         E-mail reenviado.

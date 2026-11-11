@@ -72,7 +72,9 @@ describe("App — rotas da recuperação de acesso (HU10)", () => {
         await userEvent
             .setup()
             .click(
-                await screen.findByRole("button", { name: "Esqueci minha senha" }),
+                await screen.findByRole("button", {
+                    name: "Esqueci minha senha",
+                }),
             );
 
         expect(

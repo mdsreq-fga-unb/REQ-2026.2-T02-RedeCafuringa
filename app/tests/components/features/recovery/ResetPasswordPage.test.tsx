@@ -279,7 +279,7 @@ describe("ResetPasswordPage — HU10 Recuperar acesso à conta", () => {
         );
     });
 
-        // Protótipo 10: título em laranja
+    // Protótipo 10: título em laranja
     it("destaca o título da nova senha com o estilo de destaque do protótipo", () => {
         renderPage();
 

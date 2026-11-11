@@ -177,11 +177,13 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         ).toBeTruthy();
     });
 
-        // HU02, critério 1 (acesso ao cadastro sem conta)
+    // HU02, critério 1 (acesso ao cadastro sem conta)
     it("oferece o caminho para criar uma conta", async () => {
         const { onNavigate, user } = renderLogin();
 
-        await user.click(screen.getByRole("button", { name: "Criar uma conta" }));
+        await user.click(
+            screen.getByRole("button", { name: "Criar uma conta" }),
+        );
 
         expect(onNavigate).toHaveBeenCalledWith("/cadastro");
     });
@@ -189,7 +191,9 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
     it("leva o consumidor ao cadastro de consumidor pela mesma ação", async () => {
         const { onNavigate, user } = renderLogin({ profile: "consumer" });
 
-        await user.click(screen.getByRole("button", { name: "Criar uma conta" }));
+        await user.click(
+            screen.getByRole("button", { name: "Criar uma conta" }),
+        );
 
         expect(onNavigate).toHaveBeenCalledWith("/cadastro/consumidor");
     });
@@ -252,11 +256,13 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         expect(screen.queryByText(/Senha redefinida/)).toBeNull();
     });
 
-        // Protótipo do login: troca de perfil
+    // Protótipo do login: troca de perfil
     it("oferece a troca para o login de consumidor a partir do login de produtor", async () => {
         const { onNavigate, user } = renderLogin({ profile: "producer" });
 
-        await user.click(screen.getByRole("button", { name: "Sou consumidor" }));
+        await user.click(
+            screen.getByRole("button", { name: "Sou consumidor" }),
+        );
 
         expect(onNavigate).toHaveBeenCalledWith("/login/consumer");
     });
@@ -275,7 +281,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         expect(screen.queryByRole("button", { name: /^Sou / })).toBeNull();
     });
 
-        // Protótipo do login: título em laranja
+    // Protótipo do login: título em laranja
     it("destaca o título do login com o estilo de destaque do protótipo", () => {
         renderLogin();
 
@@ -295,7 +301,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         ).toContain("login-title-accent");
     });
 
-        // Protótipo do login: subtítulo por perfil
+    // Protótipo do login: subtítulo por perfil
     it("mostra o subtítulo do produtor no login de produtor", () => {
         renderLogin({ profile: "producer" });
 
