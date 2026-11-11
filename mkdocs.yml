@@ -68,23 +68,23 @@ nav:
 
   - Arquitetura:
     - Backend:
-        - POC: arquitetura/backend/poc.md
-        - Guia de estrutura e TDD: arquitetura/backend/guia-estrutura-e-tdd.md
-        - Operação e infraestrutura: arquitetura/backend/operacao.md
-        - Segurança e auditoria: arquitetura/backend/seguranca.md
+        - Prova de Conceito: visao/arquitetura/backend/poc.md
+        - Estrutura de Pastas e TDD: visao/arquitetura/backend/guia-estrutura-e-tdd.md
+        - Infraestrutura: visao/arquitetura/backend/operacao.md
+        - Segurança e Auditoria: visao/arquitetura/backend/seguranca.md
         - Implementação das HUs:
-            - HU09 — Autenticar usuário: arquitetura/backend/implementacao/HU09.md
-            - HU10 — Recuperar acesso: arquitetura/backend/implementacao/HU10.md
-            - HU12 — Trajetória do produtor: arquitetura/backend/implementacao/HU12.md
+            - HU09 — Autenticar usuário: visao/arquitetura/backend/implementacao/HU09.md
+            - HU10 — Recuperar acesso: visao/arquitetura/backend/implementacao/HU10.md
+            - HU12 — Trajetória do produtor: visao/arquitetura/backend/implementacao/HU12.md
     - Frontend:
-        - Operação: arquitetura/frontend/operacao.md
+        - Infraestrutura: visao/arquitetura/frontend/operacao.md
     - Engenharia:
-        - Como contribuir: arquitetura/contribuindo.md
-        - Padrão de Pull Request: arquitetura/pull-requests.md
-        - Infraestrutura: arquitetura/infra/visao-geral.md
+        - Como contribuir: visao/arquitetura/engenharia/contribuindo.md
+        - Padrão de Pull Request: visao/arquitetura/engenharia/pull-requests.md
+        - Infraestrutura: visao/arquitetura/engenharia/visao-geral.md
     - Contrato da API:
-        - Referência da API (Swagger): arquitetura/shared/api.md
-        - Versionamento e contrato: arquitetura/shared/contratos.md
+        - Referência da API (Swagger): visao/arquitetura/contrato_api/api.md
+        - Versionamento e contrato: visao/arquitetura/contrato_api/contratos.md
 
 hooks:
   - scripts/mkdocs_hooks.py
