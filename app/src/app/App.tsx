@@ -191,7 +191,9 @@ export function App() {
     };
 
     return (
-        <div className={`app-shell ${isAuthFlow ? "auth-shell" : ""}`}>
+        <div
+            className={`app-shell ${isAuthFlow ? "auth-shell" : ""} ${path === "/explorar" || path === "/perfil" || path.startsWith("/produtor/") ? "public-profile-shell" : ""}`}
+        >
             <BrandHeader
                 onHome={() => navigate("/explorar")}
                 onLogin={

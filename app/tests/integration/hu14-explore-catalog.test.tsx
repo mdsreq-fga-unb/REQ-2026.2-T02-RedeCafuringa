@@ -66,6 +66,24 @@ describe("HU14 — Explorar", () => {
         const user = userEvent.setup();
         render(<App />);
         await screen.findByRole("button", { name: /Horta da Maria/ });
+        expect(
+            screen
+                .getByRole("button", { name: /Produtos Alimentos/ })
+                .getAttribute("aria-pressed"),
+        ).toBe("true");
+        await user.click(
+            screen.getByRole("button", { name: /Experiências Viva/ }),
+        );
+        expect(
+            screen
+                .getByRole("button", { name: /Produtos Alimentos/ })
+                .getAttribute("aria-pressed"),
+        ).toBe("false");
+        expect(
+            screen
+                .getByRole("button", { name: /Experiências Viva/ })
+                .getAttribute("aria-pressed"),
+        ).toBe("true");
         await user.type(screen.getByRole("searchbox"), "francisco");
         expect(
             screen.getByRole("button", { name: /Guia Francisco/ }),
@@ -83,6 +101,20 @@ describe("HU14 — Explorar", () => {
         expect(
             screen.queryByRole("button", { name: /Guia Francisco/ }),
         ).toBeNull();
+        expect(
+            screen
+                .getByRole("button", { name: /Experiências Viva/ })
+                .getAttribute("aria-pressed"),
+        ).toBe("false");
+        // Selecionar novamente mantém uma opção ativa; não limpa a seleção.
+        await user.click(
+            screen.getByRole("button", { name: /Produtos Alimentos/ }),
+        );
+        expect(
+            screen
+                .getByRole("button", { name: /Produtos Alimentos/ })
+                .getAttribute("aria-pressed"),
+        ).toBe("true");
         await user.click(
             screen.getByRole("button", { name: /Horta da Maria/ }),
         );

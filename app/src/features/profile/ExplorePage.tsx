@@ -4,6 +4,7 @@ import { listPublicProducers } from "./publicProfileService";
 import { photoSrc } from "@/features/trajectory/trajectoryService";
 import type { PublicTrajectory } from "@/features/trajectory/trajectoryService";
 import "./publicProfile.css";
+import { RuralCarousel } from "./RuralCarousel";
 
 export function ExplorePage({
     onNavigate,
@@ -15,7 +16,7 @@ export function ExplorePage({
     const [error, setError] = useState(false);
     const [attempt, setAttempt] = useState(0);
     const [search, setSearch] = useState("");
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState("Produtos");
     const [showAll, setShowAll] = useState(false);
     useEffect(() => {
         const controller = new AbortController();
@@ -40,13 +41,10 @@ export function ExplorePage({
             (!category || producer.categoriaOfertada?.includes(category))
         );
     });
-    const visible =
-        showAll || search || category ? filtered : filtered.slice(0, 2);
+    const visible = showAll || search.trim() ? filtered : filtered.slice(0, 2);
     return (
         <section className="explore-page" aria-label="Explorar a Cafuringa">
-            <div className="explore-hero">
-                <h1>Servimos a terra.</h1>
-            </div>
+            <RuralCarousel />
             <label className="explore-search">
                 <span aria-hidden="true">⌕</span>
                 <span className="visually-hidden">
@@ -64,9 +62,10 @@ export function ExplorePage({
                 <button
                     className="explore-category"
                     aria-pressed={category === "Produtos"}
-                    onClick={() =>
-                        setCategory(category === "Produtos" ? "" : "Produtos")
-                    }
+                    onClick={() => {
+                        setCategory("Produtos");
+                        setShowAll(false);
+                    }}
                 >
                     <span aria-hidden="true" className="explore-category-icon">
                         <svg viewBox="0 0 48 56" focusable="false">
@@ -87,11 +86,10 @@ export function ExplorePage({
                 <button
                     className="explore-category"
                     aria-pressed={category === "Experiências"}
-                    onClick={() =>
-                        setCategory(
-                            category === "Experiências" ? "" : "Experiências",
-                        )
-                    }
+                    onClick={() => {
+                        setCategory("Experiências");
+                        setShowAll(false);
+                    }}
                 >
                     <span aria-hidden="true" className="explore-category-icon">
                         <svg viewBox="0 0 56 56" focusable="false">
@@ -112,6 +110,7 @@ export function ExplorePage({
                 <button
                     className="text-action"
                     aria-expanded={showAll}
+                    aria-controls="public-producer-list"
                     onClick={() => setShowAll(!showAll)}
                 >
                     {showAll ? "Ver menos" : "Ver tudo"}{" "}
@@ -139,12 +138,12 @@ export function ExplorePage({
             )}
             {!loading && !error && visible.length === 0 && (
                 <p role="status">
-                    {search || category
+                    {search || producers.length > 0
                         ? "Nenhum produtor encontrado para esta busca."
                         : "Ainda não há produtores disponíveis para consulta."}
                 </p>
             )}
-            <div className="producer-list">
+            <div className="producer-list" id="public-producer-list">
                 {visible.map((producer) => (
                     <button
                         key={producer.id}
