@@ -39,11 +39,11 @@ export function ProductCatalogPage({
                     <p>Não há ofertas disponíveis no momento.</p>
                 )}
                 {status === "ready" && products.length > 0 && (
-                    <ul className="offer-list">
+                    <ul className="offer-list product-list">
                         {products.map((product) => (
                         <li key={product.id}>
                             <button
-                                className="offer-card"
+                                className="offer-card product-card"
                                 type="button"
                                 onClick={() =>
                                     onNavigate(`/oferta/${product.id}`)
@@ -54,11 +54,8 @@ export function ProductCatalogPage({
                                     <small>Produto</small>
                                     <strong>{product.name}</strong>
                                     <span>{product.producerName}</span>
-                                    <span>
-                                        {formatProductPrice(
-                                            product.price,
-                                            product.unit,
-                                        )}
+                                    <span className="product-price">
+                                        {formatProductPrice(product.price, product.unit)}
                                     </span>
                                     <span className="card-action">
                                         Conhecer{" "}
