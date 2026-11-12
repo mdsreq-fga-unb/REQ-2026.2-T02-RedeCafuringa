@@ -331,6 +331,35 @@ h2 {
     font-weight: 700;
 }
 
+.product-search {
+    position: relative;
+    margin-top: 18px;
+}
+
+.product-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    fill: none;
+    stroke: var(--orange-text);
+    stroke-width: 2;
+    stroke-linecap: round;
+    pointer-events: none;
+}
+
+.product-search input {
+    width: 100%;
+    padding: 14px 16px 14px 46px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fffefa;
+    color: inherit;
+    font: inherit;
+}
+
 .offer-page {
     padding: 4px 0 20px;
 }

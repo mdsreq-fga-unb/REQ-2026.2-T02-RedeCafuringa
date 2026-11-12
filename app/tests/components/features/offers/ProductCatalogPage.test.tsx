@@ -145,4 +145,49 @@ describe("ProductCatalogPage", () => {
 
         expect(onRetry).toHaveBeenCalledTimes(1);
     });
+
+        it("mostra o campo de busca quando há produtos", () => {
+        renderPage();
+
+        expect(
+            screen.getByRole("searchbox", { name: "Buscar produtos" }),
+        ).toBeDefined();
+    });
+
+    it("filtra os cards conforme o texto digitado", () => {
+        renderPage();
+
+        fireEvent.change(
+            screen.getByRole("searchbox", { name: "Buscar produtos" }),
+            { target: { value: "mel" } },
+        );
+
+        const cards = screen.getAllByRole("listitem");
+        expect(cards).toHaveLength(1);
+        expect(within(cards[0]).getByText("Mel do Cerrado")).toBeDefined();
+    });
+
+    it("avisa quando a busca não encontra produtos", () => {
+        renderPage();
+
+        fireEvent.change(
+            screen.getByRole("searchbox", { name: "Buscar produtos" }),
+            { target: { value: "queijo" } },
+        );
+
+        expect(screen.getByText("Nenhum produto encontrado.")).toBeDefined();
+        expect(screen.queryByRole("list")).toBeNull();
+    });
+
+    it("não mostra a busca sem produtos para filtrar", () => {
+        renderPage({ products: [] });
+
+        expect(screen.queryByRole("searchbox")).toBeNull();
+    });
+
+    it("não mostra a busca quando o carregamento falha", () => {
+        renderPage({ status: "error", products: [] });
+
+        expect(screen.queryByRole("searchbox")).toBeNull();
+    });
 });
