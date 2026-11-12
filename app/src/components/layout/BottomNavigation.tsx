@@ -15,9 +15,19 @@ export function BottomNavigation({
         <nav className="bottom-nav" aria-label="Navegação principal">
             <button
                 className={
-                    path === "/perfil" || path === "/catalogo" ? "active" : ""
+                    path === "/explorar" ||
+                    path === "/perfil" ||
+                    path === "/catalogo" ||
+                    path.startsWith("/produtor/")
+                        ? "active"
+                        : ""
                 }
-                onClick={() => onNavigate("/perfil")}
+                aria-current={
+                    path === "/explorar" || path.startsWith("/produtor/")
+                        ? "page"
+                        : undefined
+                }
+                onClick={() => onNavigate("/explorar")}
             >
                 <svg
                     className="nav-icon"

@@ -7,6 +7,8 @@ type OfferDetailsPageProps = {
     contactAvailable: boolean;
     onNavigate: (path: string) => void;
     onStartContact: () => void;
+    backRoute?: string;
+    catalogRoute?: string;
 };
 
 export function OfferDetailsPage({
@@ -14,13 +16,12 @@ export function OfferDetailsPage({
     contactAvailable,
     onNavigate,
     onStartContact,
+    backRoute = "/catalogo",
+    catalogRoute = "/catalogo",
 }: OfferDetailsPageProps) {
     return (
         <>
-            <BackButton
-                label="Voltar"
-                onClick={() => onNavigate("/catalogo")}
-            />
+            <BackButton label="Voltar" onClick={() => onNavigate(backRoute)} />
             <section className="offer-page">
                 <h1>{offer.title}</h1>
                 <p className="eyebrow">{offer.category}</p>
@@ -49,7 +50,7 @@ export function OfferDetailsPage({
                     {offer.id === "mel" && (
                         <ActionButton
                             variant="orange"
-                            onClick={() => onNavigate("/catalogo")}
+                            onClick={() => onNavigate(catalogRoute)}
                         >
                             Conhecer a Cafuringa Store
                         </ActionButton>
