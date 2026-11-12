@@ -2,10 +2,11 @@ import { BackButton } from "../../components/navigation/BackButton";
 import { formatProductPrice } from "./productPrice";
 import type { Product } from "./productTypes";
 import { ActionButton } from "../../components/ui/ActionButton";
+import type { CatalogStatus } from "./useProductCatalog";
 
 type ProductCatalogPageProps = {
     products: Product[];
-    status?: "loading" | "ready" | "error";
+    status?: CatalogStatus;
     onRetry?: () => void;
     onNavigate: (path: string) => void;
 };
