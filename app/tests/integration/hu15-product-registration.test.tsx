@@ -259,8 +259,73 @@ describe("HU15 — cadastro, vínculo e recuperação", () => {
         const { user } = await openProduct();
         await fillProduct(user);
         submit();
+        expect(
+            await screen.findByRole("heading", {
+                name: "Sua oferta está na rede",
+            }),
+        ).toBeTruthy();
+        expect(screen.getByRole("status").textContent).toBe(
+            "O cadastro foi concluído e sua oferta está disponível para consulta.",
+        );
+        expect(
+            screen.queryByRole("navigation", { name: /navegação principal/i }),
+        ).toBeNull();
+        await user.click(screen.getByRole("button", { name: "Visualizar" }));
         expect(await screen.findByText(product.nome)).toBeTruthy();
         expect(await screen.findByText(/Horta da Joana/)).toBeTruthy();
+    });
+
+    it("permite selecionar Experiência e envia a categoria escolhida", async () => {
+        session();
+        const api = mockProductApi();
+        const { user } = await openProduct();
+        const f = await fillProduct(user);
+        await user.selectOptions(f.categoria, "Experiência");
+        submit();
+        await waitFor(() => expect(submissions(api)).toHaveLength(1));
+        expect(
+            (submissions(api)[0][1]?.body as FormData).get("categoria"),
+        ).toBe("Experiência");
+    });
+
+    it("anexa fotos arrastadas, exibe prévias e envia os arquivos", async () => {
+        session();
+        const api = mockProductApi();
+        const { user } = await openProduct();
+        const f = await fillProduct(user);
+        const extra = new File(["foto"], "colheita.png", { type: "image/png" });
+        const picker = f.fotos.closest(".product-photo-picker")!;
+        fireEvent.dragOver(picker, { dataTransfer: { files: [extra] } });
+        expect(screen.getByText("Solte as fotos aqui")).toBeTruthy();
+        fireEvent.drop(picker, { dataTransfer: { files: [extra] } });
+        expect(
+            screen.getByRole("img", { name: "Foto selecionada: colheita.png" }),
+        ).toBeTruthy();
+        submit();
+        await waitFor(() => expect(submissions(api)).toHaveLength(1));
+        expect(
+            (submissions(api)[0][1]?.body as FormData).getAll("fotos"),
+        ).toHaveLength(2);
+    });
+
+    it("recusa arquivo arrastado que não é imagem sem apagar a foto selecionada", async () => {
+        session();
+        mockProductApi();
+        const { user } = await openProduct();
+        const f = await fillProduct(user);
+        fireEvent.drop(f.fotos.closest(".product-photo-picker")!, {
+            dataTransfer: {
+                files: [
+                    new File(["texto"], "notas.txt", { type: "text/plain" }),
+                ],
+            },
+        });
+        expect(screen.getByRole("alert").textContent).toMatch(
+            /apenas.*imagem/i,
+        );
+        expect(
+            screen.getByRole("img", { name: "Foto selecionada: cesta.png" }),
+        ).toBeTruthy();
     });
 
     it("CA05: aguarda confirmação e impede envio duplicado enquanto a requisição está pendente", async () => {
