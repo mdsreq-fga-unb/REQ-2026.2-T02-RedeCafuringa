@@ -8,6 +8,21 @@ import {
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ProductCatalogPage } from "@/features/offers/ProductCatalogPage";
 import type { Product } from "@/features/offers/productTypes";
+import type { ComponentProps } from "react";
+
+function renderPage(
+    props: Partial<ComponentProps<typeof ProductCatalogPage>> = {},
+) {
+    const onNavigate = vi.fn();
+    const view = render(
+        <ProductCatalogPage
+            products={products}
+            onNavigate={onNavigate}
+            {...props}
+        />,
+    );
+    return { ...view, onNavigate };
+}
 
 afterEach(cleanup);
 
@@ -31,13 +46,6 @@ const products: Product[] = [
     },
 ];
 
-function renderPage() {
-    const onNavigate = vi.fn();
-    const view = render(
-        <ProductCatalogPage products={products} onNavigate={onNavigate} />,
-    );
-    return { ...view, onNavigate };
-}
 
 describe("ProductCatalogPage", () => {
     it.each([
@@ -98,5 +106,43 @@ describe("ProductCatalogPage", () => {
         fireEvent.click(screen.getByRole("button", { name: /voltar/i }));
 
         expect(onNavigate).toHaveBeenCalledWith("/perfil");
+    });
+
+        it("mostra mensagem de carregamento sem a lista", () => {
+        renderPage({ status: "loading", products: [] });
+
+        expect(screen.getByRole("status").textContent).toBe(
+            "Carregando produtos...",
+        );
+        expect(screen.queryByRole("list")).toBeNull();
+    });
+
+    it("avisa quando não há produtos disponíveis (CA06)", () => {
+        renderPage({ products: [] });
+
+        expect(
+            screen.getByText("Não há ofertas disponíveis no momento."),
+        ).toBeDefined();
+        expect(screen.queryByRole("list")).toBeNull();
+    });
+
+    it("avisa quando o carregamento falha (CA08)", () => {
+        renderPage({ status: "error", products: [] });
+
+        expect(screen.getByRole("alert").textContent).toContain(
+            "Não foi possível carregar os produtos.",
+        );
+        expect(screen.queryByRole("list")).toBeNull();
+    });
+
+    it("permite tentar carregar novamente", () => {
+        const onRetry = vi.fn();
+        renderPage({ status: "error", products: [], onRetry });
+
+        fireEvent.click(
+            screen.getByRole("button", { name: "Tentar novamente" }),
+        );
+
+        expect(onRetry).toHaveBeenCalledTimes(1);
     });
 });
