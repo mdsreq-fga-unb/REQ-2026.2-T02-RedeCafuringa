@@ -1634,3 +1634,173 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   .md-typeset .hu-view-switch__buttons { width: 100%; }
   .md-typeset .hu-view-switch__button { flex: 1; }
 }
+
+/* Tabela enriquecida do backlog — mesma fonte dos cards, sem catálogo duplicado. */
+.md-typeset .hu-table-view--integrated { max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.md-typeset .hu-table-view--integrated .hu-table { min-width: 790px; font-size:.75rem; }
+.md-typeset .hu-table-view--integrated th { white-space:normal; }
+.md-typeset .hu-table-view--integrated td { vertical-align:top; line-height:1.45; }
+.md-typeset .hu-table__relation { display:flex; flex-wrap:wrap; gap:.25rem; margin-bottom:.35rem; align-items:baseline; }
+.md-typeset .hu-table__relation strong { flex:0 0 2.3rem; font-size:.7rem; }
+.md-typeset .hu-table__chip { display:inline-block; white-space:nowrap; font-size:.68rem; padding:.1rem .35rem; border:1px solid var(--md-default-fg-color--lightest); border-radius:.4rem; text-decoration:none!important; }
+.md-typeset .hu-table__chip:hover, .md-typeset .hu-table__chip:focus-visible { border-color:var(--md-accent-fg-color); }
+.md-typeset .hu-table__details summary { cursor:pointer; font-weight:700; font-size:.72rem; white-space:nowrap; }
+.md-typeset .hu-table__details .hu-table__relation { margin-top:.5rem; }
+.md-typeset .hu-table__stack { min-width:7rem; }
+.md-typeset .hu-table__stack > * { display:table; margin-bottom:.3rem; }
+.md-typeset .hu-table__iteration { font-weight:700; }
+.md-typeset .hu-table-title-link { font-weight:750; }
+.md-typeset .hu-table-view--integrated tr[hidden] { display:none!important; }
+
+/* REDECAFURINGA_TEMA_BACKLOG_INICIO */
+/* ========================================================================
+   REDE CAFURINGA — BACKLOG CLARO / ESCURO
+   As variáveis locais acompanham os esquemas do Material for MkDocs.
+   Atua apenas sobre .hu-catalog (cards e tabela) e não afeta outras páginas.
+   ======================================================================== */
+
+[data-md-color-scheme="default"] {
+  --rc-hu-card-bg: linear-gradient(135deg, #fffaf2, #f4e8d6);
+  --rc-hu-card-text: #34251b;
+  --rc-hu-card-hover-text: #954716;
+  --rc-hu-card-border: #d8b999;
+  --rc-hu-card-hover-border: #d97732;
+  --rc-hu-table-bg: #fffdf9;
+  --rc-hu-table-head: #f2dfc6;
+  --rc-hu-table-head-text: #442918;
+  --rc-hu-table-text: #33251c;
+  --rc-hu-table-line: #e8d8c6;
+  --rc-hu-table-stripe: #fcf5ea;
+  --rc-hu-table-hover: #fae5ca;
+  --rc-hu-table-link: #89451c;
+  --rc-hu-table-link-hover: #5c2e13;
+  --rc-hu-table-muted: #725c4b;
+  --rc-hu-chip-bg: #f7ebdc;
+  --rc-hu-chip-border: #dac2a7;
+  --rc-hu-chip-text: #593823;
+  --rc-hu-focus: #9e4c15;
+}
+
+[data-md-color-scheme="slate"] {
+  --rc-hu-card-bg: linear-gradient(135deg, #4a2d1c, #302116);
+  --rc-hu-card-text: #f5eee5;
+  --rc-hu-card-hover-text: #ffe1ac;
+  --rc-hu-card-border: #554331;
+  --rc-hu-card-hover-border: #e5ad3c;
+  --rc-hu-table-bg: #342318;
+  --rc-hu-table-head: #4a301d;
+  --rc-hu-table-head-text: #fff4e6;
+  --rc-hu-table-text: #f5eee5;
+  --rc-hu-table-line: #695140;
+  --rc-hu-table-stripe: #3c2a1d;
+  --rc-hu-table-hover: #573a23;
+  --rc-hu-table-link: #ffe4bc;
+  --rc-hu-table-link-hover: #ffd089;
+  --rc-hu-table-muted: #c1b4a7;
+  --rc-hu-chip-bg: #483526;
+  --rc-hu-chip-border: #765b42;
+  --rc-hu-chip-text: #ffead0;
+  --rc-hu-focus: #f3c76a;
+}
+
+/* Os estilos anteriores usavam cor marrom fixa para todos os temas. */
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-card {
+  background: var(--rc-hu-card-bg) !important;
+  border-color: var(--rc-hu-card-border) !important;
+  border-left: 4px solid var(--rc-hu-card-hover-border) !important;
+  color: var(--rc-hu-card-text) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-card:hover {
+  border-color: var(--rc-hu-card-hover-border) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-card h3,
+[data-md-color-scheme] .md-typeset .hu-catalog a.hu-card-title-link,
+[data-md-color-scheme] .md-typeset .hu-catalog a.hu-card-title-link:visited {
+  color: var(--rc-hu-card-text) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-card:hover h3,
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-card:hover a.hu-card-title-link {
+  color: var(--rc-hu-card-hover-text) !important;
+}
+
+/* Tabela: cabeçalho, células, listras e hover também mudam com o tema. */
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table-view {
+  border-color: var(--rc-hu-table-line) !important;
+  background: var(--rc-hu-table-bg) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog table.hu-table {
+  background: var(--rc-hu-table-bg) !important;
+  color: var(--rc-hu-table-text) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table thead,
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table th {
+  background: var(--rc-hu-table-head) !important;
+  color: var(--rc-hu-table-head-text) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table th {
+  border-bottom-color: var(--rc-hu-card-hover-border) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table td {
+  background: transparent !important;
+  color: var(--rc-hu-table-text) !important;
+  border-bottom-color: var(--rc-hu-table-line) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table tbody tr {
+  background: var(--rc-hu-table-bg) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table tbody tr:nth-child(even) {
+  background: var(--rc-hu-table-stripe) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table tbody tr:hover {
+  background: var(--rc-hu-table-hover) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog a.hu-table-title-link,
+[data-md-color-scheme] .md-typeset .hu-catalog a.hu-table-title-link:visited {
+  color: var(--rc-hu-table-link) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog a.hu-table-title-link:hover,
+[data-md-color-scheme] .md-typeset .hu-catalog a.hu-table-title-link:focus-visible {
+  color: var(--rc-hu-table-link-hover) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table__muted {
+  color: var(--rc-hu-table-muted) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table__chip {
+  background: var(--rc-hu-chip-bg);
+  border-color: var(--rc-hu-chip-border);
+  color: var(--rc-hu-chip-text) !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table__chip:hover,
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table__chip:focus-visible {
+  border-color: var(--rc-hu-card-hover-border);
+  text-decoration: underline !important;
+}
+[data-md-color-scheme] .md-typeset .hu-catalog a.hu-table-title-link:focus-visible,
+[data-md-color-scheme] .md-typeset .hu-catalog .hu-table-view:focus-visible {
+  outline-color: var(--rc-hu-focus) !important;
+}
+
+/* No tema claro, as tags com texto pastel ficavam sem contraste. */
+[data-md-color-scheme="default"] .md-typeset .hu-catalog .hu-status-execucao {
+  color: #72500f; background: #fff0c8; border-color: #d8ad4d;
+}
+[data-md-color-scheme="default"] .md-typeset .hu-catalog .hu-status-planejada {
+  color: #595959; background: #ececec; border-color: #bcbcbc;
+}
+[data-md-color-scheme="default"] .md-typeset .hu-catalog .hu-status-mvp {
+  color: #246c40; background: #e4f4e8; border-color: #8abc99;
+}
+[data-md-color-scheme="default"] .md-typeset .hu-catalog .hu-status-prioridade {
+  color: #235a84; background: #e6f2fb; border-color: #8fb9da;
+}
+[data-md-color-scheme="default"] .md-typeset .hu-catalog .hu-status-ordem {
+  color: #6a3b99; background: #f1e8fc; border-color: #b69bdb;
+}
+[data-md-color-scheme="default"] .md-typeset .hu-catalog a.hu-status-iteracao,
+[data-md-color-scheme="default"] .md-typeset .hu-catalog a.hu-status-iteracao:visited {
+  color: #155c67 !important; background: #e2f4f5; border-color: #7fbfc7;
+}
+[data-md-color-scheme="default"] .md-typeset .hu-catalog a.hu-status-iteracao:hover {
+  color: #103b43 !important; background: #c7eaee;
+}
+/* REDECAFURINGA_TEMA_BACKLOG_FIM */

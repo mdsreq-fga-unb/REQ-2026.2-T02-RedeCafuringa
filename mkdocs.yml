@@ -28,6 +28,7 @@ theme:
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/organizacao-requisitos.css
 extra_javascript:
   - javascript/extra.js
   - javascript/hu-filters.js
@@ -51,6 +52,11 @@ nav:
     - 12. Lições Aprendidas: visao/licoes_aprendidas.md
     - 13. Referências Bibliográficas: visao/referencias.md
     - 14. Vídeo de Apresentação: visao/videos.md
+
+  - Organização e Atualização:
+    - Visão Geral: organizacao_atualizacao/index.md
+    - Rastreabilidade: organizacao_atualizacao/rastreabilidade.md
+    - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
 
   - AUP - Iterações:
     - Concepção:
@@ -90,6 +96,7 @@ nav:
 
 hooks:
   - scripts/mkdocs_hooks.py
+  - scripts/organizacao_requisitos_hook.py
 
 markdown_extensions:
   - attr_list
