@@ -1,15 +1,19 @@
 # HU03 — Cadastrar usuário administrador
 
 ## 1. Identificação
-
+<!-- REQUISITOS_HU_META_AUTO_INICIO -->
 | Campo | Informação |
 |---|---|
 | **ID da História** | HU03 |
 | **Requisito Funcional** | [RF03 — Cadastrar usuário administrador](../requisitos_software.md#71-requisitos-funcionais) |
-| **Requisito Não Funcional** | [RNF03, RNF04, RNF07, RNF08, RNF10, RNF11, RNF12](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN03, RN05](../requisitos_software.md#73-lista-de-regras-de-negocio) |
+| **Requisito Não Funcional** | [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF04](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF07](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF08](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF10](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF11](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF12](../requisitos_software.md#72-requisitos-nao-funcionais) |
+| **Regra de Negócio** | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN03](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN05](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
+| **Prioridade** | Média |
+| **Escopo** | MVP |
+| **Iteração** | [Iteração 6](../evidencias/iteracao6.md) |
+<!-- REQUISITOS_HU_META_AUTO_FIM -->
 
 ---
 
