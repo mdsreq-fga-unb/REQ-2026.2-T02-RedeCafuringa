@@ -33,6 +33,28 @@ afterEach(() => {
 });
 
 describe("navegação da navbar", () => {
+    it.each(["", "#/", "#/rota-desconhecida"])(
+        "abre Explorar ao entrar pelo endereço inicial %s",
+        async (hash) => {
+            window.history.replaceState(
+                null,
+                "",
+                `${window.location.pathname}${hash}`,
+            );
+            render(<App />);
+            expect(
+                await screen.findByRole("heading", {
+                    name: "Conheça nossos produtores",
+                }),
+            ).toBeTruthy();
+            expect(
+                screen.queryByRole("heading", { name: "Dona Maria" }),
+            ).toBeNull();
+            expect(
+                screen.queryByRole("heading", { name: /Entre em sua conta/ }),
+            ).toBeNull();
+        },
+    );
     it.each(["consumer", "producer"] as const)(
         "casinha abre Explorar e preserva a sessão de %s",
         async (role) => {

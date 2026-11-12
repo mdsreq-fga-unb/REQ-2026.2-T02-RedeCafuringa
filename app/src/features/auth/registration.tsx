@@ -306,7 +306,10 @@ export function ConsumerProfileSelectionPage({
 
     return (
         <section className="signup-page profile-selection-page">
-            <BackButton label="Voltar" onClick={() => onNavigate("/perfil")} />
+            <BackButton
+                label="Voltar"
+                onClick={() => onNavigate("/explorar")}
+            />
             <h1>Entre em sua conta</h1>
             <p className="body-copy">Escolha o tipo de perfil para começar.</p>
 

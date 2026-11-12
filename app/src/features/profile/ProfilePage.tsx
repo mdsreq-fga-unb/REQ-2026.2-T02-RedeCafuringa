@@ -14,7 +14,7 @@ export function ProfilePage({
     return (
         <>
             <div className="back-row">
-                <button onClick={() => onNavigate("/perfil")}>
+                <button onClick={() => onNavigate("/explorar")}>
                     ← <span>Voltar</span>
                 </button>
             </div>

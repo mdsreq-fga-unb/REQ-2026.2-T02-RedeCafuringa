@@ -9,7 +9,10 @@ type CatalogPageProps = {
 export function CatalogPage({ offers, onNavigate }: CatalogPageProps) {
     return (
         <>
-            <BackButton label="Voltar" onClick={() => onNavigate("/perfil")} />
+            <BackButton
+                label="Voltar"
+                onClick={() => onNavigate("/explorar")}
+            />
             <section className="catalog-page">
                 <p className="eyebrow">Dona Maria</p>
                 <h1>Catálogo do perfil</h1>

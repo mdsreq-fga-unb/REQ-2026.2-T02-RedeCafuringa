@@ -40,12 +40,17 @@
     height: 100%;
     object-fit: cover;
     z-index: -2;
+    opacity: 0;
+    transition: opacity 600ms ease-in-out;
+    pointer-events: none;
+}
+.explore-hero-image.is-active {
+    opacity: 1;
 }
 .explore-hero-image[hidden] {
     display: none;
 }
-.carousel-arrow,
-.carousel-play {
+.carousel-arrow {
     position: absolute;
     display: grid;
     place-items: center;
@@ -67,11 +72,6 @@
 }
 .carousel-next {
     right: 8px;
-}
-.carousel-play {
-    top: 8px;
-    right: 8px;
-    font-size: 15px;
 }
 .carousel-dots {
     position: absolute;
@@ -314,6 +314,7 @@
         border-color 140ms;
 }
 @media (prefers-reduced-motion: reduce) {
+    .explore-hero-image,
     .explore-category,
     .public-profile-shell .button {
         transition: none;

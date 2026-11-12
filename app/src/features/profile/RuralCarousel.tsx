@@ -17,10 +17,23 @@ const slides = [
 
 export function RuralCarousel() {
     const [index, setIndex] = useState(0);
-    const [playing, setPlaying] = useState(false);
+    const [reducedMotion, setReducedMotion] = useState(
+        () =>
+            window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ??
+            false,
+    );
     const [interacting, setInteracting] = useState(false);
     const [hidden, setHidden] = useState(document.hidden);
     const touchStart = useRef<number | null>(null);
+    useEffect(() => {
+        const preference = window.matchMedia?.(
+            "(prefers-reduced-motion: reduce)",
+        );
+        const onChange = (event: MediaQueryListEvent) =>
+            setReducedMotion(event.matches);
+        preference?.addEventListener("change", onChange);
+        return () => preference?.removeEventListener("change", onChange);
+    }, []);
     useEffect(() => {
         const onVisibility = () => setHidden(document.hidden);
         document.addEventListener("visibilitychange", onVisibility);
@@ -28,15 +41,14 @@ export function RuralCarousel() {
             document.removeEventListener("visibilitychange", onVisibility);
     }, []);
     useEffect(() => {
-        if (!playing || interacting || hidden) return;
+        if (reducedMotion || interacting || hidden) return;
         const timer = window.setInterval(
             () => setIndex((value) => (value + 1) % slides.length),
             6000,
         );
         return () => window.clearInterval(timer);
-    }, [playing, interacting, hidden]);
+    }, [reducedMotion, interacting, hidden, index]);
     const select = (next: number) => {
-        setPlaying(false);
         setIndex((next + slides.length) % slides.length);
     };
     return (
@@ -71,18 +83,21 @@ export function RuralCarousel() {
                 }
             }}
         >
-            <img
-                key={index}
-                className="explore-hero-image"
-                src={slides[index].image}
-                alt={slides[index].description}
-                width="1200"
-                height="650"
-                decoding="async"
-                onError={(event) => {
-                    event.currentTarget.hidden = true;
-                }}
-            />
+            {slides.map((slide, position) => (
+                <img
+                    key={slide.image}
+                    className={`explore-hero-image${position === index ? " is-active" : ""}`}
+                    src={slide.image}
+                    alt={slide.description}
+                    aria-hidden={position !== index}
+                    width="1200"
+                    height="650"
+                    decoding="async"
+                    onError={(event) => {
+                        event.currentTarget.hidden = true;
+                    }}
+                />
+            ))}
             <h1>Servimos a terra.</h1>
             <button
                 type="button"
@@ -100,19 +115,6 @@ export function RuralCarousel() {
             >
                 ›
             </button>
-            <button
-                type="button"
-                className="carousel-play"
-                aria-label={
-                    playing ? "Pausar carrossel" : "Reproduzir carrossel"
-                }
-                onClick={() => {
-                    setPlaying(!playing);
-                    setInteracting(false);
-                }}
-            >
-                {playing ? "Ⅱ" : "▶"}
-            </button>
             <div className="carousel-dots" aria-label="Selecionar imagem">
                 {slides.map((slide, position) => (
                     <button
@@ -128,7 +130,7 @@ export function RuralCarousel() {
             </div>
             <span
                 className="visually-hidden"
-                aria-live={playing ? "off" : "polite"}
+                aria-live={interacting || reducedMotion ? "polite" : "off"}
             >
                 Imagem {index + 1} de {slides.length}:{" "}
                 {slides[index].description}

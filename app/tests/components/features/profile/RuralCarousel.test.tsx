@@ -76,18 +76,12 @@ describe("carrossel rural", () => {
         ).toBeTruthy();
     });
 
-    it("não gira sozinho ao abrir e permite reproduzir, pausar e suspender ao interagir", () => {
+    it("avança automaticamente sem botão de pausa e suspende ao interagir", () => {
         vi.useFakeTimers();
         render(<RuralCarousel />);
-        act(() => {
-            vi.advanceTimersByTime(12000);
-        });
         expect(
-            screen.getByRole("img", { name: "Paisagem rural ao pôr do sol" }),
-        ).toBeTruthy();
-        fireEvent.click(
-            screen.getByRole("button", { name: "Reproduzir carrossel" }),
-        );
+            screen.queryByRole("button", { name: /pausar|reproduzir/i }),
+        ).toBeNull();
         act(() => {
             vi.advanceTimersByTime(6000);
         });
@@ -105,17 +99,15 @@ describe("carrossel rural", () => {
             screen.getByRole("img", { name: "Cultivo e trabalho no campo" }),
         ).toBeTruthy();
         fireEvent.mouseLeave(carousel);
-        fireEvent.click(
-            screen.getByRole("button", { name: "Pausar carrossel" }),
-        );
         act(() => {
-            vi.advanceTimersByTime(12000);
+            vi.advanceTimersByTime(6000);
         });
         expect(
-            screen.getByRole("img", { name: "Cultivo e trabalho no campo" }),
+            screen.getByRole("img", {
+                name: "Horta e alimentos cultivados na terra",
+            }),
         ).toBeTruthy();
     });
-
     it("mantém título e navegação disponíveis se a foto falhar", () => {
         render(<RuralCarousel />);
         fireEvent.error(screen.getByRole("img"));
