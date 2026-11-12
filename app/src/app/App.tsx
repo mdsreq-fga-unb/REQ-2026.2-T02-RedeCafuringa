@@ -22,7 +22,6 @@ import {
     isWhatsAppContactAvailable,
     useContactSettings,
 } from "@/features/contact";
-import { CatalogPage, offers, OfferDetailsPage } from "@/features/offers";
 import { ProfilePage } from "@/features/profile";
 import type { AuthResult } from "@/shared/types";
 import { useHashRoute } from "./useHashRoute";
@@ -37,6 +36,12 @@ import { TrajectoryPage } from "@/features/trajectory/TrajectoryPage";
 import { TrajectoryForm } from "@/features/trajectory/TrajectoryForm";
 import { PublicTrajectoryPage } from "@/features/trajectory/PublicTrajectoryPage";
 import { useProducerSignup } from "@/features/trajectory/useProducerSignup";
+import {
+    CatalogPage,
+    offers,
+    OfferDetailsPage,
+    ProductCatalog,
+} from "@/features/offers";
 
 export function App() {
     const { route, navigate } = useHashRoute();
@@ -227,6 +232,9 @@ export function App() {
                 )}
                 {path === "/catalogo" && (
                     <CatalogPage offers={offers} onNavigate={navigate} />
+                )}
+                {path === "/produtos" && (
+                    <ProductCatalog onNavigate={navigate} />
                 )}
                 {currentOffer && (
                     <OfferDetailsPage
