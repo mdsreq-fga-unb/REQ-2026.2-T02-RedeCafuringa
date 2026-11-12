@@ -15,9 +15,13 @@ export function BottomNavigation({
         <nav className="bottom-nav" aria-label="Navegação principal">
             <button
                 className={
-                    path === "/perfil" || path === "/catalogo" ? "active" : ""
+                    path === "/perfil" ||
+                    path === "/catalogo" ||
+                    path === "/produtos"
+                        ? "active"
+                        : ""
                 }
-                onClick={() => onNavigate("/perfil")}
+                onClick={() => onNavigate("/produtos")}
             >
                 <svg
                     className="nav-icon"

@@ -104,4 +104,20 @@ describe("catálogo de produtos no app", () => {
         expect(window.location.hash).toBe("#/produtos");
         expect(await screen.findByText("Sítio Raízes")).toBeTruthy();
     });
+
+    it("chega ao catálogo pelo Explorar (CA01)", async () => {
+        window.location.hash = "#/perfil";
+        const user = userEvent.setup();
+        render(<App />);
+
+        await user.click(screen.getByRole("button", { name: "Explorar" }));
+
+        expect(window.location.hash).toBe("#/produtos");
+        expect(
+            await screen.findByRole("heading", {
+                name: "Catálogo de Produtos",
+            }),
+        ).toBeTruthy();
+        expect(await screen.findByText("Mel do Cerrado")).toBeTruthy();
+    });
 });
