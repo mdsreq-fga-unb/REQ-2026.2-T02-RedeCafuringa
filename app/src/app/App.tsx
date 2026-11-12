@@ -41,7 +41,9 @@ import {
     offers,
     OfferDetailsPage,
     ProductCatalog,
+    ProductOfferDetails,
 } from "@/features/offers";
+
 
 export function App() {
     const { route, navigate } = useHashRoute();
@@ -125,6 +127,8 @@ export function App() {
         ? path.split("/").filter(Boolean)[1]
         : undefined;
     const currentOffer = offers.find((offer) => offer.id === offerId);
+    const productOfferId =
+        offerId && !currentOffer ? offerId : undefined;
     const contactAvailable = isWhatsAppContactAvailable(
         settings.authorized,
         settings.whatsappNumber,
@@ -244,6 +248,13 @@ export function App() {
                         onStartContact={() =>
                             startContact(currentOffer.id, currentOffer.title)
                         }
+                    />
+                )}
+                {productOfferId && (
+                    <ProductOfferDetails
+                        key={productOfferId}
+                        id={productOfferId}
+                        onNavigate={navigate}
                     />
                 )}
                 {showProfileSelection && (

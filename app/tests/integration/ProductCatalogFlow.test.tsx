@@ -85,4 +85,23 @@ describe("catálogo de produtos no app", () => {
         expect(await screen.findByText("Mel do Cerrado")).toBeTruthy();
         expect(screen.queryByRole("alert")).toBeNull();
     });
+
+    it("abre os detalhes de um produto que só existe no catálogo e volta (CA05)", async () => {
+        const user = userEvent.setup();
+        render(<App />);
+
+        await user.click(
+            await screen.findByRole("button", { name: /Cesta da estação/ }),
+        );
+
+        expect(window.location.hash).toBe("#/oferta/cesta");
+        expect(
+            await screen.findByRole("heading", { name: "Cesta da estação" }),
+        ).toBeTruthy();
+
+        await user.click(screen.getByRole("button", { name: "Voltar" }));
+
+        expect(window.location.hash).toBe("#/produtos");
+        expect(await screen.findByText("Sítio Raízes")).toBeTruthy();
+    });
 });
