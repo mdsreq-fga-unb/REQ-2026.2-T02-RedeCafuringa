@@ -40,6 +40,19 @@ function renderPage() {
 }
 
 describe("ProductCatalogPage", () => {
+    it.each([
+        ["Mel do Cerrado", "/oferta/mel"],
+        ["Cesta da estação", "/oferta/cesta"],
+    ])("abre os detalhes de %s ao acionar o card (CA05)", (name, path) => {
+        const { onNavigate } = renderPage();
+
+        fireEvent.click(
+            screen.getByRole("button", { name: new RegExp(name, "i") }),
+        );
+
+        expect(onNavigate).toHaveBeenCalledWith(path);
+    });
+
     it("mostra o título do catálogo", () => {
         renderPage();
 

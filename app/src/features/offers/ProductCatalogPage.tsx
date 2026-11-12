@@ -19,7 +19,13 @@ export function ProductCatalogPage({
                 <ul className="offer-list">
                     {products.map((product) => (
                         <li key={product.id}>
-                            <button className="offer-card" type="button">
+                            <button
+                                className="offer-card"
+                                type="button"
+                                onClick={() =>
+                                    onNavigate(`/oferta/${product.id}`)
+                                }
+                            >
                                 <img src={product.image} alt="" />
                                 <span className="offer-card-copy">
                                     <small>Produto</small>
