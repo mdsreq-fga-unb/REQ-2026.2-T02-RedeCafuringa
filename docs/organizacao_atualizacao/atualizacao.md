@@ -2,7 +2,7 @@
 
 <span class="version-badge">Unidade 02 · Organização e Atualização</span>
 
-A proposta de atualização segue a abordagem híbrida e iterativa descrita nas [Estratégias de Engenharia de Software](../../visao/estrategias/): acolher mudanças, avaliar impactos, decidir o que passa a valer e atualizar os registros relacionados, preservando o histórico necessário.
+A proposta de atualização segue a abordagem híbrida e iterativa descrita nas [Estratégias de Engenharia de Software](../visao/estrategias.md): acolher mudanças, avaliar impactos, decidir o que passa a valer e atualizar os registros relacionados, preservando o histórico necessário.
 
 ## Fluxo de tratamento de mudanças
 
@@ -23,8 +23,8 @@ A sincronização estruturada **já está implementada** com uma fonte central e
 | Fonte de manutenção | O que editar nela | O que é atualizado no build do MkDocs |
 |---|---|---|
 | `docs/data/historias.json` | Título, RF relacionado, RNFs, regras, OE, CP, prioridade, escopo MVP, situação, ordem e iteração | Cards, tabela enriquecida, identificação das HUs, composição do MVP e HUs listadas no cronograma |
-| [Requisitos de Software](../../visao/requisitos_software/) (`docs/visao/requisitos_software.md`) | Declaração e denominação vigente dos RFs, RNFs e regras | Nomes dos RFs nas fichas de identificação e na tabela derivada do MVP |
-| [Páginas das HUs](../../visao/historias_usuario/) (`docs/visao/historias/HU*.md`) | Narrativa, critérios de aceitação, protótipos, DoR/DoD e demais detalhes da HU | Conteúdo completo da página da HU e da janela modal, que consulta essa mesma página |
+| [Requisitos de Software](../visao/requisitos_software.md) (`docs/visao/requisitos_software.md`) | Declaração e denominação vigente dos RFs, RNFs e regras | Nomes dos RFs nas fichas de identificação e na tabela derivada do MVP |
+| [Páginas das HUs](../visao/historias_usuario.md) (`docs/visao/historias/HU*.md`) | Narrativa, critérios de aceitação, protótipos, DoR/DoD e demais detalhes da HU | Conteúdo completo da página da HU e da janela modal, que consulta essa mesma página |
 
 **Não edite manualmente as tags dos cards, as linhas derivadas do MVP, as atribuições do cronograma nem o bloco de identificação gerado nas HUs.** Eles são apenas apresentações dos metadados mantidos em `historias.json`.
 
@@ -48,10 +48,10 @@ O validador bloqueia IDs duplicados, RF incoerente com a HU, 48 registros incomp
 
 | Momento | Conferência | Registros de apoio |
 |---|---|---|
-| Planejamento | Prioridade, escopo, dependências e prontidão (DoR) | [Backlog](../../visao/historias_usuario/) e [DoR/DoD](../../visao/dor_dod/) |
+| Planejamento | Prioridade, escopo, dependências e prontidão (DoR) | [Backlog](../visao/historias_usuario.md) e [DoR/DoD](../visao/dor_dod.md) |
 | Decisão sobre mudança | Motivo, impacto, responsável e o entendimento que passa a vigorar | Issue, revisão, comunicação e PR, quando registrados |
-| Revisão da iteração | Critérios, resultados, feedback e pendências (DoD) | [Evidências das iterações](../../visao/cronograma/) |
-| Fechamento | Entregas, itens adiados/retirados e versão identificável | [Histórico de revisão](../../#historico-de-revisao) e repositório |
+| Revisão da iteração | Critérios, resultados, feedback e pendências (DoD) | [Evidências das iterações](../visao/cronograma.md) |
+| Fechamento | Entregas, itens adiados/retirados e versão identificável | [Histórico de revisão](../index.md#historico-de-revisao) e repositório |
 
 ## Modelo para registrar uma mudança
 
@@ -73,4 +73,4 @@ O validador bloqueia IDs duplicados, RF incoerente com a HU, 48 registros incomp
 A equipe pode testar a estrutura com quatro exercícios: **consultar uma HU**, **percorrer um vínculo**, **simular uma mudança** e **recuperar uma decisão histórica**. Em cada exercício, deve registrar o achado, a evidência, a situação e o encaminhamento. Ausência de evidência não equivale automaticamente à ausência da prática.
 
 
-Para avaliar os vínculos afetados por uma alteração, veja [Rastreabilidade](../rastreabilidade/). Para localizar uma HU específica, consulte o [Backlog](../../visao/historias_usuario/).
+Para avaliar os vínculos afetados por uma alteração, veja [Rastreabilidade](rastreabilidade.md). Para localizar uma HU específica, consulte o [Backlog](../visao/historias_usuario.md).

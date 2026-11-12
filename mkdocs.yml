@@ -96,7 +96,6 @@ nav:
 
 hooks:
   - scripts/mkdocs_hooks.py
-  - scripts/organizacao_requisitos_hook.py
 
 markdown_extensions:
   - attr_list
