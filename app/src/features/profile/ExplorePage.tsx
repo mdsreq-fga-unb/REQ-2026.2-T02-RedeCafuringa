@@ -41,7 +41,11 @@ export function ExplorePage({
             (!category || producer.categoriaOfertada?.includes(category))
         );
     });
-    const visible = showAll || search.trim() ? filtered : filtered.slice(0, 2);
+    const visible = showAll
+        ? producers
+        : search.trim()
+          ? filtered
+          : filtered.slice(0, 2);
     return (
         <section className="explore-page" aria-label="Explorar a Cafuringa">
             <RuralCarousel />
@@ -54,7 +58,10 @@ export function ExplorePage({
                     type="search"
                     placeholder="Buscar ofertas"
                     value={search}
-                    onChange={(event) => setSearch(event.target.value)}
+                    onChange={(event) => {
+                        setSearch(event.target.value);
+                        setShowAll(false);
+                    }}
                 />
             </label>
             <h2 className="explore-heading">O que você quer conhecer?</h2>
@@ -111,7 +118,10 @@ export function ExplorePage({
                     className="text-action"
                     aria-expanded={showAll}
                     aria-controls="public-producer-list"
-                    onClick={() => setShowAll(!showAll)}
+                    onClick={() => {
+                        if (!showAll) setSearch("");
+                        setShowAll(!showAll);
+                    }}
                 >
                     {showAll ? "Ver menos" : "Ver tudo"}{" "}
                     <span aria-hidden="true">→</span>

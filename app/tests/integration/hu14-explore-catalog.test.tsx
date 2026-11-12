@@ -138,6 +138,7 @@ describe("HU14 — Explorar", () => {
                         ...publicTrajectory,
                         id: "3",
                         nomeIniciativa: "Terceiro",
+                        categoriaOfertada: "Experiências",
                     },
                 ]),
         });
@@ -149,6 +150,23 @@ describe("HU14 — Explorar", () => {
         expect(screen.getByRole("button", { name: /Terceiro/ })).toBeTruthy();
         await user.click(screen.getByRole("button", { name: /Ver menos/ }));
         expect(screen.queryByRole("button", { name: /Terceiro/ })).toBeNull();
+        await user.click(
+            screen.getByRole("button", { name: /Experiências Viva/ }),
+        );
+        expect(screen.getByRole("button", { name: /Terceiro/ })).toBeTruthy();
+        expect(screen.queryByRole("button", { name: /Segundo/ })).toBeNull();
+        await user.click(screen.getByRole("button", { name: /Ver tudo/ }));
+        expect(screen.getByRole("button", { name: /Segundo/ })).toBeTruthy();
+        expect(
+            screen.getByRole("button", { name: /Horta da Maria/ }),
+        ).toBeTruthy();
+        await user.type(screen.getByRole("searchbox"), "Terceiro");
+        expect(screen.queryByRole("button", { name: /Segundo/ })).toBeNull();
+        await user.click(screen.getByRole("button", { name: /Ver tudo/ }));
+        expect((screen.getByRole("searchbox") as HTMLInputElement).value).toBe(
+            "",
+        );
+        expect(screen.getByRole("button", { name: /Segundo/ })).toBeTruthy();
     });
 
     it("lista vazia não apresenta produtores fictícios", async () => {
