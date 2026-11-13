@@ -6,10 +6,7 @@ describe("listMockProducts", () => {
     it("lista os produtos disponíveis do catálogo demo", async () => {
         const products = await listMockProducts();
 
-        expect(products.map((product) => product.id)).toEqual([
-            "mel",
-            "cesta",
-        ]);
+        expect(products.map((product) => product.id)).toEqual(["mel", "cesta"]);
         expect(products[0]).toMatchObject({
             name: "Mel do Cerrado",
             producerName: "Dona Maria",

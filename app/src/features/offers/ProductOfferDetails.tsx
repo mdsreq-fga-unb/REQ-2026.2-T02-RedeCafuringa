@@ -29,7 +29,10 @@ export function ProductOfferDetails({
 
     return (
         <>
-            <BackButton label="Voltar" onClick={() => onNavigate("/produtos")} />
+            <BackButton
+                label="Voltar"
+                onClick={() => onNavigate("/produtos")}
+            />
             <section className="offer-page">
                 {status === "loading" && (
                     <p role="status">Carregando oferta...</p>

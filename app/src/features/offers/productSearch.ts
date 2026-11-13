@@ -8,10 +8,7 @@ function normalize(text: string): string {
         .trim();
 }
 
-export function filterProducts(
-    products: Product[],
-    query: string,
-): Product[] {
+export function filterProducts(products: Product[], query: string): Product[] {
     const term = normalize(query);
     if (!term) return products;
     return products.filter(

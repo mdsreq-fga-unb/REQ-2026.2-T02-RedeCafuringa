@@ -17,7 +17,8 @@ export const mockApiProducts: ApiProduct[] = [
         produtor: "Sítio Raízes",
         preco: 40,
         unidade: "cesta",
-        imagemUrl: "/images/cesta-da-estacao.jpg",
+        imagemUrl:
+            "https://images.unsplash.com/photo-1659822887922-c1386185cc6b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
         disponivel: true,
     },
     {
@@ -26,7 +27,8 @@ export const mockApiProducts: ApiProduct[] = [
         produtor: "Sítio Raízes",
         preco: 18,
         unidade: "pote",
-        imagemUrl: "/images/geleia-de-pimenta.jpg",
+        imagemUrl:
+            "https://images.unsplash.com/photo-1772900764482-ea6c74fb3bfa?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
         disponivel: false,
     },
 ];

@@ -35,8 +35,8 @@ describe("BottomNavigation: Explorar", () => {
     it("não fica ativo em outras telas", () => {
         renderNav("/conta");
 
-        expect(
-            screen.getByRole("button", { name: "Explorar" }).className,
-        ).toBe("");
+        expect(screen.getByRole("button", { name: "Explorar" }).className).toBe(
+            "",
+        );
     });
 });

@@ -44,7 +44,6 @@ import {
     ProductOfferDetails,
 } from "@/features/offers";
 
-
 export function App() {
     const { route, navigate } = useHashRoute();
     const { role, consumerName, email, cpf, userId, signIn, signOut } =
@@ -127,8 +126,7 @@ export function App() {
         ? path.split("/").filter(Boolean)[1]
         : undefined;
     const currentOffer = offers.find((offer) => offer.id === offerId);
-    const productOfferId =
-        offerId && !currentOffer ? offerId : undefined;
+    const productOfferId = offerId && !currentOffer ? offerId : undefined;
     const contactAvailable = isWhatsAppContactAvailable(
         settings.authorized,
         settings.whatsappNumber,

@@ -47,7 +47,7 @@ describe("fetchProducts", () => {
         });
     });
 
-        it("consulta sem enviar o token de acesso (CA07)", async () => {
+    it("consulta sem enviar o token de acesso (CA07)", async () => {
         const { client, fetchMock } = setup(jsonResponse([mel]));
 
         await fetchProducts(client);

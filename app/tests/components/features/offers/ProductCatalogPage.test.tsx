@@ -26,7 +26,6 @@ function renderPage(
 
 afterEach(cleanup);
 
-
 const products: Product[] = [
     {
         id: "mel",
@@ -45,7 +44,6 @@ const products: Product[] = [
         image: "https://exemplo.com/cesta.jpg",
     },
 ];
-
 
 describe("ProductCatalogPage", () => {
     it.each([
@@ -108,7 +106,7 @@ describe("ProductCatalogPage", () => {
         expect(onNavigate).toHaveBeenCalledWith("/perfil");
     });
 
-        it("mostra mensagem de carregamento sem a lista", () => {
+    it("mostra mensagem de carregamento sem a lista", () => {
         renderPage({ status: "loading", products: [] });
 
         expect(screen.getByRole("status").textContent).toBe(
@@ -146,7 +144,7 @@ describe("ProductCatalogPage", () => {
         expect(onRetry).toHaveBeenCalledTimes(1);
     });
 
-        it("mostra o campo de busca quando há produtos", () => {
+    it("mostra o campo de busca quando há produtos", () => {
         renderPage();
 
         expect(

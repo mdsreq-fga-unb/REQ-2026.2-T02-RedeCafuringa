@@ -44,7 +44,9 @@ describe("catálogo de produtos no app", () => {
         render(<App />);
 
         expect(
-            await screen.findByRole("heading", { name: "Catálogo de Produtos" }),
+            await screen.findByRole("heading", {
+                name: "Catálogo de Produtos",
+            }),
         ).toBeTruthy();
         expect(await screen.findByText("Mel do Cerrado")).toBeTruthy();
         expect(screen.getByText("Sítio Raízes")).toBeTruthy();
