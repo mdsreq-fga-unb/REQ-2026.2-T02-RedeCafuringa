@@ -6,7 +6,10 @@ import {
   PayloadTooLargeException,
 } from '@nestjs/common';
 import { firstValueFrom, throwError } from 'rxjs';
-import { PhotoUploadErrorsInterceptor } from './photo-gallery-upload.js';
+import {
+  PhotoGalleryUpload,
+  PhotoUploadErrorsInterceptor,
+} from './photo-gallery-upload.js';
 import { maxRequestBytes } from './photo-gallery.policy.js';
 
 // Política fictícia: as mensagens devem refletir os limites de cada galeria.
@@ -61,5 +64,23 @@ describe('Galeria de fotos — tradução dos erros do upload', () => {
     expect(await translate(notFound)).toBe(notFound);
     const plain = new Error('boom');
     expect(await translate(plain)).toBe(plain);
+  });
+
+  it.each([
+    'Too many fields',
+    'Too many parts',
+    'Field value too long',
+    'Field name too long',
+  ])('"%s" vira orientação de formulário fora do contrato', async (msg) => {
+    const error = (await translate(
+      new BadRequestException(msg),
+    )) as BadRequestException;
+    expect(error.getResponse()).toMatchObject({
+      message: ['Formulário fora do contrato: confira os campos enviados'],
+    });
+  });
+
+  it('o decorator monta o upload com a política', () => {
+    expect(typeof PhotoGalleryUpload(policy)).toBe('function');
   });
 });
