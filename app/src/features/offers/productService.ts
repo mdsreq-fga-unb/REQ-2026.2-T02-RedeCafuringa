@@ -1,11 +1,21 @@
-import { getApiClient, type ApiClient } from "@/shared/api";
+import { ApiHttpError, getApiClient, type ApiClient } from "@/shared/api";
 import { toProductList } from "./productAdapter";
-import type { ApiProduct, Product } from "./productTypes";
+import { toProductDetails } from "./productDetailsAdapter";
+import type {
+    ApiProduct,
+    ApiProductDetails,
+    Product,
+    ProductDetails,
+} from "./productTypes";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
-import { listMockProducts } from "./mockProductService";
+import { getMockProductById, listMockProducts } from "./mockProductService";
 
 export function listProducts(): Promise<Product[]> {
     return isMockAuthEnabled ? listMockProducts() : fetchProducts();
+}
+
+export function getProductById(id: string): Promise<ProductDetails | null> {
+    return isMockAuthEnabled ? getMockProductById(id) : fetchProductById(id);
 }
 
 export async function fetchProducts(
@@ -15,4 +25,22 @@ export async function fetchProducts(
         auth: false,
     });
     return toProductList(items);
+}
+
+export async function fetchProductById(
+    id: string,
+    client: ApiClient = getApiClient(),
+): Promise<ProductDetails | null> {
+    try {
+        const item = await client.get<ApiProductDetails>(
+            `/products/${encodeURIComponent(id)}`,
+            { auth: false },
+        );
+        return toProductDetails(item);
+    } catch (error) {
+        if (error instanceof ApiHttpError && error.status === 404) {
+            return null;
+        }
+        throw error;
+    }
 }
