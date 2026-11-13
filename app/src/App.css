@@ -1167,22 +1167,6 @@ h2 {
     opacity: 0.65;
 }
 /* HU10 — recuperação de acesso */
-.link-button {
-    align-self: flex-start;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: inherit;
-    font: inherit;
-    font-weight: 600;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.link-button:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-}
 
 .recovery-icon {
     display: grid;
@@ -1194,6 +1178,41 @@ h2 {
     background: rgba(0, 0, 0, 0.06);
     color: inherit;
     font-size: 1.5rem;
+}
+
+.recovery-sent {
+    margin: 16px 0 0;
+    padding: 12px;
+    border: 1px solid #e3d27a;
+    border-radius: 8px;
+    background: #fff6b3;
+    color: var(--orange-text-strong);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.login-title-accent,
+.recovery-title-accent {
+    color: var(--orange-text);
+}
+
+.profile-switch {
+    display: block;
+    width: fit-content;
+    margin-top: 16px;
+    padding: 8px 0;
+    border: 0;
+    background: none;
+    color: var(--orange-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.profile-switch:focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 2px;
 }
 
 @media (max-width: 360px) {

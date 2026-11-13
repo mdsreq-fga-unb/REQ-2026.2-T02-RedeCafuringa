@@ -62,7 +62,7 @@ describe("HU02 — acesso ao cadastro de produtor no app", () => {
 
         await userEvent.setup().click(
             screen.getByRole("button", {
-                name: "Criar conta de produtor",
+                name: "Criar uma conta",
             }),
         );
 
@@ -111,7 +111,7 @@ describe("HU02 — do cadastro à área do produtor", () => {
         const user = userEvent.setup();
 
         await user.click(
-            screen.getByRole("button", { name: "Criar conta de produtor" }),
+            screen.getByRole("button", { name: "Criar uma conta" }),
         );
         await fillRegisterForm(user);
         await user.click(screen.getByRole("button", { name: "Continuar" }));
