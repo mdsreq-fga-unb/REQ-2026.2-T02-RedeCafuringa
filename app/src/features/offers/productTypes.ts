@@ -16,3 +16,16 @@ export type Product = {
     unit: string;
     image: string;
 };
+
+export type ApiProductDetails = ApiProduct & {
+    descricao?: string;
+    medida?: string;
+    whatsapp?: string;
+};
+
+export type ProductDetails = Product & {
+    available: boolean;
+    description?: string;
+    measure?: string;
+    whatsapp?: string;
+};
