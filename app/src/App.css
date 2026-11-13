@@ -1186,12 +1186,13 @@ h2 {
     border: 1px solid #e3d27a;
     border-radius: 8px;
     background: #fff6b3;
-    color: var(--orange-text);
+    color: var(--orange-text-strong);
     font-size: 14px;
     font-weight: 700;
 }
 
-.login-title-accent {
+.login-title-accent,
+.recovery-title-accent {
     color: var(--orange-text);
 }
 
