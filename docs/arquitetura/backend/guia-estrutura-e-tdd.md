@@ -57,6 +57,7 @@ backend/
 │       │   └── password-reset/ # recuperação de acesso por e-mail (HU10)
 │       ├── users/              # contas (consumidor, produtor, administrador)
 │       ├── producer-profile/   # trajetória do produtor e perfil público (HU12)
+│       ├── products/           # cadastro e consulta de produtos (HU15); fotos na galeria de common/photos
 │       ├── health/             # live/ready
 │       └── metrics/            # Prometheus
 ├── test/
