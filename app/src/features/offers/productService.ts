@@ -1,6 +1,9 @@
-import { ApiHttpError, getApiClient } from "@/shared/api";
+import { ApiHttpError, getApiClient, type ApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
+import { toProductList } from "./productAdapter";
+import type { ApiProduct, Product } from "./productTypes";
+import { listMockProducts } from "./mockProductService";
 
 export type ProductDraft = {
     nome: string;
@@ -98,4 +101,17 @@ export async function registerProduct(
             ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),
         },
     });
+}
+
+export function listProducts(): Promise<Product[]> {
+    return isMockAuthEnabled ? listMockProducts() : fetchProducts();
+}
+
+export async function fetchProducts(
+    client: ApiClient = getApiClient(),
+): Promise<Product[]> {
+    const items = await client.get<ApiProduct[]>("/products", {
+        auth: false,
+    });
+    return toProductList(items);
 }

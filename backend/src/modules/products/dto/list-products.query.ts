@@ -5,7 +5,9 @@ import {
   IsInt,
   IsMongoId,
   IsOptional,
+  IsString,
   Max,
+  MaxLength,
   Min,
 } from 'class-validator';
 import { ProductCategory } from '../domain/product.js';
@@ -30,6 +32,16 @@ export class ListProductsQuery {
     message: `Categoria deve ser ${Object.values(ProductCategory).join(' ou ')}`,
   })
   categoria?: ProductCategory;
+
+  @ApiPropertyOptional({
+    example: 'cafe',
+    description:
+      'Trecho do nome do produto ou do nome da iniciativa do produtor, sem diferenciar acentos e maiúsculas (HU19, RN15)',
+  })
+  @IsOptional()
+  @IsString({ message: 'Busca deve ser um texto' })
+  @MaxLength(100, { message: 'Busca deve ter no máximo 100 caracteres' })
+  busca?: string;
 
   @ApiPropertyOptional({
     example: 1,

@@ -12,7 +12,8 @@ export function BottomNavigation({
     onNavigate,
 }: BottomNavigationProps) {
     const isProducer = role === "producer";
-    const panelActive = path === "/perfil" || path === "/catalogo";
+    const panelActive =
+        path === "/perfil" || path === "/catalogo" || path === "/produtos";
     const accountActive =
         path === "/conta" || (isProducer && path === "/minha-trajetoria");
     return (
@@ -21,11 +22,11 @@ export function BottomNavigation({
             aria-label="Navegação principal"
         >
             <button
-                className={
-                    path === "/perfil" || path === "/catalogo" ? "active" : ""
-                }
+                className={panelActive ? "active" : ""}
                 aria-current={panelActive ? "page" : undefined}
-                onClick={() => onNavigate(isProducer ? "/catalogo" : "/perfil")}
+                onClick={() =>
+                    onNavigate(isProducer ? "/catalogo" : "/produtos")
+                }
             >
                 <svg
                     className="nav-icon"

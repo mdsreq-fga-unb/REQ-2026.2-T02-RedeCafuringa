@@ -85,6 +85,7 @@ nav:
             - HU10 — Recuperar acesso: arquitetura/backend/implementacao/HU10.md
             - HU12 — Trajetória do produtor: arquitetura/backend/implementacao/HU12.md
             - HU15 — Cadastrar produto: arquitetura/backend/implementacao/HU15.md
+            - HU19 — Consultar catálogo: arquitetura/backend/implementacao/HU19.md
     - Frontend:
         - Operação: arquitetura/frontend/operacao.md
     - Engenharia:

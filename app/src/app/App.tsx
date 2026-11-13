@@ -22,7 +22,6 @@ import {
     isWhatsAppContactAvailable,
     useContactSettings,
 } from "@/features/contact";
-import { CatalogPage, offers, OfferDetailsPage } from "@/features/offers";
 import { ProfilePage } from "@/features/profile";
 import type { AuthResult } from "@/shared/types";
 import { useHashRoute } from "./useHashRoute";
@@ -37,6 +36,13 @@ import { TrajectoryPage } from "@/features/trajectory/TrajectoryPage";
 import { TrajectoryForm } from "@/features/trajectory/TrajectoryForm";
 import { PublicTrajectoryPage } from "@/features/trajectory/PublicTrajectoryPage";
 import { useProducerSignup } from "@/features/trajectory/useProducerSignup";
+import {
+    CatalogPage,
+    offers,
+    OfferDetailsPage,
+    ProductCatalog,
+    ProductOfferDetails,
+} from "@/features/offers";
 import { ProductRegistrationPage } from "@/features/offers/ProductRegistrationPage";
 import { ProductPublishedPage } from "@/features/offers/ProductPublishedPage";
 import type { RegisteredProduct } from "@/features/offers/productService";
@@ -157,6 +163,7 @@ export function App() {
         ? path.split("/").filter(Boolean)[1]
         : undefined;
     const currentOffer = catalogOffers.find((offer) => offer.id === offerId);
+    const productOfferId = offerId && !currentOffer ? offerId : undefined;
     const contactAvailable = isWhatsAppContactAvailable(
         settings.authorized,
         settings.whatsappNumber,
@@ -292,6 +299,9 @@ export function App() {
                         onNavigate={navigate}
                     />
                 )}
+                {path === "/produtos" && (
+                    <ProductCatalog onNavigate={navigate} />
+                )}
                 {currentOffer && (
                     <OfferDetailsPage
                         offer={currentOffer}
@@ -300,6 +310,13 @@ export function App() {
                         onStartContact={() =>
                             startContact(currentOffer.id, currentOffer.title)
                         }
+                    />
+                )}
+                {productOfferId && (
+                    <ProductOfferDetails
+                        key={productOfferId}
+                        id={productOfferId}
+                        onNavigate={navigate}
                     />
                 )}
                 {showProfileSelection && (

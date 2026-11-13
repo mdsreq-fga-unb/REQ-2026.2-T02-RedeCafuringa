@@ -19,6 +19,7 @@ import {
   productPhotoPath,
   toCentavos,
 } from './domain/product.js';
+import { buildProductSearch } from './domain/product-search.js';
 import type { CreateProductDto } from './dto/create-product.dto.js';
 import {
   DEFAULT_PRODUCTS_PAGE,
@@ -117,6 +118,8 @@ export class ProductsService {
    * Catálogo público (consumido pela HU19): só produtos disponíveis de produtor
    * ativo, do mais novo ao mais antigo. O filtro de produtor ativo é feito no
    * banco (`$lookup`), antes de paginar, para o `total` e as páginas baterem.
+   * A busca por texto (HU19) vem depois do `$lookup`, porque também procura
+   * no nome da iniciativa do produtor.
    */
   async list(query: ListProductsQuery): Promise<ProductListResponse> {
     const pagina = query.pagina ?? 1;
@@ -124,6 +127,7 @@ export class ProductsService {
     const match: Record<string, unknown> = { disponivel: true };
     if (query.produtor) match.produtor = new Types.ObjectId(query.produtor);
     if (query.categoria) match.categoria = query.categoria;
+    const search = buildProductSearch(query.busca);
 
     const [result] = await this.products
       .aggregate<{
@@ -145,6 +149,7 @@ export class ProductsService {
           },
         },
         { $unwind: '$responsavel' },
+        ...(search ? [{ $match: search }] : []),
         { $project: { chaveIdempotencia: 0 } },
         {
           $facet: {
