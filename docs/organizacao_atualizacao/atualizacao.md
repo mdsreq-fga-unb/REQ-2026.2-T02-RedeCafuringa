@@ -33,7 +33,7 @@ A sincronização estruturada **já está implementada** com uma fonte central e
 1. Identifique a HU e registre a mudança em issue ou PR, com justificativa e pessoas envolvidas.
 2. Altere **uma vez** os atributos em `docs/data/historias.json` (ex.: `iteracao`, `prioridade`, `rnfs`). Se mudar a declaração de RF ou os critérios da HU, edite também **a fonte textual própria daquele conteúdo**.
 3. Valide e atualize os snapshots rastreados no Git: `py -3 scripts/requisitos_unificados.py --sync --repo .`.
-4. Execute `py -3 scripts/requisitos_unificados.py --check --repo .` e `py -3 -m mkdocs build --clean`. O hook `scripts/organizacao_requisitos_hook.py` regenera as visões publicadas a partir das fontes a cada build.
+4. Execute `py -3 scripts/requisitos_unificados.py --check --repo .` e `py -3 -m mkdocs build --clean`. O hook `scripts/mkdocs_hooks.py` regenera as visões publicadas a partir das fontes a cada build.
 5. Revise o diff, os efeitos no MVP e na iteração, e registre a decisão no PR. Após merge e deploy, as páginas publicadas consultam a mesma versão dos dados.
 
 Uma alteração em um **atributo central** aparece automaticamente nas demais visões; **não** se trata de edição direta pelo navegador do Pages, que é um site estático. Trechos narrativos, protótipos e testes que sofram impacto continuam exigindo revisão humana — o gerador não presume decisões ou aprovações.
@@ -44,6 +44,66 @@ O validador bloqueia IDs duplicados, RF incoerente com a HU, 48 registros incomp
 
 ---
 
+## Histórico da repriorização do MVP — Issue #18
+
+**Data do registro:** 13/11/2026. **Natureza:** proposta técnica de reavaliação para revisão da equipe e do cliente; não constitui aceite formal.
+
+**Fórmula anterior:** `ET=(ES+CX+CP)/3`; `Média=(VN+ET)/2`. Esse cálculo favorecia histórias mais custosas.
+**Fórmula revisada:** `IPA=(VN+5-ET)/2`, preservando `ET=(ES+CX+CP)/3`. Em todas as notas propostas, CP indica **demanda de capacidade técnica**, não disponibilidade da equipe. Quanto maior ES/CX/CP, maior o custo. Prioridade: Alta ≥ 3,00; Média ≥ 2,50; Baixa < 2,50.
+
+A nova **ordem de implementação** primeiro respeita as iterações 6, 7 e 8 e as dependências funcionais; dentre as histórias liberadas pelos pré-requisitos, usa maior IPA e depois a posição anterior para desempate. A decisão de manter as 20 HUs e as iterações é provisória até replanejamento formal. Não foram recuperadas notas históricas individuais de VN, ES, CX e CP da fonte atual: foram preservadas **a classificação e a ordem anteriores**, sem atribuir ao cliente novas notas.
+
+| Ordem anterior | História | Prioridade anterior | Nova ordem | Prioridade revisada | IPA |
+|---:|---|---|---:|---|---:|
+| 1º | [HU01](../visao/historias/HU1.md) — Cadastrar perfil de consumidor | Média | 1º | Alta | 3.67 |
+| 2º | [HU02](../visao/historias/HU2.md) — Cadastrar perfil de produtor | Média | 2º | Alta | 3.50 |
+| 3º | [HU03](../visao/historias/HU3.md) — Cadastrar usuário administrador | Média | 5º | Média | 2.50 |
+| 4º | [HU04](../visao/historias/HU4.md) — Consultar usuários cadastrados | Alta | 6º | Média | 2.50 |
+| 5º | [HU09](../visao/historias/HU9.md) — Autenticar usuário | Alta | 3º | Alta | 3.00 |
+| 6º | [HU10](../visao/historias/HU10.md) — Recuperar acesso à conta | Alta | 7º | Média | 2.50 |
+| 7º | [HU12](../visao/historias/HU12.md) — Registrar trajetória do produtor | Baixa | 4º | Média | 2.67 |
+| 8º | [HU14](../visao/historias/HU14.md) — Consultar perfil de produtor | Alta | 14º | Média | 2.83 |
+| 9º | [HU15](../visao/historias/HU15.md) — Cadastrar produto | Média | 8º | Alta | 3.17 |
+| 10º | [HU19](../visao/historias/HU19.md) — Consultar catálogo de produtos | Alta | 9º | Alta | 3.50 |
+| 11º | [HU20](../visao/historias/HU20.md) — Consultar detalhes do produto | Alta | 10º | Alta | 3.00 |
+| 12º | [HU21](../visao/historias/HU21.md) — Cadastrar experiência | Alta | 11º | Alta | 3.00 |
+| 13º | [HU24](../visao/historias/HU24.md) — Consultar catálogo de experiências | Alta | 12º | Alta | 3.33 |
+| 14º | [HU36](../visao/historias/HU36.md) — Buscar ofertas | Alta | 13º | Alta | 3.00 |
+| 15º | [HU39](../visao/historias/HU39.md) — Disponibilizar contato direto | Alta | 15º | Alta | 3.67 |
+| 16º | [HU44](../visao/historias/HU44.md) — Solicitar pré-reserva de experiência | Alta | 16º | Média | 2.50 |
+| 17º | [HU45](../visao/historias/HU45.md) — Consultar pré-reserva | Alta | 17º | Alta | 3.00 |
+| 18º | [HU46](../visao/historias/HU46.md) — Cancelar pré-reserva | Média | 18º | Alta | 3.00 |
+| 19º | [HU47](../visao/historias/HU47.md) — Responder pré-reserva de experiência | Média | 19º | Média | 2.83 |
+| 20º | [HU48](../visao/historias/HU48.md) — Notificar alteração de pré-reserva | Média | 20º | Média | 2.50 |
+
+### Notas técnicas propostas e fundamentos
+
+| HU | VN | ES | CX | CP | ET | Justificativa técnica / fonte de inspeção |
+|---|---:|---:|---:|---:|---:|---|
+| HU01 | 4 | 2 | 2 | 1 | 1.67 | Cadastro de consumidor é base para acesso aos fluxos autenticados; implementação e validação moderadas. [HU01](../visao/historias/HU1.md) |
+| HU02 | 4 | 2 | 2 | 2 | 2.00 | Perfil de produtor sustenta oferta, divulgação e gestão; custo moderado de dados e validações. [HU02](../visao/historias/HU2.md) |
+| HU03 | 3 | 3 | 3 | 3 | 3.00 | Conta administrativa é importante para governança, mas envolve regras de privilégio e segurança. [HU03](../visao/historias/HU3.md) |
+| HU04 | 3 | 3 | 3 | 3 | 3.00 | Consulta administrativa depende de autenticação e permissões, com cuidados de privacidade. [HU04](../visao/historias/HU4.md) |
+| HU09 | 4 | 3 | 3 | 3 | 3.00 | Autenticação é pré-requisito dos fluxos privados; exige gestão de credenciais e segurança. [HU09](../visao/historias/HU9.md) |
+| HU10 | 3 | 3 | 3 | 3 | 3.00 | Recuperação de acesso é complementar ao login, com requisitos de segurança e verificação. [HU10](../visao/historias/HU10.md) |
+| HU12 | 2 | 2 | 2 | 1 | 1.67 | História do produtor enriquece conteúdo, mas depende do cadastro e tem menor urgência relativa. [HU12](../visao/historias/HU12.md) |
+| HU14 | 3 | 2 | 3 | 2 | 2.33 | Consulta do perfil é relevante para descoberta, mas depende de perfil e trajetória cadastrados. [HU14](../visao/historias/HU14.md) |
+| HU15 | 4 | 3 | 3 | 2 | 2.67 | Cadastro de produto é pré-requisito do catálogo; inclui validação de campos e associação ao produtor. [HU15](../visao/historias/HU15.md) |
+| HU19 | 4 | 2 | 2 | 2 | 2.00 | Consulta do catálogo entrega valor diretamente, com complexidade menor após o cadastro de produtos. [HU19](../visao/historias/HU19.md) |
+| HU20 | 3 | 2 | 2 | 2 | 2.00 | Detalhes de produto complementam catálogo existente e aproveitam sua fonte de dados. [HU20](../visao/historias/HU20.md) |
+| HU21 | 4 | 3 | 3 | 3 | 3.00 | Cadastro de experiências é essencial para pré-reserva, com regras e dados próprios. [HU21](../visao/historias/HU21.md) |
+| HU24 | 4 | 2 | 3 | 2 | 2.33 | Catálogo de experiências reutiliza cadastros e permite descoberta das ofertas. [HU24](../visao/historias/HU24.md) |
+| HU36 | 4 | 3 | 3 | 3 | 3.00 | Busca de ofertas agrega produtos e experiências; integra índices, filtros e consultas. [HU36](../visao/historias/HU36.md) |
+| HU39 | 4 | 2 | 2 | 1 | 1.67 | Contato direto usa link externo do WhatsApp, não chat interno; exige consentimento explícito. [HU39](../visao/historias/HU39.md) |
+| HU44 | 4 | 4 | 4 | 4 | 4.00 | Pré-reserva completa envolve validações, estados e vínculo entre usuário e experiência; custo alto. [HU44](../visao/historias/HU44.md) |
+| HU45 | 3 | 2 | 2 | 2 | 2.00 | Consulta de pré-reservas é necessária ao acompanhamento e depende do registro de solicitações. [HU45](../visao/historias/HU45.md) |
+| HU46 | 3 | 2 | 2 | 2 | 2.00 | Cancelamento de pré-reserva reutiliza dados de solicitação e exige validações de titularidade. [HU46](../visao/historias/HU46.md) |
+| HU47 | 3 | 2 | 3 | 2 | 2.33 | Resposta do produtor à pré-reserva exige autorização e atualização de estado. [HU47](../visao/historias/HU47.md) |
+| HU48 | 3 | 3 | 3 | 3 | 3.00 | Notificação de alteração depende dos estados da pré-reserva e requer integração adicional. [HU48](../visao/historias/HU48.md) |
+
+**Contagem histórica:** Alta 12; Média 7; Baixa 1. **Contagem revisada:** Alta 12; Média 8; Baixa 0.
+
+---
 ## Pontos de controle ao longo do AUP
 
 | Momento | Conferência | Registros de apoio |
@@ -67,10 +127,3 @@ O validador bloqueia IDs duplicados, RF incoerente com a HU, 48 registros incomp
 | Atualização | Arquivos, protótipo, código e testes alterados conforme o impacto |
 | Comunicação | Quem foi informado, quando e por qual canal |
 | Fechamento | Revisão, data/versão e pendências remanescentes |
-
-## Avaliação do processo
-
-A equipe pode testar a estrutura com quatro exercícios: **consultar uma HU**, **percorrer um vínculo**, **simular uma mudança** e **recuperar uma decisão histórica**. Em cada exercício, deve registrar o achado, a evidência, a situação e o encaminhamento. Ausência de evidência não equivale automaticamente à ausência da prática.
-
-
-Para avaliar os vínculos afetados por uma alteração, veja [Rastreabilidade](rastreabilidade.md). Para localizar uma HU específica, consulte o [Backlog](../visao/historias_usuario.md).

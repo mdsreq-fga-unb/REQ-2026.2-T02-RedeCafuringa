@@ -72,6 +72,7 @@
       // para que os filtros combinados não percam o comportamento esperado.
       const arranged = [...entries].sort((a, b) => {
         if (!sorting.value) return a.originalIndex - b.originalIndex;
+        if (sorting.value === "numero") return (a.id ?? Infinity) - (b.id ?? Infinity);
         if (!a.priorityOrder && !b.priorityOrder) return a.originalIndex - b.originalIndex;
         if (!a.priorityOrder) return 1;
         if (!b.priorityOrder) return -1;

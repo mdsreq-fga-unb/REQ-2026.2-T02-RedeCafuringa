@@ -3,7 +3,7 @@
     "id": 1,
     "titulo": "Cadastrar perfil de consumidor",
     "situacao": "Em execução",
-    "prioridade": "Média",
+    "prioridade": "Alta",
     "mvp": true,
     "iteracao": 6,
     "ordem": 1,
@@ -30,13 +30,23 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 2,
+      "cx": 2,
+      "cp": 1,
+      "justificativa": "Cadastro de consumidor é base para acesso aos fluxos autenticados; implementação e validação moderadas.",
+      "evidencia": "docs/visao/historias/HU1.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 2,
     "titulo": "Cadastrar perfil de produtor",
     "situacao": "Em execução",
-    "prioridade": "Média",
+    "prioridade": "Alta",
     "mvp": true,
     "iteracao": 6,
     "ordem": 2,
@@ -62,7 +72,17 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 2,
+      "cx": 2,
+      "cp": 2,
+      "justificativa": "Perfil de produtor sustenta oferta, divulgação e gestão; custo moderado de dados e validações.",
+      "evidencia": "docs/visao/historias/HU2.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 3,
@@ -71,7 +91,7 @@
     "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
-    "ordem": 3,
+    "ordem": 5,
     "rf": "RF03",
     "rnfs": [
       "RNF03",
@@ -92,16 +112,26 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Conta administrativa é importante para governança, mas envolve regras de privilégio e segurança.",
+      "evidencia": "docs/visao/historias/HU3.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 4,
     "titulo": "Consultar usuários cadastrados",
     "situacao": "Em execução",
-    "prioridade": "Alta",
+    "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
-    "ordem": 4,
+    "ordem": 6,
     "rf": "RF04",
     "rnfs": [
       "RNF03",
@@ -120,7 +150,17 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Consulta administrativa depende de autenticação e permissões, com cuidados de privacidade.",
+      "evidencia": "docs/visao/historias/HU4.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 5,
@@ -247,7 +287,7 @@
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 6,
-    "ordem": 5,
+    "ordem": 3,
     "rf": "RF09",
     "rnfs": [
       "RNF03",
@@ -264,16 +304,26 @@
     ],
     "oes": [
       "OE1"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Autenticação é pré-requisito dos fluxos privados; exige gestão de credenciais e segurança.",
+      "evidencia": "docs/visao/historias/HU9.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 10,
     "titulo": "Recuperar acesso à conta",
     "situacao": "Em execução",
-    "prioridade": "Alta",
+    "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
-    "ordem": 6,
+    "ordem": 7,
     "rf": "RF10",
     "rnfs": [
       "RNF03",
@@ -289,7 +339,17 @@
     ],
     "oes": [
       "OE1"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Recuperação de acesso é complementar ao login, com requisitos de segurança e verificação.",
+      "evidencia": "docs/visao/historias/HU10.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 11,
@@ -321,10 +381,10 @@
     "id": 12,
     "titulo": "Registrar trajetória do produtor",
     "situacao": "Em execução",
-    "prioridade": "Baixa",
+    "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
-    "ordem": 7,
+    "ordem": 4,
     "rf": "RF12",
     "rnfs": [
       "RNF03",
@@ -346,7 +406,17 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 2,
+      "es": 2,
+      "cx": 2,
+      "cp": 1,
+      "justificativa": "História do produtor enriquece conteúdo, mas depende do cadastro e tem menor urgência relativa.",
+      "evidencia": "docs/visao/historias/HU12.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 13,
@@ -380,10 +450,10 @@
     "id": 14,
     "titulo": "Consultar perfil de produtor",
     "situacao": "Em execução",
-    "prioridade": "Alta",
+    "prioridade": "Média",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 8,
+    "ordem": 14,
     "rf": "RF14",
     "rnfs": [
       "RNF01",
@@ -404,16 +474,26 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 2,
+      "cx": 3,
+      "cp": 2,
+      "justificativa": "Consulta do perfil é relevante para descoberta, mas depende de perfil e trajetória cadastrados.",
+      "evidencia": "docs/visao/historias/HU14.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 15,
     "titulo": "Cadastrar produto",
     "situacao": "Em execução",
-    "prioridade": "Média",
+    "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 9,
+    "ordem": 8,
     "rf": "RF15",
     "rnfs": [
       "RNF03",
@@ -433,7 +513,17 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 3,
+      "cx": 3,
+      "cp": 2,
+      "justificativa": "Cadastro de produto é pré-requisito do catálogo; inclui validação de campos e associação ao produtor.",
+      "evidencia": "docs/visao/historias/HU15.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 16,
@@ -524,7 +614,7 @@
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 10,
+    "ordem": 9,
     "rf": "RF19",
     "rnfs": [
       "RNF01",
@@ -543,7 +633,17 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 2,
+      "cx": 2,
+      "cp": 2,
+      "justificativa": "Consulta do catálogo entrega valor diretamente, com complexidade menor após o cadastro de produtos.",
+      "evidencia": "docs/visao/historias/HU19.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 20,
@@ -552,7 +652,7 @@
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 11,
+    "ordem": 10,
     "rf": "RF20",
     "rnfs": [
       "RNF01",
@@ -572,7 +672,17 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 2,
+      "cx": 2,
+      "cp": 2,
+      "justificativa": "Detalhes de produto complementam catálogo existente e aproveitam sua fonte de dados.",
+      "evidencia": "docs/visao/historias/HU20.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 21,
@@ -581,7 +691,7 @@
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 12,
+    "ordem": 11,
     "rf": "RF21",
     "rnfs": [
       "RNF03",
@@ -601,7 +711,17 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Cadastro de experiências é essencial para pré-reserva, com regras e dados próprios.",
+      "evidencia": "docs/visao/historias/HU21.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 22,
@@ -665,7 +785,7 @@
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 13,
+    "ordem": 12,
     "rf": "RF24",
     "rnfs": [
       "RNF01",
@@ -684,7 +804,17 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 2,
+      "cx": 3,
+      "cp": 2,
+      "justificativa": "Catálogo de experiências reutiliza cadastros e permite descoberta das ofertas.",
+      "evidencia": "docs/visao/historias/HU24.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 25,
@@ -1001,7 +1131,7 @@
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 14,
+    "ordem": 13,
     "rf": "RF36",
     "rnfs": [
       "RNF01",
@@ -1020,7 +1150,17 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Busca de ofertas agrega produtos e experiências; integra índices, filtros e consultas.",
+      "evidencia": "docs/visao/historias/HU36.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 37,
@@ -1106,7 +1246,17 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 2,
+      "cx": 2,
+      "cp": 1,
+      "justificativa": "Contato direto usa link externo do WhatsApp, não chat interno; exige consentimento explícito.",
+      "evidencia": "docs/visao/historias/HU39.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 40,
@@ -1221,7 +1371,7 @@
     "id": 44,
     "titulo": "Solicitar pré-reserva de experiência",
     "situacao": "Em execução",
-    "prioridade": "Alta",
+    "prioridade": "Média",
     "mvp": true,
     "iteracao": 8,
     "ordem": 16,
@@ -1243,7 +1393,17 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 4,
+      "cx": 4,
+      "cp": 4,
+      "justificativa": "Pré-reserva completa envolve validações, estados e vínculo entre usuário e experiência; custo alto.",
+      "evidencia": "docs/visao/historias/HU44.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 45,
@@ -1269,13 +1429,23 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 2,
+      "cx": 2,
+      "cp": 2,
+      "justificativa": "Consulta de pré-reservas é necessária ao acompanhamento e depende do registro de solicitações.",
+      "evidencia": "docs/visao/historias/HU45.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 46,
     "titulo": "Cancelar pré-reserva",
     "situacao": "Em execução",
-    "prioridade": "Média",
+    "prioridade": "Alta",
     "mvp": true,
     "iteracao": 8,
     "ordem": 18,
@@ -1296,7 +1466,17 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 2,
+      "cx": 2,
+      "cp": 2,
+      "justificativa": "Cancelamento de pré-reserva reutiliza dados de solicitação e exige validações de titularidade.",
+      "evidencia": "docs/visao/historias/HU46.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 47,
@@ -1323,7 +1503,17 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 2,
+      "cx": 3,
+      "cp": 2,
+      "justificativa": "Resposta do produtor à pré-reserva exige autorização e atualização de estado.",
+      "evidencia": "docs/visao/historias/HU47.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   },
   {
     "id": 48,
@@ -1349,6 +1539,16 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Notificação de alteração depende dos estados da pré-reserva e requer integração adicional.",
+      "evidencia": "docs/visao/historias/HU48.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    }
   }
 ]

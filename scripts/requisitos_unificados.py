@@ -8,7 +8,7 @@ Execução manual opcional, para atualizar snapshots no repositório:
     py -3 scripts/requisitos_unificados.py --sync --repo .
     py -3 scripts/requisitos_unificados.py --check --repo .
 
-Durante o MkDocs build, o hook em organizacao_requisitos_hook.py chama
+Durante o MkDocs build, o hook em scripts/mkdocs_hooks.py chama
 render_page para gerar as visões diretamente das fontes vigentes.
 """
 from __future__ import annotations
@@ -115,7 +115,7 @@ def render_hu_meta(item: dict, names: dict[str, str]) -> str:
 
 def render_cards(data: list[dict]) -> str:
     result = []
-    for item in data:
+    for item in sorted(data, key=lambda x: (0 if x['mvp'] else 1, x['ordem'] if x['mvp'] else x['id'])):
         n=item['id']; title = f'HU{n:02d} — {item["titulo"]}'
         parts = []
         order = item['ordem']
@@ -147,21 +147,34 @@ def render_cards(data: list[dict]) -> str:
 
 def render_mvp(data: list[dict], names: dict[str,str]) -> str:
     lines = [
-        '| RF | Requisito funcional | História de usuário correspondente | CP | Prioridade | Iteração |',
-        '|---|---|---|---|---|---|',
+        '| Ordem | RF | Requisito funcional | História de usuário | VN | ES | CX | CP | ET | IPA | Prioridade | Iteração |',
+        '|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|---|',
     ]
-    for item in sorted((x for x in data if x['mvp']),key=lambda r:r['ordem']):
+    for item in sorted((x for x in data if x['mvp']), key=lambda x: x['ordem']):
         n = item['id']
-        lines.append(f'| {item["rf"]} | {names.get(item["rf"], item["titulo"])} | '
-                     f'[HU{n:02d} — {item["titulo"]}](historias/HU{n}.md) | '
-                     f'{", ".join(item["cps"])} | {item["prioridade"]} | '
-                     f'[Iteração {item["iteracao"]}](evidencias/iteracao{item["iteracao"]}.md) |')
+        a = item.get('avaliacao_priorizacao') or {}
+        if any(type(a.get(k)) is not int or not 1 <= a[k] <= 4 for k in ('vn','es','cx','cp')):
+            raise ValueError(f'HU{n:02d}: notas de priorização não estão completas')
+        et = (a['es']+a['cx']+a['cp']) / 3
+        ipa = (a['vn']+5-et) / 2
+        classe = 'Alta' if ipa >= 3 else 'Média' if ipa >= 2.5 else 'Baixa'
+        if item['prioridade'] != classe:
+            raise ValueError(f'HU{n:02d}: prioridade do JSON diverge da fórmula')
+        lines.append(
+            f'| {item["ordem"]}º | {item["rf"]} | {names.get(item["rf"], item["titulo"])} | '
+            f'[HU{n:02d} — {item["titulo"]}](historias/HU{n}.md) | '
+            f'{a["vn"]} | {a["es"]} | {a["cx"]} | {a["cp"]} | '
+            f'{et:.2f} | {ipa:.2f} | **{classe}** | '
+            f'[Iteração {item["iteracao"]}](evidencias/iteracao{item["iteracao"]}.md) |'
+        )
     return '\n'.join(lines)
 
 
 def render_iteration_cell(data: list[dict], n: int) -> str:
     matching = sorted((x for x in data if x['iteracao'] == n), key=lambda x:x['ordem'])
     return ', '.join(f'[HU{x["id"]:02d}](historias/HU{x["id"]}.md)' for x in matching)
+
+
 
 
 def render_page(text: str, uri: str, data: list[dict], names: dict[str,str]) -> str:
