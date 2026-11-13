@@ -5,7 +5,10 @@ import { App } from "@/app/App";
 import { login } from "@/features/auth/authService";
 import userEvent from "@testing-library/user-event";
 import { requestAccessRecovery } from "@/features/recovery/recoveryService";
+import { listProducts } from "@/features/offers/productService";
+import type { Product } from "@/features/offers/productTypes";
 
+vi.mock("@/features/offers/productService");
 vi.mock("@/features/auth/authService");
 vi.mock("@/features/recovery/recoveryService");
 vi.mock("@/features/auth/authService");
@@ -26,6 +29,25 @@ const ROUTES = [
     "/recuperar-acesso",
     "/nova-senha?token=abc123",
     "/nova-senha",
+];
+
+const catalogProducts: Product[] = [
+    {
+        id: "mel",
+        name: "Mel do Cerrado",
+        producerName: "Dona Maria",
+        price: 32,
+        unit: "unidade",
+        image: "https://exemplo.com/mel.jpg",
+    },
+    {
+        id: "cesta",
+        name: "Cesta da estação",
+        producerName: "Sítio Raízes",
+        price: 40,
+        unit: "cesta",
+        image: "https://exemplo.com/cesta.jpg",
+    },
 ];
 
 async function violationsIn(container: HTMLElement) {
@@ -49,6 +71,7 @@ beforeEach(() => {
         user: { id: 1, name: "Gabriela", role: "consumer" },
     });
     vi.mocked(requestAccessRecovery).mockResolvedValue({ ok: true });
+    vi.mocked(listProducts).mockResolvedValue(catalogProducts);
     localStorage.clear();
 });
 
@@ -193,6 +216,23 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
         expect(
             screen.getByLabelText("Nova senha").getAttribute("aria-invalid"),
         ).toBe("true");
+        expect(await violationsIn(container)).toEqual([]);
+    });
+
+    it("o catálogo de produtos carregado não tem violações", async () => {
+        window.location.hash = "#/produtos";
+        const { container } = render(<App />);
+
+        expect(await screen.findByText("Mel do Cerrado")).toBeTruthy();
+        expect(await violationsIn(container)).toEqual([]);
+    });
+
+    it("o catálogo de produtos com erro ao carregar não tem violações", async () => {
+        vi.mocked(listProducts).mockRejectedValue(new Error("falhou"));
+        window.location.hash = "#/produtos";
+        const { container } = render(<App />);
+
+        expect(await screen.findByRole("alert")).toBeTruthy();
         expect(await violationsIn(container)).toEqual([]);
     });
 });

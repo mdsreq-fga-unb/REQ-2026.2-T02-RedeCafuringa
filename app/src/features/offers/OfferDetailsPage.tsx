@@ -5,6 +5,7 @@ import type { Offer } from "../../shared/types";
 type OfferDetailsPageProps = {
     offer: Offer;
     contactAvailable: boolean;
+    backPath?: string;
     onNavigate: (path: string) => void;
     onStartContact: () => void;
 };
@@ -12,15 +13,13 @@ type OfferDetailsPageProps = {
 export function OfferDetailsPage({
     offer,
     contactAvailable,
+    backPath = "/catalogo",
     onNavigate,
     onStartContact,
 }: OfferDetailsPageProps) {
     return (
         <>
-            <BackButton
-                label="Voltar"
-                onClick={() => onNavigate("/catalogo")}
-            />
+            <BackButton label="Voltar" onClick={() => onNavigate(backPath)} />
             <section className="offer-page">
                 <h1>{offer.title}</h1>
                 <p className="eyebrow">{offer.category}</p>

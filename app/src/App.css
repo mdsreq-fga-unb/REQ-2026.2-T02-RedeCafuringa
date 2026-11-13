@@ -346,6 +346,93 @@ h2 {
     font-size: 19px;
 }
 
+.product-list {
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.product-list > li {
+    display: flex;
+}
+
+.product-card {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 14px;
+    color: inherit;
+    font: inherit;
+}
+
+.product-card > img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+}
+
+.product-card .offer-card-copy {
+    gap: 6px;
+    color: inherit;
+    font-size: 14px;
+}
+
+.product-card .offer-card-copy strong,
+.product-card .offer-card-copy > span {
+    white-space: normal;
+}
+
+.product-card .offer-card-copy strong {
+    font-size: 18px;
+}
+
+.product-card .offer-card-copy small {
+    color: var(--orange-text);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.product-card .card-action {
+    color: var(--orange-text);
+    font-weight: 700;
+}
+
+.product-card .product-price {
+    font-weight: 700;
+}
+
+.product-search {
+    position: relative;
+    margin-top: 18px;
+}
+
+.product-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    fill: none;
+    stroke: var(--orange-text);
+    stroke-width: 2;
+    stroke-linecap: round;
+    pointer-events: none;
+}
+
+.product-search input {
+    width: 100%;
+    padding: 14px 16px 14px 46px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fffefa;
+    color: inherit;
+    font: inherit;
+}
+
 .offer-page {
     padding: 4px 0 20px;
 }
@@ -1285,22 +1372,6 @@ h2 {
     opacity: 0.65;
 }
 /* HU10 — recuperação de acesso */
-.link-button {
-    align-self: flex-start;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: inherit;
-    font: inherit;
-    font-weight: 600;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.link-button:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-}
 
 .recovery-icon {
     display: grid;
@@ -1312,6 +1383,41 @@ h2 {
     background: rgba(0, 0, 0, 0.06);
     color: inherit;
     font-size: 1.5rem;
+}
+
+.recovery-sent {
+    margin: 16px 0 0;
+    padding: 12px;
+    border: 1px solid #e3d27a;
+    border-radius: 8px;
+    background: #fff6b3;
+    color: var(--orange-text-strong);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.login-title-accent,
+.recovery-title-accent {
+    color: var(--orange-text);
+}
+
+.profile-switch {
+    display: block;
+    width: fit-content;
+    margin-top: 16px;
+    padding: 8px 0;
+    border: 0;
+    background: none;
+    color: var(--orange-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.profile-switch:focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 2px;
 }
 
 @media (max-width: 360px) {
