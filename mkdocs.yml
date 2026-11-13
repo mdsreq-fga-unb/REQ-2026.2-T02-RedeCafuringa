@@ -86,6 +86,7 @@ nav:
             - HU12 — Trajetória do produtor: arquitetura/backend/implementacao/HU12.md
             - HU15 — Cadastrar produto: arquitetura/backend/implementacao/HU15.md
             - HU19 — Consultar catálogo: arquitetura/backend/implementacao/HU19.md
+            - HU20 — Detalhes do produto: arquitetura/backend/implementacao/HU20.md
     - Frontend:
         - Operação: arquitetura/frontend/operacao.md
     - Engenharia:
