@@ -8,6 +8,12 @@ import {
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
 import { MetricsRegistry } from './modules/metrics/metrics.registry.js';
+import {
+  OPENAPI_DESCRIPTION,
+  OPENAPI_TAGS,
+  OPENAPI_TITLE,
+} from './openapi/openapi-description.js';
+import { SWAGGER_UI_OPTIONS } from './openapi/swagger-ui.js';
 
 export const API_PREFIX = 'api/v1';
 
@@ -15,65 +21,43 @@ export const API_PREFIX = 'api/v1';
  * Versão do contrato OpenAPI (SemVer), publicada em `info.version` e em
  * shared/openapi.json. Regras de quando subir cada número: docs/shared/contratos.md.
  */
-export const OPENAPI_VERSION = '0.5.0';
-
-const OPENAPI_DESCRIPTION = `API REST da plataforma **Rede Cafuringa**.
-
-**Autenticação.** \`POST /auth/login\` troca e-mail e senha por um JWT (RN05). Quem esqueceu a senha usa \`/auth/password-reset/*\`. Envie-o em \`Authorization: Bearer <token>\`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).
-
-**Rastreabilidade.** Envie \`x-request-id\` (1 a 128 caracteres de \`A-Za-z0-9._-\`). A API devolve o mesmo id no cabeçalho da resposta e nos logs; sem o cabeçalho, ou com valor inválido, gera um UUID.
-
-**Erros.** Todo erro tem o corpo \`ErrorResponse\` (\`statusCode\`, \`message\`, \`error\`). Nas falhas de validação (400), \`message\` é uma lista.
-
-**Limites.** Rotas de login, cadastro e recuperação de acesso têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com \`Retry-After\` (segundos).
-
-**Dados pessoais.** Respostas nunca trazem hash de senha nem o CPF completo (vem mascarado).
-
-**Versão do contrato.** SemVer, em \`info.version\`. Veja docs/shared/contratos.md.`;
+export const OPENAPI_VERSION = '0.6.0';
 
 /**
  * Monta o documento OpenAPI da aplicação. Usado pelo Swagger UI (fora de produção) e
  * pela exportação de shared/openapi.json (npm run openapi:export).
  */
 export function createOpenApiDocument(app: INestApplication): OpenAPIObject {
-  return SwaggerModule.createDocument(
-    app,
-    new DocumentBuilder()
-      .setTitle('Rede Cafuringa API')
-      .setDescription(OPENAPI_DESCRIPTION)
-      .setVersion(OPENAPI_VERSION)
-      .setContact(
-        'Equipe Bytelab',
-        'https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa',
-        '',
-      )
-      .addServer('http://localhost:3000', 'Desenvolvimento local')
-      .addBearerAuth(
-        {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-          description: 'JWT obtido em POST /auth/login',
-        },
-        'bearer',
-      )
-      .addTag('auth', 'Login, dados da sessão e recuperação de acesso (RN05)')
-      .addTag('users', 'Cadastro de usuários (RN02, RNF15)')
-      .addTag('health', 'Saúde do serviço, para o Docker e monitores externos')
-      .addTag(
-        'producers',
-        'Perfil do produtor: trajetória e atividades (HU12, RN07)',
-      )
-      .build(),
-    {
-      // IDs estáveis e legíveis (authLogin, usersCreateConsumer...), que viram os
-      // nomes das operações nos tipos gerados para o front.
-      operationIdFactory: (controllerKey: string, methodKey: string) =>
-        `${controllerKey.replace(/Controller$/, '').toLowerCase()}${
-          methodKey.charAt(0).toUpperCase() + methodKey.slice(1)
-        }`,
-    },
-  );
+  const builder = new DocumentBuilder()
+    .setTitle(OPENAPI_TITLE)
+    .setDescription(OPENAPI_DESCRIPTION)
+    .setVersion(OPENAPI_VERSION)
+    .setContact(
+      'Equipe Bytelab',
+      'https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa',
+      '',
+    )
+    .addServer('http://localhost:3000', 'Desenvolvimento local')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description:
+          'Cole o `accessToken` devolvido por POST /auth/login (sem a palavra Bearer).',
+      },
+      'bearer',
+    );
+  for (const tag of OPENAPI_TAGS) builder.addTag(tag.name, tag.description);
+
+  return SwaggerModule.createDocument(app, builder.build(), {
+    // IDs estáveis e legíveis (authLogin, usersCreateConsumer...), que viram os
+    // nomes das operações nos tipos gerados para o front.
+    operationIdFactory: (controllerKey: string, methodKey: string) =>
+      `${controllerKey.replace(/Controller$/, '').toLowerCase()}${
+        methodKey.charAt(0).toUpperCase() + methodKey.slice(1)
+      }`,
+  });
 }
 
 /**
@@ -113,6 +97,11 @@ export function configureApp(app: INestApplication): void {
   app.enableShutdownHooks();
 
   if (config.get<boolean>('SWAGGER_ENABLED', false)) {
-    SwaggerModule.setup(`${API_PREFIX}/docs`, app, createOpenApiDocument(app));
+    SwaggerModule.setup(
+      `${API_PREFIX}/docs`,
+      app,
+      createOpenApiDocument(app),
+      SWAGGER_UI_OPTIONS,
+    );
   }
 }

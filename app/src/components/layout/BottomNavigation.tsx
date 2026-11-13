@@ -11,26 +11,44 @@ export function BottomNavigation({
     role,
     onNavigate,
 }: BottomNavigationProps) {
+    const isProducer = role === "producer";
+    const panelActive = path === "/perfil" || path === "/catalogo";
+    const accountActive =
+        path === "/conta" || (isProducer && path === "/minha-trajetoria");
     return (
-        <nav className="bottom-nav" aria-label="Navegação principal">
+        <nav
+            className={`bottom-nav${isProducer ? " bottom-nav-producer" : ""}`}
+            aria-label="Navegação principal"
+        >
             <button
                 className={
                     path === "/perfil" || path === "/catalogo" ? "active" : ""
                 }
-                onClick={() => onNavigate("/perfil")}
+                aria-current={panelActive ? "page" : undefined}
+                onClick={() => onNavigate(isProducer ? "/catalogo" : "/perfil")}
             >
                 <svg
                     className="nav-icon"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
                 >
-                    <path d="M3 10.5 12 3l9 7.5v10H3z" />
-                    <path d="M9 20.5v-7h6v7" />
+                    {isProducer ? (
+                        <>
+                            <path d="m3 10 9-7 9 7M5 9v12h14V9" />
+                            <path d="M9 21v-8h6v8" />
+                        </>
+                    ) : (
+                        <>
+                            <path d="M3 10.5 12 3l9 7.5v10H3z" />
+                            <path d="M9 20.5v-7h6v7" />
+                        </>
+                    )}
                 </svg>
-                Explorar
+                {role === "producer" ? "Painel" : "Explorar"}
             </button>
             <button
                 className={path === "/notificacoes" ? "active" : ""}
+                aria-current={path === "/notificacoes" ? "page" : undefined}
                 onClick={() =>
                     onNavigate(role ? "/notificacoes" : "/escolher-perfil")
                 }
@@ -46,9 +64,25 @@ export function BottomNavigation({
                 Notificações
             </button>
             <button
-                className={path === "/reservas" ? "active" : ""}
+                data-action={isProducer ? "add-product" : undefined}
+                aria-current={
+                    path === (isProducer ? "/produtos/novo" : "/reservas")
+                        ? "page"
+                        : undefined
+                }
+                className={
+                    path === "/produtos/novo" || path === "/reservas"
+                        ? "active"
+                        : ""
+                }
                 onClick={() =>
-                    onNavigate(role ? "/reservas" : "/escolher-perfil")
+                    onNavigate(
+                        role === "producer"
+                            ? "/produtos/novo"
+                            : role
+                              ? "/reservas"
+                              : "/escolher-perfil",
+                    )
                 }
             >
                 <svg
@@ -56,13 +90,20 @@ export function BottomNavigation({
                     viewBox="0 0 24 24"
                     aria-hidden="true"
                 >
-                    <rect x="3" y="5" width="18" height="16" rx="1" />
-                    <path d="M7 3v4m10-4v4M3 10h18" />
+                    {role === "producer" ? (
+                        <path d="M12 3v18M3 12h18" />
+                    ) : (
+                        <>
+                            <rect x="3" y="5" width="18" height="16" rx="1" />
+                            <path d="M7 3v4m10-4v4M3 10h18" />
+                        </>
+                    )}
                 </svg>
-                Pré-reservas
+                {role === "producer" ? "Adicionar" : "Pré-reservas"}
             </button>
             <button
-                className={path === "/conta" ? "active" : ""}
+                className={accountActive ? "active" : ""}
+                aria-current={accountActive ? "page" : undefined}
                 onClick={() => onNavigate(role ? "/conta" : "/escolher-perfil")}
             >
                 <svg
@@ -70,8 +111,17 @@ export function BottomNavigation({
                     viewBox="0 0 24 24"
                     aria-hidden="true"
                 >
-                    <circle cx="12" cy="7" r="4" />
-                    <path d="M4 21v-2a8 8 0 0 1 16 0v2z" />
+                    {isProducer ? (
+                        <>
+                            <circle cx="12" cy="5.5" r="3.5" />
+                            <path d="M6 22v-7a6 6 0 0 1 12 0v7" />
+                        </>
+                    ) : (
+                        <>
+                            <circle cx="12" cy="7" r="4" />
+                            <path d="M4 21v-2a8 8 0 0 1 16 0v2z" />
+                        </>
+                    )}
                 </svg>
                 Conta
             </button>

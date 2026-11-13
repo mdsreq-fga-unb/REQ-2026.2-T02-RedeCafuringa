@@ -10,7 +10,15 @@ Dentro de “Modo local · Explorar telas”:
 
 A exclusão de cadastros pede confirmação. As ações recarregam a página para limpar também os usuários mantidos em memória; as contas padrão de teste continuam disponíveis. Nenhuma ação chama a API ou apaga dados de outros aplicativos. O menu e as funções de limpeza ficam desativados quando `VITE_USE_MOCK_AUTH=false`.
 
-No arquivo `app/.env.local` (ignorado pelo Git), defina `VITE_USE_MOCK_AUTH=true` e rode `npm run dev` dentro de `app`.
+No arquivo `app/.env.local` (ignorado pelo Git), defina `VITE_USE_MOCK_AUTH=true`. O atalho faz isso e reinicia o app no Docker:
+
+```bash
+./scripts/dev.sh mock on      # dados de demonstração (vale para o Docker e para o npm run dev)
+./scripts/dev.sh mock off     # volta para a API real
+./scripts/dev.sh mock status  # mostra o modo atual
+```
+
+Funciona tanto com `./scripts/dev.sh up` (Docker) quanto com `npm run dev` dentro de `app`. O Vite só lê o arquivo ao iniciar: depois de editar à mão, reinicie (`docker compose restart app` ou o `npm run dev`). Não defina `VITE_USE_MOCK_AUTH` no `compose.yaml` nem no ambiente do terminal: variável de ambiente tem prioridade sobre o `app/.env.local`, e era isso que fazia o Docker ignorar o arquivo.
 
 O menu “Modo local · Explorar telas” permite abrir as telas existentes e entrar com consumidor ou produtor de teste para acessar a conta. O acesso é por **e-mail e senha** (RN05). Consumidor: `ana@exemplo.com`; produtor: `produtor@exemplo.com`; administrador: `admin@exemplo.com`; senha de todos: `senha123`.
 

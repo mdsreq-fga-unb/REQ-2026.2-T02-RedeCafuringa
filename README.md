@@ -86,6 +86,7 @@ Pré-requisitos: Git (com Git Bash no Windows), Node (versão do [`.nvmrc`](.nvm
 ```bash
 ./scripts/dev.sh setup     # confere pré-requisitos, instala dependências, cria backend/.env
 ./scripts/dev.sh up        # mongo + api + app  ->  app em http://localhost:5173, api em http://localhost:3000
+./scripts/dev.sh mock on   # app com dados de demonstração (mock off volta para a API real)
 ./scripts/dev.sh check     # os mesmos passos do CI, antes de abrir o PR
 ./scripts/dev.sh docs      # documentação em http://localhost:8000
 ./scripts/dev.sh help      # todos os comandos

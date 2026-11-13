@@ -9,6 +9,8 @@ const getInitialRoute = () => {
         "/cadastro/administrador",
         "/conta-criada/admin",
         "/catalogo",
+        "/produtos/novo",
+        "/oferta-publicada",
         "/entrar",
         "/recuperar-acesso",
         "/nova-senha",

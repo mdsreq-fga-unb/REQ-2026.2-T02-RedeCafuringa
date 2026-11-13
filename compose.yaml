@@ -40,10 +40,12 @@ services:
       CHOKIDAR_USEPOLLING: 'true'
       # O proxy do Vite acessa o backend pelo nome do serviço Docker.
       API_PROXY_TARGET: http://api:3000
-      # Vazio usa /api/v1 na mesma origem do frontend, sem depender de CORS.
-      VITE_API_URL: ${VITE_API_URL:-}
-      # A demonstração é opcional; o login real é o padrão.
-      VITE_USE_MOCK_AUTH: ${VITE_USE_MOCK_AUTH:-false}
+      # VITE_API_URL e VITE_USE_MOCK_AUTH NÃO são definidos aqui de propósito: o Vite
+      # dá prioridade ao ambiente do processo sobre os arquivos .env, então qualquer
+      # valor aqui (mesmo um padrão "false") ignoraria o app/.env.local do dev.
+      # O app/.env.local chega ao container pelo bind mount abaixo; sem ele, vale a
+      # API real na mesma origem (/api/v1).
+      # Ligar/desligar a demonstração: ./scripts/dev.sh mock on|off
     ports:
       - '127.0.0.1:5173:5173'
     volumes:
