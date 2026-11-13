@@ -21,7 +21,7 @@ export const API_PREFIX = 'api/v1';
  * Versão do contrato OpenAPI (SemVer), publicada em `info.version` e em
  * shared/openapi.json. Regras de quando subir cada número: docs/shared/contratos.md.
  */
-export const OPENAPI_VERSION = '0.6.0';
+export const OPENAPI_VERSION = '0.7.0';
 
 /**
  * Monta o documento OpenAPI da aplicação. Usado pelo Swagger UI (fora de produção) e

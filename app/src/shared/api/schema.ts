@@ -361,7 +361,7 @@ export interface paths {
         };
         /**
          * Consultar o catálogo de produtos
-         * @description Catálogo público (RF19/HU19; CA08 da HU15): produtos disponíveis de produtores ativos, do mais novo ao mais antigo, paginados. `produtor` restringe ao catálogo de um perfil; `categoria` filtra por tipo. Cada item tem o mesmo formato de `GET /products/{id}`.
+         * @description Catálogo público (RF19/HU19; CA08 da HU15): produtos disponíveis de produtores ativos, do mais novo ao mais antigo, paginados. `produtor` restringe ao catálogo de um perfil; `categoria` filtra por tipo; `busca` procura no nome do produto e no nome da iniciativa, sem diferenciar acentos. Cada item tem o mesmo formato de `GET /products/{id}`.
          */
         get: operations["productsList"];
         put?: never;
@@ -2243,6 +2243,8 @@ export interface operations {
                 /** @description Só os produtos deste produtor (catálogo do perfil) */
                 produtor?: string;
                 categoria?: "Produtos" | "Experiência";
+                /** @description Trecho do nome do produto ou do nome da iniciativa do produtor, sem diferenciar acentos e maiúsculas (HU19, RN15) */
+                busca?: string;
                 /** @description Página desejada, a partir de 1 */
                 pagina?: number;
                 /** @description Quantidade de produtos por página */
