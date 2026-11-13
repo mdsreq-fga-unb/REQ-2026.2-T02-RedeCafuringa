@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ApiHttpError } from "@/shared/api";
-import { registerProduct } from "./productService";
+import { PRODUCT_PHOTOS_MAX, registerProduct } from "./productService";
 import type { ProductDraft, RegisteredProduct } from "./productService";
 import "./product-registration.css";
 
@@ -38,7 +38,41 @@ function validate(draft: ProductDraft): Errors {
             "Informe as gramas por unidade, com peso maior que zero.";
     if (!draft.fotos.length)
         errors.fotos = "Adicione ao menos uma foto do produto.";
+    else if (draft.fotos.length > PRODUCT_PHOTOS_MAX)
+        errors.fotos = `Adicione no máximo ${PRODUCT_PHOTOS_MAX} fotos.`;
+    // O tamanho não é conferido aqui: o envio reduz cada foto no aparelho
+    // (prepareProfilePhoto) e a API devolve 413 se ainda passar do limite.
     return errors;
+}
+
+/** Identificador do preenchimento atual; muda quando o produtor edita algo. */
+function newIdempotencyKey() {
+    return crypto.randomUUID();
+}
+
+/** Mensagem para a falha da API, mantendo a orientação do servidor (RNF03). */
+function failureMessage(error: unknown): string {
+    const kept = "Os dados preenchidos foram preservados.";
+    if (!(error instanceof ApiHttpError))
+        return "Não foi possível concluir o cadastro. Verifique sua conexão e tente novamente. Os dados e fotos foram preservados.";
+    switch (error.status) {
+        case 401:
+            return "Sua sessão expirou. Entre novamente como produtor. Os dados preenchidos foram preservados nesta tela.";
+        case 403:
+            return `Seu perfil não tem permissão para cadastrar produtos. ${kept}`;
+        case 404:
+            return `Sua conta de produtor não está ativa. Fale com a administração da rede. ${kept}`;
+        case 400:
+        case 413:
+        case 415: {
+            const detail = error.details.length
+                ? error.details.join(" ")
+                : error.message;
+            return `Cadastro não concluído. ${detail || "Confira os dados do produto e tente novamente."} ${kept}`;
+        }
+        default:
+            return "Não foi possível concluir o cadastro. Verifique sua conexão e tente novamente. Os dados e fotos foram preservados.";
+    }
 }
 
 function PhotoPreview({ file }: { file: File }) {
@@ -67,11 +101,14 @@ export function ProductRegistrationPage({
     const submitting = useRef(false);
     const formRef = useRef<HTMLFormElement>(null);
     const photoInput = useRef<HTMLInputElement>(null);
+    const idempotencyKey = useRef(newIdempotencyKey());
 
     function update<K extends keyof ProductDraft>(
         key: K,
         value: ProductDraft[K],
     ) {
+        // Dados novos = cadastro novo; repetir sem editar reaproveita a chave (CA07).
+        idempotencyKey.current = newIdempotencyKey();
         setDraft((previous) => ({ ...previous, [key]: value }));
         setErrors((previous) => ({ ...previous, [key]: undefined }));
         setFailure("");
@@ -93,24 +130,13 @@ export function ProductRegistrationPage({
         submitting.current = true;
         setPending(true);
         try {
-            onPublished(await registerProduct(draft));
+            onPublished(
+                await registerProduct(draft, {
+                    idempotencyKey: idempotencyKey.current,
+                }),
+            );
         } catch (error) {
-            if (error instanceof ApiHttpError && error.status === 401)
-                setFailure(
-                    "Sua sessão expirou. Entre novamente como produtor. Os dados preenchidos foram preservados nesta tela.",
-                );
-            else if (error instanceof ApiHttpError && error.status === 403)
-                setFailure(
-                    "Seu perfil não tem permissão para cadastrar produtos. Os dados preenchidos foram preservados.",
-                );
-            else if (error instanceof ApiHttpError && error.status === 400)
-                setFailure(
-                    "Cadastro não concluído. Confira os dados do produto e tente novamente.",
-                );
-            else
-                setFailure(
-                    "Não foi possível concluir o cadastro. Verifique sua conexão e tente novamente. Os dados e fotos foram preservados.",
-                );
+            setFailure(failureMessage(error));
         } finally {
             submitting.current = false;
             setPending(false);
