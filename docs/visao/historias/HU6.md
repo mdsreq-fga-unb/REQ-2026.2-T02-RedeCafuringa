@@ -1,15 +1,19 @@
 # HU06 — Consultar conteúdos cadastrados
 
 ## 1. Identificação
-
+<!-- REQUISITOS_HU_META_AUTO_INICIO -->
 | Campo | Informação |
 |---|---|
 | **ID da História** | HU06 |
 | **Requisito Funcional** | [RF06 — Consultar conteúdos cadastrados](../requisitos_software.md#71-requisitos-funcionais) |
-| **Requisito Não Funcional** | [RNF01, RNF02, RNF03, RNF04, RNF05, RNF06, RNF10, RNF11, RNF12, RNF14](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN07, RN09, RN10, RN11, RN15, RN16](../requisitos_software.md#73-lista-de-regras-de-negocio) |
-| **Característica de Produto** | [CP2, CP3](../solucao.md#23-caracteristicas-do-produto) |
+| **Requisito Não Funcional** | [RNF01](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF02](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF04](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF05](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF06](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF10](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF11](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF12](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF14](../requisitos_software.md#72-requisitos-nao-funcionais) |
+| **Regra de Negócio** | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN07](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN09](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN10](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN11](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN15](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN16](../requisitos_software.md#73-lista-de-regras-de-negocio) |
+| **Característica de Produto** | [CP2](../solucao.md#23-caracteristicas-do-produto), [CP3](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
+| **Prioridade** | Alta |
+| **Escopo** | Fora do MVP |
+| **Iteração** | Não atribuída |
+<!-- REQUISITOS_HU_META_AUTO_FIM -->
 
 ---
 
