@@ -908,6 +908,11 @@ export interface components {
             id: string;
             /** @example Horta da Joana */
             nomeIniciativa: string;
+            /**
+             * @description Localidade ou propriedade informada pelo produtor para divulgação (HU20, RN11); ausente quando não informada
+             * @example Fazenda Cafuringa
+             */
+            localidade?: string;
         };
         ProductResponse: {
             /** @example 64b0c0ffee0000000000beef */

@@ -2155,7 +2155,7 @@
   "info": {
     "title": "Rede Cafuringa API",
     "description": "API REST da plataforma **Rede Cafuringa**: produtores rurais da Cafuringa divulgam a produção, e consumidores e visitantes descobrem ofertas da região.\n\n### Primeiros passos\n\n1. **Entre:** em **auth › POST /auth/login**, clique em *Try it out* e envie e-mail e senha. A resposta traz `accessToken`.\n2. **Autorize:** clique em **Authorize** (botão com cadeado, logo abaixo desta apresentação), cole o token e confirme. Ele fica salvo neste navegador até você clicar em *Logout*.\n3. **Teste:** abra qualquer rota, *Try it out* e *Execute*. Rotas com cadeado exigem login; as demais são públicas.\n\nUse o campo de busca (*Filter by tag*) para ir direto a um grupo.\n\n### Perfis de acesso (RN01, RNF08)\n\n| Perfil | O que pode fazer |\n|---|---|\n| Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |\n| `CONSUMIDOR` | O mesmo que o visitante, com sessão |\n| `PRODUTOR` | Registrar trajetória e foto de perfil; cadastrar produtos |\n| `ADMINISTRADOR` | Consultar usuários e cadastrar outros administradores |\n\nToda rota exige login, exceto as marcadas como públicas (negação por padrão). Perfil sem permissão recebe **403**; sem token ou com token inválido, **401**.\n\n### Convenções\n\n| Tema | Como funciona |\n|---|---|\n| **Erros** | Corpo `ErrorResponse` (`statusCode`, `message`, `error`). Em validação (400), `message` é uma lista de orientações em português, prontas para exibir |\n| **Paginação** | Listas devolvem `{ itens, total, pagina, limite }`; use `?pagina=` e `?limite=` |\n| **Fotos** | Envio em `multipart/form-data`. PNG, JPEG ou WebP; a API regrava em WebP **sem metadados** (EXIF/GPS). Os caminhos devolvidos são relativos à base da API e levam a versão: podem ficar em cache para sempre |\n| **Reenvio seguro** | `POST /products` aceita `Idempotency-Key`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |\n| **Limites de uso** | Login, cadastro e recuperação de acesso têm limite de tentativas por IP: **429** com `Retry-After` (segundos) |\n| **Rastreio** | Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`); ele volta na resposta e nos logs. Sem ele, a API gera um UUID |\n| **Dados pessoais** | Respostas nunca trazem hash de senha nem CPF completo (vem mascarado). Perfis públicos só mostram dados de divulgação (RN07, RNF11) |\n| **Versão** | SemVer em `info.version`; regras em *docs/shared/contratos.md*. Tipos do front gerados a partir deste contrato (`./scripts/dev.sh contract`) |",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -2957,6 +2957,11 @@
           "nomeIniciativa": {
             "type": "string",
             "example": "Horta da Joana"
+          },
+          "localidade": {
+            "type": "string",
+            "example": "Fazenda Cafuringa",
+            "description": "Localidade ou propriedade informada pelo produtor para divulgação (HU20, RN11); ausente quando não informada"
           }
         },
         "required": [
