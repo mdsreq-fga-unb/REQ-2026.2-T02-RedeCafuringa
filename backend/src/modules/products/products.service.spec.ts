@@ -6,6 +6,7 @@ import type { PhotoGalleryService } from '../../common/photos/photo-gallery.serv
 import { Role } from '../users/domain/role.js';
 import type { User } from '../users/schemas/user.schema.js';
 import { ProductCategory } from './domain/product.js';
+import { buildProductSearch } from './domain/product-search.js';
 import type { CreateProductDto } from './dto/create-product.dto.js';
 import { ProductsService } from './products.service.js';
 import type { Product } from './schemas/product.schema.js';
@@ -286,6 +287,29 @@ describe('ProductsService (HU15/RF15)', () => {
       expect(facet.$facet.itens).toEqual([{ $skip: 4 }, { $limit: 2 }]);
       expect(res).toMatchObject({ total: 5, pagina: 3, limite: 2 });
       expect(res.itens[0].produtor.nomeIniciativa).toBe('Horta');
+    });
+
+    it('HU19: busca no nome e no produtor depois do $lookup e antes de paginar', async () => {
+      const { service, products } = setup();
+      await service.list({ busca: ' cafe ' });
+
+      const pipeline: Array<Record<string, unknown>> =
+        products.aggregate.mock.calls[0][0];
+      const unwind = pipeline.findIndex((s) => s.$unwind);
+      const facet = pipeline.findIndex((s) => s.$facet);
+      expect(pipeline[unwind + 1]).toEqual({
+        $match: buildProductSearch('cafe'),
+      });
+      expect(unwind + 1).toBeLessThan(facet);
+    });
+
+    it('HU19: sem termo de busca, não acrescenta filtro de texto', async () => {
+      const { service, products } = setup();
+      await service.list({ busca: '   ' });
+
+      const pipeline: Array<Record<string, unknown>> =
+        products.aggregate.mock.calls[0][0];
+      expect(pipeline.filter((s) => s.$match)).toHaveLength(1);
     });
 
     it('resultado ausente do banco vira página vazia', async () => {
