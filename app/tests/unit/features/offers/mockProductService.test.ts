@@ -30,4 +30,10 @@ describe("listMockProducts", () => {
         const ids = (await listMockProducts()).map((product) => product.id);
         unavailable.forEach((product) => expect(ids).not.toContain(product.id));
     });
+
+        it("mantém as URLs completas das fotos do demo", async () => {
+        const [mel] = await listMockProducts();
+
+        expect(mel.image).toBe(mockApiProducts[0].fotos[0]);
+    });
 });

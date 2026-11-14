@@ -1,3 +1,4 @@
+import { apiResourceUrl } from "@/shared/api";
 import type { ApiProduct, Product } from "./productTypes";
 
 export function toProductList(items: ApiProduct[]): Product[] {
@@ -6,9 +7,9 @@ export function toProductList(items: ApiProduct[]): Product[] {
         .map((item) => ({
             id: item.id,
             name: item.nome,
-            producerName: item.produtor,
-            price: item.preco,
-            unit: item.unidade,
-            image: item.imagemUrl,
+            producerName: item.produtor.nomeIniciativa,
+            price: item.precoPorUnidade,
+            unit: "unidade",
+            image: apiResourceUrl(item.fotos[0]),
         }));
 }

@@ -1,12 +1,6 @@
-export type ApiProduct = {
-    id: string;
-    nome: string;
-    produtor: string;
-    preco: number;
-    unidade: string;
-    imagemUrl: string;
-    disponivel: boolean;
-};
+import type { components } from "@/shared/api/schema";
+
+export type ApiProduct = components["schemas"]["ProductResponse"];
 
 export type Product = {
     id: string;

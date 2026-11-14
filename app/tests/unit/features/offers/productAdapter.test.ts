@@ -61,4 +61,10 @@ describe("toProductList", () => {
     it("devolve lista vazia quando não há produtos", () => {
         expect(toProductList([])).toEqual([]);
     });
+
+        it("permite trocar como a URL da foto é resolvida", () => {
+        const [product] = toProductList([apiMel], (foto) => `demo:${foto}`);
+
+        expect(product.image).toBe("demo:/products/mel/photos/f001?v=abc");
+    });
 });
