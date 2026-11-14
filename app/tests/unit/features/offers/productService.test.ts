@@ -1,7 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { ApiHttpError, createApiClient } from "@/shared/api";
 import { fetchProducts } from "@/features/offers/productService";
-import type { ApiProduct } from "@/features/offers/productTypes";
+import type {
+    ApiProduct,
+    ApiProductList,
+} from "@/features/offers/productTypes";
 
 const mel: ApiProduct = {
     id: "mel",
@@ -16,6 +19,10 @@ const mel: ApiProduct = {
     disponivel: true,
 };
 const retirado: ApiProduct = { ...mel, id: "retirado", disponivel: false };
+
+function page(itens: ApiProduct[]): ApiProductList {
+    return { itens, total: itens.length, pagina: 1, limite: 50 };
+}
 
 function jsonResponse(body: unknown, status = 200) {
     return new Response(JSON.stringify(body), {
@@ -36,12 +43,12 @@ function setup(response: Response) {
 
 describe("fetchProducts", () => {
     it("busca GET /products e devolve só os disponíveis", async () => {
-        const { client, fetchMock } = setup(jsonResponse([mel, retirado]));
+        const { client, fetchMock } = setup(jsonResponse(page([mel, retirado])));
 
         const products = await fetchProducts(client);
 
         const [url, init] = fetchMock.mock.calls[0];
-        expect(url).toBe("http://api.test/products");
+        expect(String(url)).toMatch(/^http:\/\/api\.test\/products\?/);
         expect(init?.method).toBe("GET");
         expect(products.map((product) => product.id)).toEqual(["mel"]);
         expect(products[0]).toMatchObject({
@@ -50,8 +57,24 @@ describe("fetchProducts", () => {
         });
     });
 
+    it("pede só produtos, deixando as experiências de fora, até 50 por página", async () => {
+        const { client, fetchMock } = setup(jsonResponse(page([mel])));
+
+        await fetchProducts(client);
+
+        const params = new URL(String(fetchMock.mock.calls[0][0])).searchParams;
+        expect(params.get("categoria")).toBe("Produtos");
+        expect(params.get("limite")).toBe("50");
+    });
+
+    it("devolve lista vazia quando a página não tem itens (CA06)", async () => {
+        const { client } = setup(jsonResponse(page([])));
+
+        await expect(fetchProducts(client)).resolves.toEqual([]);
+    });
+
     it("consulta sem enviar o token de acesso (CA07)", async () => {
-        const { client, fetchMock } = setup(jsonResponse([mel]));
+        const { client, fetchMock } = setup(jsonResponse(page([mel])));
 
         await fetchProducts(client);
 
