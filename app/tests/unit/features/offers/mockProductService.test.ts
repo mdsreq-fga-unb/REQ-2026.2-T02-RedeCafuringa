@@ -17,7 +17,7 @@ describe("listMockProducts", () => {
             name: "Cesta da estação",
             producerName: "Sítio Raízes",
             price: 40,
-            unit: "cesta",
+            unit: "unidade",
         });
     });
 

@@ -6,10 +6,13 @@ import type { ApiProduct } from "@/features/offers/productTypes";
 const mel: ApiProduct = {
     id: "mel",
     nome: "Mel do Cerrado",
-    produtor: "Dona Maria",
-    preco: 32,
-    unidade: "unidade",
-    imagemUrl: "https://exemplo.com/mel.jpg",
+    categoria: "Produtos",
+    descricao: "Mel produzido no território da Cafuringa.",
+    precoPorUnidade: 32,
+    gramasPorUnidade: 500,
+    fotos: ["/products/mel/photos/f001?v=abc"],
+    produtor: { id: "p1", nomeIniciativa: "Dona Maria" },
+    criadoEm: "2026-11-13T12:00:00.000Z",
     disponivel: true,
 };
 const retirado: ApiProduct = { ...mel, id: "retirado", disponivel: false };
