@@ -143,6 +143,11 @@
     gap: 24px;
     padding: 10px 28px 28px;
 }
+.explore-product-catalog {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 28px 24px;
+}
 .explore-category {
     display: flex;
     align-items: center;
@@ -328,6 +333,9 @@
         grid-template-columns: 1fr 1fr;
         padding-inline: 0;
         gap: 20px;
+    }
+    .explore-product-catalog {
+        padding-inline: 0;
     }
     .producer-list {
         grid-template-columns: 1fr 1fr;

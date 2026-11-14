@@ -112,6 +112,14 @@ export function ExplorePage({
                     </span>
                 </button>
             </div>
+            <div className="explore-product-catalog">
+                <ActionButton
+                    variant="outline"
+                    onClick={() => onNavigate("/produtos")}
+                >
+                    Ver catálogo de produtos
+                </ActionButton>
+            </div>
             <div className="explore-producers-heading">
                 <h2 className="explore-heading">Conheça nossos produtores</h2>
                 <button
