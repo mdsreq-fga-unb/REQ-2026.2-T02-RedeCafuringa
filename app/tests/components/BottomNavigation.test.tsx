@@ -13,15 +13,15 @@ function renderNav(path: string) {
 }
 
 describe("BottomNavigation: Explorar", () => {
-    it("leva ao catálogo de produtos (CA01)", () => {
+    it("leva à tela Explorar da HU14", () => {
         const { onNavigate } = renderNav("/perfil");
 
         fireEvent.click(screen.getByRole("button", { name: "Explorar" }));
 
-        expect(onNavigate).toHaveBeenCalledWith("/produtos");
+        expect(onNavigate).toHaveBeenCalledWith("/explorar");
     });
 
-    it.each(["/perfil", "/catalogo", "/produtos"])(
+    it.each(["/explorar", "/perfil", "/catalogo", "/produtos", "/produtor/p1"])(
         "fica ativo em %s",
         (path) => {
             renderNav(path);

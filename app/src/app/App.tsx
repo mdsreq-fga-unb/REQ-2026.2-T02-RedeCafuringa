@@ -23,6 +23,7 @@ import {
     useContactSettings,
 } from "@/features/contact";
 import { ProfilePage } from "@/features/profile";
+import { ExplorePage } from "@/features/profile/ExplorePage";
 import type { AuthResult } from "@/shared/types";
 import { useHashRoute } from "./useHashRoute";
 import { RegisterPage } from "@/features/register";
@@ -204,6 +205,12 @@ export function App() {
             return;
         }
 
+        // O contato público sempre é revalidado no perfil, nunca nas configurações locais.
+        if (subjectId?.startsWith("produtor/")) {
+            navigate(`/${subjectId}`);
+            return;
+        }
+
         if (
             nextRole === "consumer" &&
             subjectId &&
@@ -231,12 +238,22 @@ export function App() {
     };
 
     return (
-        <div className={`app-shell ${isAuthFlow ? "auth-shell" : ""}`}>
-            <BrandHeader onHome={() => navigate("/perfil")} />
+        <div
+            className={`app-shell ${isAuthFlow ? "auth-shell" : ""} ${path === "/explorar" || path === "/perfil" || path.startsWith("/produtor/") ? "public-profile-shell" : ""}`}
+        >
+            <BrandHeader
+                onHome={() => navigate("/explorar")}
+                onLogin={
+                    path === "/explorar" && !role
+                        ? () => navigate("/escolher-perfil")
+                        : undefined
+                }
+            />
             {isMockAuthEnabled && (
                 <DemoNavigation onNavigate={navigate} onSignIn={signIn} />
             )}
             <main className="main-content">
+                {path === "/explorar" && <ExplorePage onNavigate={navigate} />}
                 {usersRoute && !adminBlocked && (
                     <AdminUsersPage
                         key={path}
@@ -376,6 +393,9 @@ export function App() {
                         key={path}
                         id={path.split("/")[2]}
                         onNavigate={navigate}
+                        catalogView={query.get("catalogo") === "1"}
+                        offerId={query.get("oferta") ?? undefined}
+                        consumer={role === "consumer"}
                     />
                 )}
 

@@ -74,7 +74,10 @@ export function AccountPage(props: AccountPageProps) {
 
     return (
         <section className="account-page">
-            <BackButton label="Voltar" onClick={() => onNavigate("/perfil")} />
+            <BackButton
+                label="Voltar"
+                onClick={() => onNavigate("/explorar")}
+            />
             <h1>Olá, {displayName}</h1>
             <p className="eyebrow">
                 {role === "producer"

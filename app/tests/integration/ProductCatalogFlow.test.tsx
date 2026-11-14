@@ -6,6 +6,10 @@ import { listProducts } from "@/features/offers/productService";
 import type { Product } from "@/features/offers/productTypes";
 
 vi.mock("@/features/offers/productService");
+vi.mock("@/features/profile/publicProfileService", () => ({
+    listPublicProducers: vi.fn().mockResolvedValue([]),
+    listProducerOffers: vi.fn().mockResolvedValue([]),
+}));
 
 const products: Product[] = [
     {
@@ -107,19 +111,19 @@ describe("catálogo de produtos no app", () => {
         expect(await screen.findByText("Sítio Raízes")).toBeTruthy();
     });
 
-    it("chega ao catálogo pelo Explorar (CA01)", async () => {
+    it("Explorar abre a consulta pública de produtores após integrar a HU14", async () => {
         window.location.hash = "#/perfil";
         const user = userEvent.setup();
         render(<App />);
-
         await user.click(screen.getByRole("button", { name: "Explorar" }));
-
-        expect(window.location.hash).toBe("#/produtos");
+        expect(window.location.hash).toBe("#/explorar");
         expect(
             await screen.findByRole("heading", {
-                name: "Catálogo de Produtos",
+                name: "Conheça nossos produtores",
             }),
         ).toBeTruthy();
-        expect(await screen.findByText("Mel do Cerrado")).toBeTruthy();
+        expect(
+            screen.queryByRole("heading", { name: "Entre em sua conta" }),
+        ).toBeNull();
     });
 });

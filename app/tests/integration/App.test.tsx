@@ -130,27 +130,43 @@ describe("fluxo de contato da aplicação", () => {
 });
 
 describe("entrada e acesso público", () => {
-    it("abre a seleção de perfil primeiro e permite navegar como visitante", async () => {
+    it("abre Explorar como página inicial e permite navegar como visitante", async () => {
         const user = userEvent.setup();
         window.location.hash = "";
         render(<App />);
 
         expect(
-            await screen.findByRole("heading", { name: "Entre em sua conta" }),
+            await screen.findByRole("heading", {
+                name: "Conheça nossos produtores",
+            }),
         ).toBeTruthy();
+        expect(
+            screen.queryByRole("heading", { name: "Dona Maria" }),
+        ).toBeNull();
+        expect(
+            screen.queryByRole("heading", { name: "Entre em sua conta" }),
+        ).toBeNull();
 
         await user.click(
             screen.getByRole("button", { name: "Cafuringa, início" }),
         );
         expect(
-            await screen.findByRole("heading", { name: "Dona Maria" }),
+            await screen.findByRole("heading", {
+                name: "Conheça nossos produtores",
+            }),
         ).toBeTruthy();
         await user.click(
-            screen.getByRole("button", { name: "Ver catálogo desse perfil" }),
+            screen.getByRole("button", {
+                name: "Produtos Alimentos artesanais e muito mais.",
+            }),
         );
         expect(
-            await screen.findByRole("heading", { name: "Catálogo do perfil" }),
-        ).toBeTruthy();
+            screen
+                .getByRole("button", {
+                    name: "Produtos Alimentos artesanais e muito mais.",
+                })
+                .getAttribute("aria-pressed"),
+        ).toBe("true");
     });
 
     it.each(["Notificações", "Pré-reservas"])(

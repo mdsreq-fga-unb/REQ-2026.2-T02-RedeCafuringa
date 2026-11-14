@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
 const getInitialRoute = () => {
-    const requested = window.location.hash.slice(1) || "/escolher-perfil";
+    const requested = window.location.hash.slice(1) || "/explorar";
+    if (requested === "/") return "/explorar";
     return [
         "/perfil",
+        "/explorar",
         "/admin/acesso",
         "/admin/entrar",
         "/cadastro/administrador",
@@ -35,7 +37,7 @@ const getInitialRoute = () => {
         /^\/produtor\/[^/?]+$/.test(requested.split("?")[0]) ||
         /^\/admin\/usuarios(?:\/[^/?]+)?$/.test(requested.split("?")[0])
         ? requested
-        : "/escolher-perfil";
+        : "/explorar";
 };
 
 export function useHashRoute() {
@@ -49,6 +51,9 @@ export function useHashRoute() {
 
     const navigate = useCallback((path: string) => {
         window.location.hash = path;
+        // Alterar para o mesmo hash não emite hashchange. Sincroniza também
+        // o estado da tela para que Início/Explorar nunca preserve uma tela antiga.
+        setRoute(getInitialRoute());
     }, []);
 
     return { route, navigate };

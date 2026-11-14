@@ -4,6 +4,7 @@ import { isMockAuthEnabled } from "./authMode";
 import { resetDemoData, type DemoResetAction } from "./demoTools";
 
 const screens = [
+    ["Explorar", "/explorar"],
     ["Escolha de perfil", "/escolher-perfil"],
     ["Login consumidor", "/login/consumer"],
     ["Login produtor", "/login/producer"],

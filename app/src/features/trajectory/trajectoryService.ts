@@ -4,10 +4,11 @@ import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { readMockUserDetails } from "@/features/auth/mockAuth";
 import { prepareProfilePhoto } from "./photoResize";
 import type { TrajectoryDraft } from "./trajectoryModel";
+import { demoPublicProfiles } from "@/features/profile/publicProfileDemo";
 
 export type OwnTrajectory = components["schemas"]["OwnTrajectoryResponse"];
 export type PublicTrajectory =
-    components["schemas"]["PublicTrajectoryResponse"];
+    components["schemas"]["PublicTrajectoryResponse"] & { localidade?: string };
 // O DTO do backend aceita string | null; o schema atual omite o tipo da união nullable.
 export type SaveTrajectory = Omit<
     components["schemas"]["SaveTrajectoryDto"],
@@ -79,6 +80,8 @@ export async function getPublicTrajectory(
     signal?: AbortSignal,
 ): Promise<PublicTrajectory> {
     if (isMockAuthEnabled) {
+        const example = demoPublicProfiles.find((profile) => profile.id === id);
+        if (example) return example;
         const profile = readMockUserDetails().find(
             (user) => user.id === id && user.perfil === "PRODUTOR",
         );
@@ -90,6 +93,7 @@ export async function getPublicTrajectory(
             categoriaOfertada: profile.categoriaOfertada,
             trajetoria: saved.trajetoria,
             atividades: saved.atividades,
+            ...(profile.localidade ? { localidade: profile.localidade } : {}),
             ...(saved.telefonePublico ? { telefone: saved.telefone } : {}),
             ...(saved.fotoUrl ? { fotoUrl: saved.fotoUrl } : {}),
         };
@@ -107,6 +111,11 @@ export function photoSrc(fotoUrl: string | undefined): string {
     if (!fotoUrl) return "";
     // Demonstração: a foto fica só no navegador, como blob.
     if (isMockAuthEnabled && fotoUrl.startsWith("blob:")) return fotoUrl;
+    if (
+        isMockAuthEnabled &&
+        demoPublicProfiles.some((profile) => profile.fotoUrl === fotoUrl)
+    )
+        return fotoUrl;
     return apiResourceUrl(fotoUrl);
 }
 
