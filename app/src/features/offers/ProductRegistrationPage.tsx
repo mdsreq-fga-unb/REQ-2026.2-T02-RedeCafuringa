@@ -208,7 +208,7 @@ export function ProductRegistrationPage({
 
     return (
         <section
-            className={`product-registration${experience ? " experience-registration" : ""}`}
+            className="product-registration"
             aria-labelledby="product-title"
         >
             <BackButton
