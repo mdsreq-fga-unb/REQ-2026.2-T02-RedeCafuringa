@@ -119,5 +119,3 @@ export async function registerProduct(
 export function listProducts(): Promise<Product[]> {
     return isMockAuthEnabled ? listMockProducts() : fetchProducts();
 }
-
-

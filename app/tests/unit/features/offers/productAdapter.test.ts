@@ -36,7 +36,9 @@ describe("toProductList", () => {
     it("usa a primeira foto como capa", () => {
         const [product] = toProductList([apiMel]);
 
-        expect(product.image).toBe(apiResourceUrl("/products/mel/photos/f001?v=abc"));
+        expect(product.image).toBe(
+            apiResourceUrl("/products/mel/photos/f001?v=abc"),
+        );
         expect(product.image).not.toBe(
             apiResourceUrl("/products/mel/photos/f002?v=def"),
         );
@@ -62,7 +64,7 @@ describe("toProductList", () => {
         expect(toProductList([])).toEqual([]);
     });
 
-        it("permite trocar como a URL da foto é resolvida", () => {
+    it("permite trocar como a URL da foto é resolvida", () => {
         const [product] = toProductList([apiMel], (foto) => `demo:${foto}`);
 
         expect(product.image).toBe("demo:/products/mel/photos/f001?v=abc");

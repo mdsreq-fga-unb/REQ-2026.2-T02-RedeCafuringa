@@ -43,7 +43,9 @@ function setup(response: Response) {
 
 describe("fetchProducts", () => {
     it("busca GET /products e devolve só os disponíveis", async () => {
-        const { client, fetchMock } = setup(jsonResponse(page([mel, retirado])));
+        const { client, fetchMock } = setup(
+            jsonResponse(page([mel, retirado])),
+        );
 
         const products = await fetchProducts(client);
 
