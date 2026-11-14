@@ -12,6 +12,7 @@ export const product = {
     id: "64b0c0ffee0000000000beef",
     nome: "Cesta da estação",
     categoria: "Produtos",
+    disponivel: true,
     descricao: "Mel produzido no território da Cafuringa.",
     precoPorUnidade: 40,
     gramasPorUnidade: 500,

@@ -8,9 +8,15 @@ export function productToOffer(product: Product): Offer {
         title: product.name,
         category: product.category ?? "Produtos",
         image: product.image,
+        ...(product.photos ? { images: product.photos } : {}),
         price: formatProductPrice(product.price, product.unit),
         details: [
             `Produtor: ${product.producerName}`,
+            ...(product.grams !== undefined
+                ? [
+                      `${new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 }).format(product.grams)} g por unidade`,
+                  ]
+                : []),
             ...[product.local, product.duracao].filter(
                 (value): value is string => !!value,
             ),

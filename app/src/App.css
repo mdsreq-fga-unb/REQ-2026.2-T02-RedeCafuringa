@@ -436,6 +436,8 @@ h2 {
 
 .offer-page {
     padding: 4px 0 20px;
+    max-width: 760px;
+    margin-inline: auto;
 }
 
 .offer-page h1 {
@@ -444,11 +446,13 @@ h2 {
 }
 
 .offer-image {
-    height: clamp(154px, 39.5vw, 230px);
-    margin-bottom: 18px;
-    border-radius: 5px;
-    width: calc(100% - 4px);
-    margin-left: 5px;
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 12 / 5;
+    object-fit: cover;
+    margin: 0 0 18px;
+    border-radius: 9px;
 }
 
 .price-heading {
@@ -1518,4 +1522,58 @@ h2 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         align-items: start;
     }
+}
+
+.offer-page .description-heading {
+    margin-top: 20px;
+    font-size: 18px;
+}
+.offer-page .price-heading {
+    font-size: 18px;
+    margin-bottom: 18px;
+}
+.offer-page .offer-actions {
+    display: grid;
+    gap: 16px;
+    margin-top: 18px;
+    padding-bottom: 16px;
+}
+.offer-actions .button {
+    margin: 0;
+    text-align: center;
+    text-decoration: none;
+    min-height: 52px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.offer-gallery {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 3px 3px 14px;
+}
+.offer-gallery button {
+    flex-shrink: 0;
+    border: 2px solid var(--line);
+    border-radius: 9px;
+    padding: 3px;
+    background: #fff;
+    cursor: pointer;
+}
+.offer-gallery button[aria-pressed="true"] {
+    border-color: var(--orange-text);
+}
+.offer-gallery img {
+    display: block;
+    width: 72px;
+    height: 52px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+.offer-page .body-copy {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.6;
 }

@@ -11,6 +11,28 @@ import { App } from "@/app/App";
 import { login } from "@/features/auth/authService";
 
 vi.mock("@/features/auth/authService");
+vi.mock("@/features/offers/productDetailsService", () => ({
+    getProductDetails: vi.fn().mockResolvedValue({
+        id: "mel",
+        name: "Mel do Cerrado",
+        producerId: "demo-maria",
+        producerName: "Dona Maria",
+        price: 32,
+        unit: "unidade",
+        image: "/folha-logo.svg",
+        description: "Mel produzido no território da Cafuringa.",
+    }),
+}));
+vi.mock("@/features/trajectory/trajectoryService", async (original) => ({
+    ...(await original<
+        typeof import("@/features/trajectory/trajectoryService")
+    >()),
+    getPublicTrajectory: vi.fn().mockResolvedValue({
+        id: "demo-maria",
+        nomeIniciativa: "Dona Maria",
+        telefone: "61999999999",
+    }),
+}));
 
 async function signInAsConsumer() {
     const user = userEvent.setup();
@@ -114,7 +136,9 @@ describe("fluxo de contato da aplicação", () => {
             render(<App />);
 
             fireEvent.click(
-                screen.getByRole("button", { name: "Conversar pelo WhatsApp" }),
+                await screen.findByRole("button", {
+                    name: "Conversar pelo WhatsApp",
+                }),
             );
             await signInAsConsumer();
 

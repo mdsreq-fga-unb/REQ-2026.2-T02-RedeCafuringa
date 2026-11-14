@@ -29,6 +29,18 @@ function api({
     });
     const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
         const path = new URL(String(input), "http://localhost").pathname;
+        if (path === "/api/v1/products/mel")
+            return json({
+                id: "mel",
+                nome: "Mel do Cerrado",
+                categoria: "Produtos",
+                descricao: offers[1].description,
+                precoPorUnidade: 32,
+                gramasPorUnidade: 500,
+                fotos: [],
+                produtor: { id: producerId, nomeIniciativa: "Horta da Maria" },
+                disponivel: true,
+            });
         if (path === "/api/v1/producers") return Promise.resolve(directory());
         if (path === `/api/v1/producers/${producerId}/offers`)
             return Promise.resolve(catalog());

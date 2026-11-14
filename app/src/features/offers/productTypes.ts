@@ -5,6 +5,8 @@ export type ApiProduct = components["schemas"]["ProductResponse"];
 export type ApiProductList = components["schemas"]["ProductListResponse"];
 
 export type Product = {
+    grams?: number;
+    photos?: string[];
     producerId?: string;
     description?: string;
     category?: string;

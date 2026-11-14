@@ -39,6 +39,7 @@ it("modo normal consulta novamente a API e mostra o produto salvo sem gravá-lo 
                 saved = true;
                 return json(product, 201);
             }
+            if (path.endsWith(`/products/${product.id}`)) return json(product);
             if (path.endsWith("/products"))
                 return json({
                     itens: saved ? [{ ...product, disponivel: true }] : [],

@@ -1,6 +1,7 @@
 export type Role = "consumer" | "producer" | "admin";
 
 export type Offer = {
+    images?: string[];
     id: string;
     title: string;
     category: string;

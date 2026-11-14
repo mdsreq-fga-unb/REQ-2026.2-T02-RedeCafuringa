@@ -5,10 +5,12 @@ import { App } from "@/app/App";
 import { login } from "@/features/auth/authService";
 import userEvent from "@testing-library/user-event";
 import { requestAccessRecovery } from "@/features/recovery/recoveryService";
+import { getProductDetails } from "@/features/offers/productDetailsService";
 import { listProducts } from "@/features/offers/productService";
 import type { Product } from "@/features/offers/productTypes";
 
 vi.mock("@/features/offers/productService");
+vi.mock("@/features/offers/productDetailsService");
 vi.mock("@/features/auth/authService");
 vi.mock("@/features/recovery/recoveryService");
 vi.mock("@/features/auth/authService");
@@ -72,6 +74,9 @@ beforeEach(() => {
     });
     vi.mocked(requestAccessRecovery).mockResolvedValue({ ok: true });
     vi.mocked(listProducts).mockResolvedValue(catalogProducts);
+    vi.mocked(getProductDetails).mockImplementation(
+        async (id) => catalogProducts.find((item) => item.id === id) ?? null,
+    );
     localStorage.clear();
 });
 

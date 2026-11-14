@@ -1,3 +1,4 @@
+import { ProductOfferDetails } from "@/features/offers/ProductOfferDetails";
 import { OfferCards } from "@/features/offers/OfferCards";
 import { offerReturnRoute } from "@/features/offers/offerNavigation";
 import { useEffect, useState } from "react";
@@ -14,12 +15,14 @@ export function ProducerCatalogPage({
     onNavigate,
     onStartContact,
     contactAvailable,
+    consumer = false,
 }: {
     profile: PublicTrajectory;
     offerId?: string;
     onNavigate: (path: string) => void;
     onStartContact: () => void;
     contactAvailable: boolean;
+    consumer?: boolean;
 }) {
     const [offers, setOffers] = useState<ProducerOffer[]>([]);
     const [loading, setLoading] = useState(true);
@@ -42,6 +45,18 @@ export function ProducerCatalogPage({
         return () => controller.abort();
     }, [profile.id, attempt]);
     const selected = offers.find((offer) => offer.id === offerId);
+    if (selected?.category.startsWith("Produto"))
+        return (
+            <ProductOfferDetails
+                id={selected.id}
+                consumer={consumer}
+                backPath={offerReturnRoute(
+                    window.location.hash.slice(1),
+                    catalogRoute,
+                )}
+                onNavigate={onNavigate}
+            />
+        );
     if (selected)
         return (
             <OfferDetailsPage

@@ -2,10 +2,12 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
+import { getProductDetails } from "@/features/offers/productDetailsService";
 import { listProducts } from "@/features/offers/productService";
 import type { Product } from "@/features/offers/productTypes";
 
 vi.mock("@/features/offers/productService");
+vi.mock("@/features/offers/productDetailsService");
 vi.mock("@/features/profile/publicProfileService", () => ({
     listPublicProducers: vi.fn().mockResolvedValue([]),
     listProducerOffers: vi.fn().mockResolvedValue([]),
@@ -32,6 +34,9 @@ const products: Product[] = [
 
 beforeEach(() => {
     vi.mocked(listProducts).mockResolvedValue(products);
+    vi.mocked(getProductDetails).mockImplementation(
+        async (id) => products.find((item) => item.id === id) ?? null,
+    );
     localStorage.clear();
     window.location.hash = "#/produtos";
 });

@@ -179,7 +179,9 @@ export function App() {
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
         : undefined;
-    const currentOffer = catalogOffers.find((offer) => offer.id === offerId);
+    const currentOffer = catalogOffers.find(
+        (offer) => offer.id === offerId && offer.category.startsWith("Experi"),
+    );
     const productOfferId = offerId && !currentOffer ? offerId : undefined;
     const contactAvailable = isWhatsAppContactAvailable(
         settings.authorized,
@@ -215,6 +217,13 @@ export function App() {
         signIn(auth);
         if (nextRole === "admin") {
             navigate("/admin/acesso");
+            return;
+        }
+
+        if (subjectId?.startsWith("produto/")) {
+            navigate(
+                `/oferta/${encodeURIComponent(subjectId.slice("produto/".length))}?falar=1`,
+            );
             return;
         }
 
@@ -379,6 +388,8 @@ export function App() {
                 {productOfferId && (
                     <ProductOfferDetails
                         key={route}
+                        consumer={role === "consumer"}
+                        resumeContact={query.get("falar") === "1"}
                         experience={query.get("tipo") === "experiencia"}
                         backPath={offerReturnRoute(
                             route,
