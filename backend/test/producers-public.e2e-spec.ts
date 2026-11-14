@@ -31,7 +31,7 @@ describe('HU14 — consulta pública de produtores (e2e)', () => {
     telefone?: string;
     telefonePublico?: boolean;
   } = {}) {
-    const dto = makeProducer({ ...(telefone ? { telefone } : {}) });
+    const dto = makeProducer(telefone ? { telefone } : {});
     const created = await t
       .request()
       .post('/api/v1/users/producers')

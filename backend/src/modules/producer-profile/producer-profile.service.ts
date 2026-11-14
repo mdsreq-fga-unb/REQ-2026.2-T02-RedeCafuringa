@@ -41,6 +41,7 @@ type PublicFields = Pick<
   | 'telefonePublico'
   | 'fotoVersao'
 > & { _id: unknown };
+type PublishedPublicFields = PublicFields & { trajetoria: string };
 
 @Injectable()
 export class ProducerProfileService {
@@ -95,6 +96,28 @@ export class ProducerProfileService {
     return this.toOwn(userId, user);
   }
 
+  /** CA01-CA05: lista perfis publicados e ativos, com os mesmos dados seguros do detalhe. */
+  async listPublic(): Promise<PublicTrajectoryResponse[]> {
+    const users = await this.users
+      .find({
+        perfil: Role.PRODUTOR,
+        ativo: true,
+        trajetoria: { $exists: true, $ne: '' },
+      })
+      .select(PUBLIC_FIELDS)
+      .sort({ nomeIniciativa: 1, _id: 1 })
+      .lean<PublicFields[]>()
+      .exec();
+
+    return users
+      .filter(
+        (user): user is PublishedPublicFields =>
+          typeof user.trajetoria === 'string' &&
+          user.trajetoria.trim().length > 0,
+      )
+      .map((user) => this.toPublic(user));
+  }
+
   /** CA05/RN07: o que consumidores e visitantes podem ver. */
   async getPublic(id: string): Promise<PublicTrajectoryResponse> {
     if (!isObjectIdOrHexString(id)) throw new NotFoundException(NOT_FOUND);
@@ -105,11 +128,20 @@ export class ProducerProfileService {
       .lean<PublicFields>()
       .exec();
     // O perfil só aparece depois que o produtor publica a trajetória.
-    if (!user?.trajetoria) throw new NotFoundException(NOT_FOUND);
+    if (!user) throw new NotFoundException(NOT_FOUND);
+    const trajetoria = user.trajetoria;
+    if (typeof trajetoria !== 'string' || !trajetoria.trim()) {
+      throw new NotFoundException(NOT_FOUND);
+    }
 
+    return this.toPublic({ ...user, trajetoria });
+  }
+
+  private toPublic(user: PublishedPublicFields): PublicTrajectoryResponse {
+    const id = String(user._id);
     const telefone = publicPhone(user.telefone, user.telefonePublico);
     return {
-      id: String(user._id),
+      id,
       ...(user.nomeIniciativa ? { nomeIniciativa: user.nomeIniciativa } : {}),
       ...(user.categoriaOfertada
         ? { categoriaOfertada: user.categoriaOfertada }
@@ -117,9 +149,7 @@ export class ProducerProfileService {
       trajetoria: user.trajetoria,
       ...(user.atividades ? { atividades: user.atividades } : {}),
       ...(telefone ? { telefone } : {}),
-      ...(user.fotoVersao
-        ? { fotoUrl: photoPath(String(user._id), user.fotoVersao) }
-        : {}),
+      ...(user.fotoVersao ? { fotoUrl: photoPath(id, user.fotoVersao) } : {}),
     };
   }
 
