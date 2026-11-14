@@ -7,6 +7,7 @@ type OfferDetailsPageProps = {
     contactAvailable: boolean;
     onNavigate: (path: string) => void;
     onStartContact: () => void;
+    backPath?: string;
     backRoute?: string;
     catalogRoute?: string;
 };
@@ -16,12 +17,16 @@ export function OfferDetailsPage({
     contactAvailable,
     onNavigate,
     onStartContact,
-    backRoute = "/catalogo",
+    backPath,
+    backRoute,
     catalogRoute = "/catalogo",
 }: OfferDetailsPageProps) {
     return (
         <>
-            <BackButton label="Voltar" onClick={() => onNavigate(backRoute)} />
+            <BackButton
+                label="Voltar"
+                onClick={() => onNavigate(backRoute ?? backPath ?? "/catalogo")}
+            />
             <section className="offer-page">
                 <h1>{offer.title}</h1>
                 <p className="eyebrow">{offer.category}</p>

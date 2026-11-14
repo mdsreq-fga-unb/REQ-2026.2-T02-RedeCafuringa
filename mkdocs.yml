@@ -28,9 +28,12 @@ theme:
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/organizacao-requisitos.css
 extra_javascript:
   - javascript/extra.js
   - javascript/hu-filters.js
+  - javascript/hu-modal.js
+  - javascript/hu-table.js
 
 nav:
   - Início: index.md
@@ -49,6 +52,11 @@ nav:
     - 12. Lições Aprendidas: visao/licoes_aprendidas.md
     - 13. Referências Bibliográficas: visao/referencias.md
     - 14. Vídeo de Apresentação: visao/videos.md
+
+  - Organização e Atualização:
+    - Visão Geral: organizacao_atualizacao/index.md
+    - Rastreabilidade: organizacao_atualizacao/rastreabilidade.md
+    - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
 
   - AUP - Iterações:
     - Concepção:
@@ -76,6 +84,8 @@ nav:
             - HU09 — Autenticar usuário: arquitetura/backend/implementacao/HU09.md
             - HU10 — Recuperar acesso: arquitetura/backend/implementacao/HU10.md
             - HU12 — Trajetória do produtor: arquitetura/backend/implementacao/HU12.md
+            - HU15 — Cadastrar produto: arquitetura/backend/implementacao/HU15.md
+            - HU19 — Consultar catálogo: arquitetura/backend/implementacao/HU19.md
     - Frontend:
         - Operação: arquitetura/frontend/operacao.md
     - Engenharia:

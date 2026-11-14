@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BrandHeader, BottomNavigation } from "@/components";
 import { AccountPage } from "@/features/account";
 import {
@@ -22,7 +22,6 @@ import {
     isWhatsAppContactAvailable,
     useContactSettings,
 } from "@/features/contact";
-import { CatalogPage, offers, OfferDetailsPage } from "@/features/offers";
 import { ProfilePage } from "@/features/profile";
 import { ExplorePage } from "@/features/profile/ExplorePage";
 import type { AuthResult } from "@/shared/types";
@@ -38,8 +37,22 @@ import { TrajectoryPage } from "@/features/trajectory/TrajectoryPage";
 import { TrajectoryForm } from "@/features/trajectory/TrajectoryForm";
 import { PublicTrajectoryPage } from "@/features/trajectory/PublicTrajectoryPage";
 import { useProducerSignup } from "@/features/trajectory/useProducerSignup";
+import {
+    CatalogPage,
+    offers,
+    OfferDetailsPage,
+    ProductCatalog,
+    ProductOfferDetails,
+} from "@/features/offers";
+import { ProductRegistrationPage } from "@/features/offers/ProductRegistrationPage";
+import { ProductPublishedPage } from "@/features/offers/ProductPublishedPage";
+import type { RegisteredProduct } from "@/features/offers/productService";
+import { apiResourceUrl } from "@/shared/api";
 
 export function App() {
+    const [publishedProducts, setPublishedProducts] = useState<
+        RegisteredProduct[]
+    >([]);
     const { route, navigate } = useHashRoute();
     const { role, consumerName, email, cpf, userId, signIn, signOut } =
         useDemoSession();
@@ -55,6 +68,35 @@ export function App() {
         useContactSettings();
 
     const path = route.split("?")[0];
+    const published = publishedProducts.at(-1);
+    const catalogOffers = [
+        ...publishedProducts.map((product) => ({
+            id: product.id,
+            title: product.nome,
+            category: product.categoria,
+            image: product.fotos[0]
+                ? isMockAuthEnabled && /^data:image\//.test(product.fotos[0])
+                    ? product.fotos[0]
+                    : apiResourceUrl(product.fotos[0])
+                : "",
+            price: `${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(product.precoPorUnidade)} / unidade`,
+            details: [
+                `Produtor: ${product.produtor.nomeIniciativa}`,
+                `${product.gramasPorUnidade} g por unidade`,
+            ],
+            description: product.descricao,
+        })),
+        ...offers,
+    ];
+    useEffect(() => {
+        if (path === "/oferta-publicada" && !published) navigate("/catalogo");
+    }, [path, published, navigate]);
+    const productBlocked =
+        path === "/produtos/novo" &&
+        (role !== "producer" || !localStorage.getItem("cafuringa-token"));
+    useEffect(() => {
+        if (productBlocked) navigate(role ? "/conta" : "/login/producer");
+    }, [productBlocked, role, navigate]);
     const trajectoryBlocked =
         path === "/minha-trajetoria" &&
         (role !== "producer" || !localStorage.getItem("cafuringa-token"));
@@ -105,6 +147,7 @@ export function App() {
     const loginProfile =
         path === "/login/consumer" || fromContact ? "consumer" : "producer";
     const isAuthFlow =
+        path === "/oferta-publicada" ||
         path.startsWith("/admin/") ||
         path === "/cadastro/administrador" ||
         path === "/conta-criada/admin" ||
@@ -120,7 +163,8 @@ export function App() {
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
         : undefined;
-    const currentOffer = offers.find((offer) => offer.id === offerId);
+    const currentOffer = catalogOffers.find((offer) => offer.id === offerId);
+    const productOfferId = offerId && !currentOffer ? offerId : undefined;
     const contactAvailable = isWhatsAppContactAvailable(
         settings.authorized,
         settings.whatsappNumber,
@@ -243,7 +287,37 @@ export function App() {
                     />
                 )}
                 {path === "/catalogo" && (
-                    <CatalogPage offers={offers} onNavigate={navigate} />
+                    <CatalogPage
+                        offers={catalogOffers}
+                        onNavigate={navigate}
+                        canRegisterProduct={
+                            role === "producer" &&
+                            !!localStorage.getItem("cafuringa-token")
+                        }
+                    />
+                )}
+                {path === "/produtos/novo" && !productBlocked && (
+                    <ProductRegistrationPage
+                        onNavigate={navigate}
+                        onPublished={(product) => {
+                            setPublishedProducts((previous) => [
+                                ...previous.filter(
+                                    (item) => item.id !== product.id,
+                                ),
+                                product,
+                            ]);
+                            navigate("/oferta-publicada");
+                        }}
+                    />
+                )}
+                {path === "/oferta-publicada" && published && (
+                    <ProductPublishedPage
+                        id={published.id}
+                        onNavigate={navigate}
+                    />
+                )}
+                {path === "/produtos" && (
+                    <ProductCatalog onNavigate={navigate} />
                 )}
                 {currentOffer && (
                     <OfferDetailsPage
@@ -253,6 +327,13 @@ export function App() {
                         onStartContact={() =>
                             startContact(currentOffer.id, currentOffer.title)
                         }
+                    />
+                )}
+                {productOfferId && (
+                    <ProductOfferDetails
+                        key={productOfferId}
+                        id={productOfferId}
+                        onNavigate={navigate}
                     />
                 )}
                 {showProfileSelection && (

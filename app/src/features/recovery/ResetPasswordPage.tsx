@@ -86,7 +86,7 @@ export function ResetPasswordPage({
     return (
         <section className="login-page recovery-page">
             <BackButton label="Voltar" onClick={() => onNavigate("/entrar")} />
-            <h1>Crie uma nova senha</h1>
+            <h1 className="recovery-title-accent">Crie uma nova senha</h1>
             <p className="body-copy">
                 Etapa acessada pelo link de recuperação.
             </p>

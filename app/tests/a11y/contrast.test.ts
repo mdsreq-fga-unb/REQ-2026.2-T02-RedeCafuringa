@@ -103,3 +103,30 @@ describe("contraste dos tokens de cor (WCAG 2.1 AA)", () => {
         expect(greenButton).toMatch(/color:\s*var\(--ink\)/);
     });
 });
+
+describe("laranja de texto das telas de recuperação (HU10)", () => {
+    it("o check do ícone de e-mail enviado tem contraste de elemento gráfico (3:1) sobre o círculo", () => {
+        const accent = token("orange-text");
+
+        expect(contrast(accent, "#eef7ea")).toBeGreaterThanOrEqual(AA_UI);
+    });
+
+    it("o endereço informado na faixa amarela tem contraste de texto (4,5:1)", () => {
+        const rule = css.match(/\.recovery-sent\s*\{([^}]*)\}/);
+        expect(rule, "regra .recovery-sent em App.css").not.toBeNull();
+        const background = rule![1].match(/background:\s*(#[0-9a-fA-F]{6})/);
+        const color = rule![1].match(/color:\s*var\(--([\w-]+)\)/);
+        expect(background).not.toBeNull();
+        expect(color).not.toBeNull();
+
+        expect(
+            contrast(token(color![1]), background![1]),
+        ).toBeGreaterThanOrEqual(AA_TEXT);
+    });
+
+    it("o título da nova senha usa o laranja de texto", () => {
+        expect(css).toMatch(
+            /\.recovery-title-accent\s*[,{][^}]*--orange-text\)/,
+        );
+    });
+});
