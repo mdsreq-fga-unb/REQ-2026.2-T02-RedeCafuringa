@@ -197,17 +197,60 @@ describe("HU14 — consulta pública", () => {
         expect(document.querySelector('a[href*="maps"]')).toBeNull();
     });
 
-    it("CA06/RN09: catálogo mantém a identificação do produtor selecionado", async () => {
-        mockTrajectoryApi();
+    it("CA06/RN09: consulta no catálogo HU15 as ofertas do produtor selecionado", async () => {
+        const detailApi = mockTrajectoryApi();
+        const product = {
+            id: "64b0c0ffee0000000000beef",
+            nome: "Mel do Cerrado",
+            categoria: "Produtos",
+            descricao: "Mel produzido na região.",
+            precoPorUnidade: 32,
+            gramasPorUnidade: 500,
+            fotos: ["/products/64b0c0ffee0000000000beef/photos/foto?v=v1"],
+            produtor: {
+                id: producerId,
+                nomeIniciativa: publicTrajectory.nomeIniciativa,
+            },
+            criadoEm: "2026-11-13T12:00:00.000Z",
+            disponivel: true,
+        };
+        const fetchMock = vi.fn<typeof fetch>((input, init = {}) => {
+            const url = new URL(String(input), "http://localhost");
+            if (
+                url.pathname === "/api/v1/products" &&
+                (init.method ?? "GET") === "GET"
+            )
+                return Promise.resolve(
+                    json({
+                        itens: [product],
+                        total: 1,
+                        pagina: 1,
+                        limite: 20,
+                    }),
+                );
+            return detailApi(input, init);
+        });
+        vi.stubGlobal("fetch", fetchMock);
         const user = userEvent.setup();
         render(<App />);
         await loaded();
         await user.click(catalog());
-        await screen.findByRole("heading", { name: /catálogo/i });
+        await screen.findByRole("button", { name: /Mel do Cerrado/ });
         expect(screen.getByText(publicTrajectory.nomeIniciativa)).toBeTruthy();
-        // Contrato de navegação proposto: preservar o ID no caminho ou na query.
+        const productRequest = fetchMock.mock.calls.find(([input]) => {
+            const url = new URL(String(input), "http://localhost");
+            return url.pathname === "/api/v1/products";
+        });
+        expect(productRequest).toBeDefined();
+        const productUrl = new URL(
+            String(productRequest?.[0]),
+            "http://localhost",
+        );
+        expect(productUrl.searchParams.get("produtor")).toBe(producerId);
+        expect(
+            new Headers(productRequest?.[1]?.headers).has("Authorization"),
+        ).toBe(false);
         expect(decodeURIComponent(window.location.hash)).toContain(producerId);
-        expect(screen.queryByText("Dona Maria")).toBeNull();
     });
 
     it.each([404, 503])(
