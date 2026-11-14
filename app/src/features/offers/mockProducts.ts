@@ -15,7 +15,6 @@ export const mockApiProducts: ApiProduct[] = [
         produtor: {
             id: "demo-dona-maria",
             nomeIniciativa: "Dona Maria",
-            localidade: "Cafuringa",
         },
         criadoEm: "2026-11-01T12:00:00.000Z",
         disponivel: true,
@@ -34,7 +33,6 @@ export const mockApiProducts: ApiProduct[] = [
         produtor: {
             id: "demo-sitio-raizes",
             nomeIniciativa: "Sítio Raízes",
-            localidade: "Cafuringa",
         },
         criadoEm: "2026-11-02T12:00:00.000Z",
         disponivel: true,
@@ -53,7 +51,6 @@ export const mockApiProducts: ApiProduct[] = [
         produtor: {
             id: "demo-sitio-raizes",
             nomeIniciativa: "Sítio Raízes",
-            localidade: "Cafuringa",
         },
         criadoEm: "2026-11-03T12:00:00.000Z",
         disponivel: false,
