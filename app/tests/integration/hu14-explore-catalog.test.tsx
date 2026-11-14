@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
-import { offers } from "@/features/offers/offerData";
 import {
     json,
     mockTrajectoryApi,
@@ -15,9 +14,42 @@ import {
 
 vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: false }));
 
+function catalogItem({
+    id,
+    nome,
+    produtorId,
+    categoria = "Produtos",
+}: {
+    id: string;
+    nome: string;
+    produtorId: string;
+    categoria?: string;
+}) {
+    return {
+        id,
+        nome,
+        categoria,
+        descricao: "Oferta local.",
+        precoPorUnidade: 32,
+        gramasPorUnidade: 500,
+        fotos: [],
+        produtor: {
+            id: produtorId,
+            nomeIniciativa:
+                produtorId === producerId ? "Horta da Maria" : "Outro sítio",
+        },
+        criadoEm: "2026-11-13T12:00:00.000Z",
+        disponivel: true,
+    };
+}
+
+function catalogPage(itens: ReturnType<typeof catalogItem>[] = []) {
+    return json({ itens, total: itens.length, pagina: 1, limite: 20 });
+}
+
 function api({
     directory = () => json([publicTrajectory]),
-    catalog = () => json([]),
+    catalog = () => catalogPage(),
     phone,
 }: {
     directory?: () => Response;
@@ -28,9 +60,10 @@ function api({
         publicData: { ...publicTrajectory, telefone: phone },
     });
     const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
-        const path = new URL(String(input), "http://localhost").pathname;
-        if (path === "/api/v1/producers") return Promise.resolve(directory());
-        if (path === `/api/v1/producers/${producerId}/offers`)
+        const url = new URL(String(input), "http://localhost");
+        if (url.pathname === "/api/v1/producers")
+            return Promise.resolve(directory());
+        if (url.pathname.endsWith("/products"))
             return Promise.resolve(catalog());
         return detail(input, init);
     });
@@ -228,9 +261,18 @@ describe("HU14 — ofertas e contato vinculados ao produtor", () => {
     it("exibe somente as ofertas associadas ao produtor e preserva o retorno do detalhe", async () => {
         api({
             catalog: () =>
-                json([
-                    { ...offers[1], producerId },
-                    { ...offers[0], producerId: "outro" },
+                catalogPage([
+                    catalogItem({
+                        id: "mel",
+                        nome: "Mel do Cerrado",
+                        produtorId: producerId,
+                    }),
+                    catalogItem({
+                        id: "experience",
+                        nome: "Visita e Degustação",
+                        produtorId: "outro",
+                        categoria: "Experiência",
+                    }),
                 ]),
         });
         window.location.hash = `${publicRoute}?catalogo=1`;
@@ -268,7 +310,13 @@ describe("HU14 — ofertas e contato vinculados ao produtor", () => {
             catalog: () =>
                 ++attempt === 1
                     ? json({ message: "Falha" }, 503)
-                    : json([{ ...offers[1], producerId }]),
+                    : catalogPage([
+                          catalogItem({
+                              id: "mel",
+                              nome: "Mel do Cerrado",
+                              produtorId: producerId,
+                          }),
+                      ]),
         });
         window.location.hash = `${publicRoute}?catalogo=1`;
         const user = userEvent.setup();

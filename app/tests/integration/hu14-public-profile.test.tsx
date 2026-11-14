@@ -214,6 +214,14 @@ describe("HU14 — consulta pública", () => {
             criadoEm: "2026-11-13T12:00:00.000Z",
             disponivel: true,
         };
+        const experience = {
+            ...product,
+            id: "64b0c0ffee0000000000feed",
+            nome: "Visita guiada",
+            categoria: "Experiência",
+            descricao: "Conheça a produção no sítio.",
+            fotos: [],
+        };
         const fetchMock = vi.fn<typeof fetch>((input, init = {}) => {
             const url = new URL(String(input), "http://localhost");
             if (
@@ -222,8 +230,8 @@ describe("HU14 — consulta pública", () => {
             )
                 return Promise.resolve(
                     json({
-                        itens: [product],
-                        total: 1,
+                        itens: [product, experience],
+                        total: 2,
                         pagina: 1,
                         limite: 20,
                     }),
@@ -236,6 +244,8 @@ describe("HU14 — consulta pública", () => {
         await loaded();
         await user.click(catalog());
         await screen.findByRole("button", { name: /Mel do Cerrado/ });
+        await screen.findByRole("button", { name: /Visita guiada/ });
+        expect(screen.getByText("Experiência", { exact: true })).toBeTruthy();
         expect(screen.getByText(publicTrajectory.nomeIniciativa)).toBeTruthy();
         const productRequest = fetchMock.mock.calls.find(([input]) => {
             const url = new URL(String(input), "http://localhost");

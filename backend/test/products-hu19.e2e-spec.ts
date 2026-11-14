@@ -78,6 +78,32 @@ describe('HU19/RF19 — Consultar catálogo de produtos (e2e)', () => {
     expect(res.body).toEqual({ itens: [], total: 0, pagina: 1, limite: 20 });
   });
 
+  it('HU14/CA06: filtra as ofertas do perfil por produtor, inclusive experiências', async () => {
+    const selected = await registerProducer(t, {
+      nomeIniciativa: 'Sítio selecionado',
+    });
+    const other = await registerProducer(t, {
+      nomeIniciativa: 'Outro sítio',
+    });
+    const experience = await createProduct(t, selected.auth, photo, {
+      nome: 'Visita guiada',
+      categoria: 'Experiência',
+    });
+    await createProduct(t, other.auth, photo, { nome: 'Cesta de verduras' });
+
+    const res = await list(`?produtor=${selected.id}`).expect(200);
+
+    expect(res.body.total).toBe(1);
+    expect(ids(res.body.itens)).toEqual([experience.id]);
+    expect(res.body.itens[0]).toMatchObject({
+      categoria: 'Experiência',
+      produtor: {
+        id: selected.id,
+        nomeIniciativa: 'Sítio selecionado',
+      },
+    });
+  });
+
   describe('RN15 — busca por texto', () => {
     it('encontra pelo nome do produto, sem diferenciar acentos e maiúsculas', async () => {
       const p = await registerProducer(t);

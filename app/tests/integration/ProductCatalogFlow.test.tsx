@@ -113,6 +113,9 @@ describe("catálogo de produtos no app", () => {
         render(<App />);
 
         await user.click(screen.getByRole("button", { name: "Explorar" }));
+        await user.click(
+            screen.getByRole("button", { name: "Ver catálogo de produtos" }),
+        );
 
         expect(window.location.hash).toBe("#/produtos");
         expect(
