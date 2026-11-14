@@ -2,20 +2,36 @@ import { ApiHttpError, getApiClient, type ApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
 import { toProductList } from "./productAdapter";
+import { saveDemoOffer, notifyOffersChanged } from "./publishedOffers";
 import { listMockProducts } from "./mockProductService";
 import type { ApiProductList, Product } from "./productTypes";
 
-/** Máximo aceito pela API (GET /products). Sem paginação na tela, ver o PR. */
+/** Máximo por requisição aceito por GET /products. */
 const CATALOG_LIMIT = 50;
 
 export async function fetchProducts(
     client: ApiClient = getApiClient(),
 ): Promise<Product[]> {
-    const page = await client.get<ApiProductList>(
+    let page = await client.get<ApiProductList>(
         `/products?categoria=Produtos&limite=${CATALOG_LIMIT}`,
         { auth: false },
     );
-    return toProductList(page.itens);
+    const items = [...page.itens];
+    // A busca local deve alcançar todo o catálogo, inclusive além da primeira página.
+    while (page.pagina * page.limite < page.total) {
+        const next = await client.get<ApiProductList>(
+            `/products?categoria=Produtos&limite=${CATALOG_LIMIT}&pagina=${page.pagina + 1}`,
+            { auth: false },
+        );
+        if (next.pagina <= page.pagina || !next.itens.length) {
+            throw new Error(
+                "Não foi possível carregar todas as páginas do catálogo.",
+            );
+        }
+        items.push(...next.itens);
+        page = next;
+    }
+    return toProductList(items);
 }
 
 export type ProductDraft = {
@@ -80,7 +96,7 @@ export async function registerProduct(
                     }),
             ),
         );
-        return {
+        const product = {
             id: `demo-product-${crypto.randomUUID()}`,
             nome: draft.nome.trim(),
             categoria: draft.categoria,
@@ -97,6 +113,8 @@ export async function registerProduct(
                     "Produtor de teste",
             },
         } satisfies RegisteredProduct;
+        saveDemoOffer(product);
+        return product;
     }
     const body = new FormData();
     body.set("nome", draft.nome.trim());
@@ -108,12 +126,20 @@ export async function registerProduct(
     // enviar (mesmo preparo da foto de perfil). Uma de cada vez, para poupar memória.
     for (const foto of draft.fotos)
         body.append("fotos", await prepareProfilePhoto(foto));
-    return getApiClient().post<RegisteredProduct>("/products", body, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),
+    const product = await getApiClient().post<RegisteredProduct>(
+        "/products",
+        body,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                ...(idempotencyKey
+                    ? { "Idempotency-Key": idempotencyKey }
+                    : {}),
+            },
         },
-    });
+    );
+    notifyOffersChanged();
+    return product;
 }
 
 export function listProducts(): Promise<Product[]> {

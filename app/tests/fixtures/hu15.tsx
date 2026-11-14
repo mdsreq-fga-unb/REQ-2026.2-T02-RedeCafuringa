@@ -54,7 +54,12 @@ export function mockProductApi(
                 return save(init);
             if (path === `${productPath}/${product.id}`) return json(product);
             if (path === productPath && (!init.method || init.method === "GET"))
-                return json([product]);
+                return json({
+                    itens: [product],
+                    total: 1,
+                    pagina: 1,
+                    limite: 50,
+                });
             throw new Error(
                 `HTTP não previsto pela fixture HU15: ${init.method ?? "GET"} ${path}`,
             );

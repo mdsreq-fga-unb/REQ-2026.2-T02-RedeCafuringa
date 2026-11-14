@@ -1,5 +1,6 @@
 import { ApiHttpError, getApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
+import { saveDemoOffer, notifyOffersChanged } from "./publishedOffers";
 import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
 
 export type ExperienceDraft = {
@@ -59,7 +60,7 @@ export async function registerExperience(
                     }),
             ),
         );
-        return {
+        const experience = {
             id: `demo-experience-${crypto.randomUUID()}`,
             nome: draft.nome.trim(),
             categoria: draft.categoria,
@@ -77,6 +78,8 @@ export async function registerExperience(
                     "Produtor de teste",
             },
         } satisfies RegisteredExperience;
+        saveDemoOffer(experience);
+        return experience;
     }
     const body = new FormData();
     body.set("nome", draft.nome.trim());
@@ -89,10 +92,18 @@ export async function registerExperience(
     // enviar (mesmo preparo da foto de perfil). Uma de cada vez, para poupar memória.
     for (const foto of draft.fotos)
         body.append("fotos", await prepareProfilePhoto(foto));
-    return getApiClient().post<RegisteredExperience>("/experiences", body, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),
+    const experience = await getApiClient().post<RegisteredExperience>(
+        "/experiences",
+        body,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                ...(idempotencyKey
+                    ? { "Idempotency-Key": idempotencyKey }
+                    : {}),
+            },
         },
-    });
+    );
+    notifyOffersChanged();
+    return experience;
 }

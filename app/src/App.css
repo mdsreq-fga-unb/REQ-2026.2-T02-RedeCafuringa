@@ -347,7 +347,8 @@ h2 {
 }
 
 .product-list {
-    margin: 22px 0 0;
+    margin: 16px 0 0;
+    gap: 16px;
     padding: 0;
     list-style: none;
 }
@@ -357,9 +358,9 @@ h2 {
 }
 
 .product-card {
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: stretch;
-    gap: 14px;
+    gap: 24px;
     padding: 16px;
     border-radius: 14px;
     color: inherit;
@@ -369,12 +370,12 @@ h2 {
 .product-card > img {
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 9;
-    border-radius: 10px;
+    aspect-ratio: 16 / 7;
+    border-radius: 6px;
 }
 
 .product-card .offer-card-copy {
-    gap: 6px;
+    gap: 10px;
     color: inherit;
     font-size: 14px;
 }
@@ -417,7 +418,7 @@ h2 {
     height: 20px;
     transform: translateY(-50%);
     fill: none;
-    stroke: var(--orange-text);
+    stroke: #25634d;
     stroke-width: 2;
     stroke-linecap: round;
     pointer-events: none;
@@ -1439,5 +1440,82 @@ h2 {
 
     .profile-selection-actions {
         margin-top: 72px;
+    }
+}
+
+.product-catalog {
+    max-width: 960px;
+    margin-inline: auto;
+}
+.product-card {
+    background: #fff;
+}
+.product-card .product-producer {
+    color: var(--muted);
+    font-size: 13px;
+}
+.product-catalog .product-search {
+    margin-top: 10px;
+}
+.product-catalog .product-search input {
+    min-height: 56px;
+    border-radius: 15px;
+    background: #fff;
+    padding-left: 48px;
+    font-size: 13px;
+}
+.product-catalog .product-search-icon {
+    left: 18px;
+    width: 24px;
+    height: 24px;
+}
+.product-card:focus-visible {
+    outline: 3px solid var(--orange-text);
+    outline-offset: 3px;
+}
+
+.catalog-more {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    margin: 20px 0 28px;
+    padding: 12px 18px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--orange-text-strong);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.explore-offers {
+    margin-block: 28px;
+}
+
+.profile-catalog .catalog-intro {
+    max-width: 48ch;
+    margin-block: 8px 16px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.catalog-count {
+    display: inline-block;
+    border-radius: 24px;
+    padding: 7px 13px;
+    margin: 0 0 12px;
+    background: #eaf0e5;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.profile-catalog .product-submit {
+    margin-top: 12px;
+}
+@media (min-width: 700px) {
+    .product-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
     }
 }

@@ -1,3 +1,5 @@
+import { OfferCards } from "@/features/offers/OfferCards";
+import { offerReturnRoute } from "@/features/offers/offerNavigation";
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -47,7 +49,10 @@ export function ProducerCatalogPage({
                 contactAvailable={contactAvailable}
                 onStartContact={onStartContact}
                 onNavigate={onNavigate}
-                backRoute={catalogRoute}
+                backRoute={offerReturnRoute(
+                    window.location.hash.slice(1),
+                    catalogRoute,
+                )}
                 catalogRoute={catalogRoute}
             />
         );
@@ -57,11 +62,22 @@ export function ProducerCatalogPage({
                 label="Voltar"
                 onClick={() => onNavigate(profileRoute)}
             />
-            <section className="catalog-page producer-catalog">
+            <section className="catalog-page producer-catalog product-catalog profile-catalog">
                 <p className="eyebrow">
                     {profile.nomeIniciativa || "Produtor"}
                 </p>
                 <h1>Catálogo do perfil</h1>
+                <p className="catalog-intro">
+                    Conheça os sabores e as vivências desta iniciativa.
+                </p>
+                {!loading && !error && (
+                    <p className="catalog-count">
+                        {offers.length}{" "}
+                        {offers.length === 1
+                            ? "oferta disponível"
+                            : "ofertas disponíveis"}
+                    </p>
+                )}
                 {loading && <p role="status">Carregando ofertas…</p>}
                 {error && (
                     <div role="alert">
@@ -90,31 +106,13 @@ export function ProducerCatalogPage({
                         Este produtor ainda não tem ofertas disponíveis.
                     </p>
                 )}
-                <div className="offer-list">
-                    {offers.map((offer) => (
-                        <button
-                            key={offer.id}
-                            className="offer-card"
-                            onClick={() =>
-                                onNavigate(
-                                    `${catalogRoute}&oferta=${encodeURIComponent(offer.id)}`,
-                                )
-                            }
-                        >
-                            {offer.image && (
-                                <img src={offer.image} alt="" loading="lazy" />
-                            )}
-                            <span className="offer-card-copy">
-                                <small>{offer.category}</small>
-                                <strong>{offer.title}</strong>
-                                <span>{offer.price}</span>
-                            </span>
-                            <span className="card-arrow" aria-hidden="true">
-                                →
-                            </span>
-                        </button>
-                    ))}
-                </div>
+                <OfferCards
+                    offers={offers}
+                    onNavigate={onNavigate}
+                    routeFor={(offer) =>
+                        `${catalogRoute}&oferta=${encodeURIComponent(offer.id)}`
+                    }
+                />
             </section>
         </>
     );

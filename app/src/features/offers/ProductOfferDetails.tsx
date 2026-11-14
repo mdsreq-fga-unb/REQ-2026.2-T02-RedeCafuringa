@@ -1,3 +1,5 @@
+import { listExperiences } from "./catalogItems";
+import { listProducts } from "./productService";
 import { BackButton } from "../../components/navigation/BackButton";
 import { OfferDetailsPage } from "./OfferDetailsPage";
 import { productToOffer } from "./productOffer";
@@ -5,14 +7,20 @@ import { useProductCatalog } from "./useProductCatalog";
 
 type ProductOfferDetailsProps = {
     id: string;
+    experience?: boolean;
+    backPath?: string;
     onNavigate: (path: string) => void;
 };
 
 export function ProductOfferDetails({
     id,
+    experience = false,
+    backPath = "/produtos",
     onNavigate,
 }: ProductOfferDetailsProps) {
-    const { status, products } = useProductCatalog();
+    const { status, products } = useProductCatalog(
+        experience ? listExperiences : listProducts,
+    );
     const product = products.find((item) => item.id === id);
 
     if (product) {
@@ -20,7 +28,7 @@ export function ProductOfferDetails({
             <OfferDetailsPage
                 offer={productToOffer(product)}
                 contactAvailable={false}
-                backPath="/produtos"
+                backPath={backPath}
                 onNavigate={onNavigate}
                 onStartContact={() => undefined}
             />
@@ -29,10 +37,7 @@ export function ProductOfferDetails({
 
     return (
         <>
-            <BackButton
-                label="Voltar"
-                onClick={() => onNavigate("/produtos")}
-            />
+            <BackButton label="Voltar" onClick={() => onNavigate(backPath)} />
             <section className="offer-page">
                 {status === "loading" && (
                     <p role="status">Carregando oferta...</p>

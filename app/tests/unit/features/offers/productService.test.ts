@@ -42,6 +42,34 @@ function setup(response: Response) {
 }
 
 describe("fetchProducts", () => {
+    it("consulta as demais páginas para não omitir ofertas depois dos primeiros 50 itens", async () => {
+        const fetchMock = vi
+            .fn<typeof fetch>()
+            .mockResolvedValueOnce(
+                jsonResponse({ itens: [mel], total: 2, pagina: 1, limite: 1 }),
+            )
+            .mockResolvedValueOnce(
+                jsonResponse({
+                    itens: [{ ...mel, id: "segunda-pagina" }],
+                    total: 2,
+                    pagina: 2,
+                    limite: 1,
+                }),
+            );
+        const client = createApiClient({
+            baseUrl: "http://api.test",
+            fetch: fetchMock,
+        });
+        expect((await fetchProducts(client)).map((item) => item.id)).toEqual([
+            "mel",
+            "segunda-pagina",
+        ]);
+        expect(
+            new URL(String(fetchMock.mock.calls[1][0])).searchParams.get(
+                "pagina",
+            ),
+        ).toBe("2");
+    });
     it("busca GET /products e devolve só os disponíveis", async () => {
         const { client, fetchMock } = setup(
             jsonResponse(page([mel, retirado])),

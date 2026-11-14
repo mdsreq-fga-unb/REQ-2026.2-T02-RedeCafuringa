@@ -9,6 +9,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { ProductCatalogPage } from "@/features/offers/ProductCatalogPage";
 import type { Product } from "@/features/offers/productTypes";
 import type { ComponentProps } from "react";
+import userEvent from "@testing-library/user-event";
+import axe from "axe-core";
 
 function renderPage(
     props: Partial<ComponentProps<typeof ProductCatalogPage>> = {},
@@ -46,6 +48,50 @@ const products: Product[] = [
 ];
 
 describe("ProductCatalogPage", () => {
+    it("permite buscar e abrir o produto por teclado", async () => {
+        const { onNavigate } = renderPage();
+        const user = userEvent.setup();
+        screen.getByRole("searchbox", { name: "Buscar produtos" }).focus();
+        await user.type(screen.getByRole("searchbox"), "mel");
+        await user.tab();
+        expect(document.activeElement).toBe(
+            screen.getByRole("button", { name: /Mel do Cerrado/ }),
+        );
+        await user.keyboard("{Enter}");
+        expect(onNavigate).toHaveBeenCalledWith("/oferta/mel");
+    });
+
+    it("não apresenta violações detectáveis WCAG A/AA no catálogo", async () => {
+        const { container } = renderPage();
+        const result = await axe.run(container, {
+            runOnly: {
+                type: "tag",
+                values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
+            },
+            rules: { "color-contrast": { enabled: false } },
+        });
+        expect(result.violations.map((item) => item.id)).toEqual([]);
+    });
+    it("segue o protótipo: busca, resumo e ação antes da imagem", () => {
+        const { container } = renderPage();
+        expect(
+            screen.getByPlaceholderText("Buscar produtos e experiências"),
+        ).toBeTruthy();
+        const card = container.querySelector(".product-card")!;
+        const copy = card.querySelector(".offer-card-copy")!;
+        const image = card.querySelector("img")!;
+        expect(
+            copy.compareDocumentPosition(image) &
+                Node.DOCUMENT_POSITION_FOLLOWING,
+        ).toBeTruthy();
+        expect(image.getAttribute("loading")).toBe("lazy");
+    });
+
+    it("retorna à tela Explorar sem exigir autenticação", () => {
+        const { onNavigate } = renderPage();
+        fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
+        expect(onNavigate).toHaveBeenCalledWith("/explorar");
+    });
     it.each([
         ["Mel do Cerrado", "/oferta/mel"],
         ["Cesta da estação", "/oferta/cesta"],
@@ -98,12 +144,12 @@ describe("ProductCatalogPage", () => {
         );
     });
 
-    it("volta para o perfil ao acionar Voltar", () => {
+    it("volta para Explorar ao acionar Voltar", () => {
         const { onNavigate } = renderPage();
 
         fireEvent.click(screen.getByRole("button", { name: /voltar/i }));
 
-        expect(onNavigate).toHaveBeenCalledWith("/perfil");
+        expect(onNavigate).toHaveBeenCalledWith("/explorar");
     });
 
     it("mostra mensagem de carregamento sem a lista", () => {

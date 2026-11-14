@@ -9,10 +9,13 @@ export function toProductList(
         .filter((item) => item.disponivel)
         .map((item) => ({
             id: item.id,
+            producerId: item.produtor.id,
+            description: item.descricao,
+            category: item.categoria,
             name: item.nome,
             producerName: item.produtor.nomeIniciativa,
             price: item.precoPorUnidade,
             unit: "unidade",
-            image: resolvePhoto(item.fotos[0]),
+            image: item.fotos[0] ? resolvePhoto(item.fotos[0]) : "",
         }));
 }

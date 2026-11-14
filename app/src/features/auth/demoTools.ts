@@ -12,6 +12,7 @@ const sessionKeys = [
 ];
 const userKeys = ["cafuringa-mock-users", "cafuringa-mock-admin-emails"];
 const settingsKeys = [
+    "cafuringa-demo-offers",
     "cafuringa-contact",
     "cafuringa-conversations",
     "cafuringa-producer-initiative",

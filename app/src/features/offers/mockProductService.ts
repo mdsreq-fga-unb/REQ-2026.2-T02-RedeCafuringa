@@ -1,3 +1,5 @@
+import { readDemoOffers } from "./publishedOffers";
+import { registeredToCatalogItem } from "./catalogItems";
 import { mockApiProducts } from "./mockProducts";
 import { toProductList } from "./productAdapter";
 import type { Product } from "./productTypes";
@@ -7,5 +9,13 @@ import type { Product } from "./productTypes";
 const demoPhoto = (foto: string) => foto;
 
 export function listMockProducts(): Promise<Product[]> {
-    return Promise.resolve(toProductList(mockApiProducts, demoPhoto));
+    return Promise.resolve([
+        ...readDemoOffers()
+            .filter(
+                (item) =>
+                    "precoPorUnidade" in item && item.disponivel !== false,
+            )
+            .map(registeredToCatalogItem),
+        ...toProductList(mockApiProducts, demoPhoto),
+    ]);
 }

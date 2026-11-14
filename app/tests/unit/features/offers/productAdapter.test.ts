@@ -24,6 +24,9 @@ describe("toProductList", () => {
         expect(toProductList([apiMel])).toEqual([
             {
                 id: "mel",
+                producerId: "p1",
+                description: apiMel.descricao,
+                category: "Produtos",
                 name: "Mel do Cerrado",
                 producerName: "Dona Maria",
                 price: 32,

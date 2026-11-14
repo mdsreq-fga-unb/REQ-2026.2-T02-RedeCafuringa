@@ -25,6 +25,10 @@ import {
 import { ProfilePage } from "@/features/profile";
 import { ExplorePage } from "@/features/profile/ExplorePage";
 import type { AuthResult } from "@/shared/types";
+import {
+    rememberOfferOrigin,
+    offerReturnRoute,
+} from "@/features/offers/offerNavigation";
 import { useHashRoute } from "./useHashRoute";
 import { RegisterPage } from "@/features/register";
 import "../App.css";
@@ -51,10 +55,19 @@ import type { RegisteredProduct } from "@/features/offers/productService";
 import { apiResourceUrl } from "@/shared/api";
 
 export function App() {
+    const [exploreCategory, setExploreCategory] = useState("Produtos");
+    const [exploreSearch, setExploreSearch] = useState("");
     const [publishedProducts, setPublishedProducts] = useState<
         (RegisteredProduct | RegisteredExperience)[]
     >([]);
-    const { route, navigate } = useHashRoute();
+    const { route, navigate: changeRoute } = useHashRoute();
+    const navigate = useCallback(
+        (next: string) => {
+            rememberOfferOrigin(next, route);
+            changeRoute(next);
+        },
+        [route, changeRoute],
+    );
     const { role, consumerName, email, cpf, userId, signIn, signOut } =
         useDemoSession();
     const signup = useProducerSignup((auth) => {
@@ -253,7 +266,15 @@ export function App() {
                 <DemoNavigation onNavigate={navigate} onSignIn={signIn} />
             )}
             <main className="main-content">
-                {path === "/explorar" && <ExplorePage onNavigate={navigate} />}
+                {path === "/explorar" && (
+                    <ExplorePage
+                        onNavigate={navigate}
+                        initialCategory={exploreCategory}
+                        initialSearch={exploreSearch}
+                        onCategoryChange={setExploreCategory}
+                        onSearchChange={setExploreSearch}
+                    />
+                )}
                 {usersRoute && !adminBlocked && (
                     <AdminUsersPage
                         key={path}
@@ -291,7 +312,15 @@ export function App() {
                 )}
                 {path === "/catalogo" && (
                     <CatalogPage
-                        offers={catalogOffers}
+                        offers={
+                            role === "producer"
+                                ? catalogOffers.filter((offer) =>
+                                      publishedProducts.some(
+                                          (item) => item.id === offer.id,
+                                      ),
+                                  )
+                                : catalogOffers
+                        }
                         onNavigate={navigate}
                         canRegisterProduct={
                             role === "producer" &&
@@ -326,12 +355,20 @@ export function App() {
                         onNavigate={navigate}
                     />
                 )}
+                {path === "/experiencias" && (
+                    <ProductCatalog
+                        key="experiences"
+                        category="Experiências"
+                        onNavigate={navigate}
+                    />
+                )}
                 {path === "/produtos" && (
-                    <ProductCatalog onNavigate={navigate} />
+                    <ProductCatalog key="products" onNavigate={navigate} />
                 )}
                 {currentOffer && (
                     <OfferDetailsPage
                         offer={currentOffer}
+                        backRoute={offerReturnRoute(route, "/catalogo")}
                         contactAvailable={contactAvailable}
                         onNavigate={navigate}
                         onStartContact={() =>
@@ -341,7 +378,14 @@ export function App() {
                 )}
                 {productOfferId && (
                     <ProductOfferDetails
-                        key={productOfferId}
+                        key={route}
+                        experience={query.get("tipo") === "experiencia"}
+                        backPath={offerReturnRoute(
+                            route,
+                            query.get("tipo") === "experiencia"
+                                ? "/experiencias"
+                                : "/produtos",
+                        )}
                         id={productOfferId}
                         onNavigate={navigate}
                     />

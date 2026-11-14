@@ -24,6 +24,7 @@ const getInitialRoute = () => {
         "/cadastro",
         "/catalogo",
         "/produtos",
+        "/experiencias",
         "/entrar",
         "/cadastro/trajetoria",
         "/minha-trajetoria",

@@ -62,7 +62,12 @@ export function mockExperienceApi(
                 path === experiencePath &&
                 (!init.method || init.method === "GET")
             )
-                return json([experience]);
+                return json({
+                    itens: [experience],
+                    total: 1,
+                    pagina: 1,
+                    limite: 50,
+                });
             throw new Error(
                 `HTTP não previsto pela fixture HU21: ${init.method ?? "GET"} ${path}`,
             );

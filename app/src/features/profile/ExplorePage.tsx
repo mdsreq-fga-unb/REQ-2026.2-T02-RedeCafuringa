@@ -1,3 +1,4 @@
+import { OfferPreview } from "@/features/offers/OfferPreview";
 import { useEffect, useState } from "react";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { listPublicProducers } from "./publicProfileService";
@@ -8,15 +9,23 @@ import { RuralCarousel } from "./RuralCarousel";
 
 export function ExplorePage({
     onNavigate,
+    initialCategory = "Produtos",
+    initialSearch = "",
+    onCategoryChange,
+    onSearchChange,
 }: {
     onNavigate: (path: string) => void;
+    initialCategory?: string;
+    initialSearch?: string;
+    onCategoryChange?: (category: string) => void;
+    onSearchChange?: (search: string) => void;
 }) {
     const [producers, setProducers] = useState<PublicTrajectory[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [attempt, setAttempt] = useState(0);
-    const [search, setSearch] = useState("");
-    const [category, setCategory] = useState("Produtos");
+    const [search, setSearch] = useState(initialSearch);
+    const [category, setCategory] = useState(initialCategory);
     const [showAll, setShowAll] = useState(false);
     useEffect(() => {
         const controller = new AbortController();
@@ -60,6 +69,7 @@ export function ExplorePage({
                     value={search}
                     onChange={(event) => {
                         setSearch(event.target.value);
+                        onSearchChange?.(event.target.value);
                         setShowAll(false);
                     }}
                 />
@@ -71,6 +81,7 @@ export function ExplorePage({
                     aria-pressed={category === "Produtos"}
                     onClick={() => {
                         setCategory("Produtos");
+                        onCategoryChange?.("Produtos");
                         setShowAll(false);
                     }}
                 >
@@ -95,6 +106,7 @@ export function ExplorePage({
                     aria-pressed={category === "Experiências"}
                     onClick={() => {
                         setCategory("Experiências");
+                        onCategoryChange?.("Experiências");
                         setShowAll(false);
                     }}
                 >
@@ -112,6 +124,12 @@ export function ExplorePage({
                     </span>
                 </button>
             </div>
+            <OfferPreview
+                key={category}
+                category={category}
+                query={search}
+                onNavigate={onNavigate}
+            />
             <div className="explore-producers-heading">
                 <h2 className="explore-heading">Conheça nossos produtores</h2>
                 <button

@@ -6,11 +6,17 @@ export function productToOffer(product: Product): Offer {
     return {
         id: product.id,
         title: product.name,
-        category: "Produtos",
+        category: product.category ?? "Produtos",
         image: product.image,
         price: formatProductPrice(product.price, product.unit),
-        details: [`Produtor: ${product.producerName}`],
+        details: [
+            `Produtor: ${product.producerName}`,
+            ...[product.local, product.duracao].filter(
+                (value): value is string => !!value,
+            ),
+        ],
         description:
+            product.description ??
             "Consulte disponibilidade e formas de retirada diretamente com o produtor.",
     };
 }

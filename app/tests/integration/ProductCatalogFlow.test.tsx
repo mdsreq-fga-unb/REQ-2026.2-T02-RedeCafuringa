@@ -125,5 +125,15 @@ describe("catálogo de produtos no app", () => {
         expect(
             screen.queryByRole("heading", { name: "Entre em sua conta" }),
         ).toBeNull();
+        await user.click(
+            screen.getByRole("button", { name: /Ver mais produtos/ }),
+        );
+        expect(window.location.hash).toBe("#/produtos");
+        expect(
+            await screen.findByRole("heading", {
+                name: "Catálogo de Produtos",
+            }),
+        ).toBeTruthy();
+        expect(await screen.findByText("Mel do Cerrado")).toBeTruthy();
     });
 });

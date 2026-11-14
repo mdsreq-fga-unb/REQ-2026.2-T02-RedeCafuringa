@@ -5,6 +5,11 @@ export type ApiProduct = components["schemas"]["ProductResponse"];
 export type ApiProductList = components["schemas"]["ProductListResponse"];
 
 export type Product = {
+    producerId?: string;
+    description?: string;
+    category?: string;
+    local?: string;
+    duracao?: string;
     id: string;
     name: string;
     producerName: string;

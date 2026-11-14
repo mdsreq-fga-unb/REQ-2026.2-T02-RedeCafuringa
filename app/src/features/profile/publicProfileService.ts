@@ -1,4 +1,8 @@
-import { getApiClient } from "@/shared/api";
+import { readDemoOffers } from "@/features/offers/publishedOffers";
+import { registeredToCatalogItem } from "@/features/offers/catalogItems";
+import { productToOffer } from "@/features/offers/productOffer";
+import { fetchProducts } from "@/features/offers/productService";
+import { ApiHttpError, getApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { readMockUserDetails } from "@/features/auth/mockAuth";
 import { getPublicTrajectory } from "@/features/trajectory/trajectoryService";
@@ -40,11 +44,31 @@ export async function listProducerOffers(
     signal?: AbortSignal,
 ): Promise<ProducerOffer[]> {
     const data = isMockAuthEnabled
-        ? demoPublicOffers
-        : await getApiClient().get<ProducerOffer[]>(
-              `/producers/${encodeURIComponent(id)}/offers`,
-              { auth: false, signal },
-          );
+        ? [
+              ...readDemoOffers()
+                  .filter((item) => item.disponivel !== false)
+                  .map((item) => ({
+                      ...productToOffer(registeredToCatalogItem(item)),
+                      producerId: item.produtor.id,
+                  })),
+              ...demoPublicOffers,
+          ]
+        : await getApiClient()
+              .get<ProducerOffer[]>(
+                  `/producers/${encodeURIComponent(id)}/offers`,
+                  { auth: false, signal },
+              )
+              .catch(async (error: unknown) => {
+                  if (!(error instanceof ApiHttpError) || error.status !== 404)
+                      throw error;
+                  // A API atual já oferece produtos públicos; a rota agregada da HU14 é futura.
+                  return (await fetchProducts())
+                      .filter((item) => item.producerId === id)
+                      .map((item) => ({
+                          ...productToOffer(item),
+                          producerId: id,
+                      }));
+              });
     if (!Array.isArray(data)) throw new Error("Resposta de ofertas inválida");
     // Nunca mistura ofertas de outros produtores, mesmo se a API devolver uma lista ampla.
     return data.filter((offer) => offer.producerId === id);
