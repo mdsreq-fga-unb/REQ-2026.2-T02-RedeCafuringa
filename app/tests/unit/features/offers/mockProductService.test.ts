@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mockApiProducts } from "@/features/offers/mockProducts";
 import { listMockProducts } from "@/features/offers/mockProductService";
 
+
 describe("listMockProducts", () => {
     it("lista os produtos disponíveis do catálogo demo", async () => {
         const products = await listMockProducts();
