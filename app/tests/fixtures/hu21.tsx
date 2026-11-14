@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import { App } from "@/app/App";
 
-// Convenções propostas para a fase RED; ver hu21-tdd.md.
+// Fronteira HTTP proposta para a HU21; a API ainda não expõe /experiences.
 export const experienceRoute = "#/experiencias/nova";
 export const experiencePath = "/api/v1/experiences";
 export const token = "hu21-producer-token";
@@ -129,7 +129,7 @@ export async function fillExperience(user: ReturnType<typeof userEvent.setup>) {
 }
 
 export function submit() {
-    const form = fields().nome.closest("form");
+    const form = screen.getByLabelText(/^Descrição/i).closest("form");
     if (!form)
         throw new Error("Os campos da HU21 devem pertencer a um formulário.");
     fireEvent.submit(form);

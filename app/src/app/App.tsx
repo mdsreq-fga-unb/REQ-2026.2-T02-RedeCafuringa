@@ -45,12 +45,13 @@ import {
 } from "@/features/offers";
 import { ProductRegistrationPage } from "@/features/offers/ProductRegistrationPage";
 import { ProductPublishedPage } from "@/features/offers/ProductPublishedPage";
+import type { RegisteredExperience } from "@/features/offers/experienceService";
 import type { RegisteredProduct } from "@/features/offers/productService";
 import { apiResourceUrl } from "@/shared/api";
 
 export function App() {
     const [publishedProducts, setPublishedProducts] = useState<
-        RegisteredProduct[]
+        (RegisteredProduct | RegisteredExperience)[]
     >([]);
     const { route, navigate } = useHashRoute();
     const { role, consumerName, email, cpf, userId, signIn, signOut } =
@@ -78,10 +79,12 @@ export function App() {
                     ? product.fotos[0]
                     : apiResourceUrl(product.fotos[0])
                 : "",
-            price: `${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(product.precoPorUnidade)} / unidade`,
+            price: `${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format("valorPorPessoa" in product ? product.valorPorPessoa : product.precoPorUnidade)} / ${"valorPorPessoa" in product ? "pessoa" : "unidade"}`,
             details: [
                 `Produtor: ${product.produtor.nomeIniciativa}`,
-                `${product.gramasPorUnidade} g por unidade`,
+                ...("local" in product
+                    ? [product.local, product.duracao]
+                    : [`${product.gramasPorUnidade} g por unidade`]),
             ],
             description: product.descricao,
         })),
@@ -91,7 +94,7 @@ export function App() {
         if (path === "/oferta-publicada" && !published) navigate("/catalogo");
     }, [path, published, navigate]);
     const productBlocked =
-        path === "/produtos/novo" &&
+        ["/produtos/novo", "/experiencias/nova"].includes(path) &&
         (role !== "producer" || !localStorage.getItem("cafuringa-token"));
     useEffect(() => {
         if (productBlocked) navigate(role ? "/conta" : "/login/producer");
@@ -279,20 +282,27 @@ export function App() {
                         }
                     />
                 )}
-                {path === "/produtos/novo" && !productBlocked && (
-                    <ProductRegistrationPage
-                        onNavigate={navigate}
-                        onPublished={(product) => {
-                            setPublishedProducts((previous) => [
-                                ...previous.filter(
-                                    (item) => item.id !== product.id,
-                                ),
-                                product,
-                            ]);
-                            navigate("/oferta-publicada");
-                        }}
-                    />
-                )}
+                {["/produtos/novo", "/experiencias/nova"].includes(path) &&
+                    !productBlocked && (
+                        <ProductRegistrationPage
+                            key={path}
+                            initialCategory={
+                                path === "/experiencias/nova"
+                                    ? "Experiência"
+                                    : "Produtos"
+                            }
+                            onNavigate={navigate}
+                            onPublished={(product) => {
+                                setPublishedProducts((previous) => [
+                                    ...previous.filter(
+                                        (item) => item.id !== product.id,
+                                    ),
+                                    product,
+                                ]);
+                                navigate("/oferta-publicada");
+                            }}
+                        />
+                    )}
                 {path === "/oferta-publicada" && published && (
                     <ProductPublishedPage
                         id={published.id}

@@ -26,15 +26,73 @@ import {
 
 vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: false }));
 
+it("alterna categorias no cadastro comum sem perder dados e envia os campos específicos", async () => {
+    session();
+    const api = mockExperienceApi();
+    window.location.hash = "#/produtos/novo";
+    render(<App />);
+    const user = userEvent.setup();
+    await user.selectOptions(
+        screen.getByLabelText(/^Categoria/i),
+        "Experiência",
+    );
+    const f = await fillExperience(user);
+    await user.selectOptions(f.categoria, "Produtos");
+    expect(screen.queryByLabelText(/^Local/i)).toBeNull();
+    expect(screen.getByLabelText(/^Gramas por unidade/i)).toBeTruthy();
+    await user.selectOptions(f.categoria, "Experiência");
+    expect(fields().nome.value).toBe(experience.nome);
+    expect(fields().local.value).toBe(experience.local);
+    expect(fields().duracao.value).toBe(experience.duracao);
+    expect(fields().fotos.files?.[0].name).toBe("visita.png");
+    submit();
+    expect(await screen.findByRole("status")).toBeTruthy();
+    const body = submissions(api)[0][1]!.body as FormData;
+    expect(body.has("gramasPorUnidade")).toBe(false);
+    expect(body.has("precoPorUnidade")).toBe(false);
+    expect(body.get("valorPorPessoa")).toBe("45");
+});
+
+it("aceita valor em reais com vírgula", async () => {
+    session();
+    const api = mockExperienceApi();
+    const { user } = await openExperience();
+    const f = await fillExperience(user);
+    fireEvent.change(f.preco, { target: { value: "45,50" } });
+    submit();
+    expect(await screen.findByRole("status")).toBeTruthy();
+    expect(
+        (submissions(api)[0][1]!.body as FormData).get("valorPorPessoa"),
+    ).toBe("45.5");
+});
+
+it("API indisponível preserva o formulário sem simular publicação", async () => {
+    session();
+    mockExperienceApi(() =>
+        json({ message: "Not found", statusCode: 404 }, 404),
+    );
+    const { user } = await openExperience();
+    const f = await fillExperience(user);
+    submit();
+    expect((await screen.findByRole("alert")).textContent).toMatch(
+        /indisponível.*preservados/i,
+    );
+    expect(f.local.value).toBe(experience.local);
+    expect(
+        screen.queryByRole("heading", { name: "Sua oferta está na rede" }),
+    ).toBeNull();
+});
+
 it("CA01: produtor abre cadastro pela área de gerenciamento", async () => {
     session();
     mockExperienceApi();
     window.location.hash = "#/catalogo";
     render(<App />);
-    await userEvent.setup().click(
-        screen.getByRole("button", {
-            name: /adicionar experiência|cadastrar experiência/i,
-        }),
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Adicionar produto" }));
+    await user.selectOptions(
+        await screen.findByLabelText(/^Categoria/i),
+        "Experiência",
     );
     expect(
         await screen.findByRole("heading", {

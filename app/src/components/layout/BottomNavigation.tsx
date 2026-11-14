@@ -67,12 +67,22 @@ export function BottomNavigation({
             <button
                 data-action={isProducer ? "add-product" : undefined}
                 aria-current={
-                    path === (isProducer ? "/produtos/novo" : "/reservas")
+                    (
+                        isProducer
+                            ? ["/produtos/novo", "/experiencias/nova"].includes(
+                                  path,
+                              )
+                            : path === "/reservas"
+                    )
                         ? "page"
                         : undefined
                 }
                 className={
-                    path === "/produtos/novo" || path === "/reservas"
+                    [
+                        "/produtos/novo",
+                        "/experiencias/nova",
+                        "/reservas",
+                    ].includes(path)
                         ? "active"
                         : ""
                 }

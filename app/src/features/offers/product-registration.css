@@ -30,6 +30,28 @@
     margin-bottom: 16px;
 }
 
+.experience-registration .product-photo-picker {
+    width: 58px;
+    min-height: 58px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+.experience-registration .product-photo-picker span {
+    display: none;
+}
+
+.experience-registration .product-photo-help {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
 .product-field label {
     display: block;
     font-weight: 700;

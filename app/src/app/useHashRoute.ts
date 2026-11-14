@@ -10,6 +10,7 @@ const getInitialRoute = () => {
         "/conta-criada/admin",
         "/catalogo",
         "/produtos/novo",
+        "/experiencias/nova",
         "/oferta-publicada",
         "/entrar",
         "/recuperar-acesso",

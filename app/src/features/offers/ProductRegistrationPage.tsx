@@ -6,38 +6,66 @@ import { PRODUCT_PHOTOS_MAX, registerProduct } from "./productService";
 import type { ProductDraft, RegisteredProduct } from "./productService";
 import "./product-registration.css";
 
-type Errors = Partial<Record<keyof ProductDraft, string>>;
-const initialDraft: ProductDraft = {
+import {
+    registerExperience,
+    type RegisteredExperience,
+} from "./experienceService";
+
+type OfferDraft = ProductDraft & { local: string; duracao: string };
+type Errors = Partial<Record<keyof OfferDraft, string>>;
+const initialDraft: OfferDraft = {
     nome: "",
     categoria: "Produtos",
     descricao: "",
     preco: "",
     gramas: "",
+    local: "",
+    duracao: "",
     fotos: [],
 };
 
-function validate(draft: ProductDraft): Errors {
+function validate(draft: OfferDraft): Errors {
     const errors: Errors = {};
-    if (!draft.nome.trim()) errors.nome = "Informe o nome do produto.";
+    const experience = draft.categoria === "Experiência";
+    if (!draft.nome.trim() || draft.nome.length > 120)
+        errors.nome = experience
+            ? "Informe o título da experiência (até 120 caracteres)."
+            : "Informe o nome do produto (até 120 caracteres).";
     if (!["Produtos", "Experiência"].includes(draft.categoria))
         errors.categoria = "Selecione uma categoria válida.";
-    if (!draft.descricao.trim())
-        errors.descricao = "Informe a descrição do produto.";
+    if (!draft.descricao.trim() || draft.descricao.length > 2000)
+        errors.descricao =
+            "Informe a descrição da oferta (até 2000 caracteres).";
     if (
         !draft.preco.trim() ||
-        !Number.isFinite(Number(draft.preco)) ||
-        Number(draft.preco) < 0
+        !/^\d+(?:[.,]\d{1,2})?$/.test(draft.preco) ||
+        !Number.isFinite(Number(draft.preco.replace(",", "."))) ||
+        Number(draft.preco.replace(",", ".")) < 0 ||
+        Number(draft.preco.replace(",", ".")) > 100000
     )
         errors.preco = "Informe um preço válido, maior ou igual a zero.";
     if (
-        !draft.gramas.trim() ||
-        !Number.isFinite(Number(draft.gramas)) ||
-        Number(draft.gramas) <= 0
+        !experience &&
+        (!draft.gramas.trim() ||
+            !Number.isFinite(Number(draft.gramas)) ||
+            Number(draft.gramas) <= 0)
     )
         errors.gramas =
             "Informe as gramas por unidade, com peso maior que zero.";
+    if (experience && (!draft.local.trim() || draft.local.length > 300))
+        errors.local = "Informe o local da experiência (até 300 caracteres).";
+    if (experience && (!draft.duracao.trim() || draft.duracao.length > 100))
+        errors.duracao =
+            "Informe a duração da experiência (até 100 caracteres).";
     if (!draft.fotos.length)
-        errors.fotos = "Adicione ao menos uma foto do produto.";
+        errors.fotos = "Adicione ao menos uma foto da oferta.";
+    else if (
+        draft.fotos.some(
+            (file) =>
+                !["image/png", "image/jpeg", "image/webp"].includes(file.type),
+        )
+    )
+        errors.fotos = "Selecione fotos PNG, JPEG ou WebP.";
     else if (draft.fotos.length > PRODUCT_PHOTOS_MAX)
         errors.fotos = `Adicione no máximo ${PRODUCT_PHOTOS_MAX} fotos.`;
     // O tamanho não é conferido aqui: o envio reduz cada foto no aparelho
@@ -51,7 +79,7 @@ function newIdempotencyKey() {
 }
 
 /** Mensagem para a falha da API, mantendo a orientação do servidor (RNF03). */
-function failureMessage(error: unknown): string {
+function failureMessage(error: unknown, experience: boolean): string {
     const kept = "Os dados preenchidos foram preservados.";
     if (!(error instanceof ApiHttpError))
         return "Não foi possível concluir o cadastro. Verifique sua conexão e tente novamente. Os dados e fotos foram preservados.";
@@ -59,16 +87,18 @@ function failureMessage(error: unknown): string {
         case 401:
             return "Sua sessão expirou. Entre novamente como produtor. Os dados preenchidos foram preservados nesta tela.";
         case 403:
-            return `Seu perfil não tem permissão para cadastrar produtos. ${kept}`;
+            return `Seu perfil não tem permissão para cadastrar ${experience ? "experiências" : "produtos"}. ${kept}`;
         case 404:
-            return `Sua conta de produtor não está ativa. Fale com a administração da rede. ${kept}`;
+            return experience
+                ? `O cadastro de experiências está indisponível no servidor. Tente novamente mais tarde. ${kept}`
+                : `Sua conta de produtor não está ativa. Fale com a administração da rede. ${kept}`;
         case 400:
         case 413:
         case 415: {
             const detail = error.details.length
                 ? error.details.join(" ")
                 : error.message;
-            return `Cadastro não concluído. ${detail || "Confira os dados do produto e tente novamente."} ${kept}`;
+            return `Cadastro não concluído. ${detail || "Confira os dados da oferta e tente novamente."} ${kept}`;
         }
         default:
             return "Não foi possível concluir o cadastro. Verifique sua conexão e tente novamente. Os dados e fotos foram preservados.";
@@ -89,11 +119,17 @@ function PhotoPreview({ file }: { file: File }) {
 export function ProductRegistrationPage({
     onNavigate,
     onPublished,
+    initialCategory = "Produtos",
 }: {
     onNavigate: (path: string) => void;
-    onPublished: (product: RegisteredProduct) => void;
+    onPublished: (product: RegisteredProduct | RegisteredExperience) => void;
+    initialCategory?: "Produtos" | "Experiência";
 }) {
-    const [draft, setDraft] = useState<ProductDraft>(initialDraft);
+    const [draft, setDraft] = useState<OfferDraft>(() => ({
+        ...initialDraft,
+        categoria: initialCategory,
+    }));
+    const experience = draft.categoria === "Experiência";
     const [errors, setErrors] = useState<Errors>({});
     const [failure, setFailure] = useState("");
     const [pending, setPending] = useState(false);
@@ -103,14 +139,13 @@ export function ProductRegistrationPage({
     const photoInput = useRef<HTMLInputElement>(null);
     const idempotencyKey = useRef(newIdempotencyKey());
 
-    function update<K extends keyof ProductDraft>(
-        key: K,
-        value: ProductDraft[K],
-    ) {
+    function update<K extends keyof OfferDraft>(key: K, value: OfferDraft[K]) {
         // Dados novos = cadastro novo; repetir sem editar reaproveita a chave (CA07).
         idempotencyKey.current = newIdempotencyKey();
         setDraft((previous) => ({ ...previous, [key]: value }));
-        setErrors((previous) => ({ ...previous, [key]: undefined }));
+        setErrors((previous) =>
+            key === "categoria" ? {} : { ...previous, [key]: undefined },
+        );
         setFailure("");
     }
 
@@ -131,19 +166,22 @@ export function ProductRegistrationPage({
         setPending(true);
         try {
             onPublished(
-                await registerProduct(draft, {
-                    idempotencyKey: idempotencyKey.current,
-                }),
+                await (experience ? registerExperience : registerProduct)(
+                    { ...draft, preco: draft.preco.replace(",", ".") },
+                    {
+                        idempotencyKey: idempotencyKey.current,
+                    },
+                ),
             );
         } catch (error) {
-            setFailure(failureMessage(error));
+            setFailure(failureMessage(error, experience));
         } finally {
             submitting.current = false;
             setPending(false);
         }
     }
 
-    function accessibility(key: keyof ProductDraft) {
+    function accessibility(key: keyof OfferDraft) {
         return {
             id: `product-${key}`,
             name: key,
@@ -154,7 +192,7 @@ export function ProductRegistrationPage({
                 : undefined,
         };
     }
-    function errorFor(key: keyof ProductDraft) {
+    function errorFor(key: keyof OfferDraft) {
         return (
             errors[key] && (
                 <p
@@ -170,26 +208,39 @@ export function ProductRegistrationPage({
 
     return (
         <section
-            className="product-registration"
+            className={`product-registration${experience ? " experience-registration" : ""}`}
             aria-labelledby="product-title"
         >
             <BackButton
                 label="Voltar"
                 onClick={() => onNavigate("/catalogo")}
             />
-            <h1 id="product-title">Divulgue um produto</h1>
+            <h1 id="product-title">
+                {experience
+                    ? "Divulgue uma experiência"
+                    : "Divulgue um produto"}
+            </h1>
             <p className="product-intro">
-                Dados essenciais para aparecer no catálogo.
+                {experience
+                    ? "Convide as pessoas a conhecer sua iniciativa."
+                    : "Dados essenciais para aparecer no catálogo."}
             </p>
             <form ref={formRef} onSubmit={save} noValidate aria-busy={pending}>
                 <fieldset disabled={pending}>
                     <div className="product-field">
-                        <label htmlFor="product-nome">Nome *</label>
+                        <label htmlFor="product-nome">
+                            {experience ? "Título *" : "Nome *"}
+                        </label>
                         <input
                             {...accessibility("nome")}
                             value={draft.nome}
                             onChange={(e) => update("nome", e.target.value)}
-                            placeholder="Ex.: Cesta de hortaliças da estação"
+                            maxLength={120}
+                            placeholder={
+                                experience
+                                    ? "Visita e Degustação de Queijo"
+                                    : "Ex.: Cesta de hortaliças da estação"
+                            }
                             autoComplete="off"
                         />
                         {errorFor("nome")}
@@ -216,43 +267,86 @@ export function ProductRegistrationPage({
                             onChange={(e) =>
                                 update("descricao", e.target.value)
                             }
-                            placeholder="Conte o que você oferece, como é produzido e o que está incluído. Ex.: cesta com hortaliças frescas cultivadas sem agrotóxicos."
+                            placeholder={
+                                experience
+                                    ? "Caminhe pelo sítio, conheça a produção familiar e prove sabores da estação. Use calçado fechado e leve água."
+                                    : "Conte o que você oferece, como é produzido e o que está incluído. Ex.: cesta com hortaliças frescas cultivadas sem agrotóxicos."
+                            }
+                            maxLength={2000}
                             rows={3}
                         />
                         {errorFor("descricao")}
                     </div>
+                    {experience && (
+                        <>
+                            <div className="product-field">
+                                <label htmlFor="product-local">Local *</label>
+                                <input
+                                    {...accessibility("local")}
+                                    maxLength={300}
+                                    value={draft.local}
+                                    onChange={(e) =>
+                                        update("local", e.target.value)
+                                    }
+                                    placeholder="Sítio Raízes, Cafuringa, DF"
+                                />
+                                {errorFor("local")}
+                            </div>
+                            <div className="product-field">
+                                <label htmlFor="product-duracao">
+                                    Duração *
+                                </label>
+                                <input
+                                    {...accessibility("duracao")}
+                                    maxLength={100}
+                                    value={draft.duracao}
+                                    onChange={(e) =>
+                                        update("duracao", e.target.value)
+                                    }
+                                    placeholder="2 horas"
+                                />
+                                {errorFor("duracao")}
+                            </div>
+                        </>
+                    )}
                     <div className="product-field product-price">
                         <label htmlFor="product-preco">
-                            Preço por unidade *
+                            {experience
+                                ? "Valor por pessoa *"
+                                : "Preço por unidade *"}
                         </label>
                         <input
                             {...accessibility("preco")}
-                            type="number"
+                            type={experience ? "text" : "number"}
                             inputMode="decimal"
                             min="0"
                             step="0.01"
                             value={draft.preco}
                             onChange={(e) => update("preco", e.target.value)}
-                            placeholder="Ex.: 40,00"
+                            placeholder={experience ? "R$ 45,00" : "Ex.: 40,00"}
                         />
                         {errorFor("preco")}
                     </div>
-                    <div className="product-field product-weight">
-                        <label htmlFor="product-gramas">
-                            Gramas por unidade *
-                        </label>
-                        <input
-                            {...accessibility("gramas")}
-                            type="number"
-                            inputMode="decimal"
-                            min="0"
-                            step="any"
-                            value={draft.gramas}
-                            onChange={(e) => update("gramas", e.target.value)}
-                            placeholder="Ex.: 500"
-                        />
-                        {errorFor("gramas")}
-                    </div>
+                    {!experience && (
+                        <div className="product-field product-weight">
+                            <label htmlFor="product-gramas">
+                                Gramas por unidade *
+                            </label>
+                            <input
+                                {...accessibility("gramas")}
+                                type="number"
+                                inputMode="decimal"
+                                min="0"
+                                step="any"
+                                value={draft.gramas}
+                                onChange={(e) =>
+                                    update("gramas", e.target.value)
+                                }
+                                placeholder="Ex.: 500"
+                            />
+                            {errorFor("gramas")}
+                        </div>
+                    )}
                     <div className="product-field product-photos">
                         <label htmlFor="product-fotos">Adicionar fotos *</label>
                         <div
@@ -374,7 +468,9 @@ export function ProductRegistrationPage({
                     disabled={pending}
                     type="submit"
                 >
-                    {pending ? "Adicionando produto…" : "Adicionar produto"}
+                    {pending
+                        ? `Adicionando ${experience ? "experiência" : "produto"}…`
+                        : `Adicionar ${experience ? "experiência" : "produto"}`}
                 </button>
             </form>
         </section>
