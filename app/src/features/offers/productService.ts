@@ -2,8 +2,21 @@ import { ApiHttpError, getApiClient, type ApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
 import { toProductList } from "./productAdapter";
-import type { ApiProduct, Product } from "./productTypes";
 import { listMockProducts } from "./mockProductService";
+import type { ApiProductList, Product } from "./productTypes";
+
+/** Máximo aceito pela API (GET /products). Sem paginação na tela, ver o PR. */
+const CATALOG_LIMIT = 50;
+
+export async function fetchProducts(
+    client: ApiClient = getApiClient(),
+): Promise<Product[]> {
+    const page = await client.get<ApiProductList>(
+        `/products?categoria=Produtos&limite=${CATALOG_LIMIT}`,
+        { auth: false },
+    );
+    return toProductList(page.itens);
+}
 
 export type ProductDraft = {
     nome: string;
@@ -107,11 +120,4 @@ export function listProducts(): Promise<Product[]> {
     return isMockAuthEnabled ? listMockProducts() : fetchProducts();
 }
 
-export async function fetchProducts(
-    client: ApiClient = getApiClient(),
-): Promise<Product[]> {
-    const items = await client.get<ApiProduct[]>("/products", {
-        auth: false,
-    });
-    return toProductList(items);
-}
+
