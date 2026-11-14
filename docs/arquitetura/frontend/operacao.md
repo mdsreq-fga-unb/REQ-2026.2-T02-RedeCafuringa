@@ -22,7 +22,9 @@ Definidas em `app/.env.example`; o `setup` copia para `app/.env.local` (ignorado
 | Variável | Para quê |
 |---|---|
 | `VITE_API_URL` | URL base da API, com `/api/v1`. Vazio = mesma origem |
-| `VITE_USE_MOCK_AUTH` | `true` usa o login falso (só desenvolvimento) |
+| `VITE_USE_MOCK_AUTH` | `true` usa o login falso (só desenvolvimento). Atalho: `./scripts/dev.sh mock on\|off` (edita o `app/.env.local` e reinicia o app no Docker) |
+
+No Docker, o `app/.env.local` chega ao container pelo bind mount. O `compose.yaml` não define essas variáveis de propósito: o Vite dá prioridade ao ambiente do processo sobre os arquivos `.env`, e um valor ali faria o container ignorar o arquivo.
 
 **Tudo com prefixo `VITE_` vai para o bundle e é público.** Nunca coloque senha, token ou chave. Valor inválido para-o na inicialização com uma mensagem na tela; variável ausente é aceita.
 

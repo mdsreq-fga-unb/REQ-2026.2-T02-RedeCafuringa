@@ -1,0 +1,1354 @@
+[
+  {
+    "id": 1,
+    "titulo": "Cadastrar perfil de consumidor",
+    "situacao": "Em execução",
+    "prioridade": "Média",
+    "mvp": true,
+    "iteracao": 6,
+    "ordem": 1,
+    "rf": "RF01",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF07",
+      "RNF08",
+      "RNF10",
+      "RNF11",
+      "RNF12",
+      "RNF15"
+    ],
+    "regras": [
+      "RN01",
+      "RN02",
+      "RN05",
+      "RN08"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 2,
+    "titulo": "Cadastrar perfil de produtor",
+    "situacao": "Em execução",
+    "prioridade": "Média",
+    "mvp": true,
+    "iteracao": 6,
+    "ordem": 2,
+    "rf": "RF02",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF07",
+      "RNF08",
+      "RNF11",
+      "RNF15"
+    ],
+    "regras": [
+      "RN01",
+      "RN02",
+      "RN05",
+      "RN07",
+      "RN08",
+      "RN09"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 3,
+    "titulo": "Cadastrar usuário administrador",
+    "situacao": "Em execução",
+    "prioridade": "Média",
+    "mvp": true,
+    "iteracao": 6,
+    "ordem": 3,
+    "rf": "RF03",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF07",
+      "RNF08",
+      "RNF10",
+      "RNF11",
+      "RNF12"
+    ],
+    "regras": [
+      "RN01",
+      "RN03",
+      "RN05"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 4,
+    "titulo": "Consultar usuários cadastrados",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 6,
+    "ordem": 4,
+    "rf": "RF04",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF08",
+      "RNF11",
+      "RNF12"
+    ],
+    "regras": [
+      "RN01",
+      "RN03"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 5,
+    "titulo": "Excluir usuário",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF05",
+    "rnfs": [
+      "RNF03",
+      "RNF08",
+      "RNF11"
+    ],
+    "regras": [
+      "RN01",
+      "RN03",
+      "RN04"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 6,
+    "titulo": "Consultar conteúdos cadastrados",
+    "situacao": "Planejado",
+    "prioridade": "Alta",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF06",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF06",
+      "RNF10",
+      "RNF11",
+      "RNF12",
+      "RNF14"
+    ],
+    "regras": [
+      "RN01",
+      "RN07",
+      "RN09",
+      "RN10",
+      "RN11",
+      "RN15",
+      "RN16"
+    ],
+    "cps": [
+      "CP2",
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 7,
+    "titulo": "Remover conteúdo inadequado",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF07",
+    "rnfs": [
+      "RNF03",
+      "RNF08",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN01",
+      "RN03",
+      "RN04",
+      "RN10"
+    ],
+    "cps": [
+      "CP2",
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 8,
+    "titulo": "Atualizar informações institucionais",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF08",
+    "rnfs": [
+      "RNF03",
+      "RNF07",
+      "RNF08"
+    ],
+    "regras": [
+      "RN03",
+      "RN13"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 9,
+    "titulo": "Autenticar usuário",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 6,
+    "ordem": 5,
+    "rf": "RF09",
+    "rnfs": [
+      "RNF03",
+      "RNF08",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN01",
+      "RN05"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE1"
+    ]
+  },
+  {
+    "id": 10,
+    "titulo": "Recuperar acesso à conta",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 6,
+    "ordem": 6,
+    "rf": "RF10",
+    "rnfs": [
+      "RNF03",
+      "RNF08",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN05"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE1"
+    ]
+  },
+  {
+    "id": 11,
+    "titulo": "Excluir conta",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF11",
+    "rnfs": [
+      "RNF03",
+      "RNF08",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN01",
+      "RN06"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE1"
+    ]
+  },
+  {
+    "id": 12,
+    "titulo": "Registrar trajetória do produtor",
+    "situacao": "Em execução",
+    "prioridade": "Baixa",
+    "mvp": true,
+    "iteracao": 6,
+    "ordem": 7,
+    "rf": "RF12",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF07",
+      "RNF08",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN01",
+      "RN02",
+      "RN07",
+      "RN09"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 13,
+    "titulo": "Atualizar perfil de produtor",
+    "situacao": "Planejado",
+    "prioridade": "Média",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF13",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF07",
+      "RNF08",
+      "RNF11"
+    ],
+    "regras": [
+      "RN01",
+      "RN02",
+      "RN07"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 14,
+    "titulo": "Consultar perfil de produtor",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 7,
+    "ordem": 8,
+    "rf": "RF14",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF03",
+      "RNF04",
+      "RNF06",
+      "RNF11"
+    ],
+    "regras": [
+      "RN07",
+      "RN09",
+      "RN11",
+      "RN16"
+    ],
+    "cps": [
+      "CP1"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 15,
+    "titulo": "Cadastrar produto",
+    "situacao": "Em execução",
+    "prioridade": "Média",
+    "mvp": true,
+    "iteracao": 7,
+    "ordem": 9,
+    "rf": "RF15",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF07",
+      "RNF08",
+      "RNF15"
+    ],
+    "regras": [
+      "RN01",
+      "RN02",
+      "RN09",
+      "RN11"
+    ],
+    "cps": [
+      "CP2"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 16,
+    "titulo": "Atualizar produto",
+    "situacao": "Planejado",
+    "prioridade": "Média",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF16",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF07",
+      "RNF08",
+      "RNF11"
+    ],
+    "regras": [
+      "RN01",
+      "RN09",
+      "RN10",
+      "RN11"
+    ],
+    "cps": [
+      "CP2"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 17,
+    "titulo": "Excluir produto",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF17",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF08",
+      "RNF11"
+    ],
+    "regras": [
+      "RN01",
+      "RN09",
+      "RN10"
+    ],
+    "cps": [
+      "CP2"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 18,
+    "titulo": "Informar disponibilidade de produto",
+    "situacao": "Planejado",
+    "prioridade": "Média",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF18",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF07",
+      "RNF08"
+    ],
+    "regras": [
+      "RN09",
+      "RN10"
+    ],
+    "cps": [
+      "CP2"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 19,
+    "titulo": "Consultar catálogo de produtos",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 7,
+    "ordem": 10,
+    "rf": "RF19",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF04",
+      "RNF05",
+      "RNF06",
+      "RNF10"
+    ],
+    "regras": [
+      "RN10",
+      "RN15"
+    ],
+    "cps": [
+      "CP2"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 20,
+    "titulo": "Consultar detalhes do produto",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 7,
+    "ordem": 11,
+    "rf": "RF20",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF04",
+      "RNF05",
+      "RNF06",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN09",
+      "RN11"
+    ],
+    "cps": [
+      "CP2"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 21,
+    "titulo": "Cadastrar experiência",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 7,
+    "ordem": 12,
+    "rf": "RF21",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF07",
+      "RNF08",
+      "RNF15"
+    ],
+    "regras": [
+      "RN01",
+      "RN02",
+      "RN09",
+      "RN11"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 22,
+    "titulo": "Atualizar experiência",
+    "situacao": "Planejado",
+    "prioridade": "Média",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF22",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF07",
+      "RNF08",
+      "RNF15"
+    ],
+    "regras": [
+      "RN01",
+      "RN09",
+      "RN10",
+      "RN11"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 23,
+    "titulo": "Excluir experiência",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF23",
+    "rnfs": [
+      "RNF03",
+      "RNF08"
+    ],
+    "regras": [
+      "RN01",
+      "RN06",
+      "RN09",
+      "RN10"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 24,
+    "titulo": "Consultar catálogo de experiências",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 7,
+    "ordem": 13,
+    "rf": "RF24",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF03",
+      "RNF04",
+      "RNF06",
+      "RNF15"
+    ],
+    "regras": [
+      "RN10",
+      "RN15"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 25,
+    "titulo": "Consultar detalhes da experiência",
+    "situacao": "Planejado",
+    "prioridade": "Alta",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF25",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF03",
+      "RNF04",
+      "RNF06",
+      "RNF11",
+      "RNF15"
+    ],
+    "regras": [
+      "RN09",
+      "RN10",
+      "RN11"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 26,
+    "titulo": "Cadastrar evento",
+    "situacao": "Planejado",
+    "prioridade": "Média",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF26",
+    "rnfs": [
+      "RNF03",
+      "RNF07",
+      "RNF08",
+      "RNF15"
+    ],
+    "regras": [
+      "RN01",
+      "RN02",
+      "RN09",
+      "RN11",
+      "RN13"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 27,
+    "titulo": "Atualizar evento",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF27",
+    "rnfs": [
+      "RNF03",
+      "RNF07",
+      "RNF08",
+      "RNF15"
+    ],
+    "regras": [
+      "RN01",
+      "RN09",
+      "RN10",
+      "RN11",
+      "RN13"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 28,
+    "titulo": "Excluir evento",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF28",
+    "rnfs": [
+      "RNF03",
+      "RNF08"
+    ],
+    "regras": [
+      "RN01",
+      "RN06",
+      "RN09",
+      "RN10",
+      "RN13"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 29,
+    "titulo": "Consultar catálogo de eventos",
+    "situacao": "Planejado",
+    "prioridade": "Média",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF29",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF03",
+      "RNF04",
+      "RNF06",
+      "RNF15"
+    ],
+    "regras": [
+      "RN09",
+      "RN10",
+      "RN11",
+      "RN13",
+      "RN15",
+      "RN16"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 30,
+    "titulo": "Consultar detalhes do evento",
+    "situacao": "Planejado",
+    "prioridade": "Média",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF30",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF03",
+      "RNF04",
+      "RNF06",
+      "RNF11",
+      "RNF15"
+    ],
+    "regras": [
+      "RN09",
+      "RN10",
+      "RN11",
+      "RN13",
+      "RN16"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 31,
+    "titulo": "Auxiliar cadastro de ofertas",
+    "situacao": "Planejado",
+    "prioridade": "Alta",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF31",
+    "rnfs": [
+      "RNF02",
+      "RNF03",
+      "RNF08",
+      "RNF11"
+    ],
+    "regras": [
+      "RN01",
+      "RN02",
+      "RN09",
+      "RN11"
+    ],
+    "cps": [
+      "CP2",
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 32,
+    "titulo": "Apresentar informações da Cafuringa",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF32",
+    "rnfs": [
+      "RNF04",
+      "RNF05",
+      "RNF06",
+      "RNF12"
+    ],
+    "regras": [
+      "RN13"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 33,
+    "titulo": "Consultar guia de boas práticas",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF33",
+    "rnfs": [
+      "RNF04",
+      "RNF05",
+      "RNF12"
+    ],
+    "regras": [
+      "RN14"
+    ],
+    "cps": [
+      "CP3"
+    ],
+    "oes": [
+      "OE1"
+    ]
+  },
+  {
+    "id": 34,
+    "titulo": "Notificar novos eventos",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF34",
+    "rnfs": [
+      "RNF03",
+      "RNF10",
+      "RNF11",
+      "RNF12"
+    ],
+    "regras": [
+      "RN15"
+    ],
+    "cps": [
+      "CP4"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 35,
+    "titulo": "Visualizar ofertas no mapa",
+    "situacao": "Planejado",
+    "prioridade": "Alta",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF35",
+    "rnfs": [
+      "RNF04",
+      "RNF05",
+      "RNF06",
+      "RNF10",
+      "RNF12"
+    ],
+    "regras": [
+      "RN16"
+    ],
+    "cps": [
+      "CP4"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 36,
+    "titulo": "Buscar ofertas",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 7,
+    "ordem": 14,
+    "rf": "RF36",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF06",
+      "RNF12"
+    ],
+    "regras": [
+      "RN15"
+    ],
+    "cps": [
+      "CP4"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 37,
+    "titulo": "Filtrar ofertas",
+    "situacao": "Planejado",
+    "prioridade": "Média",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF37",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF06",
+      "RNF12"
+    ],
+    "regras": [
+      "RN15"
+    ],
+    "cps": [
+      "CP4"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 38,
+    "titulo": "Buscar ofertas por localização",
+    "situacao": "Planejado",
+    "prioridade": "Média",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF38",
+    "rnfs": [
+      "RNF01",
+      "RNF02",
+      "RNF03",
+      "RNF04",
+      "RNF06",
+      "RNF15"
+    ],
+    "regras": [
+      "RN09",
+      "RN15",
+      "RN16"
+    ],
+    "cps": [
+      "CP1",
+      "CP2",
+      "CP3"
+    ],
+    "oes": [
+      "OE2"
+    ]
+  },
+  {
+    "id": 39,
+    "titulo": "Disponibilizar contato direto",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 8,
+    "ordem": 15,
+    "rf": "RF39",
+    "rnfs": [
+      "RNF04",
+      "RNF05",
+      "RNF08",
+      "RNF10",
+      "RNF11",
+      "RNF12"
+    ],
+    "regras": [
+      "RN17"
+    ],
+    "cps": [
+      "CP5"
+    ],
+    "oes": [
+      "OE3"
+    ]
+  },
+  {
+    "id": 40,
+    "titulo": "Enviar feedback",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF40",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF08",
+      "RNF09",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN18"
+    ],
+    "cps": [
+      "CP5"
+    ],
+    "oes": [
+      "OE3"
+    ]
+  },
+  {
+    "id": 41,
+    "titulo": "Visualizar feedback",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF41",
+    "rnfs": [
+      "RNF04",
+      "RNF05",
+      "RNF08",
+      "RNF09",
+      "RNF11",
+      "RNF12"
+    ],
+    "regras": [
+      "RN18"
+    ],
+    "cps": [
+      "CP5"
+    ],
+    "oes": [
+      "OE3"
+    ]
+  },
+  {
+    "id": 42,
+    "titulo": "Editar feedback",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF42",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF08",
+      "RNF09",
+      "RNF11"
+    ],
+    "regras": [
+      "RN18"
+    ],
+    "cps": [
+      "CP5"
+    ],
+    "oes": [
+      "OE3"
+    ]
+  },
+  {
+    "id": 43,
+    "titulo": "Excluir feedback",
+    "situacao": "Planejado",
+    "prioridade": "Baixa",
+    "mvp": false,
+    "iteracao": null,
+    "ordem": null,
+    "rf": "RF43",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF08",
+      "RNF09",
+      "RNF11"
+    ],
+    "regras": [
+      "RN18"
+    ],
+    "cps": [
+      "CP5"
+    ],
+    "oes": [
+      "OE3"
+    ]
+  },
+  {
+    "id": 44,
+    "titulo": "Solicitar pré-reserva de experiência",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 8,
+    "ordem": 16,
+    "rf": "RF44",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF07",
+      "RNF08",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN19"
+    ],
+    "cps": [
+      "CP6"
+    ],
+    "oes": [
+      "OE3"
+    ]
+  },
+  {
+    "id": 45,
+    "titulo": "Consultar pré-reserva",
+    "situacao": "Em execução",
+    "prioridade": "Alta",
+    "mvp": true,
+    "iteracao": 8,
+    "ordem": 17,
+    "rf": "RF45",
+    "rnfs": [
+      "RNF04",
+      "RNF05",
+      "RNF08",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN20"
+    ],
+    "cps": [
+      "CP6"
+    ],
+    "oes": [
+      "OE3"
+    ]
+  },
+  {
+    "id": 46,
+    "titulo": "Cancelar pré-reserva",
+    "situacao": "Em execução",
+    "prioridade": "Média",
+    "mvp": true,
+    "iteracao": 8,
+    "ordem": 18,
+    "rf": "RF46",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF08",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN21"
+    ],
+    "cps": [
+      "CP6"
+    ],
+    "oes": [
+      "OE3"
+    ]
+  },
+  {
+    "id": 47,
+    "titulo": "Responder pré-reserva de experiência",
+    "situacao": "Em execução",
+    "prioridade": "Média",
+    "mvp": true,
+    "iteracao": 8,
+    "ordem": 19,
+    "rf": "RF47",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF08",
+      "RNF10",
+      "RNF11"
+    ],
+    "regras": [
+      "RN22"
+    ],
+    "cps": [
+      "CP6"
+    ],
+    "oes": [
+      "OE3"
+    ]
+  },
+  {
+    "id": 48,
+    "titulo": "Notificar alteração de pré-reserva",
+    "situacao": "Em execução",
+    "prioridade": "Média",
+    "mvp": true,
+    "iteracao": 8,
+    "ordem": 20,
+    "rf": "RF48",
+    "rnfs": [
+      "RNF03",
+      "RNF05",
+      "RNF10",
+      "RNF11",
+      "RNF12"
+    ],
+    "regras": [
+      "RN22"
+    ],
+    "cps": [
+      "CP6"
+    ],
+    "oes": [
+      "OE3"
+    ]
+  }
+]

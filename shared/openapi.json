@@ -1803,12 +1803,359 @@
           "producers"
         ]
       }
+    },
+    "/api/v1/products": {
+      "post": {
+        "description": "HU15/RF15 (CA02-CA05, CA07): cadastra um produto do produtor autenticado, que fica vinculado à conta do token (RN09). Exclusivo do perfil PRODUTOR (RN01, RNF08). Textos são simples (sem HTML). As fotos (1 a 10) passam pelo mesmo tratamento da foto de perfil: formato conferido pelos bytes e regravação em WebP sem metadados (EXIF/GPS).",
+        "operationId": "productsCreate",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Opcional. Identificador gerado pelo app para este cadastro (8 a 64 letras, números, \"-\" ou \"_\"). Reenviar com a mesma chave após uma falha de conexão devolve o produto já criado, sem duplicar (CA07).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "nome",
+                  "categoria",
+                  "descricao",
+                  "precoPorUnidade",
+                  "gramasPorUnidade",
+                  "fotos"
+                ],
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "categoria": {
+                    "type": "string",
+                    "enum": [
+                      "Produtos",
+                      "Experiência"
+                    ]
+                  },
+                  "descricao": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "precoPorUnidade": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "description": "Reais, com ponto e até 2 casas decimais"
+                  },
+                  "gramasPorUnidade": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 1000000
+                  },
+                  "fotos": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 10,
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "De 1 a 10 imagens PNG, JPEG ou WebP de até 5 MB cada, na ordem da galeria (a primeira é a capa)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Produto cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Campos ausentes ou inválidos, sem foto, fotos demais ou ilegíveis (mensagens em `message`)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de produtor (consumidor ou administrador)\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta de produtor inexistente ou desativada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Alguma foto acima de 5 MB",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Alguma foto não é PNG, JPEG ou WebP",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cadastrar produto",
+        "tags": [
+          "products"
+        ]
+      },
+      "get": {
+        "description": "Catálogo público (RF19/HU19; CA08 da HU15): produtos disponíveis de produtores ativos, do mais novo ao mais antigo, paginados. `produtor` restringe ao catálogo de um perfil; `categoria` filtra por tipo; `busca` procura no nome do produto e no nome da iniciativa, sem diferenciar acentos. Cada item tem o mesmo formato de `GET /products/{id}`.",
+        "operationId": "productsList",
+        "parameters": [
+          {
+            "name": "produtor",
+            "required": false,
+            "in": "query",
+            "description": "Só os produtos deste produtor (catálogo do perfil)",
+            "schema": {
+              "example": "64b0c0ffee0000000000abcd",
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoria",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Produtos",
+                "Experiência"
+              ]
+            }
+          },
+          {
+            "name": "busca",
+            "required": false,
+            "in": "query",
+            "description": "Trecho do nome do produto ou do nome da iniciativa do produtor, sem diferenciar acentos e maiúsculas (HU19, RN15)",
+            "schema": {
+              "example": "cafe",
+              "type": "string"
+            }
+          },
+          {
+            "name": "pagina",
+            "required": false,
+            "in": "query",
+            "description": "Página desejada, a partir de 1",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Quantidade de produtos por página",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "example": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página do catálogo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Filtro ou paginação inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Consultar o catálogo de produtos",
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/api/v1/products/{id}": {
+      "get": {
+        "description": "HU15 (CA08, RN11): aberta a visitantes e consumidores. Traz os dados da oferta e o responsável (id e nome da iniciativa). Produtos indisponíveis ou de produtor desativado não aparecem.",
+        "operationId": "productsGetOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Produto",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto inexistente, indisponível, de produtor desativado ou identificador inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Consultar um produto",
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/api/v1/products/{id}/photos/{photoId}": {
+      "get": {
+        "description": "HU15: visível nas mesmas condições do produto. Use o caminho de `fotos`. Responde com `ETag` e aceita `If-None-Match`.",
+        "operationId": "productsGetPhoto",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "photoId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "v",
+            "required": false,
+            "in": "query",
+            "description": "Versão da foto, como vem em `fotos`. Com a versão atual a resposta fica em cache para sempre; sem ela, o navegador revalida.",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Imagem WebP sem metadados",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "O navegador já tem esta versão"
+          },
+          "404": {
+            "description": "Produto ou foto inexistente, ou produto não visível",
+            "content": {
+              "image/webp": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Foto de um produto",
+        "tags": [
+          "products"
+        ]
+      }
     }
   },
   "info": {
     "title": "Rede Cafuringa API",
-    "description": "API REST da plataforma **Rede Cafuringa**.\n\n**Autenticação.** `POST /auth/login` troca e-mail e senha por um JWT (RN05). Quem esqueceu a senha usa `/auth/password-reset/*`. Envie-o em `Authorization: Bearer <token>`. Toda rota exige login, exceto as marcadas como públicas (negação por padrão).\n\n**Rastreabilidade.** Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`). A API devolve o mesmo id no cabeçalho da resposta e nos logs; sem o cabeçalho, ou com valor inválido, gera um UUID.\n\n**Erros.** Todo erro tem o corpo `ErrorResponse` (`statusCode`, `message`, `error`). Nas falhas de validação (400), `message` é uma lista.\n\n**Limites.** Rotas de login, cadastro e recuperação de acesso têm limite estrito de tentativas por IP; ao exceder, a resposta é 429 com `Retry-After` (segundos).\n\n**Dados pessoais.** Respostas nunca trazem hash de senha nem o CPF completo (vem mascarado).\n\n**Versão do contrato.** SemVer, em `info.version`. Veja docs/shared/contratos.md.",
-    "version": "0.5.0",
+    "description": "API REST da plataforma **Rede Cafuringa**: produtores rurais da Cafuringa divulgam a produção, e consumidores e visitantes descobrem ofertas da região.\n\n### Primeiros passos\n\n1. **Entre:** em **auth › POST /auth/login**, clique em *Try it out* e envie e-mail e senha. A resposta traz `accessToken`.\n2. **Autorize:** clique em **Authorize** (botão com cadeado, logo abaixo desta apresentação), cole o token e confirme. Ele fica salvo neste navegador até você clicar em *Logout*.\n3. **Teste:** abra qualquer rota, *Try it out* e *Execute*. Rotas com cadeado exigem login; as demais são públicas.\n\nUse o campo de busca (*Filter by tag*) para ir direto a um grupo.\n\n### Perfis de acesso (RN01, RNF08)\n\n| Perfil | O que pode fazer |\n|---|---|\n| Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |\n| `CONSUMIDOR` | O mesmo que o visitante, com sessão |\n| `PRODUTOR` | Registrar trajetória e foto de perfil; cadastrar produtos |\n| `ADMINISTRADOR` | Consultar usuários e cadastrar outros administradores |\n\nToda rota exige login, exceto as marcadas como públicas (negação por padrão). Perfil sem permissão recebe **403**; sem token ou com token inválido, **401**.\n\n### Convenções\n\n| Tema | Como funciona |\n|---|---|\n| **Erros** | Corpo `ErrorResponse` (`statusCode`, `message`, `error`). Em validação (400), `message` é uma lista de orientações em português, prontas para exibir |\n| **Paginação** | Listas devolvem `{ itens, total, pagina, limite }`; use `?pagina=` e `?limite=` |\n| **Fotos** | Envio em `multipart/form-data`. PNG, JPEG ou WebP; a API regrava em WebP **sem metadados** (EXIF/GPS). Os caminhos devolvidos são relativos à base da API e levam a versão: podem ficar em cache para sempre |\n| **Reenvio seguro** | `POST /products` aceita `Idempotency-Key`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |\n| **Limites de uso** | Login, cadastro e recuperação de acesso têm limite de tentativas por IP: **429** com `Retry-After` (segundos) |\n| **Rastreio** | Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`); ele volta na resposta e nos logs. Sem ele, a API gera um UUID |\n| **Dados pessoais** | Respostas nunca trazem hash de senha nem CPF completo (vem mascarado). Perfis públicos só mostram dados de divulgação (RN07, RNF11) |\n| **Versão** | SemVer em `info.version`; regras em *docs/shared/contratos.md*. Tipos do front gerados a partir deste contrato (`./scripts/dev.sh contract`) |",
+    "version": "0.8.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -1818,19 +2165,23 @@
   "tags": [
     {
       "name": "auth",
-      "description": "Login, dados da sessão e recuperação de acesso (RN05)"
+      "description": "Entrar, consultar a própria sessão e recuperar o acesso à conta (RN05, HU09, HU10)"
     },
     {
       "name": "users",
-      "description": "Cadastro de usuários (RN02, RNF15)"
-    },
-    {
-      "name": "health",
-      "description": "Saúde do serviço, para o Docker e monitores externos"
+      "description": "Cadastro de consumidor, produtor e administrador; consulta administrativa (RN02, RNF15, HU01–HU04)"
     },
     {
       "name": "producers",
-      "description": "Perfil do produtor: trajetória e atividades (HU12, RN07)"
+      "description": "Perfil do produtor: trajetória, atividades, contato e foto de perfil (HU12, RN07)"
+    },
+    {
+      "name": "products",
+      "description": "Catálogo e cadastro de produtos, com galeria de fotos (HU15, RN09, RN11)"
+    },
+    {
+      "name": "health",
+      "description": "Saúde do serviço, para o Docker, o deploy e monitores externos"
     }
   ],
   "servers": [
@@ -1845,7 +2196,7 @@
         "scheme": "bearer",
         "bearerFormat": "JWT",
         "type": "http",
-        "description": "JWT obtido em POST /auth/login"
+        "description": "Cole o `accessToken` devolvido por POST /auth/login (sem a palavra Bearer)."
       }
     },
     "schemas": {
@@ -2594,6 +2945,130 @@
         },
         "required": [
           "fotoUrl"
+        ]
+      },
+      "ProductProducerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000abcd"
+          },
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Horta da Joana"
+          },
+          "localidade": {
+            "type": "string",
+            "example": "Fazenda Cafuringa",
+            "description": "Localidade ou propriedade informada pelo produtor para divulgação (HU20, RN11); ausente quando não informada"
+          }
+        },
+        "required": [
+          "id",
+          "nomeIniciativa"
+        ]
+      },
+      "ProductResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000beef"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Cesta de hortaliças da estação"
+          },
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "Produtos",
+              "Experiência"
+            ],
+            "example": "Produtos"
+          },
+          "descricao": {
+            "type": "string",
+            "example": "Cesta com hortaliças frescas cultivadas sem agrotóxicos."
+          },
+          "precoPorUnidade": {
+            "type": "number",
+            "example": 40,
+            "description": "Reais, até 2 casas decimais"
+          },
+          "gramasPorUnidade": {
+            "type": "number",
+            "example": 500
+          },
+          "fotos": {
+            "example": [
+              "/products/64b0c0ffee0000000000beef/photos/64b0c0ffee0000000000f001?v=Q2FmdXJpbmdhRm90"
+            ],
+            "description": "Caminhos das fotos, na ordem enviada, relativos à URL base da API. Mudam a cada foto nova, então podem ficar em cache indefinidamente.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "produtor": {
+            "$ref": "#/components/schemas/ProductProducerResponse"
+          },
+          "criadoEm": {
+            "type": "string",
+            "example": "2026-11-13T12:00:00.000Z",
+            "description": "Data do cadastro"
+          },
+          "disponivel": {
+            "type": "boolean",
+            "example": true,
+            "description": "Se a oferta está disponível (RN10). As rotas públicas só devolvem disponíveis; o campo existe para a gestão de disponibilidade (RF18)."
+          }
+        },
+        "required": [
+          "id",
+          "nome",
+          "categoria",
+          "descricao",
+          "precoPorUnidade",
+          "gramasPorUnidade",
+          "fotos",
+          "produtor",
+          "criadoEm",
+          "disponivel"
+        ]
+      },
+      "ProductListResponse": {
+        "type": "object",
+        "properties": {
+          "itens": {
+            "description": "Produtos da página, do mais novo ao mais antigo; vazio quando não há registros. Cada item tem o mesmo formato de `GET /products/{id}`.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductResponse"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 42,
+            "description": "Total de produtos que atendem aos filtros"
+          },
+          "pagina": {
+            "type": "number",
+            "example": 1,
+            "description": "Página devolvida"
+          },
+          "limite": {
+            "type": "number",
+            "example": 20,
+            "description": "Tamanho da página"
+          }
+        },
+        "required": [
+          "itens",
+          "total",
+          "pagina",
+          "limite"
         ]
       }
     }

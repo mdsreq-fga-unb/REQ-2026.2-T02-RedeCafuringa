@@ -33,6 +33,8 @@ Ambiente
   down [-v]                Derruba o ambiente (-v apaga também os volumes, inclusive o banco)
   status                   Mostra os containers
   logs [serviço]           Acompanha os logs (api, app, mongo)
+  mock [on|off|status]     Liga/desliga os dados de demonstração (VITE_USE_MOCK_AUTH em app/.env.local)
+                           e reinicia o app no Docker, se estiver rodando
   indexes [--prod]         Sincroniza os índices do Mongo com os schemas (idempotente; o "up" já roda).
                            --prod: usa o compose de produção (backend/deploy), rode depois de cada deploy
 
@@ -149,6 +151,7 @@ cmd_up() {
       info "Subindo mongo + api + app (Vite com hot reload)"
       docker compose up -d --build --wait
       ok "app em http://localhost:5173 | api em http://localhost:3000/api/v1/health/live"
+      info "Dados de demonstração: VITE_USE_MOCK_AUTH=$(mock_value) (troque com ./scripts/dev.sh mock on|off)"
       ;;
     *) die "opção desconhecida para up: $1 (use --prod)" ;;
   esac
@@ -183,6 +186,44 @@ cmd_status() {
 cmd_logs() {
   need docker "Instale o Docker."
   docker compose --profile prod logs -f --tail=100 "$@"
+}
+
+# Valor atual de VITE_USE_MOCK_AUTH em app/.env.local ("false" se ausente).
+mock_value() {
+  local value=''
+  [ -f app/.env.local ] && value="$(sed -n 's/^[[:space:]]*VITE_USE_MOCK_AUTH[[:space:]]*=[[:space:]]*//p' app/.env.local | tail -n1 | tr -d '\r"'"'"' ')"
+  printf '%s' "${value:-false}"
+}
+
+# O Vite lê app/.env.local (pelo bind mount, no Docker) só ao iniciar: por isso o restart.
+cmd_mock() {
+  local want
+  case "${1:-status}" in
+    on | true) want=true ;;
+    off | false) want=false ;;
+    status)
+      info "VITE_USE_MOCK_AUTH=$(mock_value) (app/.env.local)"
+      return
+      ;;
+    *) die "opção desconhecida para mock: $1 (use on, off ou status)" ;;
+  esac
+
+  [ -f app/.env.local ] || { cp app/.env.example app/.env.local; ok "app/.env.local criado a partir do .env.example"; }
+  if grep -q '^[[:space:]]*VITE_USE_MOCK_AUTH[[:space:]]*=' app/.env.local; then
+    sed -i.bak "s/^[[:space:]]*VITE_USE_MOCK_AUTH[[:space:]]*=.*/VITE_USE_MOCK_AUTH=$want/" app/.env.local
+    rm -f app/.env.local.bak
+  else
+    printf '\nVITE_USE_MOCK_AUTH=%s\n' "$want" >> app/.env.local
+  fi
+  ok "VITE_USE_MOCK_AUTH=$want em app/.env.local"
+
+  if command -v docker >/dev/null 2>&1 && [ -n "$(docker compose ps -q app 2>/dev/null)" ]; then
+    info "Reiniciando o app no Docker para o Vite reler o arquivo"
+    docker compose restart app >/dev/null
+    ok "app em http://localhost:5173 ($([ "$want" = true ] && echo 'dados de demonstração' || echo 'API real'))"
+  else
+    ok "Rode ./scripts/dev.sh up (ou reinicie o npm run dev em app/) para aplicar"
+  fi
 }
 
 cmd_check() {
@@ -344,6 +385,7 @@ main() {
     down) cmd_down "$@" ;;
     status) cmd_status ;;
     logs) cmd_logs "$@" ;;
+    mock) cmd_mock "$@" ;;
     indexes) cmd_indexes "$@" ;;
     check) cmd_check "$@" ;;
     test) cmd_test "$@" ;;

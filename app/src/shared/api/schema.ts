@@ -352,6 +352,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar o catálogo de produtos
+         * @description Catálogo público (RF19/HU19; CA08 da HU15): produtos disponíveis de produtores ativos, do mais novo ao mais antigo, paginados. `produtor` restringe ao catálogo de um perfil; `categoria` filtra por tipo; `busca` procura no nome do produto e no nome da iniciativa, sem diferenciar acentos. Cada item tem o mesmo formato de `GET /products/{id}`.
+         */
+        get: operations["productsList"];
+        put?: never;
+        /**
+         * Cadastrar produto
+         * @description HU15/RF15 (CA02-CA05, CA07): cadastra um produto do produtor autenticado, que fica vinculado à conta do token (RN09). Exclusivo do perfil PRODUTOR (RN01, RNF08). Textos são simples (sem HTML). As fotos (1 a 10) passam pelo mesmo tratamento da foto de perfil: formato conferido pelos bytes e regravação em WebP sem metadados (EXIF/GPS).
+         */
+        post: operations["productsCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar um produto
+         * @description HU15 (CA08, RN11): aberta a visitantes e consumidores. Traz os dados da oferta e o responsável (id e nome da iniciativa). Produtos indisponíveis ou de produtor desativado não aparecem.
+         */
+        get: operations["productsGetOne"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{id}/photos/{photoId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Foto de um produto
+         * @description HU15: visível nas mesmas condições do produto. Use o caminho de `fotos`. Responde com `ETag` e aceita `If-None-Match`.
+         */
+        get: operations["productsGetPhoto"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -838,6 +902,74 @@ export interface components {
              * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
              */
             fotoUrl: string;
+        };
+        ProductProducerResponse: {
+            /** @example 64b0c0ffee0000000000abcd */
+            id: string;
+            /** @example Horta da Joana */
+            nomeIniciativa: string;
+            /**
+             * @description Localidade ou propriedade informada pelo produtor para divulgação (HU20, RN11); ausente quando não informada
+             * @example Fazenda Cafuringa
+             */
+            localidade?: string;
+        };
+        ProductResponse: {
+            /** @example 64b0c0ffee0000000000beef */
+            id: string;
+            /** @example Cesta de hortaliças da estação */
+            nome: string;
+            /**
+             * @example Produtos
+             * @enum {string}
+             */
+            categoria: "Produtos" | "Experiência";
+            /** @example Cesta com hortaliças frescas cultivadas sem agrotóxicos. */
+            descricao: string;
+            /**
+             * @description Reais, até 2 casas decimais
+             * @example 40
+             */
+            precoPorUnidade: number;
+            /** @example 500 */
+            gramasPorUnidade: number;
+            /**
+             * @description Caminhos das fotos, na ordem enviada, relativos à URL base da API. Mudam a cada foto nova, então podem ficar em cache indefinidamente.
+             * @example [
+             *       "/products/64b0c0ffee0000000000beef/photos/64b0c0ffee0000000000f001?v=Q2FmdXJpbmdhRm90"
+             *     ]
+             */
+            fotos: string[];
+            produtor: components["schemas"]["ProductProducerResponse"];
+            /**
+             * @description Data do cadastro
+             * @example 2026-11-13T12:00:00.000Z
+             */
+            criadoEm: string;
+            /**
+             * @description Se a oferta está disponível (RN10). As rotas públicas só devolvem disponíveis; o campo existe para a gestão de disponibilidade (RF18).
+             * @example true
+             */
+            disponivel: boolean;
+        };
+        ProductListResponse: {
+            /** @description Produtos da página, do mais novo ao mais antigo; vazio quando não há registros. Cada item tem o mesmo formato de `GET /products/{id}`. */
+            itens: components["schemas"]["ProductResponse"][];
+            /**
+             * @description Total de produtos que atendem aos filtros
+             * @example 42
+             */
+            total: number;
+            /**
+             * @description Página devolvida
+             * @example 1
+             */
+            pagina: number;
+            /**
+             * @description Tamanho da página
+             * @example 20
+             */
+            limite: number;
         };
     };
     responses: never;
@@ -2100,6 +2232,213 @@ export interface operations {
                 content?: never;
             };
             /** @description Produtor inexistente, desativado, sem trajetória publicada, sem foto ou identificador inválido */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    productsList: {
+        parameters: {
+            query?: {
+                /** @description Só os produtos deste produtor (catálogo do perfil) */
+                produtor?: string;
+                categoria?: "Produtos" | "Experiência";
+                /** @description Trecho do nome do produto ou do nome da iniciativa do produtor, sem diferenciar acentos e maiúsculas (HU19, RN15) */
+                busca?: string;
+                /** @description Página desejada, a partir de 1 */
+                pagina?: number;
+                /** @description Quantidade de produtos por página */
+                limite?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Página do catálogo */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductListResponse"];
+                };
+            };
+            /** @description Filtro ou paginação inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    productsCreate: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Opcional. Identificador gerado pelo app para este cadastro (8 a 64 letras, números, "-" ou "_"). Reenviar com a mesma chave após uma falha de conexão devolve o produto já criado, sem duplicar (CA07). */
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    nome: string;
+                    /** @enum {string} */
+                    categoria: "Produtos" | "Experiência";
+                    descricao: string;
+                    /** @description Reais, com ponto e até 2 casas decimais */
+                    precoPorUnidade: number;
+                    gramasPorUnidade: number;
+                    /** @description De 1 a 10 imagens PNG, JPEG ou WebP de até 5 MB cada, na ordem da galeria (a primeira é a capa) */
+                    fotos: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description Produto cadastrado */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductResponse"];
+                };
+            };
+            /** @description Campos ausentes ou inválidos, sem foto, fotos demais ou ilegíveis (mensagens em `message`) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de produtor (consumidor ou administrador)
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta de produtor inexistente ou desativada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Alguma foto acima de 5 MB */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Alguma foto não é PNG, JPEG ou WebP */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    productsGetOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Produto */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductResponse"];
+                };
+            };
+            /** @description Produto inexistente, indisponível, de produtor desativado ou identificador inválido */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    productsGetPhoto: {
+        parameters: {
+            query?: {
+                /** @description Versão da foto, como vem em `fotos`. Com a versão atual a resposta fica em cache para sempre; sem ela, o navegador revalida. */
+                v?: unknown;
+            };
+            header?: never;
+            path: {
+                id: string;
+                photoId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Imagem WebP sem metadados */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": string;
+                };
+            };
+            /** @description O navegador já tem esta versão */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Produto ou foto inexistente, ou produto não visível */
             404: {
                 headers: {
                     [name: string]: unknown;

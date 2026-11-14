@@ -26,6 +26,79 @@ button {
     color: inherit;
 }
 
+/* Seletores nativos: mesma interação acessível, menu alinhado à marca. */
+select {
+    max-width: 100%;
+    min-width: 0;
+    cursor: pointer;
+    color: var(--ink);
+    background-color: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 16px;
+    font: inherit;
+    line-height: 1.5;
+}
+
+select:focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 3px;
+}
+
+select option {
+    color: #1c332b;
+    background: #fff;
+    padding: 12px 16px;
+}
+
+@supports (appearance: base-select) {
+    select,
+    ::picker(select) {
+        appearance: base-select;
+    }
+    ::picker(select) {
+        margin-block: 8px;
+        padding: 6px;
+        border: 1px solid #d8ded8;
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 12px 32px #1c332b1a;
+        max-height: min(320px, 50dvh);
+    }
+    select option {
+        border-radius: 10px;
+        min-height: 44px;
+        gap: 12px;
+    }
+    select option:hover,
+    select option:focus {
+        background: #fff2e4;
+    }
+    select option:checked {
+        color: #8a4000;
+        background: #fff2e4;
+        font-weight: 600;
+    }
+    select::picker-icon {
+        color: #5f716b;
+        transition: rotate 180ms ease;
+    }
+    select:open::picker-icon {
+        rotate: 180deg;
+    }
+    select option::checkmark {
+        color: #b85600;
+    }
+}
+
+@media (max-width: 699px) {
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}
+
 .topbar {
     position: sticky;
     z-index: 5;
@@ -670,6 +743,51 @@ h2 {
     font-weight: 700;
 }
 
+/* Navegação do produtor conforme o protótipo HU15. */
+.bottom-nav-producer {
+    height: calc(73px + env(safe-area-inset-bottom));
+    background: #fff;
+}
+
+.bottom-nav-producer button {
+    color: #ff851b;
+    font-weight: 400;
+    gap: 6px;
+    padding: 8px 0;
+    transition: color 180ms ease;
+}
+
+.bottom-nav-producer .nav-icon {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.5;
+    transition: transform 220ms ease;
+}
+
+.bottom-nav-producer button[aria-current="page"] {
+    color: #536a60;
+}
+
+.bottom-nav-producer button[aria-current="page"] .nav-icon {
+    transform: translateY(-2px) scale(1.08);
+}
+
+.bottom-nav-producer button:active .nav-icon {
+    transform: scale(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bottom-nav-producer button,
+    .bottom-nav-producer .nav-icon {
+        transition: none;
+    }
+
+    .bottom-nav-producer button[aria-current="page"] .nav-icon,
+    .bottom-nav-producer button:active .nav-icon {
+        transform: none;
+    }
+}
+
 @media (min-width: 700px) {
     /* Mantém a rolagem disponível sem a barra visual no desktop. */
     html {
@@ -1254,22 +1372,6 @@ h2 {
     opacity: 0.65;
 }
 /* HU10 — recuperação de acesso */
-.link-button {
-    align-self: flex-start;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: inherit;
-    font: inherit;
-    font-weight: 600;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.link-button:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-}
 
 .recovery-icon {
     display: grid;
@@ -1281,6 +1383,41 @@ h2 {
     background: rgba(0, 0, 0, 0.06);
     color: inherit;
     font-size: 1.5rem;
+}
+
+.recovery-sent {
+    margin: 16px 0 0;
+    padding: 12px;
+    border: 1px solid #e3d27a;
+    border-radius: 8px;
+    background: #fff6b3;
+    color: var(--orange-text-strong);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.login-title-accent,
+.recovery-title-accent {
+    color: var(--orange-text);
+}
+
+.profile-switch {
+    display: block;
+    width: fit-content;
+    margin-top: 16px;
+    padding: 8px 0;
+    border: 0;
+    background: none;
+    color: var(--orange-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.profile-switch:focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 2px;
 }
 
 @media (max-width: 360px) {

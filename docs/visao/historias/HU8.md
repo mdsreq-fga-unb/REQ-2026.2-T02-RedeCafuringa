@@ -1,15 +1,19 @@
 # HU08 — Atualizar informações institucionais
 
 ## 1. Identificação
-
+<!-- REQUISITOS_HU_META_AUTO_INICIO -->
 | Campo | Informação |
 |---|---|
 | **ID da História** | HU08 |
 | **Requisito Funcional** | [RF08 — Atualizar informações institucionais](../requisitos_software.md#71-requisitos-funcionais) |
-| **Requisito Não Funcional** | [RNF03, RNF07, RNF08](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN03, RN13](../requisitos_software.md#73-lista-de-regras-de-negocio) |
+| **Requisito Não Funcional** | [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF07](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF08](../requisitos_software.md#72-requisitos-nao-funcionais) |
+| **Regra de Negócio** | [RN03](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN13](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP3](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
+| **Prioridade** | Baixa |
+| **Escopo** | Fora do MVP |
+| **Iteração** | Não atribuída |
+<!-- REQUISITOS_HU_META_AUTO_FIM -->
 
 ---
 
