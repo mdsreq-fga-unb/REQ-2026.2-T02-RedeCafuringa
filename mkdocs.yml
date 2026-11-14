@@ -84,6 +84,7 @@ nav:
             - HU09 — Autenticar usuário: arquitetura/backend/implementacao/HU09.md
             - HU10 — Recuperar acesso: arquitetura/backend/implementacao/HU10.md
             - HU12 — Trajetória do produtor: arquitetura/backend/implementacao/HU12.md
+            - HU14 — Perfil público do produtor: arquitetura/backend/implementacao/HU14.md
             - HU15 — Cadastrar produto: arquitetura/backend/implementacao/HU15.md
             - HU19 — Consultar catálogo: arquitetura/backend/implementacao/HU19.md
     - Frontend:
