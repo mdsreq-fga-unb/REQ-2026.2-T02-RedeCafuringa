@@ -59,10 +59,12 @@ export function LoginPage({
     const [loading, setLoading] = useState(false);
     const signupPath =
         profile === "consumer" ? "/cadastro/consumidor" : "/cadastro";
-    const signupLabel =
-        profile === "consumer"
-            ? "Criar conta de consumidor"
-            : "Criar conta de produtor";
+
+    const subtitle = fromContact
+        ? "Acesse sua conta para continuar para o WhatsApp."
+        : profile === "consumer"
+          ? "Entre para acompanhar as novidades."
+          : "Entre para divulgar seus produtos e serviços.";
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -92,16 +94,12 @@ export function LoginPage({
                     onNavigate(fromContact ? "/perfil" : "/escolher-perfil")
                 }
             />
-            <h1>
+            <h1 className="login-title-accent">
                 {fromContact
                     ? "Entre para falar com o responsável"
                     : "Que bom ter você aqui"}
             </h1>
-            <p className="body-copy">
-                {fromContact
-                    ? "Acesse sua conta para continuar para o WhatsApp."
-                    : "Entre com seu e-mail e sua senha."}
-            </p>
+            <p className="body-copy">{subtitle}</p>
 
             {registered && (
                 <p className="form-notice" role="status">
@@ -167,14 +165,6 @@ export function LoginPage({
                     </p>
                 )}
 
-                <button
-                    type="button"
-                    className="link-button"
-                    onClick={() => onNavigate("/recuperar-acesso")}
-                >
-                    Recuperar acesso
-                </button>
-
                 <div className="login-actions">
                     <ActionButton
                         variant="orange"
@@ -186,12 +176,36 @@ export function LoginPage({
                     <ActionButton
                         variant="outline"
                         type="button"
+                        onClick={() => onNavigate("/recuperar-acesso")}
+                    >
+                        Esqueci minha senha
+                    </ActionButton>
+                    <ActionButton
+                        variant="outline"
+                        type="button"
                         onClick={() => onNavigate(signupPath)}
                     >
-                        {signupLabel}
+                        Criar uma conta
                     </ActionButton>
                 </div>
             </form>
+
+            {!fromContact && (
+                <button
+                    type="button"
+                    className="profile-switch"
+                    onClick={() =>
+                        onNavigate(
+                            profile === "consumer"
+                                ? "/login/producer"
+                                : "/login/consumer",
+                        )
+                    }
+                >
+                    {profile === "consumer" ? "Sou produtor" : "Sou consumidor"}{" "}
+                    <span aria-hidden="true">→</span>
+                </button>
+            )}
 
             {isMockAuthEnabled && <p className="demo-note">{demoHint}</p>}
         </section>

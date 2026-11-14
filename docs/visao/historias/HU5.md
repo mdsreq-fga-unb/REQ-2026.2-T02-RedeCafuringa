@@ -1,15 +1,19 @@
 # HU05 — Excluir usuário
 
 ## 1. Identificação
-
+<!-- REQUISITOS_HU_META_AUTO_INICIO -->
 | Campo | Informação |
 |---|---|
 | **ID da História** | HU05 |
 | **Requisito Funcional** | [RF05 — Excluir usuário](../requisitos_software.md#71-requisitos-funcionais) |
-| **Requisito Não Funcional** | [RNF03, RNF08, RNF11](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN03, RN04](../requisitos_software.md#73-lista-de-regras-de-negocio) |
+| **Requisito Não Funcional** | [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF08](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF11](../requisitos_software.md#72-requisitos-nao-funcionais) |
+| **Regra de Negócio** | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN03](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN04](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
+| **Prioridade** | Baixa |
+| **Escopo** | Fora do MVP |
+| **Iteração** | Não atribuída |
+<!-- REQUISITOS_HU_META_AUTO_FIM -->
 
 ---
 

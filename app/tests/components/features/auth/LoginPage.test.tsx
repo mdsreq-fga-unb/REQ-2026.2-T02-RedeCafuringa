@@ -182,24 +182,28 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         const { onNavigate, user } = renderLogin();
 
         await user.click(
-            screen.getByRole("button", { name: "Criar conta de produtor" }),
+            screen.getByRole("button", { name: "Criar uma conta" }),
         );
 
         expect(onNavigate).toHaveBeenCalledWith("/cadastro");
     });
 
-    it("mostra somente a ação de cadastro do perfil selecionado", () => {
+    it("leva o consumidor ao cadastro de consumidor pela mesma ação", async () => {
+        const { onNavigate, user } = renderLogin({ profile: "consumer" });
+
+        await user.click(
+            screen.getByRole("button", { name: "Criar uma conta" }),
+        );
+
+        expect(onNavigate).toHaveBeenCalledWith("/cadastro/consumidor");
+    });
+
+    it("mostra uma única ação de cadastro", () => {
         renderLogin({ profile: "consumer" });
 
         expect(
-            screen.getAllByRole("button", { name: /Criar conta de/ }),
+            screen.getAllByRole("button", { name: "Criar uma conta" }),
         ).toHaveLength(1);
-        expect(
-            screen.getByRole("button", { name: "Criar conta de consumidor" }),
-        ).toBeTruthy();
-        expect(
-            screen.queryByRole("button", { name: "Criar conta de produtor" }),
-        ).toBeNull();
     });
 
     // HU02, critério 9 (depois do cadastro, o usuário segue para o login)
@@ -222,7 +226,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         const { onNavigate, user } = renderLogin();
 
         await user.click(
-            screen.getByRole("button", { name: "Recuperar acesso" }),
+            screen.getByRole("button", { name: "Esqueci minha senha" }),
         );
 
         expect(onNavigate).toHaveBeenCalledWith("/recuperar-acesso");
@@ -233,7 +237,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         renderLogin({ profile: "consumer" });
 
         expect(
-            screen.getByRole("button", { name: "Recuperar acesso" }),
+            screen.getByRole("button", { name: "Esqueci minha senha" }),
         ).toBeTruthy();
     });
 
@@ -250,5 +254,80 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         renderLogin();
 
         expect(screen.queryByText(/Senha redefinida/)).toBeNull();
+    });
+
+    // Protótipo do login: troca de perfil
+    it("oferece a troca para o login de consumidor a partir do login de produtor", async () => {
+        const { onNavigate, user } = renderLogin({ profile: "producer" });
+
+        await user.click(
+            screen.getByRole("button", { name: "Sou consumidor" }),
+        );
+
+        expect(onNavigate).toHaveBeenCalledWith("/login/consumer");
+    });
+
+    it("oferece a troca para o login de produtor a partir do login de consumidor", async () => {
+        const { onNavigate, user } = renderLogin({ profile: "consumer" });
+
+        await user.click(screen.getByRole("button", { name: "Sou produtor" }));
+
+        expect(onNavigate).toHaveBeenCalledWith("/login/producer");
+    });
+
+    it("não oferece a troca de perfil quando o login veio de um pedido de contato", () => {
+        renderLogin({ fromContact: true, profile: "consumer" });
+
+        expect(screen.queryByRole("button", { name: /^Sou / })).toBeNull();
+    });
+
+    // Protótipo do login: título em laranja
+    it("destaca o título do login com o estilo de destaque do protótipo", () => {
+        renderLogin();
+
+        expect(
+            screen.getByRole("heading", { name: "Que bom ter você aqui" })
+                .className,
+        ).toContain("login-title-accent");
+    });
+
+    it("mantém o destaque no título do login vindo de um pedido de contato", () => {
+        renderLogin({ fromContact: true });
+
+        expect(
+            screen.getByRole("heading", {
+                name: "Entre para falar com o responsável",
+            }).className,
+        ).toContain("login-title-accent");
+    });
+
+    // Protótipo do login: subtítulo por perfil
+    it("mostra o subtítulo do produtor no login de produtor", () => {
+        renderLogin({ profile: "producer" });
+
+        expect(
+            screen.getByText("Entre para divulgar seus produtos e serviços."),
+        ).toBeTruthy();
+    });
+
+    it("mostra o subtítulo do consumidor no login de consumidor", () => {
+        renderLogin({ profile: "consumer" });
+
+        expect(
+            screen.getByText("Entre para acompanhar as novidades."),
+        ).toBeTruthy();
+    });
+
+    it("mantém o subtítulo do WhatsApp quando o login veio de um pedido de contato", () => {
+        renderLogin({ fromContact: true, profile: "consumer" });
+
+        expect(
+            screen.getByText(
+                "Acesse sua conta para continuar para o WhatsApp.",
+            ),
+        ).toBeTruthy();
+        expect(
+            screen.queryByText("Entre para acompanhar as novidades."),
+        ).toBeNull();
     });
 });
