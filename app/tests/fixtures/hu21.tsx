@@ -105,6 +105,9 @@ export function fields() {
         descricao: screen.getByLabelText(/^Descrição/i) as HTMLTextAreaElement,
         local: screen.getByLabelText(/^Local/i) as HTMLInputElement,
         duracao: screen.getByLabelText(/^Duração/i) as HTMLInputElement,
+        unidade: screen.getByLabelText(
+            /^Unidade de tempo/i,
+        ) as HTMLSelectElement,
         preco: screen.getByLabelText(/^Valor por pessoa/i) as HTMLInputElement,
         fotos: screen.getByLabelText(/^Adicionar fotos/i) as HTMLInputElement,
     };
@@ -128,7 +131,7 @@ export async function fillExperience(user: ReturnType<typeof userEvent.setup>) {
     fireEvent.change(f.descricao, { target: { value: experience.descricao } });
     fireEvent.change(f.preco, { target: { value: "45" } });
     fireEvent.change(f.local, { target: { value: experience.local } });
-    fireEvent.change(f.duracao, { target: { value: experience.duracao } });
+    fireEvent.change(f.duracao, { target: { value: "2" } });
     await user.upload(f.fotos, photo());
     return f;
 }

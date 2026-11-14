@@ -26,6 +26,44 @@ import {
 
 vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: false }));
 
+it.each([
+    [30, "minutos", "30 minutos"],
+    [1, "horas", "1 hora"],
+    [1, "minutos", "1 minuto"],
+])(
+    "envia duração numérica %s com unidade %s",
+    async (value, unit, expected) => {
+        session();
+        const api = mockExperienceApi();
+        const { user } = await openExperience();
+        const f = await fillExperience(user);
+        expect(f.duracao.type).toBe("number");
+        fireEvent.change(f.duracao, { target: { value: String(value) } });
+        await user.selectOptions(f.unidade, String(unit));
+        submit();
+        await screen.findByRole("status");
+        expect((submissions(api)[0][1]!.body as FormData).get("duracao")).toBe(
+            expected,
+        );
+    },
+);
+
+it.each(["texto", "0", "-2", "1.5"])(
+    "recusa duração inválida %s",
+    async (value) => {
+        session();
+        const api = mockExperienceApi();
+        const { user } = await openExperience();
+        const f = await fillExperience(user);
+        fireEvent.change(f.duracao, { target: { value } });
+        submit();
+        expect((await screen.findByRole("alert")).textContent).toMatch(
+            /duração/i,
+        );
+        expect(submissions(api)).toHaveLength(0);
+    },
+);
+
 it("alterna categorias no cadastro comum sem perder dados e envia os campos específicos", async () => {
     session();
     const api = mockExperienceApi();
@@ -43,7 +81,7 @@ it("alterna categorias no cadastro comum sem perder dados e envia os campos espe
     await user.selectOptions(f.categoria, "Experiência");
     expect(fields().nome.value).toBe(experience.nome);
     expect(fields().local.value).toBe(experience.local);
-    expect(fields().duracao.value).toBe(experience.duracao);
+    expect(fields().duracao.value).toBe("2");
     expect(fields().fotos.files?.[0].name).toBe("visita.png");
     submit();
     expect(await screen.findByRole("status")).toBeTruthy();
@@ -205,7 +243,7 @@ it.each([400, 401, 403, 500])(
         expect(await screen.findByRole("alert")).toBeTruthy();
         expect(f.nome.value).toBe(experience.nome);
         expect(f.local.value).toBe(experience.local);
-        expect(f.duracao.value).toBe(experience.duracao);
+        expect(f.duracao.value).toBe("2");
         expect(f.fotos.files?.[0].name).toBe("visita.png");
         expect(
             screen.queryByRole("heading", { name: "Sua oferta está na rede" }),
@@ -224,6 +262,7 @@ it("RNF04: permite percorrer o formulário por teclado", async () => {
         f.descricao,
         f.local,
         f.duracao,
+        f.unidade,
         f.preco,
     ]) {
         await user.tab();
@@ -273,7 +312,7 @@ afterEach(() => {
     window.location.hash = "";
 });
 
-it("CA02/CA04: mostra os sete campos obrigatórios do protótipo e impede envio vazio", async () => {
+it("CA02/CA04: mostra os campos obrigatórios do protótipo e impede envio vazio", async () => {
     session();
     const api = mockExperienceApi();
     await openExperience();
@@ -355,7 +394,7 @@ it("CA07: preserva campos e fotos e reutiliza chave ao tentar novamente", async 
     expect(f.descricao.value).toBe(experience.descricao);
     expect(f.categoria.value).toBe(experience.categoria);
     expect(f.local.value).toBe(experience.local);
-    expect(f.duracao.value).toBe(experience.duracao);
+    expect(f.duracao.value).toBe("2");
     expect(Number(f.preco.value)).toBe(45);
     expect(f.fotos.files?.[0].name).toBe("visita.png");
     submit();

@@ -11,7 +11,11 @@ import {
     type RegisteredExperience,
 } from "./experienceService";
 
-type OfferDraft = ProductDraft & { local: string; duracao: string };
+type OfferDraft = ProductDraft & {
+    local: string;
+    duracao: string;
+    duracaoUnidade: "minutos" | "horas";
+};
 type Errors = Partial<Record<keyof OfferDraft, string>>;
 const initialDraft: OfferDraft = {
     nome: "",
@@ -21,6 +25,7 @@ const initialDraft: OfferDraft = {
     gramas: "",
     local: "",
     duracao: "",
+    duracaoUnidade: "horas",
     fotos: [],
 };
 
@@ -54,9 +59,16 @@ function validate(draft: OfferDraft): Errors {
             "Informe as gramas por unidade, com peso maior que zero.";
     if (experience && (!draft.local.trim() || draft.local.length > 300))
         errors.local = "Informe o local da experiência (até 300 caracteres).";
-    if (experience && (!draft.duracao.trim() || draft.duracao.length > 100))
+    if (
+        experience &&
+        (!/^\d+$/.test(draft.duracao) ||
+            !Number.isSafeInteger(Number(draft.duracao)) ||
+            Number(draft.duracao) <= 0)
+    )
         errors.duracao =
-            "Informe a duração da experiência (até 100 caracteres).";
+            "Informe a duração com um número inteiro maior que zero.";
+    if (experience && !["minutos", "horas"].includes(draft.duracaoUnidade))
+        errors.duracaoUnidade = "Selecione minutos ou horas.";
     if (!draft.fotos.length)
         errors.fotos = "Adicione ao menos uma foto da oferta.";
     else if (
@@ -167,7 +179,13 @@ export function ProductRegistrationPage({
         try {
             onPublished(
                 await (experience ? registerExperience : registerProduct)(
-                    { ...draft, preco: draft.preco.replace(",", ".") },
+                    {
+                        ...draft,
+                        preco: draft.preco.replace(",", "."),
+                        duracao: experience
+                            ? `${Number(draft.duracao)} ${Number(draft.duracao) === 1 ? (draft.duracaoUnidade === "horas" ? "hora" : "minuto") : draft.duracaoUnidade}`
+                            : draft.duracao,
+                    },
                     {
                         idempotencyKey: idempotencyKey.current,
                     },
@@ -296,16 +314,50 @@ export function ProductRegistrationPage({
                                 <label htmlFor="product-duracao">
                                     Duração *
                                 </label>
-                                <input
-                                    {...accessibility("duracao")}
-                                    maxLength={100}
-                                    value={draft.duracao}
-                                    onChange={(e) =>
-                                        update("duracao", e.target.value)
-                                    }
-                                    placeholder="2 horas"
-                                />
+                                <div className="duration-control">
+                                    <input
+                                        {...accessibility("duracao")}
+                                        type="number"
+                                        inputMode="numeric"
+                                        min="1"
+                                        step="1"
+                                        value={draft.duracao}
+                                        onChange={(e) =>
+                                            update("duracao", e.target.value)
+                                        }
+                                        onKeyDown={(event) => {
+                                            if (
+                                                [
+                                                    "e",
+                                                    "E",
+                                                    "+",
+                                                    "-",
+                                                    ".",
+                                                    ",",
+                                                ].includes(event.key)
+                                            )
+                                                event.preventDefault();
+                                        }}
+                                        placeholder="Ex.: 2"
+                                    />
+                                    <select
+                                        {...accessibility("duracaoUnidade")}
+                                        aria-label="Unidade de tempo"
+                                        value={draft.duracaoUnidade}
+                                        onChange={(event) =>
+                                            update(
+                                                "duracaoUnidade",
+                                                event.target
+                                                    .value as OfferDraft["duracaoUnidade"],
+                                            )
+                                        }
+                                    >
+                                        <option value="minutos">Minutos</option>
+                                        <option value="horas">Horas</option>
+                                    </select>
+                                </div>
                                 {errorFor("duracao")}
+                                {errorFor("duracaoUnidade")}
                             </div>
                         </>
                     )}

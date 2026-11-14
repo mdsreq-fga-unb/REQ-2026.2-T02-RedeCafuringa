@@ -291,3 +291,40 @@
         height: 40px;
     }
 }
+
+.duration-control {
+    display: flex;
+    align-items: stretch;
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: #fff;
+}
+.product-field .duration-control input,
+.product-field .duration-control select {
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    border-radius: 15px;
+}
+.product-field .duration-control input {
+    flex: 1;
+    width: 0;
+}
+.product-field .duration-control select {
+    flex: 0 0 auto;
+    width: 135px;
+    border-left: 1px solid var(--line);
+    border-radius: 0 15px 15px 0;
+}
+.duration-control:focus-within {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 3px;
+}
+.duration-control input:focus-visible,
+.duration-control select:focus-visible {
+    outline: none;
+}
+.duration-control:has([aria-invalid="true"]) {
+    border-color: #a32b22;
+}
