@@ -127,3 +127,41 @@ A nova **ordem de implementação** primeiro respeita as iterações 6, 7 e 8 e 
 | Atualização | Arquivos, protótipo, código e testes alterados conforme o impacto |
 | Comunicação | Quem foi informado, quando e por qual canal |
 | Fechamento | Revisão, data/versão e pendências remanescentes |
+
+---
+
+<!-- ISSUE_17_BACKLOG_INICIO -->
+## Gestão de dependências e limites operacionais do Backlog — Issue #17
+
+> **Registro de revisão técnica:** 13/11/2026. Os vínculos são uma **proposta de precedência para integração e testes** e aguardam validação da equipe. A situação exibida no Backlog é a situação documental registrada, não prova de conclusão de código. Os responsáveis ainda não designados permanecem **A definir**. A revisão das 48 HUs foi atribuída à **Equipe ByteLab**, conforme decisão da equipe; dependências propostas ainda requerem validação.
+
+### Encadeamento de entregas
+
+- **Iteração 6 — identidade e base dos perfis:** cadastros de consumidor/produtor (HU01/HU02), autenticação (HU09), trajetória do produtor (HU12), cadastro administrativo (HU03), consulta administrativa (HU04) e recuperação de acesso (HU10). Para testar autenticação de ambos os perfis, é necessária base de cadastros reais ou massa de teste controlada; a precedência documenta a integração, sem afirmar que toda implementação depende de telas prontas.
+- **Iteração 7 — oferta e descoberta:** cadastrar produtos/experiências (HU15/HU21) antes de consultá-los (HU19/HU20/HU24); a busca (HU36) integra dados de produtores, produtos e experiências. O perfil público (HU14) requer produtor e trajetória. O escopo de eventos é posterior à primeira entrega.
+- **Iteração 8 — contato e pré-reservas:** HU39 usa o WhatsApp externo em perfis públicos autorizados, não chat interno; a pré-reserva HU44 depende de autenticação e de experiência cadastrada. HU45/HU46/HU47/HU48 dependem do registro e dos estados das solicitações.
+
+A ordem de execução já fixada na Issue #18 **não foi alterada por esta revisão**. O Backlog passa a apresentar os vínculos de dependência por HU e os campos de gestão. HUs fora do MVP exibem **dependências a mapear** até seu refinamento.
+
+### Ajuste do registro da Iteração 5
+
+O apontamento da Issue #17 descreve uma **versão histórica** na qual a Iteração 5 selecionava HUs identificadas como HU15, HU04, HU05, HU08, HU09 e HU10. A numeração e o escopo das histórias foram posteriormente reorganizados: hoje HU15 significa **Cadastrar produto** e HU39 significa **Contato direto**. Conforme [registro existente da Iteração 5](../visao/evidencias/iteracao5.md), houve impedimento de aprovação de protótipo e a equipe não avançou significativamente na implementação. O [cronograma vigente](../visao/cronograma.md) mantém a Iteração 5 sem HUs atribuídas e distribui as 20 HUs do MVP entre as Iterações 6, 7 e 8. Isso registra a mudança sem atribuir entregas inexistentes.
+
+### Alternativa operacional para correção, exclusão e moderação
+
+Enquanto as histórias específicas de atualizar/excluir conteúdo e de moderação (como HU16, HU17, HU22, HU23 e HU07) estiverem fora do MVP, propõe-se o seguinte **procedimento manual assistido**, a ser aprovado pela equipe e cliente **antes do uso em produção**:
+
+1. Receber a solicitação por um canal de suporte designado pela equipe; registrar um identificador, o item afetado e o motivo **sem expor dados pessoais em issues públicas**.
+2. Confirmar a identidade/autorização do solicitante e obter validação de um responsável designado para conteúdos impróprios ou correções críticas.
+3. Executar a correção ou indisponibilização **somente por mecanismo administrativo seguro efetivamente disponível e testado**, com registro de quem atuou, quando, o motivo e o resultado. Não pressupor edição direta no banco nem anunciar um painel inexistente.
+4. Se **não existir mecanismo seguro de ocultação/correção**, a condição operacional é **não publicar novos conteúdos afetados** e registrar o bloqueio para entrega prioritária antes de disponibilizar publicamente o fluxo em produção. Para conteúdo já publicado sem retirada segura, tratar como impedimento de publicação e escalonar imediatamente à equipe responsável.
+5. Confirmar o resultado com o solicitante, preservando evidências e privacidade. Reabrir o item se a solução não estiver disponível ou verificada.
+
+**Pendências explícitas:** escolher canal oficial e equipe autorizada, testar o mecanismo seguro de ocultação e obter aprovação do Product Owner. Este texto documenta a **alternativa proposta**, não atesta uma capacidade já implementada ou aprovada.
+
+### Recorte da busca RF36 / HU36
+
+O RF36 descreve o escopo completo (produtores, produtos, experiências **e eventos**). A entrega inicial da HU36 no MVP abrange **produtores, produtos e experiências** existentes. Eventos ficam para uma versão posterior, dependentes do cadastro e catálogo correspondentes fora do MVP. Essa é uma **proposta de delimitação da entrega**, a validar antes de considerá-la acordada com o cliente.
+
+**Próxima revisão:** preencher responsáveis reais a partir do Project; manter a Equipe ByteLab como revisora e validar dependências e alternativa operacional em reunião/review, registrar aceite e evidências na issue ou PR.
+<!-- ISSUE_17_BACKLOG_FIM -->

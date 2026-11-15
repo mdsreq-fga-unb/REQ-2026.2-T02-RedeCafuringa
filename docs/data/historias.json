@@ -40,7 +40,10 @@
       "evidencia": "docs/visao/historias/HU1.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 2,
@@ -82,7 +85,10 @@
       "evidencia": "docs/visao/historias/HU2.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 3,
@@ -122,7 +128,12 @@
       "evidencia": "docs/visao/historias/HU3.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU09"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 4,
@@ -160,7 +171,15 @@
       "evidencia": "docs/visao/historias/HU4.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU01",
+      "HU02",
+      "HU03",
+      "HU09"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 5,
@@ -186,7 +205,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 6,
@@ -224,7 +246,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 7,
@@ -253,7 +278,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 8,
@@ -278,7 +306,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 9,
@@ -314,7 +345,13 @@
       "evidencia": "docs/visao/historias/HU9.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU01",
+      "HU02"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 10,
@@ -349,7 +386,12 @@
       "evidencia": "docs/visao/historias/HU10.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU09"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 11,
@@ -375,7 +417,10 @@
     ],
     "oes": [
       "OE1"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 12,
@@ -416,7 +461,13 @@
       "evidencia": "docs/visao/historias/HU12.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU02",
+      "HU09"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 13,
@@ -444,7 +495,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 14,
@@ -484,7 +538,13 @@
       "evidencia": "docs/visao/historias/HU14.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU02",
+      "HU12"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 15,
@@ -523,7 +583,13 @@
       "evidencia": "docs/visao/historias/HU15.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU02",
+      "HU09"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 16,
@@ -552,7 +618,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 17,
@@ -579,7 +648,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 18,
@@ -605,7 +677,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 19,
@@ -643,7 +718,12 @@
       "evidencia": "docs/visao/historias/HU19.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU15"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 20,
@@ -682,7 +762,13 @@
       "evidencia": "docs/visao/historias/HU20.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU15",
+      "HU19"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 21,
@@ -721,7 +807,13 @@
       "evidencia": "docs/visao/historias/HU21.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU02",
+      "HU09"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 22,
@@ -750,7 +842,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 23,
@@ -776,7 +871,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 24,
@@ -814,7 +912,12 @@
       "evidencia": "docs/visao/historias/HU24.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU21"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 25,
@@ -844,7 +947,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 26,
@@ -873,7 +979,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 27,
@@ -902,7 +1011,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 28,
@@ -929,7 +1041,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 29,
@@ -961,7 +1076,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 30,
@@ -993,7 +1111,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 31,
@@ -1022,7 +1143,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 32,
@@ -1047,7 +1171,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 33,
@@ -1071,7 +1198,10 @@
     ],
     "oes": [
       "OE1"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 34,
@@ -1096,7 +1226,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 35,
@@ -1122,7 +1255,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 36,
@@ -1160,7 +1296,16 @@
       "evidencia": "docs/visao/historias/HU36.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU02",
+      "HU15",
+      "HU19",
+      "HU21",
+      "HU24"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 37,
@@ -1188,7 +1333,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 38,
@@ -1219,7 +1367,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 39,
@@ -1256,7 +1407,13 @@
       "evidencia": "docs/visao/historias/HU39.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU02",
+      "HU14"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 40,
@@ -1284,7 +1441,10 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 41,
@@ -1311,7 +1471,10 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 42,
@@ -1338,7 +1501,10 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 43,
@@ -1365,7 +1531,10 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 44,
@@ -1403,7 +1572,14 @@
       "evidencia": "docs/visao/historias/HU44.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU09",
+      "HU21",
+      "HU24"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 45,
@@ -1439,7 +1615,12 @@
       "evidencia": "docs/visao/historias/HU45.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU44"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 46,
@@ -1476,7 +1657,13 @@
       "evidencia": "docs/visao/historias/HU46.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU44",
+      "HU45"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 47,
@@ -1513,7 +1700,13 @@
       "evidencia": "docs/visao/historias/HU47.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU02",
+      "HU44"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 48,
@@ -1549,6 +1742,12 @@
       "evidencia": "docs/visao/historias/HU48.md; docs/visao/requisitos_software.md; Issue #18",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
-    }
+    },
+    "dependencias": [
+      "HU44",
+      "HU47"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   }
 ]

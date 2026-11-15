@@ -14,4 +14,10 @@ Assim, o período foi marcado principalmente pela espera do retorno do cliente e
 
 Apesar de não apresentar avanços significativos na construção do produto, a iteração permitiu evidenciar dependências externas e limitações de capacidade que afetaram o planejamento. Esses fatores foram considerados pela equipe para reorganizar as atividades subsequentes, ajustar as expectativas de entrega e retomar o desenvolvimento assim que houvesse condições adequadas para prosseguir.
 
+---
 
+<!-- ISSUE_17_BACKLOG_INICIO -->
+## Rastreabilidade do replanejamento (Issue #17)
+
+A revisão do professor mencionou uma seleção anterior de HUs para esta iteração. Os identificadores e suas atribuições mudaram nas revisões subsequentes, por isso esse conjunto histórico **não deve ser interpretado com a numeração atual**. Esta iteração não registra HUs do MVP entregues: o avanço foi limitado pelos impedimentos descritos acima. O cronograma vigente distribui as HUs selecionadas entre as Iterações 6, 7 e 8, e suas dependências propostas podem ser consultadas no [Backlog](../historias_usuario.md).
+<!-- ISSUE_17_BACKLOG_FIM -->

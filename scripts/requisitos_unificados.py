@@ -58,6 +58,17 @@ def read_json(repo: Path) -> list[dict]:
                 raise ValueError(f'HU{n:02d}: identificador inválido em {key}')
         if not item['cps'] or not item['oes']:
             raise ValueError(f'HU{n:02d}: CP e OE são obrigatórios')
+        deps = item.get('dependencias', None)
+        if item['mvp'] and not isinstance(deps, list):
+            raise ValueError(f'HU{n:02d}: dependências de MVP devem estar mapeadas')
+        if deps is not None:
+            if not isinstance(deps, list) or any(not isinstance(d,str) or not re.fullmatch(r'HU\d{2}',d) for d in deps):
+                raise ValueError(f'HU{n:02d}: dependências inválidas')
+            if len(deps)!=len(set(deps)) or f'HU{n:02d}' in deps:
+                raise ValueError(f'HU{n:02d}: dependências repetidas ou autorreferência')
+        for field in ('responsavel','revisor'):
+            if item.get(field) is not None and (not isinstance(item[field],str) or not item[field].strip()):
+                raise ValueError(f'HU{n:02d}: campo {field} inválido')
         if not isinstance(item.get('mvp'), bool):
             raise ValueError(f'HU{n:02d}: mvp precisa ser booleano')
         if item['mvp']:
@@ -73,6 +84,16 @@ def read_json(repo: Path) -> list[dict]:
         raise ValueError('Ordens de 1º a 20º devem ser únicas')
     if sum(x['mvp'] for x in data) != 20:
         raise ValueError('MVP deve ter 20 histórias')
+    by_id={x['id']:x for x in data}
+    for item in data:
+        for dep in item.get('dependencias') or []:
+            other = by_id.get(int(dep[2:]))
+            if other is None:raise ValueError(f'HU{item["id"]:02d}: dependência inexistente {dep}')
+            if item['mvp']:
+                if not other['mvp']:
+                    raise ValueError(f'HU{item["id"]:02d}: depende de HU fora do MVP: {dep}')
+                if other['ordem'] >= item['ordem']:
+                    raise ValueError(f'HU{item["id"]:02d}: {dep} deve precedê-la na ordem do MVP')
     return sorted(data, key=lambda x: x['id'])
 
 
@@ -125,6 +146,17 @@ def render_cards(data: list[dict]) -> str:
         for key in ('rf','rnfs','regras','cps','oes'):
             val = item[key]
             attrs += f' data-{key}="{escape(" ".join(val) if isinstance(val,list) else val, quote=True)}"'
+        dep = item.get('dependencias')
+        if dep is None:
+            dep_view, dep_state = 'A mapear', 'pendente'
+        elif not dep:
+            dep_view, dep_state = 'Nenhuma identificada', 'nenhuma'
+        else:
+            dep_view, dep_state = ', '.join(f'<a href="../historias/HU{int(d[2:])}/">{d}</a>' for d in dep), 'proposta'
+        dono = item.get('responsavel') or 'A definir'
+        rev = item.get('revisor') or 'A definir'
+        attrs += f' data-dependencias="{escape(" ".join(dep or []),quote=True)}" data-dependencias-status="{dep_state}"'
+        attrs += f' data-responsavel="{escape(dono,quote=True)}" data-revisor="{escape(rev,quote=True)}"'
         parts.append(f'      <span class="hu-status hu-status-{ "execucao" if item["situacao"]=="Em execução" else "planejada" }">{escape(item["situacao"])}</span>')
         if item['mvp']:
             parts.append('      <span class="hu-status hu-status-mvp">MVP</span>')
@@ -139,6 +171,11 @@ def render_cards(data: list[dict]) -> str:
             *parts,
             '    </div>',
             f'    <h3><a class="hu-card-title-link" href="../historias/HU{n}/">{escape(title)}</a></h3>',
+            '    <div class="hu-card-planning">',
+            f'      <span><strong>Dependências:</strong> {dep_view}</span>',
+            f'      <span><strong>Responsável:</strong> {escape(dono)}</span>',
+            f'      <span><strong>Revisor:</strong> {escape(rev)}</span>',
+            '    </div>',
             '  </div>',
             '</div>',
         ]))
