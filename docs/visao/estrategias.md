@@ -20,6 +20,10 @@ A classificação do projeto em uma abordagem híbrida ocorre por combinarmos el
 
 ---
 
+<!-- ISSUE10_AUP_INICIO -->
+**Controle de evidências dos marcos AUP.** A descrição dos marcos de passagem não pressupõe que uma baseline ou aceite esteja formalmente aprovado. O estado verificado, os riscos e as pendências estão no [Registro de Marcos e Execução do AUP](evidencias/marcos_aup.md).
+<!-- ISSUE10_AUP_FIM -->
+
 ## 4.2 Quadro Comparativo
 
 O quadro a seguir compara o processo selecionado (AUP) com uma alternativa viável de Processo Unificado enxuto (OpenUP), utilizando o mesmo rigor e critérios para evidenciar as nuances que motivaram a escolha:

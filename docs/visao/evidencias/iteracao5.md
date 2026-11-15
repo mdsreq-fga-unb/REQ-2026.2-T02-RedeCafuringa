@@ -2,6 +2,10 @@
 
 [Voltar para o Cronograma](../cronograma.md)
 
+<!-- ISSUE10_AUP_INICIO -->
+**Controle do marco AUP:** a dependência da validação do protótipo descrita acima é um impedimento real da passagem para Construção. A [matriz de evidências dos marcos](marcos_aup.md) registra os artefatos existentes e o que ainda exige aprovação; nenhuma aprovação retroativa foi presumida.
+<!-- ISSUE10_AUP_FIM -->
+
 ## Descrição das Atividades Realizadas
 
 Durante a Iteração 5, a equipe enfrentou dificuldades que impactaram o andamento das atividades planejadas para a fase de Construção do processo AUP. O principal fator de impedimento foi a dependência da aprovação do protótipo da plataforma Rede Cafuringa por parte do cliente, etapa necessária para dar continuidade ao desenvolvimento com maior segurança quanto ao alinhamento das soluções propostas às suas expectativas.

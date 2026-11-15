@@ -59,6 +59,7 @@ nav:
     - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
 
   - AUP - Iterações:
+    - Governança AUP e Evidências: visao/evidencias/marcos_aup.md
     - Concepção:
       - Iteração 1: visao/evidencias/iteracao1.md
       - Iteração 2: visao/evidencias/iteracao2.md

@@ -4,15 +4,9 @@
 
 ## Descrição das Atividades Realizadas
 
-Durante a Iteração 6, já na fase de Construção do processo AUP, as atividades foram direcionadas à implementação gradual das funcionalidades definidas para o MVP da Rede Cafuringa, utilizando como referência os requisitos, as histórias de usuário e o protótipo elaborados nas iterações anteriores.
+A **Iteração 6** integra a fase de Construção do AUP e possui histórias planejadas no [cronograma](../cronograma.md). O repositório contém implementações, documentação técnica e testes para determinados fluxos; contudo, **a existência de código, de checklists ou de uma HU no cronograma não comprova, por si só, que todas as entregas da iteração foram concluídas e aceitas**.
 
-Nesta etapa, a equipe concentrou seus esforços no desenvolvimento das funcionalidades planejadas, seguindo as especificações e os critérios de aceitação estabelecidos para cada história de usuário. As atividades envolveram a implementação das soluções, a verificação dos resultados obtidos e a avaliação do atendimento aos critérios definidos para considerar cada entrega concluída.
-
-Não foram necessárias alterações ou novos refinamentos nos requisitos durante essa iteração, uma vez que as especificações permaneceram adequadas às necessidades e ao escopo previamente estabelecidos. Assim, a equipe manteve o planejamento e as definições consolidadas nas etapas anteriores, direcionando os esforços à execução das atividades de desenvolvimento.
-
-Paralelamente, foram aplicados os critérios de Definition of Ready (DoR) e Definition of Done (DoD), utilizados como referências para verificar a prontidão das atividades e a conclusão das entregas. As histórias de usuário finalizadas tiveram seus respectivos critérios documentados, permitindo registrar as condições atendidas e fornecer evidências do progresso alcançado.
-
-Ao final da iteração, foram concluídas as entregas planejadas para o período, com suas respectivas verificações e registros de conclusão. Dessa forma, a Iteração 6 marcou o início efetivo da construção incremental da plataforma, mantendo a rastreabilidade entre os requisitos especificados e as funcionalidades desenvolvidas.
+A conferência de conclusão deve relacionar cada HU ao PR/commit integrado, à execução de testes e do CI, à revisão e à decisão de aceite. Quando o vínculo individual ainda não estiver registrado, a situação permanece **não comprovada documentalmente**, sem invalidar implementações que possam existir. Consulte a [matriz de execução do AUP](marcos_aup.md) para localizar as fontes e pendências.
 
 ---
 
@@ -20,54 +14,20 @@ Ao final da iteração, foram concluídas as entregas planejadas para o período
 
 ### Verificação e Validação
 
-??? info "DoD e DoD"
-    Para está iteração foram finalizados as seguintes HU's e os respectivos DoD e DoD se encontram no final de cada página a seguir:
+**Relação entre planejamento e evidência:** a lista a seguir é extraída das atribuições da fonte única de HUs; **não é uma relação de itens aprovados no DoD**.
 
-    <div class="hu-button-container">
-        <a href="/visao" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-    </div>
-    <div class="hu-button-container">
-        <a href="/visao" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-    </div>
-    
+| HU | Funcionalidade planejada | Situação da comprovação neste registro |
+|---|---|---|
+| [HU01](../historias/HU1.md) | Cadastrar perfil de consumidor | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU02](../historias/HU2.md) | Cadastrar perfil de produtor | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU09](../historias/HU9.md) | Autenticar usuário | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU12](../historias/HU12.md) | Registrar trajetória do produtor | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU03](../historias/HU3.md) | Cadastrar usuário administrador | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU04](../historias/HU4.md) | Consultar usuários cadastrados | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU10](../historias/HU10.md) | Recuperar acesso à conta | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+
+Há [código, testes e implementação técnica](../../arquitetura/backend/guia-estrutura-e-tdd.md) e [esteiras automatizadas](../../arquitetura/infra/visao-geral.md) no repositório. Para afirmar a conclusão de cada HU, consulte os [PRs do projeto](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pulls?q=is%3Apr) e registre o link específico e o resultado do check correspondente. **Campos do DoR/DoD ainda sem evidência não são comprovação de aprovação**.
+
 ### Organização e Atualização
 
 ??? info "Refinamento Iterativo de Requisitos"  

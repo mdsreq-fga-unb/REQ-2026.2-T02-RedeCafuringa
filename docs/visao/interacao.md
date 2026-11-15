@@ -25,7 +25,7 @@ Para viabilizar esse fluxo, o projeto utiliza as seguintes ferramentas e rotinas
 
 * **Microsoft Teams:** Ferramenta oficial para as videoconferências. A equipe de desenvolvimento realiza duas reuniões internas semanais para acompanhar o progresso e solucionar impedimentos. Nesses encontros, espera-se a participação de todos os integrantes da equipe, sempre que possível, sendo obrigatória a presença do monitor em pelo menos uma dessas reuniões.
 
-* **GitHub Projects:** Ferramenta oficial para gerenciar o quadro de projetos, centralizando a criação, priorização e movimentação das tarefas durante o desenvolvimento.
+* **GitHub Projects:** [Quadro de acompanhamento da equipe](https://github.com/orgs/mdsreq-fga-unb/projects/115) (sujeito às permissões de acesso), utilizado para consultar tarefas, estados e responsáveis. Dependências e impedimentos específicos devem estar nos itens correspondentes e vinculados ao [registro de execução do AUP](evidencias/marcos_aup.md).
 
 * **Reuniões de Revisão com o Cliente:** Ocorrem via Microsoft Teams a cada 7 ou 15 dias, conforme a necessidade e a disponibilidade do cliente. Durante as agendas, o cliente participa ativamente da revisão dos cartões concluídos, validação de funcionalidades, coleta de feedbacks e priorização do backlog. Espera-se a presença de todos os integrantes da equipe técnica, sempre que possível.
 
