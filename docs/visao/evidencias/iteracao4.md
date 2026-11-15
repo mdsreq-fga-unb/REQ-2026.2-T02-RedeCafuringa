@@ -43,6 +43,10 @@ Ao final da iteração, o projeto passou a contar com um MVP formalmente estrutu
 
 ---
 
+<!-- ISSUE11_ER_INICIO -->
+A [síntese dos vídeos e das decisões de ER](registro_er.md) separa apresentação do protótipo, decisão de escopo e validação de comportamento. Testes de usabilidade com participantes e aceite específico dependem de evidência verificável.
+<!-- ISSUE11_ER_FIM -->
+
 ## Vídeos Comprobatórios
 
 A equipe ByteLab reuniu-se a 1 de outubro de 2026 para debater atualizações no cronograma, processos de desenvolvimento e validação de requisitos.

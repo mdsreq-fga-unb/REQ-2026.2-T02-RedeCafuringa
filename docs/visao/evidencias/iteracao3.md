@@ -20,6 +20,10 @@ Dessa forma, a Iteração 3 representou um avanço significativo na maturidade d
 
 ---
 
+<!-- ISSUE11_ER_INICIO -->
+Para distinguir visitas, feedbacks, alterações e aprovações, consulte o [Registro de Evidências e Decisões de ER](registro_er.md). A documentação da visita à Cafuringa identifica a conversa com Jefferson, mas não permite atribuir demandas específicas a outros participantes sem uma fonte complementar.
+<!-- ISSUE11_ER_FIM -->
+
 ## Evidências
 
 ### Declaração de Requisitos
