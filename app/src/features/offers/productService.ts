@@ -51,7 +51,7 @@ export type RegisteredProduct = {
     precoPorUnidade: number;
     gramasPorUnidade: number;
     fotos: string[];
-    produtor: { id: string; nomeIniciativa: string };
+    produtor: { id: string; nomeIniciativa: string; localidade?: string };
     /** Presente nas respostas da API (RN10); as rotas públicas só trazem disponíveis. */
     disponivel?: boolean;
 };

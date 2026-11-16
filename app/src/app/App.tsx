@@ -96,6 +96,11 @@ export function App() {
             price: `${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format("valorPorPessoa" in product ? product.valorPorPessoa : product.precoPorUnidade)} / ${"valorPorPessoa" in product ? "pessoa" : "unidade"}`,
             details: [
                 `Produtor: ${product.produtor.nomeIniciativa}`,
+                // HU20 CA03 / HU21 CA08: propriedade divulgada pelo responsável.
+                ...("localidade" in product.produtor &&
+                product.produtor.localidade
+                    ? [`Propriedade: ${product.produtor.localidade}`]
+                    : []),
                 ...("local" in product
                     ? [product.local, product.duracao]
                     : [`${product.gramasPorUnidade} g por unidade`]),
