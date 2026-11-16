@@ -12,6 +12,9 @@ export function productToOffer(product: Product): Offer {
         price: formatProductPrice(product.price, product.unit),
         details: [
             `Produtor: ${product.producerName}`,
+            ...(product.producerLocation
+                ? [`Propriedade: ${product.producerLocation}`]
+                : []),
             ...(product.grams !== undefined
                 ? [
                       `${new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 }).format(product.grams)} g por unidade`,

@@ -6,7 +6,7 @@ import {
     createWhatsAppUrl,
     isWhatsAppContactAvailable,
 } from "@/features/contact";
-import { listExperiences } from "./catalogItems";
+import { getExperienceDetails } from "./catalogItems";
 import { getProductDetails } from "./productDetailsService";
 import { OfferDetailsPage } from "./OfferDetailsPage";
 import { productToOffer } from "./productOffer";
@@ -39,9 +39,7 @@ export function ProductOfferDetails({
     useEffect(() => {
         const controller = new AbortController();
         const load = experience
-            ? listExperiences().then(
-                  (items) => items.find((item) => item.id === id) ?? null,
-              )
+            ? getExperienceDetails(id, controller.signal)
             : getProductDetails(id, controller.signal);
         void load
             .then((product) => {

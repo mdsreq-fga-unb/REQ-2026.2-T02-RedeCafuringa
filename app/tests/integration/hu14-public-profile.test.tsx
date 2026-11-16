@@ -214,28 +214,31 @@ describe("HU14 — consulta pública", () => {
             criadoEm: "2026-11-13T12:00:00.000Z",
             disponivel: true,
         };
+        // HU21: experiências vêm da rota própria, no mesmo catálogo do perfil.
         const experience = {
-            ...product,
             id: "64b0c0ffee0000000000feed",
             nome: "Visita guiada",
             categoria: "Experiência",
             descricao: "Conheça a produção no sítio.",
+            valorPorPessoa: 45,
+            local: "Sítio Boa Vista",
+            duracao: "2 horas",
             fotos: [],
+            produtor: product.produtor,
+            criadoEm: "2026-11-13T12:00:00.000Z",
+            disponivel: true,
         };
+        const page = (itens: unknown[]) =>
+            Promise.resolve(
+                json({ itens, total: itens.length, pagina: 1, limite: 20 }),
+            );
         const fetchMock = vi.fn<typeof fetch>((input, init = {}) => {
             const url = new URL(String(input), "http://localhost");
-            if (
-                url.pathname === "/api/v1/products" &&
-                (init.method ?? "GET") === "GET"
-            )
-                return Promise.resolve(
-                    json({
-                        itens: [product, experience],
-                        total: 2,
-                        pagina: 1,
-                        limite: 20,
-                    }),
-                );
+            if ((init.method ?? "GET") === "GET") {
+                if (url.pathname === "/api/v1/products") return page([product]);
+                if (url.pathname === "/api/v1/experiences")
+                    return page([experience]);
+            }
             return detailApi(input, init);
         });
         vi.stubGlobal("fetch", fetchMock);
@@ -245,8 +248,21 @@ describe("HU14 — consulta pública", () => {
         await user.click(catalog());
         await screen.findByRole("button", { name: /Mel do Cerrado/ });
         await screen.findByRole("button", { name: /Visita guiada/ });
-        expect(screen.getByText("Experiência", { exact: true })).toBeTruthy();
-        expect(screen.getByText(publicTrajectory.nomeIniciativa)).toBeTruthy();
+        expect(screen.getByText(/^Experiências?$/)).toBeTruthy();
+        const experienceRequest = fetchMock.mock.calls.find(
+            ([input]) =>
+                new URL(String(input), "http://localhost").pathname ===
+                "/api/v1/experiences",
+        );
+        expect(
+            new URL(
+                String(experienceRequest?.[0]),
+                "http://localhost",
+            ).searchParams.get("produtor"),
+        ).toBe(producerId);
+        expect(
+            screen.getAllByText(publicTrajectory.nomeIniciativa).length,
+        ).toBeGreaterThan(0);
         const productRequest = fetchMock.mock.calls.find(([input]) => {
             const url = new URL(String(input), "http://localhost");
             return url.pathname === "/api/v1/products";

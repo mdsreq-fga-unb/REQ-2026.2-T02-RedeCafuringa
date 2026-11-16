@@ -101,9 +101,7 @@ function failureMessage(error: unknown, experience: boolean): string {
         case 403:
             return `Seu perfil não tem permissão para cadastrar ${experience ? "experiências" : "produtos"}. ${kept}`;
         case 404:
-            return experience
-                ? `O cadastro de experiências está indisponível no servidor. Tente novamente mais tarde. ${kept}`
-                : `Sua conta de produtor não está ativa. Fale com a administração da rede. ${kept}`;
+            return `Sua conta de produtor não está ativa. Fale com a administração da rede. ${kept}`;
         case 400:
         case 413:
         case 415: {

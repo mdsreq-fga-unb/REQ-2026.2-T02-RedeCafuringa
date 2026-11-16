@@ -104,16 +104,16 @@ it("aceita valor em reais com vírgula", async () => {
     ).toBe("45.5");
 });
 
-it("API indisponível preserva o formulário sem simular publicação", async () => {
+it("conta de produtor desativada (404) preserva o formulário sem simular publicação", async () => {
     session();
     mockExperienceApi(() =>
-        json({ message: "Not found", statusCode: 404 }, 404),
+        json({ message: "Produtor não encontrado", statusCode: 404 }, 404),
     );
     const { user } = await openExperience();
     const f = await fillExperience(user);
     submit();
     expect((await screen.findByRole("alert")).textContent).toMatch(
-        /indisponível.*preservados/i,
+        /não está ativa.*preservados/i,
     );
     expect(f.local.value).toBe(experience.local);
     expect(

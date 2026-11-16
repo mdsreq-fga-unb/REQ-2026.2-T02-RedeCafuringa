@@ -1,4 +1,4 @@
-import { apiResourceUrl, getApiClient } from "@/shared/api";
+import { ApiHttpError, apiResourceUrl, getApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import type { Product } from "./productTypes";
 import { readDemoOffers, type RegisteredOffer } from "./publishedOffers";
@@ -7,19 +7,55 @@ import { offers } from "./offerData";
 
 export function registeredToCatalogItem(offer: RegisteredOffer): Product {
     const experience = "valorPorPessoa" in offer;
+    const resolve = (path: string) =>
+        isMockAuthEnabled ? path : apiResourceUrl(path);
     const photo = offer.fotos[0];
+    const localidade =
+        "localidade" in offer.produtor ? offer.produtor.localidade : undefined;
     return {
         id: offer.id,
         name: offer.nome,
         producerId: offer.produtor.id,
         producerName: offer.produtor.nomeIniciativa,
+        ...(localidade ? { producerLocation: localidade } : {}),
         description: offer.descricao,
         category: experience ? "Experiências" : "Produtos",
         price: experience ? offer.valorPorPessoa : offer.precoPorUnidade,
         unit: experience ? "pessoa" : "unidade",
-        image: photo ? (isMockAuthEnabled ? photo : apiResourceUrl(photo)) : "",
-        ...(experience ? { local: offer.local, duracao: offer.duracao } : {}),
+        image: photo ? resolve(photo) : "",
+        ...(experience
+            ? {
+                  local: offer.local,
+                  duracao: offer.duracao,
+                  photos: offer.fotos.map(resolve),
+              }
+            : {}),
     };
+}
+
+/**
+ * HU21 CA08: detalhe público de uma experiência, consultado pela rota própria
+ * (sem depender de a experiência estar na primeira página do catálogo).
+ * Devolve `null` quando não existe ou não está disponível.
+ */
+export async function getExperienceDetails(
+    id: string,
+    signal?: AbortSignal,
+): Promise<Product | null> {
+    if (isMockAuthEnabled)
+        return (await listExperiences()).find((item) => item.id === id) ?? null;
+    try {
+        const data = await getApiClient().get<RegisteredExperience>(
+            `/experiences/${encodeURIComponent(id)}`,
+            { auth: false, signal },
+        );
+        if (data.id !== id || data.disponivel === false) return null;
+        return registeredToCatalogItem(data);
+    } catch (error) {
+        if (error instanceof ApiHttpError && [404, 410].includes(error.status))
+            return null;
+        throw error;
+    }
 }
 
 export async function listExperiences(): Promise<Product[]> {

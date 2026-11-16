@@ -8,6 +8,8 @@ export type Product = {
     grams?: number;
     photos?: string[];
     producerId?: string;
+    /** Localidade ou propriedade divulgada pelo responsável (HU20 CA03, HU21 CA08). */
+    producerLocation?: string;
     description?: string;
     category?: string;
     local?: string;

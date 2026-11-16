@@ -97,6 +97,18 @@ it("CA01–CA05/CA07: consulta individual pública com descrição, preço, peso
         expect(new Headers(init?.headers).has("Authorization")).toBe(false);
 });
 
+it("CA03: identifica a propriedade responsável quando o produtor a divulga", async () => {
+    api(() =>
+        json({
+            ...product,
+            produtor: { ...product.produtor, localidade: "Sítio Boa Vista" },
+        }),
+    );
+    open();
+    expect(await screen.findByText("Produtor: Dona Maria")).toBeTruthy();
+    expect(screen.getByText("Propriedade: Sítio Boa Vista")).toBeTruthy();
+});
+
 it.each([404, 410])(
     "CA06/CA08: HTTP %s não apresenta oferta ativa",
     async (status) => {

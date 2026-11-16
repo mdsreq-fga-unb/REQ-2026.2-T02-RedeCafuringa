@@ -22,14 +22,17 @@ export type RegisteredExperience = {
     local: string;
     duracao: string;
     fotos: string[];
-    produtor: { id: string; nomeIniciativa: string };
+    /** Responsável pela oferta (CA03, CA08): só dados de divulgação. */
+    produtor: { id: string; nomeIniciativa: string; localidade?: string };
     /** Presente nas respostas da API (RN10); as rotas públicas só trazem disponíveis. */
     disponivel?: boolean;
 };
 
 /**
- * Contrato proposto pela HU21. /experiences ainda não existe na API atual.
- * Reutiliza autenticação e preparo de fotos; erros mantêm o formulário.
+ * HU21: cadastra a experiência em `POST /experiences` (contrato 0.9.0). O
+ * dono vem do token na API (RN09); a `Idempotency-Key` evita duplicar ao
+ * reenviar após falha de conexão (CA07). No modo de demonstração grava no
+ * navegador. Erros mantêm o formulário preenchido.
  */
 export async function registerExperience(
     draft: ExperienceDraft,
