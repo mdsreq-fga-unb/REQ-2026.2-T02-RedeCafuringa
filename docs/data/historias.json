@@ -2,7 +2,7 @@
   {
     "id": 1,
     "titulo": "Cadastrar perfil de consumidor",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 6,
@@ -42,13 +42,13 @@
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
     },
     "dependencias": [],
-    "responsavel": null,
+    "responsavel": "Pedro Luiz e Pedro Augusto",
     "revisor": "Equipe ByteLab"
   },
   {
     "id": 2,
     "titulo": "Cadastrar perfil de produtor",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 6,
@@ -87,13 +87,13 @@
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
     },
     "dependencias": [],
-    "responsavel": null,
+    "responsavel": "Luccas Rodrigues e Pedro Agusto",
     "revisor": "Equipe ByteLab"
   },
   {
     "id": 3,
     "titulo": "Cadastrar usuário administrador",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
@@ -132,13 +132,13 @@
     "dependencias": [
       "HU09"
     ],
-    "responsavel": null,
+    "responsavel": "Ítalo Alves e Lucas Gabriel",
     "revisor": "Equipe ByteLab"
   },
   {
     "id": 4,
     "titulo": "Consultar usuários cadastrados",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
@@ -178,7 +178,7 @@
       "HU03",
       "HU09"
     ],
-    "responsavel": null,
+    "responsavel": "Pedro Luiz e Lucas Gabriel",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -314,7 +314,7 @@
   {
     "id": 9,
     "titulo": "Autenticar usuário",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 6,
@@ -350,13 +350,13 @@
       "HU01",
       "HU02"
     ],
-    "responsavel": null,
+    "responsavel": "Pedro Luiz e Lucas Gabriel",
     "revisor": "Equipe ByteLab"
   },
   {
     "id": 10,
     "titulo": "Recuperar acesso à conta",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
@@ -390,7 +390,7 @@
     "dependencias": [
       "HU09"
     ],
-    "responsavel": null,
+    "responsavel": "Ítalo Alves e Pedro Augusto",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -425,7 +425,7 @@
   {
     "id": 12,
     "titulo": "Registrar trajetória do produtor",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
@@ -466,7 +466,7 @@
       "HU02",
       "HU09"
     ],
-    "responsavel": null,
+    "responsavel": "Ítalo Alves e Pedro Augusto",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -503,10 +503,10 @@
   {
     "id": 14,
     "titulo": "Consultar perfil de produtor",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Média",
     "mvp": true,
-    "iteracao": 7,
+    "iteracao": 8,
     "ordem": 14,
     "rf": "RF14",
     "rnfs": [
@@ -543,13 +543,13 @@
       "HU02",
       "HU12"
     ],
-    "responsavel": null,
+    "responsavel": "Luccas Rodrigues e Pedro Agusto",
     "revisor": "Equipe ByteLab"
   },
   {
     "id": 15,
     "titulo": "Cadastrar produto",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
@@ -588,7 +588,7 @@
       "HU02",
       "HU09"
     ],
-    "responsavel": null,
+    "responsavel": "Ítalo Alves e Pedro Augusto",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -685,7 +685,7 @@
   {
     "id": 19,
     "titulo": "Consultar catálogo de produtos",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
@@ -722,13 +722,13 @@
     "dependencias": [
       "HU15"
     ],
-    "responsavel": null,
+    "responsavel": "Pedro Luiz e Lucas Gabriel",
     "revisor": "Equipe ByteLab"
   },
   {
     "id": 20,
     "titulo": "Consultar detalhes do produto",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
@@ -767,13 +767,13 @@
       "HU15",
       "HU19"
     ],
-    "responsavel": null,
+    "responsavel": "Pedro Luiz e Lucas Gabriel",
     "revisor": "Equipe ByteLab"
   },
   {
     "id": 21,
     "titulo": "Cadastrar experiência",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
@@ -812,7 +812,7 @@
       "HU02",
       "HU09"
     ],
-    "responsavel": null,
+    "responsavel": "Pedro Augusto e Lucas Gabriel",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -879,10 +879,10 @@
   {
     "id": 24,
     "titulo": "Consultar catálogo de experiências",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
-    "iteracao": 7,
+    "iteracao": 8,
     "ordem": 12,
     "rf": "RF24",
     "rnfs": [
@@ -916,7 +916,7 @@
     "dependencias": [
       "HU21"
     ],
-    "responsavel": null,
+    "responsavel": "Pedro Augusto e Lucas Gabriel",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -1263,10 +1263,10 @@
   {
     "id": 36,
     "titulo": "Buscar ofertas",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
-    "iteracao": 7,
+    "iteracao": 9,
     "ordem": 13,
     "rf": "RF36",
     "rnfs": [
@@ -1304,7 +1304,7 @@
       "HU21",
       "HU24"
     ],
-    "responsavel": null,
+    "responsavel": "Pedro Augusto e Lucas Gabriel",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -1542,7 +1542,7 @@
     "situacao": "Em execução",
     "prioridade": "Média",
     "mvp": true,
-    "iteracao": 8,
+    "iteracao": 9,
     "ordem": 16,
     "rf": "RF44",
     "rnfs": [
@@ -1587,7 +1587,7 @@
     "situacao": "Em execução",
     "prioridade": "Alta",
     "mvp": true,
-    "iteracao": 8,
+    "iteracao": 9,
     "ordem": 17,
     "rf": "RF45",
     "rnfs": [
@@ -1628,7 +1628,7 @@
     "situacao": "Em execução",
     "prioridade": "Alta",
     "mvp": true,
-    "iteracao": 8,
+    "iteracao": 9,
     "ordem": 18,
     "rf": "RF46",
     "rnfs": [
@@ -1671,7 +1671,7 @@
     "situacao": "Em execução",
     "prioridade": "Média",
     "mvp": true,
-    "iteracao": 8,
+    "iteracao": 9,
     "ordem": 19,
     "rf": "RF47",
     "rnfs": [
@@ -1714,7 +1714,7 @@
     "situacao": "Em execução",
     "prioridade": "Média",
     "mvp": true,
-    "iteracao": 8,
+    "iteracao": 9,
     "ordem": 20,
     "rf": "RF48",
     "rnfs": [

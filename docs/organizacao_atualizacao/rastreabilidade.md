@@ -4,7 +4,7 @@
 
 Rastrear um requisito significa conseguir recuperar sua origem, seus vínculos, suas condições de verificação e o planejamento da entrega. No projeto Rede Cafuringa, essas informações estão distribuídas entre a visão do produto, os requisitos, o backlog e as páginas das histórias.
 
-## Exemplo aplicado: HU01
+## Exemplo Aplicado: HU01
 
 <div class="orc-example-grid">
   <a href="../visao/solucao.md#22-objetivos-especificos-oe-do-produto"><small>Objetivo</small><strong>OE2</strong><span>Consultar definição</span></a>
@@ -17,7 +17,7 @@ Rastrear um requisito significa conseguir recuperar sua origem, seus vínculos, 
 
 Os vínculos acima estão presentes na documentação da HU01 e no planejamento do backlog. Para conferir cada RNF e regra aplicável, consulte a [identificação e as relações da HU01](../visao/historias/HU1.md).
 
-## Percurso de análise de impacto
+## Percurso de Análise de Impacto
 
 Ao surgir uma mudança, a equipe deve localizar o registro primário e verificar, conforme a alteração:
 
