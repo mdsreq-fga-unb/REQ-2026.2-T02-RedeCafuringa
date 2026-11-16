@@ -42,7 +42,7 @@
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
     },
     "dependencias": [],
-    "responsavel": "Pedro Luiz e Pedro Augusto",
+    "responsavel": "Pedro Luiz, Lucas Gabriel e Ítalo Alves",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -87,7 +87,7 @@
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
     },
     "dependencias": [],
-    "responsavel": "Luccas Rodrigues e Lucas Gabriel",
+    "responsavel": "Luccas Rodrigues, Pedro Augusto, Lucas Gabriel e Ítalo Alves",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -132,7 +132,7 @@
     "dependencias": [
       "HU09"
     ],
-    "responsavel": "Ítalo Alves e Lucas Gabriel",
+    "responsavel": "Ítalo Alves, Lucas Gabriel e Pedro Luiz",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -350,7 +350,7 @@
       "HU01",
       "HU02"
     ],
-    "responsavel": "Pedro Luiz e Lucas Gabriel",
+    "responsavel": "Pedro Luiz, Ítalo Alves e Pedro Augusto",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -466,7 +466,7 @@
       "HU02",
       "HU09"
     ],
-    "responsavel": "Ítalo Alves e Pedro Augusto",
+    "responsavel": "Ítalo Alves e Lucas Gabriel",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -543,7 +543,7 @@
       "HU02",
       "HU12"
     ],
-    "responsavel": "Luccas Rodrigues e Pedro Agusto",
+    "responsavel": "Luccas Rodrigues, Lucas Gabriel e Ítalo Alves",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -588,7 +588,7 @@
       "HU02",
       "HU09"
     ],
-    "responsavel": "Ítalo Alves e Pedro Augusto",
+    "responsavel": "Lucas Gabriel e Ítalo Alves",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -722,7 +722,7 @@
     "dependencias": [
       "HU15"
     ],
-    "responsavel": "Pedro Luiz e Lucas Gabriel",
+    "responsavel": "Pedro Luiz, Pedro Augusto, Lucas Gabriel e Ítalo Alves",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -767,7 +767,7 @@
       "HU15",
       "HU19"
     ],
-    "responsavel": "Pedro Luiz e Lucas Gabriel",
+    "responsavel": "Pedro Luiz, Pedro Augusto, Lucas Gabriel e Ítalo Alves",
     "revisor": "Equipe ByteLab"
   },
   {
@@ -812,7 +812,7 @@
       "HU02",
       "HU09"
     ],
-    "responsavel": "Pedro Augusto e Lucas Gabriel",
+    "responsavel": "Lucas Gabriel, Ítalo Alves e Pedro Augusto",
     "revisor": "Equipe ByteLab"
   },
   {
