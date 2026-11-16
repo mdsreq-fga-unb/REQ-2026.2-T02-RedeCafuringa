@@ -1,25 +1,28 @@
 # HU01 — Cadastrar perfil de consumidor
 
 ## 1. Identificação
+
 <!-- REQUISITOS_HU_META_AUTO_INICIO -->
-| Campo | Informação |
-|---|---|
-| **ID da História** | HU01 |
-| **Requisito Funcional** | [RF01 — Cadastrar perfil de consumidor](../requisitos_software.md#71-requisitos-funcionais) |
-| **Requisito Não Funcional** | [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF04](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF05](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF07](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF08](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF10](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF11](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF12](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF15](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN02](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN05](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN08](../requisitos_software.md#73-lista-de-regras-de-negocio) |
-| **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
-| **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Alta |
-| **Escopo** | MVP |
-| **Iteração** | [Iteração 6](../evidencias/iteracao6.md) |
+
+| Campo                         | Informação                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ID da História**            | HU01                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Requisito Funcional**       | [RF01 — Cadastrar perfil de consumidor](../requisitos_software.md#71-requisitos-funcionais)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| **Requisito Não Funcional**   | [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF04](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF05](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF07](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF08](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF10](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF11](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF12](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF15](../requisitos_software.md#72-requisitos-nao-funcionais) |
+| **Regra de Negócio**          | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN02](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN05](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN08](../requisitos_software.md#73-lista-de-regras-de-negocio)                                                                                                                                                                                                                                                                                                                                      |
+| **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Objetivos Específicos**     | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| **Prioridade**                | Alta                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Escopo**                    | MVP                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| **Iteração**                  | [Iteração 6](../evidencias/iteracao6.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+
 <!-- REQUISITOS_HU_META_AUTO_FIM -->
 
 ---
 
 ## 2. História de Usuário
 
-*Como consumidor ou visitante, quero cadastrar meu perfil na plataforma, para acessar funcionalidades e interagir com produtores e experiências.*
+_Como consumidor ou visitante, quero cadastrar meu perfil na plataforma, para acessar funcionalidades e interagir com produtores e experiências._
 
 ---
 
@@ -107,7 +110,7 @@ O fluxo de cadastro deve considerar as medidas de proteção aplicáveis caso cr
 
 ---
 
-## 6. Relaçao com as Características de Produto 
+## 6. Relaçao com as Características de Produto
 
 **[CP1 — Perfis](../solucao.md/#23-caracteristicas-do-produto)**
 
@@ -115,7 +118,7 @@ O cadastro de consumidores contribui para a formação da base de usuários que 
 
 ---
 
-## 7. Relação com os Objetivos Específicos 
+## 7. Relação com os Objetivos Específicos
 
 **[OE2 — Visibilidade e oferta local](../solucao.md/#22-objetivos-especificos-oe-do-produto)**
 
@@ -131,22 +134,22 @@ O cadastro de consumidores contribui para formar a base de usuários da Rede Caf
 
 ## 9. Atividades Relacionadas
 
-| ID | Atividade | Descrição |
-|---|---|---|
-| AT01 | Definir os campos do cadastro | Identificar e disponibilizar os campos obrigatórios: nome completo, CPF, e-mail e senha. |
-| AT02 | Implementar o formulário de cadastro | Desenvolver a interface para preenchimento e envio dos dados do consumidor. |
-| AT03 | Implementar validação dos campos | Validar o preenchimento obrigatório, o formato do CPF, o formato do e-mail e os critérios definidos para a senha. |
-| AT04 | Verificar duplicidade de dados | Impedir o cadastro quando o e-mail ou CPF já estiver associado a uma conta, conforme as regras de unicidade adotadas. |
-| AT05 | Registrar o perfil de consumidor | Implementar o processamento e o armazenamento dos dados válidos, associando a conta ao perfil de consumidor. |
-| AT06 | Implementar mensagens de retorno | Informar o usuário sobre erros de preenchimento, duplicidades e conclusão bem-sucedida do cadastro. |
-| AT07 | Aplicar medidas de segurança e privacidade | Proteger os dados pessoais, utilizar comunicação HTTPS em produção e impedir a exposição pública de informações privadas. |
-| AT08 | Aplicar permissões do perfil | Garantir que a conta criada receba somente as permissões correspondentes ao perfil de consumidor. |
-| AT09 | Verificar acessibilidade e responsividade | Avaliar a navegação por teclado, a identificação dos campos, o contraste e a adaptação do formulário a diferentes telas. |
-| AT10 | Tratar interrupções de conexão | Garantir que os dados já preenchidos não sejam apagados automaticamente durante uma interrupção temporária da conexão, antes de uma nova tentativa de envio. |
-| AT11 | Verificar as medidas de proteção de menores | Avaliar as medidas de proteção de dados, privacidade e aferição de idade aplicáveis ao fluxo de cadastro, conforme as regras definidas para a plataforma. |
-| AT12 | Executar testes do cadastro | Testar o fluxo com dados válidos, campos vazios ou inválidos, e-mail duplicado, CPF duplicado e conclusão bem-sucedida. |
-| AT13 | Validar compatibilidade entre navegadores | Verificar o funcionamento do cadastro nos navegadores e ambientes definidos no RNF12. |
-| AT14 | Documentar e revisar a funcionalidade | Registrar o comportamento implementado, os resultados dos testes e eventuais pendências para revisão pela equipe. |
+| ID   | Atividade                                   | Descrição                                                                                                                                                    |
+| ---- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AT01 | Definir os campos do cadastro               | Identificar e disponibilizar os campos obrigatórios: nome completo, CPF, e-mail e senha.                                                                     |
+| AT02 | Implementar o formulário de cadastro        | Desenvolver a interface para preenchimento e envio dos dados do consumidor.                                                                                  |
+| AT03 | Implementar validação dos campos            | Validar o preenchimento obrigatório, o formato do CPF, o formato do e-mail e os critérios definidos para a senha.                                            |
+| AT04 | Verificar duplicidade de dados              | Impedir o cadastro quando o e-mail ou CPF já estiver associado a uma conta, conforme as regras de unicidade adotadas.                                        |
+| AT05 | Registrar o perfil de consumidor            | Implementar o processamento e o armazenamento dos dados válidos, associando a conta ao perfil de consumidor.                                                 |
+| AT06 | Implementar mensagens de retorno            | Informar o usuário sobre erros de preenchimento, duplicidades e conclusão bem-sucedida do cadastro.                                                          |
+| AT07 | Aplicar medidas de segurança e privacidade  | Proteger os dados pessoais, utilizar comunicação HTTPS em produção e impedir a exposição pública de informações privadas.                                    |
+| AT08 | Aplicar permissões do perfil                | Garantir que a conta criada receba somente as permissões correspondentes ao perfil de consumidor.                                                            |
+| AT09 | Verificar acessibilidade e responsividade   | Avaliar a navegação por teclado, a identificação dos campos, o contraste e a adaptação do formulário a diferentes telas.                                     |
+| AT10 | Tratar interrupções de conexão              | Garantir que os dados já preenchidos não sejam apagados automaticamente durante uma interrupção temporária da conexão, antes de uma nova tentativa de envio. |
+| AT11 | Verificar as medidas de proteção de menores | Avaliar as medidas de proteção de dados, privacidade e aferição de idade aplicáveis ao fluxo de cadastro, conforme as regras definidas para a plataforma.    |
+| AT12 | Executar testes do cadastro                 | Testar o fluxo com dados válidos, campos vazios ou inválidos, e-mail duplicado, CPF duplicado e conclusão bem-sucedida.                                      |
+| AT13 | Validar compatibilidade entre navegadores   | Verificar o funcionamento do cadastro nos navegadores e ambientes definidos no RNF12.                                                                        |
+| AT14 | Documentar e revisar a funcionalidade       | Registrar o comportamento implementado, os resultados dos testes e eventuais pendências para revisão pela equipe.                                            |
 
 ---
 
@@ -193,4 +196,9 @@ Registre abaixo **uma linha por contribuição**. Cada integrante deve informar 
 
 | Integrante | Atividade realizada | Evidência (link ou arquivo) | Data |
 |---|---|---|---|
-| *A preencher* | *A preencher* | *A preencher* | *A preencher* |
+| Pedro Luiz (pedroluizfo) | Backend do cadastro de consumidor: modelagem dos dados e correção de dependências | [PR #51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/51) · [commit 043bb7c7](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/043bb7c7) | 02/11/2026 |
+| Lucas Gabriel Gomes Aguiar | Frontend do cadastro de consumidor: formulário, data de nascimento, autenticação simulada e testes de integração | [PR #57](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/57) · [commit 440b7998](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/440b7998) · [commit 1935e9f7](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/1935e9f7) · [commit ed8608c8](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/ed8608c8) | 01/11/2026 |
+| Pedro Augusto (macedoPedro20) | Validações e máscaras do formulário de cadastro (e-mail, telefone, documentos) | [PR #57](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/57) · [commit 904833c5](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/904833c5) | 01/11/2026 |
+| Italo Alves | Integração com a API: e-mail duplicado com mensagem própria, envio da data de nascimento e login por e-mail e senha (RN05) | [PR #57](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/57) · [commit f05fd325](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/f05fd325) · [commit e4c7e4bd](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/e4c7e4bd) · [commit f816c685](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/f816c685) | 05/11/2026 |
+| Italo Alves | Revisão do PR do backend do cadastro de consumidor | [PR #51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/51) (revisão aprovada) | 02/11/2026 |
+| Pedro Luiz (pedroluizfo) | Revisão do PR que integra frontend e backend do cadastro de consumidor e produtor, e merge na `dev` | [PR #57](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/57) (revisão aprovada) | 05/11/2026 |

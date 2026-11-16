@@ -1,27 +1,28 @@
-
-
 # HU09 — Autenticar usuário
 
 ## 1. Identificação
+
 <!-- REQUISITOS_HU_META_AUTO_INICIO -->
-| Campo | Informação |
-|---|---|
-| **ID da História** | HU09 |
-| **Requisito Funcional** | [RF09 — Autenticar usuário](../requisitos_software.md#71-requisitos-funcionais) |
-| **Requisito Não Funcional** | [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF08](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF10](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF11](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN05](../requisitos_software.md#73-lista-de-regras-de-negocio) |
-| **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
-| **Objetivos Específicos** | [OE1](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Alta |
-| **Escopo** | MVP |
-| **Iteração** | [Iteração 6](../evidencias/iteracao6.md) |
+
+| Campo                         | Informação                                                                                                                                                                                                                                                         |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **ID da História**            | HU09                                                                                                                                                                                                                                                               |
+| **Requisito Funcional**       | [RF09 — Autenticar usuário](../requisitos_software.md#71-requisitos-funcionais)                                                                                                                                                                                    |
+| **Requisito Não Funcional**   | [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF08](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF10](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF11](../requisitos_software.md#72-requisitos-nao-funcionais) |
+| **Regra de Negócio**          | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN05](../requisitos_software.md#73-lista-de-regras-de-negocio)                                                                                                                                   |
+| **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto)                                                                                                                                                                                                                 |
+| **Objetivos Específicos**     | [OE1](../solucao.md#22-objetivos-especificos-oe-do-produto)                                                                                                                                                                                                        |
+| **Prioridade**                | Alta                                                                                                                                                                                                                                                               |
+| **Escopo**                    | MVP                                                                                                                                                                                                                                                                |
+| **Iteração**                  | [Iteração 6](../evidencias/iteracao6.md)                                                                                                                                                                                                                           |
+
 <!-- REQUISITOS_HU_META_AUTO_FIM -->
 
 ---
 
 ## 2. História de Usuário
 
-*Como usuário cadastrado, quero autenticar-me na plataforma, para acessar as funcionalidades disponíveis ao meu perfil.*
+_Como usuário cadastrado, quero autenticar-me na plataforma, para acessar as funcionalidades disponíveis ao meu perfil._
 
 ---
 
@@ -103,23 +104,23 @@ A autenticação permite que os usuários cadastrados acessem os recursos da pla
 
 ## 8. Protótipo
 
-![Protótipo HU09](../../img/prototipo/HU09.png)
+![Protótipo HU09](../../img/prototipo/HU9.png)
 
 ---
 
 ## 9. Atividades Relacionadas
 
-| ID | Atividade | Descrição |
-|---|---|---|
-| AT01 | Disponibilizar a funcionalidade de autenticação | Implementar a interface de acesso à conta dos usuários cadastrados. |
-| AT02 | Implementar entrada de credenciais | Permitir que o usuário informe os dados necessários para autenticação. |
-| AT03 | Implementar validação de credenciais | Desenvolver a verificação das credenciais informadas em relação à conta cadastrada. |
-| AT04 | Implementar controle de acesso por perfil | Direcionar o usuário às funcionalidades compatíveis com seu perfil após a autenticação. |
-| AT05 | Implementar mensagens de retorno | Informar o usuário sobre autenticações concluídas ou tentativas não autorizadas. |
-| AT06 | Aplicar proteção da comunicação | Garantir a transmissão segura das credenciais e dos dados relacionados à autenticação. |
-| AT07 | Executar testes de autenticação | Verificar o comportamento da funcionalidade com credenciais válidas e inválidas. |
-| AT08 | Executar testes de autorização | Verificar se cada perfil acessa somente as funcionalidades permitidas. |
-| AT09 | Documentar e revisar a funcionalidade | Registrar o comportamento implementado e os resultados dos testes para revisão pela equipe. |
+| ID   | Atividade                                       | Descrição                                                                                   |
+| ---- | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| AT01 | Disponibilizar a funcionalidade de autenticação | Implementar a interface de acesso à conta dos usuários cadastrados.                         |
+| AT02 | Implementar entrada de credenciais              | Permitir que o usuário informe os dados necessários para autenticação.                      |
+| AT03 | Implementar validação de credenciais            | Desenvolver a verificação das credenciais informadas em relação à conta cadastrada.         |
+| AT04 | Implementar controle de acesso por perfil       | Direcionar o usuário às funcionalidades compatíveis com seu perfil após a autenticação.     |
+| AT05 | Implementar mensagens de retorno                | Informar o usuário sobre autenticações concluídas ou tentativas não autorizadas.            |
+| AT06 | Aplicar proteção da comunicação                 | Garantir a transmissão segura das credenciais e dos dados relacionados à autenticação.      |
+| AT07 | Executar testes de autenticação                 | Verificar o comportamento da funcionalidade com credenciais válidas e inválidas.            |
+| AT08 | Executar testes de autorização                  | Verificar se cada perfil acessa somente as funcionalidades permitidas.                      |
+| AT09 | Documentar e revisar a funcionalidade           | Registrar o comportamento implementado e os resultados dos testes para revisão pela equipe. |
 
 ---
 
@@ -166,4 +167,8 @@ Registre abaixo **uma linha por contribuição**. Cada integrante deve informar 
 
 | Integrante | Atividade realizada | Evidência (link ou arquivo) | Data |
 |---|---|---|---|
-| *A preencher* | *A preencher* | *A preencher* | *A preencher* |
+| Pedro Luiz (pedroluizfo) | Base de implementação da segurança e da autenticação | [PR #28](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/28) · [commit f92802b3](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/f92802b3) | 28/10/2026 |
+| Italo Alves | Revisão do login: mensagem por causa, sessão encerrada ao expirar o token, cabeçalho `Retry-After` no 429 e rastreabilidade | [PR #62](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/62) · [commit d4f05350](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/d4f05350) · [commit 222c6cac](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/222c6cac) · [commit aa4e6191](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/aa4e6191) | 08/11/2026 |
+| Pedro Augusto (macedoPedro20) | Telas de login por perfil: troca entre produtor e consumidor, título e subtítulo conforme o protótipo e ação “Criar uma conta” | [PR #64](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/64) · [commit 60bd84e3](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/60bd84e3) · [commit 4511740d](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/4511740d) · [commit 7075cd01](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/7075cd01) · [commit 8943f63a](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/8943f63a) | 10/11/2026 |
+| Pedro Luiz (pedroluizfo) | Revisão do PR da revisão do login e merge na `dev` | [PR #62](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/62) (revisão aprovada) | 09/11/2026 |
+| Italo Alves | Revisão do PR de ajustes de interface do login e da recuperação de acesso, com correções na própria branch | [PR #64](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/64) (revisão aprovada) | 13/11/2026 |

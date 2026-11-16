@@ -36,10 +36,6 @@ Essas funcionalidades contribuem diretamente para o objetivo da Rede Cafuringa d
 
     O desenvolvimento dessas funcionalidades também contou com a estrutura técnica e as orientações descritas no [Guia do Backend — Estrutura de pastas e TDD](../arquitetura/backend/guia-estrutura-e-tdd.md). As práticas de integração e validação do projeto estão documentadas na [Visão Geral de Engenharia](../arquitetura/engenharia/visao-geral.md).
 
-??? info "Validação das HU19, HU20 e HU21"
-
-    Antes da integração na `dev`, os critérios de aceite das três histórias foram conferidos com testes automatizados (backend e front) e com teste manual no ambiente Docker usando a API real. A matriz de rastreabilidade, as capturas de tela e os achados da integração estão em [Validação das HU19, HU20 e HU21](validacao_hu19_hu21.md).
-
 ### Organização e Atualização
 
 ??? info "Revisão e Refinamento dos Requisitos"

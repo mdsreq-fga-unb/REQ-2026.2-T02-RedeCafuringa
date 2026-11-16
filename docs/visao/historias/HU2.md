@@ -1,25 +1,28 @@
 # HU02 — Cadastrar perfil de produtor
 
 ## 1. Identificação
+
 <!-- REQUISITOS_HU_META_AUTO_INICIO -->
-| Campo | Informação |
-|---|---|
-| **ID da História** | HU02 |
-| **Requisito Funcional** | [RF02 — Cadastrar perfil de produtor](../requisitos_software.md#71-requisitos-funcionais) |
-| **Requisito Não Funcional** | [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF04](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF07](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF08](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF11](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF15](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN02](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN05](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN07](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN08](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN09](../requisitos_software.md#73-lista-de-regras-de-negocio) |
-| **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
-| **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Alta |
-| **Escopo** | MVP |
-| **Iteração** | [Iteração 6](../evidencias/iteracao6.md) |
+
+| Campo                         | Informação                                                                                                                                                                                                                                                                                                                                                                                           |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ID da História**            | HU02                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Requisito Funcional**       | [RF02 — Cadastrar perfil de produtor](../requisitos_software.md#71-requisitos-funcionais)                                                                                                                                                                                                                                                                                                            |
+| **Requisito Não Funcional**   | [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF04](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF07](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF08](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF11](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF15](../requisitos_software.md#72-requisitos-nao-funcionais) |
+| **Regra de Negócio**          | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN02](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN05](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN07](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN08](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN09](../requisitos_software.md#73-lista-de-regras-de-negocio) |
+| **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto)                                                                                                                                                                                                                                                                                                                                                   |
+| **Objetivos Específicos**     | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto)                                                                                                                                                                                                                                                                                                                                          |
+| **Prioridade**                | Alta                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Escopo**                    | MVP                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Iteração**                  | [Iteração 6](../evidencias/iteracao6.md)                                                                                                                                                                                                                                                                                                                                                             |
+
 <!-- REQUISITOS_HU_META_AUTO_FIM -->
 
 ---
 
 ## 2. História de Usuário
 
-*Como produtor ou responsável por uma iniciativa, quero cadastrar meu perfil de produtor, para divulgar minha produção, meus produtos e minhas experiências.*
+_Como produtor ou responsável por uma iniciativa, quero cadastrar meu perfil de produtor, para divulgar minha produção, meus produtos e minhas experiências._
 
 ---
 
@@ -147,26 +150,26 @@ O cadastro de produtores contribui diretamente para ampliar a visibilidade das i
 
 ## 9. Atividades Relacionadas
 
-| ID | Atividade | Descrição |
-|---|---|---|
-| AT01 | Definir os campos do cadastro | Identificar e disponibilizar os campos necessários ao cadastro: nome da iniciativa, responsável, CPF, CNPJ quando aplicável, localidade, categorias ofertadas, formas de pagamento, e-mail e senha. |
-| AT02 | Implementar o formulário de cadastro | Desenvolver a interface para preenchimento e envio dos dados do produtor ou responsável pela iniciativa. |
-| AT03 | Implementar identificação da iniciativa | Permitir o registro do nome da propriedade, associação, comunidade ou iniciativa, quando houver. |
-| AT04 | Implementar identificação do responsável | Disponibilizar os campos necessários para identificar a pessoa responsável pelo perfil, incluindo CPF. |
-| AT05 | Implementar identificação jurídica | Permitir o preenchimento do CNPJ quando aplicável, considerando as condições estabelecidas para iniciativas enquadradas como MEI. |
-| AT06 | Implementar seleção de categorias | Disponibilizar opções para classificação das categorias de produtos e experiências oferecidas pela iniciativa. |
-| AT07 | Registrar localidade e formas de pagamento | Implementar o preenchimento e armazenamento das informações de localização e das formas de pagamento disponibilizadas pelo produtor. |
-| AT08 | Implementar validação dos campos | Validar o preenchimento obrigatório, os formatos de CPF, CNPJ e e-mail, além dos critérios definidos para a senha. |
-| AT09 | Verificar duplicidade de dados | Impedir o cadastro quando o e-mail, CPF ou CNPJ já estiver associado a outro cadastro, conforme as regras de unicidade adotadas. |
-| AT10 | Registrar o perfil de produtor | Implementar o processamento e armazenamento dos dados válidos, associando a conta ao perfil de produtor. |
-| AT11 | Implementar mensagens de retorno | Informar o usuário sobre erros de preenchimento, duplicidades e conclusão bem-sucedida do cadastro. |
-| AT12 | Aplicar medidas de segurança e privacidade | Proteger os dados pessoais e impedir a exposição pública de informações cadastrais privadas, como CPF e CNPJ. |
-| AT13 | Aplicar permissões do perfil | Garantir que a conta criada receba as permissões correspondentes ao perfil de produtor. |
-| AT14 | Verificar acessibilidade e responsividade | Avaliar a navegação por teclado, identificação dos campos, contraste e adaptação do formulário a diferentes telas. |
-| AT15 | Tratar interrupções de conexão | Garantir que os dados já preenchidos não sejam apagados automaticamente durante uma interrupção temporária da conexão, antes de uma nova tentativa de envio. |
-| AT16 | Verificar as medidas de proteção de menores | Avaliar as medidas de proteção de dados, privacidade e consentimento aplicáveis ao fluxo de cadastro, conforme as regras definidas para a plataforma. |
-| AT17 | Executar testes do cadastro | Testar o fluxo com dados válidos, campos obrigatórios vazios ou inválidos, CPF e CNPJ inválidos, e-mail duplicado, documentos duplicados e conclusão bem-sucedida. |
-| AT18 | Documentar e revisar a funcionalidade | Registrar o comportamento implementado, os resultados dos testes e eventuais pendências para revisão pela equipe. |
+| ID   | Atividade                                   | Descrição                                                                                                                                                                                           |
+| ---- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AT01 | Definir os campos do cadastro               | Identificar e disponibilizar os campos necessários ao cadastro: nome da iniciativa, responsável, CPF, CNPJ quando aplicável, localidade, categorias ofertadas, formas de pagamento, e-mail e senha. |
+| AT02 | Implementar o formulário de cadastro        | Desenvolver a interface para preenchimento e envio dos dados do produtor ou responsável pela iniciativa.                                                                                            |
+| AT03 | Implementar identificação da iniciativa     | Permitir o registro do nome da propriedade, associação, comunidade ou iniciativa, quando houver.                                                                                                    |
+| AT04 | Implementar identificação do responsável    | Disponibilizar os campos necessários para identificar a pessoa responsável pelo perfil, incluindo CPF.                                                                                              |
+| AT05 | Implementar identificação jurídica          | Permitir o preenchimento do CNPJ quando aplicável, considerando as condições estabelecidas para iniciativas enquadradas como MEI.                                                                   |
+| AT06 | Implementar seleção de categorias           | Disponibilizar opções para classificação das categorias de produtos e experiências oferecidas pela iniciativa.                                                                                      |
+| AT07 | Registrar localidade e formas de pagamento  | Implementar o preenchimento e armazenamento das informações de localização e das formas de pagamento disponibilizadas pelo produtor.                                                                |
+| AT08 | Implementar validação dos campos            | Validar o preenchimento obrigatório, os formatos de CPF, CNPJ e e-mail, além dos critérios definidos para a senha.                                                                                  |
+| AT09 | Verificar duplicidade de dados              | Impedir o cadastro quando o e-mail, CPF ou CNPJ já estiver associado a outro cadastro, conforme as regras de unicidade adotadas.                                                                    |
+| AT10 | Registrar o perfil de produtor              | Implementar o processamento e armazenamento dos dados válidos, associando a conta ao perfil de produtor.                                                                                            |
+| AT11 | Implementar mensagens de retorno            | Informar o usuário sobre erros de preenchimento, duplicidades e conclusão bem-sucedida do cadastro.                                                                                                 |
+| AT12 | Aplicar medidas de segurança e privacidade  | Proteger os dados pessoais e impedir a exposição pública de informações cadastrais privadas, como CPF e CNPJ.                                                                                       |
+| AT13 | Aplicar permissões do perfil                | Garantir que a conta criada receba as permissões correspondentes ao perfil de produtor.                                                                                                             |
+| AT14 | Verificar acessibilidade e responsividade   | Avaliar a navegação por teclado, identificação dos campos, contraste e adaptação do formulário a diferentes telas.                                                                                  |
+| AT15 | Tratar interrupções de conexão              | Garantir que os dados já preenchidos não sejam apagados automaticamente durante uma interrupção temporária da conexão, antes de uma nova tentativa de envio.                                        |
+| AT16 | Verificar as medidas de proteção de menores | Avaliar as medidas de proteção de dados, privacidade e consentimento aplicáveis ao fluxo de cadastro, conforme as regras definidas para a plataforma.                                               |
+| AT17 | Executar testes do cadastro                 | Testar o fluxo com dados válidos, campos obrigatórios vazios ou inválidos, CPF e CNPJ inválidos, e-mail duplicado, documentos duplicados e conclusão bem-sucedida.                                  |
+| AT18 | Documentar e revisar a funcionalidade       | Registrar o comportamento implementado, os resultados dos testes e eventuais pendências para revisão pela equipe.                                                                                   |
 
 ---
 
@@ -213,4 +216,9 @@ Registre abaixo **uma linha por contribuição**. Cada integrante deve informar 
 
 | Integrante | Atividade realizada | Evidência (link ou arquivo) | Data |
 |---|---|---|---|
-| *A preencher* | *A preencher* | *A preencher* | *A preencher* |
+| Luccas Rodrigues dos Santos | Backend do cadastro de produtor: DTO, categorias ofertadas, validação de CNPJ e testes | [PR #57](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/57) · [commit 8cab179e](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/8cab179e) · [commit 887f1b5c](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/887f1b5c) · [commit b1231c1a](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/b1231c1a) · [commit 15a328f6](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/15a328f6) | 04/11/2026 |
+| Pedro Augusto (macedoPedro20) | Validação de CNPJ (dígitos verificadores) e telefone com DDD, com máscaras | [PR #55](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/55) · [commit ebcaaf81](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/ebcaaf81) · [commit 05143e74](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/05143e74) · [commit aa88d326](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/aa88d326) | 01/11/2026 |
+| Lucas Gabriel Gomes Aguiar | Frontend do cadastro de produtor: botão de cadastro por perfil e página de sucesso | [PR #55](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/55) · [commit 3f342444](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/3f342444) · [commit 90181cad](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/90181cad) | 04/11/2026 |
+| Italo Alves | Telefone do produtor na API e cadastro de produtor alinhado ao contrato (multisseleção de categorias e duração) | [PR #58](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/58) · [commit ba4848e7](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/ba4848e7) · [commit bd441b89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/bd441b89) | 05/11/2026 |
+| Lucas Gabriel Gomes Aguiar | Integração e merge na `dev` do PR do cadastro de produtor | [PR #55](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/55) | 05/11/2026 |
+| Pedro Luiz (pedroluizfo) | Revisão do PR que integra frontend e backend do cadastro de consumidor e produtor, e merge na `dev` | [PR #57](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/57) (revisão aprovada) | 05/11/2026 |

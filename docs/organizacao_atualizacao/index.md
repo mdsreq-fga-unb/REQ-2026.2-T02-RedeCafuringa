@@ -1,6 +1,6 @@
 # Organização e Atualização de Requisitos
 
-<span class="version-badge">Unidade 02 · Engenharia de Requisitos</span>
+<span class="version-badge">Unidade 03 · Engenharia de Requisitos</span>
 
 Esta seção apresenta como a equipe **ByteLab** organiza, consulta, acompanha e revisa os requisitos da **Rede Cafuringa** durante as iterações do *Agile Unified Process* (AUP). A proposta distingue o que já está documentado do que ainda precisa ser consolidado para manter o escopo coerente e rastreável.
 
