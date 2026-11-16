@@ -80,7 +80,7 @@ Sempre que um endpoint for alterado, execute:
 
 Faça commit dos arquivos gerados junto com as alterações. O CI reprova o PR caso os arquivos do contrato estejam ausentes ou desatualizados.
 
-Consulte os detalhes em [Contrato da API](shared/contratos.md).
+Consulte os detalhes em [Contrato da API](../contrato_api/contratos.md).
 
 ---
 
@@ -104,5 +104,5 @@ Todo código enviado ao repositório deve respeitar as seguintes regras:
 
 As instruções para configurar e utilizar o ambiente de desenvolvimento estão documentadas nas seguintes páginas:
 
-- [Frontend: operação](frontend/operacao.md) — primeiros passos, variáveis de ambiente e problemas comuns do frontend.
-- [Backend: operação](backend/operacao.md) — configuração, execução e operação do backend.
+- [Frontend: operação](../frontend/operacao.md) — primeiros passos, variáveis de ambiente e problemas comuns do frontend.
+- [Backend: operação](../backend/operacao.md) — configuração, execução e operação do backend.

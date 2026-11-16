@@ -55,7 +55,7 @@ As seções obrigatórias variam conforme o tipo de PR.
 - **A revisão pode ser feita por partes.** Organize commits pequenos, cada um com um assunto. Em funcionalidades, siga TDD: escreva o teste antes da implementação.
 - **A ordem de merge está explícita.** Se outro PR precisar ser integrado antes, descreva exatamente como realizar a integração.
 - **O caminho feliz e os casos de falha estão documentados.** A pessoa revisora deve tentar identificar problemas, e não apenas confirmar que a funcionalidade funciona.
-- **O contrato acompanha o código.** Quando um endpoint for alterado, atualize a versão da API, execute `./scripts/dev.sh contract` e inclua os arquivos gerados no PR. Consulte [Versionamento e contrato](shared/contratos.md).
+- **O contrato acompanha o código.** Quando um endpoint for alterado, atualize a versão da API, execute `./scripts/dev.sh contract` e inclua os arquivos gerados no PR. Consulte [Versionamento e contrato](../contrato_api/contratos.md).
 
 ---
 

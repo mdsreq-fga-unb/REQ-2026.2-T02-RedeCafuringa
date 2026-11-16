@@ -18,11 +18,15 @@ Ao final da iteração, o projeto passou a contar com um MVP formalmente estrutu
 
 ---
 
+<!-- ISSUE10_AUP_INICIO -->
+**Marco da fase de Elaboração:** a documentação e a apresentação do protótipo registram uma versão de trabalho, não o aceite formal de uma baseline arquitetural. Consulte o [registro de passagem de fase, riscos e aprovações pendentes](marcos_aup.md); os critérios divergentes e as decisões ainda abertas não podem ser tratados como automaticamente aprovados.
+<!-- ISSUE10_AUP_FIM -->
+
 ## Evidências
 
 ### Representação de Requisitos
 
-??? info "MVP Totalmente Definido"
+??? info "MVP estruturado para validação"
     <div class="hu-button-container">
         <a href="/visao/mvp/" class="hu-button">
             <span>Consultar MVP</span>
@@ -38,6 +42,10 @@ Ao final da iteração, o projeto passou a contar com um MVP formalmente estrutu
     <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/design/oBDkQHMsaFJiU97kxFL58w/Rede-Cafuringa-%E2%80%A2-MVP-mobile?node-id=0-1&m=dev&t=92FuBPjtkTss9O9e-1&embed-host=share" allowfullscreen></iframe>     
 
 ---
+
+<!-- ISSUE11_ER_INICIO -->
+A [síntese dos vídeos e das decisões de ER](registro_er.md) separa apresentação do protótipo, decisão de escopo e validação de comportamento. Testes de usabilidade com participantes e aceite específico dependem de evidência verificável.
+<!-- ISSUE11_ER_FIM -->
 
 ## Vídeos Comprobatórios
 

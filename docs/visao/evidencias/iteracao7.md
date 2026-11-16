@@ -4,15 +4,9 @@
 
 ## Descrição das Atividades Realizadas
 
-Durante a Iteração 7, na fase de Construção do processo AUP, a equipe deu continuidade ao desenvolvimento incremental da plataforma Rede Cafuringa, concentrando os esforços na implementação das funcionalidades previstas no MVP e na conclusão das histórias de usuário planejadas para o período.
+A **Iteração 7** integra a fase de Construção do AUP e possui histórias planejadas no [cronograma](../cronograma.md). O repositório contém implementações, documentação técnica e testes para determinados fluxos; contudo, **a existência de código, de checklists ou de uma HU no cronograma não comprova, por si só, que todas as entregas da iteração foram concluídas e aceitas**.
 
-As atividades envolveram a continuidade do desenvolvimento das soluções, respeitando as especificações e os critérios de aceitação definidos anteriormente. À medida que as funcionalidades eram concluídas, foram realizadas verificações com base nos critérios de Definition of Done (DoD), permitindo avaliar se as entregas atendiam às condições estabelecidas e registrar formalmente sua conclusão nas respectivas documentações.
-
-Nesta iteração, também foi mantida a organização e a atualização dos artefatos do projeto, garantindo que as histórias de usuário e seus registros de validação permanecessem acessíveis e alinhados ao progresso do desenvolvimento.
-
-Em relação à Engenharia de Requisitos, não foram identificadas necessidades de alteração ou refinamento das especificações existentes. Os requisitos permaneceram consistentes com o escopo definido para o MVP, permitindo que a equipe mantivesse o direcionamento estabelecido nas iterações anteriores e concentrasse seus esforços na implementação.
-
-Ao final da iteração, foram concluídas novas entregas de funcionalidades, acompanhadas de seus respectivos registros de verificação e critérios de conclusão. Dessa forma, a Iteração 7 contribuiu para a evolução incremental da plataforma, ampliando o conjunto de funcionalidades implementadas e mantendo a rastreabilidade entre os requisitos, as histórias de usuário e os resultados obtidos.
+A conferência de conclusão deve relacionar cada HU ao PR/commit integrado, à execução de testes e do CI, à revisão e à decisão de aceite. Quando o vínculo individual ainda não estiver registrado, a situação permanece **não comprovada documentalmente**, sem invalidar implementações que possam existir. Consulte a [matriz de execução do AUP](marcos_aup.md) para localizar as fontes e pendências.
 
 ---
 
@@ -20,54 +14,20 @@ Ao final da iteração, foram concluídas novas entregas de funcionalidades, aco
 
 ### Verificação e Validação
 
-??? info "DoD e DoD"
-    Para está iteração foram finalizados as seguintes HU's e os respectivos DoD e DoD se encontram no final de cada página a seguir:
+**Relação entre planejamento e evidência:** a lista a seguir é extraída das atribuições da fonte única de HUs; **não é uma relação de itens aprovados no DoD**.
 
-    <div class="hu-button-container">
-        <a href="/visao" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-    </div>
-    <div class="hu-button-container">
-        <a href="/visao" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-    </div>
-    
+| HU | Funcionalidade planejada | Situação da comprovação neste registro |
+|---|---|---|
+| [HU15](../historias/HU15.md) | Cadastrar produto | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU19](../historias/HU19.md) | Consultar catálogo de produtos | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU20](../historias/HU20.md) | Consultar detalhes do produto | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU21](../historias/HU21.md) | Cadastrar experiência | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU24](../historias/HU24.md) | Consultar catálogo de experiências | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU36](../historias/HU36.md) | Buscar ofertas | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+| [HU14](../historias/HU14.md) | Consultar perfil de produtor | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+
+Há [código, testes e implementação técnica](../arquitetura/backend/guia-estrutura-e-tdd.md) e [esteiras automatizadas](../arquitetura/engenharia/visao-geral.md) no repositório. Para afirmar a conclusão de cada HU, consulte os [PRs do projeto](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pulls?q=is%3Apr) e registre o link específico e o resultado do check correspondente.
+
 ### Organização e Atualização
 
 ??? info "Refinamento Iterativo de Requisitos"  
@@ -77,3 +37,4 @@ Ao final da iteração, foram concluídas novas entregas de funcionalidades, aco
 
 ## Vídeos Comprobatórios
 
+<iframe width="800" height="450" src="https://www.youtube.com/embed/krf_uStQ5Pw" title="Vídeo de alinhamento entre as equipes de Desenvolvimento" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

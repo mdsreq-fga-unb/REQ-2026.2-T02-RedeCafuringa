@@ -4,7 +4,7 @@ A documentação de cada endpoint — incluindo rotas, parâmetros, corpos das r
 
 ## 1. Acessos à documentação
 
-- **[Abrir o Swagger UI](../../api/index.html){ target="_blank" }**: apresenta a documentação correspondente ao arquivo `shared/openapi.json` utilizado nesta versão do site.
+- **[Abrir o Swagger UI](../../../api/index.html){ target="_blank" }**: apresenta a documentação correspondente ao arquivo `shared/openapi.json` utilizado nesta versão do site.
 - **Swagger local:** [http://localhost:3000/api/v1/docs](http://localhost:3000/api/v1/docs) — disponível durante a execução local do backend, com suporte à funcionalidade *Try it out*.
 - **Contrato OpenAPI bruto:** [`shared/openapi.json`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/blob/dev/shared/openapi.json).
 

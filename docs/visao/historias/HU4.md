@@ -1,15 +1,19 @@
 # HU04 — Consultar usuários cadastrados
 
 ## 1. Identificação
-
+<!-- REQUISITOS_HU_META_AUTO_INICIO -->
 | Campo | Informação |
 |---|---|
 | **ID da História** | HU04 |
 | **Requisito Funcional** | [RF04 — Consultar usuários cadastrados](../requisitos_software.md#71-requisitos-funcionais) |
-| **Requisito Não Funcional** | [RNF03, RNF04, RNF05, RNF08, RNF11, RNF12](../requisitos_software.md#72-requisitos-nao-funcionais) |
-| **Regra de Negócio** | [RN01, RN03](../requisitos_software.md#73-lista-de-regras-de-negocio) |
+| **Requisito Não Funcional** | [RNF03](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF04](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF05](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF08](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF11](../requisitos_software.md#72-requisitos-nao-funcionais), [RNF12](../requisitos_software.md#72-requisitos-nao-funcionais) |
+| **Regra de Negócio** | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN03](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
+| **Prioridade** | Média |
+| **Escopo** | MVP |
+| **Iteração** | [Iteração 6](../evidencias/iteracao6.md) |
+<!-- REQUISITOS_HU_META_AUTO_FIM -->
 
 ---
 
@@ -174,3 +178,14 @@ Marque os itens após a verificação da entrega.
 - [ ] Trata os erros do usuário?
 - [ ] Está livre de defeitos críticos?
 - [ ] Está documentado?
+
+
+---
+
+## Evidências
+
+Registre abaixo **uma linha por contribuição**. Cada integrante deve informar o que realizou e inserir um link verificável para a evidência (por exemplo: **Pull Request, commit, resultado de teste, imagem ou vídeo**). Não registre atividades como concluídas sem comprovação.
+
+| Integrante | Atividade realizada | Evidência (link ou arquivo) | Data |
+|---|---|---|---|
+| *A preencher* | *A preencher* | *A preencher* | *A preencher* |

@@ -28,9 +28,11 @@ theme:
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/organizacao-requisitos.css
 extra_javascript:
   - javascript/extra.js
   - javascript/hu-filters.js
+  - javascript/hu-table.js
 
 nav:
   - Início: index.md
@@ -40,6 +42,7 @@ nav:
     - 3. Intervenção Social: visao/intervencao.md
     - 4. Estratégias de Engenharia de Software: visao/estrategias.md
     - 5. Engenharia de Requisitos: visao/engenharia_requisitos.md
+    - 5.3 Evidências e Decisões de ER: visao/evidencias/registro_er.md
     - 6. Interação Entre Equipe e Cliente: visao/interacao.md
     - 7. Requisitos de Software: visao/requisitos_software.md
     - 8. DoR e DoD: visao/dor_dod.md
@@ -50,7 +53,13 @@ nav:
     - 13. Referências Bibliográficas: visao/referencias.md
     - 14. Vídeo de Apresentação: visao/videos.md
 
+  - Organização e Atualização:
+      - Visão Geral: organizacao_atualizacao/index.md
+      - Rastreabilidade: organizacao_atualizacao/rastreabilidade.md
+      - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
+
   - AUP - Iterações:
+    - Governança AUP e Evidências: visao/evidencias/marcos_aup.md
     - Concepção:
       - Iteração 1: visao/evidencias/iteracao1.md
       - Iteração 2: visao/evidencias/iteracao2.md

@@ -55,7 +55,7 @@ Valores inválidos impedem a inicialização e exibem uma mensagem na tela. Vari
 | Lint, formatação (Prettier), verificação de tipos e build | `npm run lint`, `npm run format:check`, `npm run typecheck` e `npm run build`, em `app/` |
 | Testes e cobertura (com piso por métrica) | `npm run test:coverage` |
 | Acessibilidade WCAG 2.1 AA | `tests/a11y/` — axe nas rotas e verificação de contraste dos tokens de cor |
-| Contrato da API | `npm run api:types`; consulte [Contrato da API](../shared/contratos.md). |
+| Contrato da API | `npm run api:types`; consulte [Contrato da API](../contrato_api/contratos.md). |
 
 ### 3.1. Uso de cores
 

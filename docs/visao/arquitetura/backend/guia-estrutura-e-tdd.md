@@ -710,7 +710,7 @@ As seguintes regras devem ser respeitadas por todos os integrantes durante o des
 5. **Todo bug deve gerar um teste:** reproduzir o problema por meio de um teste que falha antes de implementar a correção, utilizando o prefixo `fix:` no commit da implementação.
 6. **Branches e Pull Requests:** criar branches `feat/<descricao>` a partir da `dev`, utilizando o script `./scripts/dev.sh branch feat/<descricao>`, e abrir o PR direcionado à branch `dev`.
 
-Para mais detalhes sobre o fluxo de contribuição, consulte [Como Contribuir](../contribuindo.md).
+Para mais detalhes sobre o fluxo de contribuição, consulte [Como Contribuir](../engenharia/contribuindo.md).
 
 ### 7.1 Checklist obrigatório do Pull Request
 
@@ -762,7 +762,7 @@ Este guia deve ser utilizado em conjunto com os demais documentos técnicos e de
 | Documento | Finalidade |
 |---|---|
 | [Prova de Conceito (PoC)](poc.md) | Decisões arquiteturais, tecnologias e análise de riscos técnicos. |
-| [Como Contribuir](../contribuindo.md) | Orientações sobre branches, commits e Pull Requests. |
+| [Como Contribuir](../engenharia/contribuindo.md) | Orientações sobre branches, commits e Pull Requests. |
 | [Operação](operacao.md) | Configuração, execução e manutenção do ambiente. |
 | [Documentação de implementação](implementacao/) | Detalhamento técnico das histórias de usuário implementadas. |
 

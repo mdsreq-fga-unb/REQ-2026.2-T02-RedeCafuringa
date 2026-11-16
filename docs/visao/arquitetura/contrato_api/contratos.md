@@ -2,7 +2,7 @@
 
 O contrato entre backend e frontend é definido pelo arquivo [`shared/openapi.json`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/blob/dev/shared/openapi.json), **gerado diretamente a partir do código do backend**.
 
-A referência legível de cada endpoint está disponível no [Swagger UI](../../api/index.html){ target="_blank" }, publicado no site e montado a partir desse mesmo arquivo. Consulte também a página [Referência da API](api.md).
+A referência legível de cada endpoint está disponível no [Swagger UI](../../../api/index.html){ target="_blank" }, publicado no site e montado a partir desse mesmo arquivo. Consulte também a página [Referência da API](api.md).
 
 ## 1. Fluxo de geração
 

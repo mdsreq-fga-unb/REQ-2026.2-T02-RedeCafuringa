@@ -102,9 +102,9 @@ A tabela a seguir registra as principais decisões de infraestrutura, seus motiv
 
 | Decisão | Motivo | Onde |
 |---|---|---|
-| Merge commit, sem squash | Preserva os commits e a autoria da equipe. | [Como contribuir](../contribuindo.md) |
+| Merge commit, sem squash | Preserva os commits e a autoria da equipe. | [Como contribuir](contribuindo.md) |
 | Histórico do backend reescrito somente nos 2 commits que continham `.venv-preview` (88 MB) | O ambiente virtual foi versionado por engano. A recriação somente dos commits afetados preservou os outros 246 commits, seus SHAs e assinaturas. | Histórico da branch `dev` |
-| Contrato OpenAPI gerado a partir do código, com verificações de drift no CI | Evita divergências silenciosas entre frontend e backend. | [Contrato da API](../shared/contratos.md) |
+| Contrato OpenAPI gerado a partir do código, com verificações de drift no CI | Evita divergências silenciosas entre frontend e backend. | [Contrato da API](../contrato_api/contratos.md) |
 | Lint específico por app (oxlint no backend e ESLint no frontend) | Cada aplicação já possuía sua configuração. A migração não traria ganhos relevantes. | `backend/`, `app/` |
 | Trivy utilizado como imagem fixada por digest, e não como action | Evita o risco de utilizar tags mutáveis de actions de terceiros na cadeia de suprimentos. | `docker-ci.yml` |
 | Imagem-base do nginx `1.30-alpine-slim` | A versão `1.29-alpine` apresentava CVEs HIGH/CRITICAL com correção disponível. A versão slim não apresentava vulnerabilidades identificadas na análise e é aproximadamente 3 vezes menor. | `app/Dockerfile` |

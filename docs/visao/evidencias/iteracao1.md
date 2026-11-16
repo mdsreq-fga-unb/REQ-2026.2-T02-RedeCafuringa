@@ -38,7 +38,7 @@ Dessa forma, a Iteração 1 cumpriu seu propósito de estabelecer a base de conh
     <iframe src="https://docs.google.com/document/d/e/2PACX-1vT69mXgAy-mJQmvIL2-lPRW2GcgfRSiu19RMG1jaiiAOcC-Uwq2z73ebVURO8qHmzyNj7m31yc8wP8t/pub?embedded=true"width="100%" height="500" frameborder="0"></iframe>
 
 ??? info "Histórias de Usuário Preliminar"
-    - ![História de Usuário](../img/aup-concepcao/historia_usuario.jpeg)
+    - ![História de Usuário](../../img/aup-concepcao/historia_usuario.jpeg)
 
 ---
 
