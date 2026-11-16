@@ -22,7 +22,7 @@ A HU deve compor os requisitos aprovados para o MVP ou ter sido formalmente repr
 
 * **A HU está coberta por critérios de aceite?** 
 
-Critérios de aceitação objetivos e verificáveis devem estar presentes, servindo de base para os testes escritos no TDD.
+Critérios de aceitação objetivos e verificáveis devem estar presentes.
 
 * **Os RNFs e as restrições legais aplicáveis estão identificados?** 
 
@@ -84,7 +84,7 @@ A funcionalidade deve estar implementada de acordo com os requisitos estabelecid
 
 * **Os testes foram executados e aprovados?** 
 
-Os testes unitários e de integração, escritos seguindo o TDD, devem ter sido executados com sucesso.
+Os testes unitários e de integração devem ter sido executados com sucesso.
 
 * **Está aderente aos padrões de codificação?** 
 

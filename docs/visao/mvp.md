@@ -57,15 +57,15 @@ A **classificação** vem do IPA. A **ordem de implementação** considera prime
 | 9º | RF19 | Consultar catálogo de produtos | [HU19 — Consultar catálogo de produtos](historias/HU19.md) | 4 | 2 | 2 | 2 | 2.00 | 3.50 | **Alta** | [Iteração 7](evidencias/iteracao7.md) |
 | 10º | RF20 | Consultar detalhes do produto | [HU20 — Consultar detalhes do produto](historias/HU20.md) | 3 | 2 | 2 | 2 | 2.00 | 3.00 | **Alta** | [Iteração 7](evidencias/iteracao7.md) |
 | 11º | RF21 | Cadastrar experiência | [HU21 — Cadastrar experiência](historias/HU21.md) | 4 | 3 | 3 | 3 | 3.00 | 3.00 | **Alta** | [Iteração 7](evidencias/iteracao7.md) |
-| 12º | RF24 | Consultar catálogo de experiências | [HU24 — Consultar catálogo de experiências](historias/HU24.md) | 4 | 2 | 3 | 2 | 2.33 | 3.33 | **Alta** | [Iteração 7](evidencias/iteracao7.md) |
-| 13º | RF36 | Buscar ofertas | [HU36 — Buscar ofertas](historias/HU36.md) | 4 | 3 | 3 | 3 | 3.00 | 3.00 | **Alta** | [Iteração 7](evidencias/iteracao7.md) |
-| 14º | RF14 | Consultar perfil de produtor | [HU14 — Consultar perfil de produtor](historias/HU14.md) | 3 | 2 | 3 | 2 | 2.33 | 2.83 | **Média** | [Iteração 7](evidencias/iteracao7.md) |
+| 12º | RF24 | Consultar catálogo de experiências | [HU24 — Consultar catálogo de experiências](historias/HU24.md) | 4 | 2 | 3 | 2 | 2.33 | 3.33 | **Alta** | [Iteração 8](evidencias/iteracao8.md) |
+| 13º | RF36 | Buscar ofertas | [HU36 — Buscar ofertas](historias/HU36.md) | 4 | 3 | 3 | 3 | 3.00 | 3.00 | **Alta** | [Iteração 9](evidencias/iteracao9.md) |
+| 14º | RF14 | Consultar perfil de produtor | [HU14 — Consultar perfil de produtor](historias/HU14.md) | 3 | 2 | 3 | 2 | 2.33 | 2.83 | **Média** | [Iteração 8](evidencias/iteracao8.md) |
 | 15º | RF39 | Disponibilizar contato direto | [HU39 — Disponibilizar contato direto](historias/HU39.md) | 4 | 2 | 2 | 1 | 1.67 | 3.67 | **Alta** | [Iteração 8](evidencias/iteracao8.md) |
-| 16º | RF44 | Solicitar pré-reserva de experiência | [HU44 — Solicitar pré-reserva de experiência](historias/HU44.md) | 4 | 4 | 4 | 4 | 4.00 | 2.50 | **Média** | [Iteração 8](evidencias/iteracao8.md) |
-| 17º | RF45 | Consultar pré-reserva | [HU45 — Consultar pré-reserva](historias/HU45.md) | 3 | 2 | 2 | 2 | 2.00 | 3.00 | **Alta** | [Iteração 8](evidencias/iteracao8.md) |
-| 18º | RF46 | Cancelar pré-reserva | [HU46 — Cancelar pré-reserva](historias/HU46.md) | 3 | 2 | 2 | 2 | 2.00 | 3.00 | **Alta** | [Iteração 8](evidencias/iteracao8.md) |
-| 19º | RF47 | Responder pré-reserva de experiência | [HU47 — Responder pré-reserva de experiência](historias/HU47.md) | 3 | 2 | 3 | 2 | 2.33 | 2.83 | **Média** | [Iteração 8](evidencias/iteracao8.md) |
-| 20º | RF48 | Notificar alteração de pré-reserva | [HU48 — Notificar alteração de pré-reserva](historias/HU48.md) | 3 | 3 | 3 | 3 | 3.00 | 2.50 | **Média** | [Iteração 8](evidencias/iteracao8.md) |
+| 16º | RF44 | Solicitar pré-reserva de experiência | [HU44 — Solicitar pré-reserva de experiência](historias/HU44.md) | 4 | 4 | 4 | 4 | 4.00 | 2.50 | **Média** | [Iteração 9](evidencias/iteracao9.md) |
+| 17º | RF45 | Consultar pré-reserva | [HU45 — Consultar pré-reserva](historias/HU45.md) | 3 | 2 | 2 | 2 | 2.00 | 3.00 | **Alta** | [Iteração 9](evidencias/iteracao9.md) |
+| 18º | RF46 | Cancelar pré-reserva | [HU46 — Cancelar pré-reserva](historias/HU46.md) | 3 | 2 | 2 | 2 | 2.00 | 3.00 | **Alta** | [Iteração 9](evidencias/iteracao9.md) |
+| 19º | RF47 | Responder pré-reserva de experiência | [HU47 — Responder pré-reserva de experiência](historias/HU47.md) | 3 | 2 | 3 | 2 | 2.33 | 2.83 | **Média** | [Iteração 9](evidencias/iteracao9.md) |
+| 20º | RF48 | Notificar alteração de pré-reserva | [HU48 — Notificar alteração de pré-reserva](historias/HU48.md) | 3 | 3 | 3 | 3 | 3.00 | 2.50 | **Média** | [Iteração 9](evidencias/iteracao9.md) |
 <!-- REQUISITOS_MVP_AUTO_FIM -->
 
 ## 10.3 Requisitos não funcionais transversais do MVP
