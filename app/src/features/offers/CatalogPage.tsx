@@ -61,7 +61,14 @@ export function CatalogPage({
                         : "ofertas disponíveis"}
                 </p>
                 {canRegisterProduct && (
-                    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1rem" }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: "0.5rem",
+                            flexWrap: "wrap",
+                            marginBottom: "1rem",
+                        }}
+                    >
                         <button
                             className="product-submit"
                             onClick={() => onNavigate("/produtos/novo")}

@@ -30,7 +30,7 @@ it.each([
     [30, "minutos", "30 minutos"],
     [1, "horas", "1 hora"],
     [1, "minutos", "1 minuto"],
-])(catalogo
+])(
     "envia duração numérica %s com unidade %s",
     async (value, unit, expected) => {
         session();
