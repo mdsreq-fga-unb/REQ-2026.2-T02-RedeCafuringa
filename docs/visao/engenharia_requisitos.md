@@ -247,7 +247,3 @@ A síntese abaixo espelha as atividades da seção **5.1**. A etapa é uma class
 | Construção | Organização e Atualização | Atualização de rastreabilidade | Relacionamento entre HUs e implementações | [Rastreabilidade](../organizacao_atualizacao/rastreabilidade.md) |
 | Transição | Verificação e Validação | Preparação/revisão dos cenários e testes de aceitação de usuário | Cenários, resultados e decisão sobre produto entregue | Ainda requer evidências de homologação e aceite; não presumir execução |
 | Transição | Organização e Atualização | Registro da entrega e encerramento | Versão e histórico final | Exige referência verificável da versão homologada |
-
-### Técnicas mencionadas, mas não comprovadas como executadas
-
-**Grupo focal estruturado, homologação regulatória formal, análise documental com resultado sistematizado e teste de usabilidade com participantes** não devem aparecer como práticas concluídas sem registro de participantes, tarefas/documentos, datas, achados e decisões. A eventual pesquisa normativa utilizada como referência não equivale à aprovação regulatória. Certificação e legalização formal não compõem o MVP, conforme a decisão de escopo da Issue #18. O quadro de lacunas e o modelo de registro estão em [Evidências e decisões da ER](evidencias/registro_er.md).

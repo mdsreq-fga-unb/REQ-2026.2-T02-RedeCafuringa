@@ -29,9 +29,3 @@ Ao surgir uma mudança, a equipe deve localizar o registro primário e verificar
 | Planejamento | Prioridade, MVP, dependências e iteração mudam? | [MVP](../visao/mvp.md) e [Cronograma](../visao/cronograma.md) |
 | Evidências | Testes, revisão e registro da decisão foram atualizados? | [Critérios DoR/DoD](../visao/dor_dod.md) e [histórico](../index.md#historico-de-revisao) |
 
-## Função das representações
-
-O projeto prioriza histórias de usuário como recortes de valor, com critérios de aceitação verificáveis. Caso haja cenários ou casos de uso complementares, eles devem acrescentar detalhes de fluxo e exceções relevantes, mantendo vínculos explícitos, em vez de duplicar a narrativa principal.
-
-
-Consulte também o [Backlog em tabela](../visao/historias_usuario.md) e a [rotina de atualização](atualizacao.md).

@@ -55,8 +55,8 @@ nav:
     - 14. Vídeo de Apresentação: visao/videos.md
 
   - Organização e Atualização:
-    - Visão Geral: organizacao_atualizacao/index.md
-    - Rastreabilidade: organizacao_atualizacao/rastreabilidade.md
+    - Rastreabilidade: organizacao_atualizacao/index.md
+    - Análise de Impacto: organizacao_atualizacao/rastreabilidade.md
     - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
 
   - AUP - Iterações:

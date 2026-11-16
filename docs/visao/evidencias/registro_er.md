@@ -1,8 +1,6 @@
 # Evidências e Decisões de Engenharia de Requisitos
 
-<span class="version-badge">Unidade 02 · Issue #11</span>
-
-Este registro diferencia **evento documentado**, **decisão explicitamente identificável**, **alteração rastreada** e **validação de comportamento**. Uma reunião ou vídeo sem ata individualizada é evidência de contato ou apresentação, mas não prova aprovação de todos os requisitos.
+<span class="version-badge">Unidade 03 · Issue #11</span>
 
 ## 1. Eventos e resultados identificáveis
 
@@ -19,7 +17,6 @@ Este registro diferencia **evento documentado**, **decisão explicitamente ident
 | 08/10/2026 — DoR e DoD | Equipe ByteLab | Simplificação dos acordos e checklists | Acordo de processo discutido | A revisão de aplicação por HU fica para as Issues #15 e #16. [Vídeo](https://www.youtube.com/watch?v=31ZtccoYXtQ) |
 | Apresentação do protótipo da Iteração 4 | Equipe; validação individual do cliente a comprovar | Demonstração visual dos fluxos | Protótipo apresentado | Não é relatório de testes com usuários nem aceite formal. [Vídeo](https://www.youtube.com/watch?v=DCNR_vjC-uk) |
 
-As descrições se apoiam nos registros publicados da [Iteração 3](iteracao3.md) e da [Iteração 4](iteracao4.md). **Não foram atribuídos feedbacks ou decisões individuais a participantes cuja presença não foi registrada.**
 
 ## 2. Técnicas planejadas e lacunas
 
@@ -32,7 +29,6 @@ As descrições se apoiam nos registros publicados da [Iteração 3](iteracao3.m
 | Usabilidade do protótipo | Protótipo navegável e vídeo de apresentação | Participantes reais, tarefas, dificuldades, taxa de conclusão, recomendações e ajustes de UI; ainda não comprova teste executado |
 | Aceite dos comportamentos do MVP | Vídeos/reuniões e acordos de escopo | Decisões por fluxo ou critério, cliente responsável, data, versão e ressalvas |
 
-**Importante:** “Não há evidência localizada” significa que o registro público consultado não sustenta a afirmação, **não que a equipe necessariamente deixou de realizar a prática**.
 
 ## 3. Modelo de consolidação dos feedbacks
 
@@ -44,12 +40,3 @@ Preencher cada linha a partir de reunião, vídeo, mensagem ou PR comprovável, 
 
 Ao registrar a decisão, atualizar a fonte aplicável de requisitos e relacioná-la ao [histórico de alterações](../../organizacao_atualizacao/atualizacao.md). **Não basta repetir que a equipe recebeu feedback; é preciso apontar o que mudou e por quê.**
 
-## 4. Síntese dos vídeos e decisão sobre validação
-
-| Evidência | O que documenta | O que não deve ser inferido |
-|---|---|---|
-| [Reunião interna de 01/10](https://www.youtube.com/watch?v=yy58nDU2hmQ) | Atualização de cronograma e processo | Aceite do MVP pelo cliente |
-| [Discussão do DoR/DoD de 08/10](https://www.youtube.com/watch?v=31ZtccoYXtQ) | Critérios de prontidão/conclusão e formato de registro | Conclusão individual das HUs |
-| [Apresentação do protótipo](https://www.youtube.com/watch?v=DCNR_vjC-uk) | Demonstração de telas e fluxos visuais | Teste de usabilidade medido ou aprovação de critérios individuais |
-
-Para transformar apresentação em **evidência de validação**, registrar fluxo, participante, decisão explícita, ajustes solicitados, versão e data; para **testes de usabilidade**, adicionar participantes, roteiro de tarefas, observações e resultado.
