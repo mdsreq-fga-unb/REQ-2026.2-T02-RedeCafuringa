@@ -57,7 +57,6 @@
   </div>
 </section>
 
-<p class="hu-backlog-guidance">Os vínculos de dependência representam proposta técnica em revisão. Responsáveis sem designação confirmada aparecem como <strong>A definir</strong>; a equipe revisora é a <strong>Equipe ByteLab</strong>; a situação e a iteração são os metadados de planejamento do projeto.</p>
 
 <div class="section-cards hu-catalog">
 <!-- REQUISITOS_CARDS_AUTO_INICIO -->
