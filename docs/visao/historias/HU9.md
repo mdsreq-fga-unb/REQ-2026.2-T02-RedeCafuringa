@@ -166,4 +166,5 @@ Registre abaixo **uma linha por contribuição**. Cada integrante deve informar 
 
 | Integrante | Atividade realizada | Evidência (link ou arquivo) | Data |
 |---|---|---|---|
-| *A preencher* | *A preencher* | *A preencher* | *A preencher* |
+| Pedro Luiz (pedroluizfo) | Base de implementação da segurança e da autenticação | [PR #28](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/28) · [commit f92802b3](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/f92802b3) | 28/10/2026 |
+| Italo Alves | Revisão do login: mensagem por causa, sessão encerrada ao expirar o token, cabeçalho `Retry-After` no 429 e rastreabilidade | [PR #62](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/62) · [commit d4f05350](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/d4f05350) · [commit 222c6cac](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/222c6cac) · [commit aa4e6191](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/aa4e6191) | 08/11/2026 |

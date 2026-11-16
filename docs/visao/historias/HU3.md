@@ -188,4 +188,4 @@ Registre abaixo **uma linha por contribuição**. Cada integrante deve informar 
 
 | Integrante | Atividade realizada | Evidência (link ou arquivo) | Data |
 |---|---|---|---|
-| *A preencher* | *A preencher* | *A preencher* | *A preencher* |
+| Italo Alves | Cadastro de administrador por administrador (`POST /users/admins`), administrador inicial no boot e login administrativo real com guarda de rota | [PR #58](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/58) · [commit 7c0f82c9](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/7c0f82c9) · [commit 21827b37](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/21827b37) · [commit 6d8e05a9](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/commit/6d8e05a9) | 05/11/2026 |
