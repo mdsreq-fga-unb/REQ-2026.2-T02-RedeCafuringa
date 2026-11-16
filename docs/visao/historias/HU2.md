@@ -216,4 +216,4 @@ Registre abaixo **uma linha por contribuição**. Cada integrante deve informar 
 
 | Integrante                       | Atividade realizada                | Evidência (link ou arquivo)                                                     | Data       |
 | -------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------- | ---------- |
-| Pedro Augusto e Luccas Rodrihues | Pedro A. fez o frontend e o Luccas | [PR#57](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/57) | 28/10/2026 |
+| Pedro Augusto e Luccas Rodrigues | Pedro A. fez o frontend e o Luccas | [PR#57](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/57) | 28/10/2026 |
