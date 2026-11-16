@@ -36,6 +36,14 @@ const DUPLICATE_KEY = 11000;
 
 type ProductDoc = Product & { _id: Types.ObjectId };
 
+/**
+ * Dados de divulgação do produtor que acompanham a oferta (HU20: CA03, CA05,
+ * RN11). Só estes campos são lidos da conta: e-mail, telefone e documentos
+ * nunca chegam à resposta.
+ */
+type PublicProducer = { nomeIniciativa?: string; localidade?: string };
+const PUBLIC_PRODUCER_FIELDS = 'nomeIniciativa localidade';
+
 const owner = (id: Types.ObjectId | string) => ({
   tipo: PhotoOwnerType.PRODUTO,
   id,
@@ -68,7 +76,7 @@ export class ProductsService {
 
     if (key) {
       const existing = await this.findByKey(userId, key);
-      if (existing) return this.toResponse(existing, producer.nomeIniciativa);
+      if (existing) return this.toResponse(existing, producer);
     }
 
     // Quantidade (política do produto) e conteúdo validados antes de gravar.
@@ -89,17 +97,14 @@ export class ProductsService {
         fotos,
         ...(key ? { chaveIdempotencia: key } : {}),
       });
-      return this.toResponse(
-        created.toObject() as ProductDoc,
-        producer.nomeIniciativa,
-      );
+      return this.toResponse(created.toObject() as ProductDoc, producer);
     } catch (error) {
       // Não deixa fotos órfãs se o produto não foi gravado.
       await this.gallery.removeAll(owner(productId));
       if (key && isDuplicateKey(error)) {
         // Dois envios simultâneos com a mesma chave: vale o que chegou antes.
         const existing = await this.findByKey(userId, key);
-        if (existing) return this.toResponse(existing, producer.nomeIniciativa);
+        if (existing) return this.toResponse(existing, producer);
       }
       throw error;
     }
@@ -111,7 +116,7 @@ export class ProductsService {
    */
   async getPublic(id: string): Promise<ProductResponse> {
     const { product, producer } = await this.visible(id, PRODUCT_NOT_FOUND);
-    return this.toResponse(product, producer.nomeIniciativa);
+    return this.toResponse(product, producer);
   }
 
   /**
@@ -131,7 +136,7 @@ export class ProductsService {
 
     const [result] = await this.products
       .aggregate<{
-        itens: Array<ProductDoc & { responsavel: { nomeIniciativa?: string } }>;
+        itens: Array<ProductDoc & { responsavel: PublicProducer }>;
         total: Array<{ n: number }>;
       }>([
         { $match: match },
@@ -143,7 +148,7 @@ export class ProductsService {
             foreignField: '_id',
             pipeline: [
               { $match: { perfil: Role.PRODUTOR, ativo: true } },
-              { $project: { _id: 0, nomeIniciativa: 1 } },
+              { $project: { _id: 0, nomeIniciativa: 1, localidade: 1 } },
             ],
             as: 'responsavel',
           },
@@ -162,7 +167,7 @@ export class ProductsService {
 
     return {
       itens: (result?.itens ?? []).map((p) =>
-        this.toResponse(p, p.responsavel.nomeIniciativa),
+        this.toResponse(p, p.responsavel),
       ),
       total: result?.total[0]?.n ?? 0,
       pagina,
@@ -198,8 +203,8 @@ export class ProductsService {
     if (!isObjectIdOrHexString(id)) return Promise.resolve(null);
     return this.users
       .findOne({ _id: id, perfil: Role.PRODUTOR, ativo: true })
-      .select('nomeIniciativa')
-      .lean<{ nomeIniciativa?: string }>()
+      .select(PUBLIC_PRODUCER_FIELDS)
+      .lean<PublicProducer>()
       .exec();
   }
 
@@ -229,7 +234,7 @@ export class ProductsService {
 
   private toResponse(
     product: ProductDoc,
-    nomeIniciativa: string | undefined,
+    { nomeIniciativa, localidade }: PublicProducer,
   ): ProductResponse {
     const id = product._id.toString();
     return {
@@ -245,6 +250,7 @@ export class ProductsService {
       produtor: {
         id: product.produtor.toString(),
         nomeIniciativa: nomeIniciativa ?? '',
+        ...(localidade ? { localidade } : {}),
       },
       criadoEm: (product.criadoEm ?? new Date()).toISOString(),
       disponivel: product.disponivel ?? true,

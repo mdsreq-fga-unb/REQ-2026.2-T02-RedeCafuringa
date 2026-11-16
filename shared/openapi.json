@@ -2983,6 +2983,11 @@
           "nomeIniciativa": {
             "type": "string",
             "example": "Horta da Joana"
+          },
+          "localidade": {
+            "type": "string",
+            "example": "Fazenda Cafuringa",
+            "description": "Localidade ou propriedade informada pelo produtor para divulgação (HU20, RN11); ausente quando não informada"
           }
         },
         "required": [
