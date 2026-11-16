@@ -27,6 +27,9 @@ Registro da verificação feita antes da integração das histórias **HU19 — 
 | 2 | A HU21 **não tinha backend**: o cadastro só funcionava no modo de demonstração e o próprio código dizia que `/experiences` não existia. CA03 e CA05 não eram cumpridos com dados reais. | Criado o módulo `experiences` na API (cadastro, catálogo, detalhe e foto), com testes de unidade e e2e. |
 | 3 | A `feat/hu21` estava 18 commits atrás da `dev` (HU14 e documentação). | `dev` mergeada; 8 conflitos resolvidos. Regra adotada: comportamento da HU14 segue a `dev`; acréscimos das HU19–21 seguem a `feat/hu21`. |
 | 4 | Na tela aberta logo após publicar uma oferta, a propriedade do responsável não aparecia. | Corrigido durante o teste manual. |
+| 5 | Com a API real, a tela `/catalogo` misturava ofertas fictícias da demonstração (“Visita e Degustação de Queijos”, “Mel do Cerrado”) com as cadastradas — herança da HU15, já presente na `dev`. | A lista de demonstração passou a aparecer só no modo de demonstração (HU19 CA02). |
+| 6 | “Conversar pelo WhatsApp” numa experiência pedia login e, ao voltar, abria a rota de produto e mostrava “Produto indisponível”. | O assunto do contato passou a indicar experiência e a volta preserva o tipo. |
+| 7 | Um commit enviado à `feat/hu21` durante a validação (rota `/experiencias/nova`) tinha um erro de sintaxe no teste e um arquivo fora do padrão de formatação, o que deixaria o CI vermelho. | Integrado e corrigido; a rota nova foi conferida no navegador. |
 
 ---
 
@@ -82,10 +85,12 @@ Legenda: ✅ atendido e comprovado.
 |---|---|
 | Backend — unidade | 571 testes, todos aprovados |
 | Backend — e2e (MongoDB em memória) | 322 testes, todos aprovados (27 novos da HU21) |
-| Front — unidade e integração (com cobertura) | 744 testes, todos aprovados |
+| Front — unidade e integração (com cobertura) | 746 testes, todos aprovados |
 | Lint, formatação e checagem de tipos | Sem erros (back e front) |
 | Build de produção do front | Concluído |
 | Contrato OpenAPI | Regenerado (0.9.0), tipos do front sem divergência |
+
+Em uma das execuções completas da e2e, um teste da HU04 (`users-list`) falhou com 401 depois de 53 s, com a máquina sob carga (Docker e navegador abertos). Rodado isoladamente duas vezes e na execução completa seguinte, passou. Fica registrado como instabilidade de tempo, sem relação com estas histórias.
 
 ---
 
