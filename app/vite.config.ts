@@ -106,7 +106,7 @@ export default defineConfig(({ mode }) => {
                 },
                 workbox: {
                     globPatterns: [
-                        "**/*.{js,css,html,ico,png,svg,woff2,webmanifest}",
+                        "**/*.{js,css,html,ico,png,webp,svg,woff2,webmanifest}",
                     ],
                     cleanupOutdatedCaches: true,
                     // Offline: toda navegação cai no app shell (index.html) pré-cacheado.

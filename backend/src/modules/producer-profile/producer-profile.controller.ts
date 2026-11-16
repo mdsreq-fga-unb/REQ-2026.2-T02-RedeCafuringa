@@ -64,6 +64,21 @@ export class ProducerProfileController {
     private readonly photo: ProducerPhotoService,
   ) {}
 
+  @Public()
+  @Get()
+  @ApiOperation({
+    summary: 'Consultar perfis públicos de produtores',
+    description:
+      'HU14 (CA01-CA05): lista produtores ativos que publicaram a trajetória. Retorna somente informações públicas; o telefone aparece apenas com autorização. E-mail, CPF e CNPJ nunca são expostos (RN07, RNF11).',
+  })
+  @ApiOkResponse({
+    type: [PublicTrajectoryResponse],
+    description: 'Perfis públicos disponíveis',
+  })
+  listPublic(): Promise<PublicTrajectoryResponse[]> {
+    return this.profile.listPublic();
+  }
+
   // "me" é declarada antes de ":id" para não ser lida como um identificador.
   @Roles(Role.PRODUTOR)
   @Get('me/trajectory')

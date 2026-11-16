@@ -68,6 +68,7 @@ describe('contrato OpenAPI', () => {
       'GET /api/v1/health',
       'GET /api/v1/health/live',
       'GET /api/v1/health/ready',
+      'GET /api/v1/producers',
       'GET /api/v1/producers/me/trajectory',
       'GET /api/v1/producers/{id}/photo',
       'GET /api/v1/producers/{id}/trajectory',

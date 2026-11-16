@@ -264,6 +264,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/producers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar perfis públicos de produtores
+         * @description HU14 (CA01-CA05): lista produtores ativos que publicaram a trajetória. Retorna somente informações públicas; o telefone aparece apenas com autorização. E-mail, CPF e CNPJ nunca são expostos (RN07, RNF11).
+         */
+        get: operations["producerprofileListPublic"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/producers/me/trajectory": {
         parameters: {
             query?: never;
@@ -804,6 +824,44 @@ export interface components {
              */
             mensagem: string;
         };
+        PublicTrajectoryResponse: {
+            /**
+             * @description Identificador do produtor
+             * @example 64b0c0ffee0000000000abcd
+             */
+            id: string;
+            /**
+             * @description Nome da iniciativa
+             * @example Horta Comunitária Cafuringa
+             */
+            nomeIniciativa?: string;
+            /**
+             * @description Tipo de oferta do produtor
+             * @example Produtos
+             * @enum {string}
+             */
+            categoriaOfertada?: "Produtos" | "Experiências" | "Produtos e Experiências";
+            /**
+             * @description História do produtor, em texto simples; exiba escapando HTML. Sempre presente: o perfil só é público depois de publicada.
+             * @example Começamos a plantar café em 1990.
+             */
+            trajetoria: string;
+            /**
+             * @description Atividades desenvolvidas, em texto simples. Ausente se vazio.
+             * @example Horta orgânica e visitas guiadas.
+             */
+            atividades?: string;
+            /**
+             * @description Telefone de contato, presente somente quando o produtor autorizou a divulgação
+             * @example 61999990000
+             */
+            telefone?: string;
+            /**
+             * @description Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.
+             * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
+             */
+            fotoUrl?: string;
+        };
         OwnTrajectoryResponse: {
             /**
              * @description Ausente enquanto o produtor não registrou a trajetória
@@ -857,44 +915,6 @@ export interface components {
              * @example true
              */
             telefonePublico?: boolean;
-        };
-        PublicTrajectoryResponse: {
-            /**
-             * @description Identificador do produtor
-             * @example 64b0c0ffee0000000000abcd
-             */
-            id: string;
-            /**
-             * @description Nome da iniciativa
-             * @example Horta Comunitária Cafuringa
-             */
-            nomeIniciativa?: string;
-            /**
-             * @description Tipo de oferta do produtor
-             * @example Produtos
-             * @enum {string}
-             */
-            categoriaOfertada?: "Produtos" | "Experiências" | "Produtos e Experiências";
-            /**
-             * @description História do produtor, em texto simples; exiba escapando HTML. Sempre presente: o perfil só é público depois de publicada.
-             * @example Começamos a plantar café em 1990.
-             */
-            trajetoria: string;
-            /**
-             * @description Atividades desenvolvidas, em texto simples. Ausente se vazio.
-             * @example Horta orgânica e visitas guiadas.
-             */
-            atividades?: string;
-            /**
-             * @description Telefone de contato, presente somente quando o produtor autorizou a divulgação
-             * @example 61999990000
-             */
-            telefone?: string;
-            /**
-             * @description Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.
-             * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
-             */
-            fotoUrl?: string;
         };
         PhotoResponse: {
             /**
@@ -1909,6 +1929,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    producerprofileListPublic: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Perfis públicos disponíveis */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicTrajectoryResponse"][];
                 };
             };
         };

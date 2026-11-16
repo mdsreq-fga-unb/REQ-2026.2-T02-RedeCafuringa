@@ -5,21 +5,28 @@ import type { Offer } from "../../shared/types";
 type OfferDetailsPageProps = {
     offer: Offer;
     contactAvailable: boolean;
-    backPath?: string;
     onNavigate: (path: string) => void;
     onStartContact: () => void;
+    backPath?: string;
+    backRoute?: string;
+    catalogRoute?: string;
 };
 
 export function OfferDetailsPage({
     offer,
     contactAvailable,
-    backPath = "/catalogo",
     onNavigate,
     onStartContact,
+    backPath,
+    backRoute,
+    catalogRoute = "/catalogo",
 }: OfferDetailsPageProps) {
     return (
         <>
-            <BackButton label="Voltar" onClick={() => onNavigate(backPath)} />
+            <BackButton
+                label="Voltar"
+                onClick={() => onNavigate(backRoute ?? backPath ?? "/catalogo")}
+            />
             <section className="offer-page">
                 <h1>{offer.title}</h1>
                 <p className="eyebrow">{offer.category}</p>
@@ -48,7 +55,7 @@ export function OfferDetailsPage({
                     {offer.id === "mel" && (
                         <ActionButton
                             variant="orange"
-                            onClick={() => onNavigate("/catalogo")}
+                            onClick={() => onNavigate(catalogRoute)}
                         >
                             Conhecer a Cafuringa Store
                         </ActionButton>

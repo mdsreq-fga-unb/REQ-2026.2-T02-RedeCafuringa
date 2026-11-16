@@ -15,10 +15,10 @@ describe("useHashRoute", () => {
         expect(result.current.route).toBe("/produtos");
     });
 
-    it("manda rotas desconhecidas para a escolha de perfil", () => {
+    it("manda rotas desconhecidas para Explorar", () => {
         window.location.hash = "#/nao-existe";
         const { result } = renderHook(() => useHashRoute());
 
-        expect(result.current.route).toBe("/escolher-perfil");
+        expect(result.current.route).toBe("/explorar");
     });
 });

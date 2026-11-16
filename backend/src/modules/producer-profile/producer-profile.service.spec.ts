@@ -12,6 +12,7 @@ const NOW = new Date('2026-11-06T12:00:00.000Z');
 function query<T>(value: T) {
   const q = {
     select: vi.fn(() => q),
+    sort: vi.fn(() => q),
     lean: vi.fn(() => q),
     exec: vi.fn().mockResolvedValue(value),
   };
@@ -50,6 +51,7 @@ function producerDoc(overrides: Record<string, unknown> = {}) {
 
 function setup() {
   const model = {
+    find: vi.fn().mockReturnValue(query([])),
     findOne: vi.fn().mockReturnValue(query(null)),
     findOneAndUpdate: vi.fn().mockReturnValue(query(null)),
   };
@@ -408,5 +410,48 @@ describe('ProducerProfileService', () => {
         );
       },
     );
+  });
+
+  describe('listPublic (HU14 CA01–CA05)', () => {
+    it('lista somente trajetórias publicadas e serializa apenas os campos públicos', async () => {
+      const { service, model } = setup();
+      const published = producerDoc({
+        trajetoria: 'Nossa história na região.',
+        atividades: 'Horta e visitas.',
+        telefonePublico: true,
+      });
+      const whitespace = producerDoc({ trajetoria: '   ' });
+      const q = query([published, whitespace]);
+      model.find.mockReturnValue(q);
+
+      const result = await service.listPublic();
+
+      expect(model.find).toHaveBeenCalledWith({
+        perfil: Role.PRODUTOR,
+        ativo: true,
+        trajetoria: { $exists: true, $ne: '' },
+      });
+      expect(q.select).toHaveBeenCalled();
+      expect(q.sort).toHaveBeenCalledWith({ nomeIniciativa: 1, _id: 1 });
+      expect(result).toEqual([
+        {
+          id: published.id,
+          nomeIniciativa: 'Horta Cafuringa',
+          categoriaOfertada: ProducerCategory.PRODUTOS,
+          trajetoria: 'Nossa história na região.',
+          atividades: 'Horta e visitas.',
+          telefone: '61999990000',
+        },
+      ]);
+      for (const secret of PRIVATE_FIELDS) {
+        expect(JSON.stringify(result)).not.toContain(secret);
+      }
+    });
+
+    it('devolve lista vazia quando não há trajetórias públicas', async () => {
+      const { service } = setup();
+
+      await expect(service.listPublic()).resolves.toEqual([]);
+    });
   });
 });
