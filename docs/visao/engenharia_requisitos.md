@@ -7,7 +7,7 @@ Abaixo apresenta-se a estruturação operacional detalhada das **Atividades e T�
 ---
 
 <!-- ISSUE11_ER_INICIO -->
-A seção 5.1 classifica a **natureza** das atividades; a seção 5.2 resume as mesmas atividades. A execução efetiva e as decisões ficam em [Evidências e Decisões de ER](evidencias/registro_er.md), sem inferir homologação a partir de uma representação ou vídeo.
+A seção 5.1 classifica a **natureza** das atividades; a seção 5.2 resume as mesmas atividades. A execução efetiva e as decisões ficam em [Evidências e Decisões de ER](evidencias/registro_er.md).
 <!-- ISSUE11_ER_FIM -->
 
 ### Fase de Concepção

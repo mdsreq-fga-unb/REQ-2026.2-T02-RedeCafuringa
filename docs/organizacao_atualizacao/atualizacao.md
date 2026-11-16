@@ -14,8 +14,6 @@ A proposta de atualização segue a abordagem híbrida e iterativa descrita nas 
   <div><span>05</span><strong>Comunicar</strong><p>Revisar por PR, informar envolvidos e vincular evidências.</p></div>
 </div>
 
-Esse fluxo é uma **rotina proposta/documentada**; não representa a afirmação de que toda mudança histórica já percorreu formalmente cada etapa.
-
 ## Fonte única de metadados e atualização automática
 
 A sincronização estruturada **já está implementada** com uma fonte central e visões derivadas. Há **três fontes por responsabilidade**, em vez de copiar as mesmas informações em várias tabelas:
