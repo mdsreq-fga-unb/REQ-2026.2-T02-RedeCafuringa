@@ -36,7 +36,7 @@ Toda rota exige login, exceto as marcadas como públicas (negação por padrão)
 | **Erros** | Corpo \`ErrorResponse\` (\`statusCode\`, \`message\`, \`error\`). Em validação (400), \`message\` é uma lista de orientações em português, prontas para exibir |
 | **Paginação** | Listas devolvem \`{ itens, total, pagina, limite }\`; use \`?pagina=\` e \`?limite=\` |
 | **Fotos** | Envio em \`multipart/form-data\`. PNG, JPEG ou WebP; a API regrava em WebP **sem metadados** (EXIF/GPS). Os caminhos devolvidos são relativos à base da API e levam a versão: podem ficar em cache para sempre |
-| **Reenvio seguro** | \`POST /products\` aceita \`Idempotency-Key\`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |
+| **Reenvio seguro** | \`POST /products\` e \`POST /experiences\` aceitam \`Idempotency-Key\`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |
 | **Limites de uso** | Login, cadastro e recuperação de acesso têm limite de tentativas por IP: **429** com \`Retry-After\` (segundos) |
 | **Rastreio** | Envie \`x-request-id\` (1 a 128 caracteres de \`A-Za-z0-9._-\`); ele volta na resposta e nos logs. Sem ele, a API gera um UUID |
 | **Dados pessoais** | Respostas nunca trazem hash de senha nem CPF completo (vem mascarado). Perfis públicos só mostram dados de divulgação (RN07, RNF11) |
@@ -66,6 +66,11 @@ export const OPENAPI_TAGS: ReadonlyArray<{
     name: 'products',
     description:
       'Catálogo e cadastro de produtos, com galeria de fotos (HU15, RN09, RN11)',
+  },
+  {
+    name: 'experiences',
+    description:
+      'Catálogo e cadastro de experiências, atividades e atrativos de turismo rural, com galeria de fotos (HU21, RN09, RN11)',
   },
   {
     name: 'health',
