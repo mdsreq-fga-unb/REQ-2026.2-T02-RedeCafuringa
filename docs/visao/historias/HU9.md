@@ -167,4 +167,4 @@ Registre abaixo **uma linha por contribuição**. Cada integrante deve informar 
 
 | Integrante            | Atividade realizada                          | Evidência (link ou arquivo)                                                     | Data       |
 | --------------------- | -------------------------------------------- | ------------------------------------------------------------------------------- | ---------- |
-| Italo e Pedro Augusto | Pedro fez o frontend e o Italo fez o backend | [PR#62](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/62) | 06/10/2026 |
+| Italo e Pedro Augusto | Pedro fez o frontend e o Italo fez o backend | [PR#62](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/62) | 06/11/2026 |
