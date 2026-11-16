@@ -1,6 +1,6 @@
 # Atualização de Requisitos e Histórico
 
-<span class="version-badge">Unidade 02 · Organização e Atualização</span>
+<span class="version-badge">Unidade 03 · Organização e Atualização</span>
 
 A proposta de atualização segue a abordagem híbrida e iterativa descrita nas [Estratégias de Engenharia de Software](../visao/estrategias.md): acolher mudanças, avaliar impactos, decidir o que passa a valer e atualizar os registros relacionados, preservando o histórico necessário.
 

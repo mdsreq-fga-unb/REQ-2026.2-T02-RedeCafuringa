@@ -1,6 +1,6 @@
 # Rastreabilidade e Análise de Impacto
 
-<span class="version-badge">Unidade 02 · Organização e Atualização</span>
+<span class="version-badge">Unidade 03 · Organização e Atualização</span>
 
 Rastrear um requisito significa conseguir recuperar sua origem, seus vínculos, suas condições de verificação e o planejamento da entrega. No projeto Rede Cafuringa, essas informações estão distribuídas entre a visão do produto, os requisitos, o backlog e as páginas das histórias.
 
