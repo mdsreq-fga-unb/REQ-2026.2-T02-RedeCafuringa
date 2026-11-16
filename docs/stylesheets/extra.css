@@ -1238,7 +1238,7 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
 .hu-catalog .hu-card[hidden] { display: none !important; }
 
 /* INICIO: ajuste-responsivo-filtros-hu */
-/* Busca na primeira linha e 5 filtros combináveis na segunda. */
+/* Ajuste para os 5 campos: busca na primeira linha e os 4 filtros na segunda. */
 .md-typeset .hu-filters {
   box-sizing: border-box;
   width: 100%;
@@ -1251,7 +1251,7 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   display: grid;
   width: 100%;
   min-width: 0;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.85rem;
   align-items: end;
 }

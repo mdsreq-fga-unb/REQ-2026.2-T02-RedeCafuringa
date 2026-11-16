@@ -81,14 +81,16 @@ export function RecoverAccessPage({
                     instruções para recuperar o acesso.
                 </p>
 
-                <p className="form-notice" role="status">
+                <p className="recovery-sent" role="status">
                     {`Endereço informado: ${sentTo}`}
                 </p>
+
                 <p className="body-copy">
                     Não recebeu? Confira se digitou o e-mail certo e olhe a
                     caixa de spam. Se você ainda não tem conta, faça seu
                     cadastro.
                 </p>
+
                 {resent && (
                     <p className="form-notice" role="status">
                         E-mail reenviado.

@@ -26,7 +26,7 @@ A conferência de conclusão deve relacionar cada HU ao PR/commit integrado, à 
 | [HU36](../historias/HU36.md) | Buscar ofertas | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
 | [HU14](../historias/HU14.md) | Consultar perfil de produtor | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
 
-Há [código, testes e implementação técnica](../../arquitetura/backend/guia-estrutura-e-tdd.md) e [esteiras automatizadas](../../arquitetura/infra/visao-geral.md) no repositório. Para afirmar a conclusão de cada HU, consulte os [PRs do projeto](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pulls?q=is%3Apr) e registre o link específico e o resultado do check correspondente. 
+Há [código, testes e implementação técnica](../arquitetura/backend/guia-estrutura-e-tdd.md) e [esteiras automatizadas](../arquitetura/engenharia/visao-geral.md) no repositório. Para afirmar a conclusão de cada HU, consulte os [PRs do projeto](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pulls?q=is%3Apr) e registre o link específico e o resultado do check correspondente.
 
 ### Organização e Atualização
 

@@ -20,6 +20,7 @@ import { RolesGuard } from './modules/auth/guards/roles.guard.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { MetricsModule } from './modules/metrics/metrics.module.js';
 import { ProducerProfileModule } from './modules/producer-profile/producer-profile.module.js';
+import { ProductsModule } from './modules/products/products.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 
 @Module({
@@ -144,6 +145,7 @@ import { UsersModule } from './modules/users/users.module.js';
     UsersModule,
     AuthModule,
     ProducerProfileModule,
+    ProductsModule,
   ],
   // A ordem importa: rate limit antes da autenticação (força bruta de token
   // também é limitada) e autenticação antes do papel.

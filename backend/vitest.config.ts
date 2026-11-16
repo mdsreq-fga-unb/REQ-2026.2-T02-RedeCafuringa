@@ -20,7 +20,14 @@ export default defineConfig({
         'src/**/domain/**/*.ts',
         'src/common/**/*.ts',
       ],
-      exclude: ['src/**/*.spec.ts', 'src/**/*.module.ts', 'src/**/*.dto.ts'],
+      // Schemas são declarativos (só decorators), como DTOs e módulos; o TS gera
+      // ramos de metadados neles que nenhum teste exercita de propósito.
+      exclude: [
+        'src/**/*.spec.ts',
+        'src/**/*.module.ts',
+        'src/**/*.dto.ts',
+        'src/**/*.schema.ts',
+      ],
       // perFile: cada arquivo precisa atingir o mínimo, não só a média do projeto.
       thresholds: {
         perFile: true,

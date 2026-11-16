@@ -71,12 +71,16 @@ describe('contrato OpenAPI', () => {
       'GET /api/v1/producers/me/trajectory',
       'GET /api/v1/producers/{id}/photo',
       'GET /api/v1/producers/{id}/trajectory',
+      'GET /api/v1/products',
+      'GET /api/v1/products/{id}',
+      'GET /api/v1/products/{id}/photos/{photoId}',
       'GET /api/v1/users',
       'GET /api/v1/users/{id}',
       'POST /api/v1/auth/login',
       'POST /api/v1/auth/password-reset/confirm',
       'POST /api/v1/auth/password-reset/request',
       'POST /api/v1/auth/password-reset/validate',
+      'POST /api/v1/products',
       'POST /api/v1/users/admins',
       'POST /api/v1/users/consumers',
       'POST /api/v1/users/producers',
@@ -104,7 +108,7 @@ describe('contrato OpenAPI', () => {
     }
   });
 
-  it('só /auth/me, as rotas administrativas e a trajetória e a foto próprias exigem Bearer; o resto é público', () => {
+  it('só /auth/me, as rotas administrativas, a trajetória e a foto próprias e o cadastro de produto exigem Bearer; o resto é público', () => {
     const protectedOps = operations
       .filter((o) => o.op.security?.some((s) => 'bearer' in s))
       .map((o) => `${o.method} ${o.path}`);
@@ -114,6 +118,7 @@ describe('contrato OpenAPI', () => {
       'get /api/v1/producers/me/trajectory',
       'get /api/v1/users',
       'get /api/v1/users/{id}',
+      'post /api/v1/products',
       'post /api/v1/users/admins',
       'put /api/v1/producers/me/photo',
       'put /api/v1/producers/me/trajectory',

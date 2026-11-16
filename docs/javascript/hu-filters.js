@@ -22,13 +22,12 @@
     const status = panel.querySelector("#hu-status-filter");
     const priority = panel.querySelector("#hu-priority-filter");
     const mvp = panel.querySelector("#hu-mvp-filter");
-    const iteration = panel.querySelector("#hu-iteration-filter");
     const sorting = panel.querySelector("#hu-sort-filter");
     const reset = panel.querySelector("#hu-reset");
     const count = panel.querySelector("#hu-results-count");
     const empty = document.getElementById("hu-empty");
 
-    const entries = Array.from(catalog.querySelectorAll(".hu-card")).map((card, originalIndex) => {
+    const entries = Array.from(catalog.querySelectorAll("a.hu-card")).map((card, originalIndex) => {
       const title = card.querySelector("h3")?.textContent || "";
       const code = title.match(/HU\s*0*(\d+)/i);
       return {
@@ -42,7 +41,6 @@
             : "",
         priority: normalize(card.querySelector(".hu-status-prioridade")?.textContent),
         mvp: Boolean(card.querySelector(".hu-status-mvp")),
-        iteration: card.dataset.iteration || "",
         priorityOrder: Number(card.dataset.priorityOrder || 0),
         originalIndex,
       };
@@ -60,8 +58,7 @@
         const matchesStatus = !status.value || entry.status === status.value;
         const matchesPriority = !priority.value || entry.priority === priority.value;
         const matchesMvp = !mvp.value || entry.mvp === (mvp.value === "sim");
-        const matchesIteration = !iteration.value || entry.iteration === iteration.value;
-        const show = matchesSearch && matchesStatus && matchesPriority && matchesMvp && matchesIteration;
+        const show = matchesSearch && matchesStatus && matchesPriority && matchesMvp;
 
         entry.card.hidden = !show;
         if (show) visible += 1;
@@ -88,7 +85,7 @@
     }
 
     search.addEventListener("input", update);
-    [status, priority, mvp, iteration, sorting].forEach((select) =>
+    [status, priority, mvp, sorting].forEach((select) =>
       select.addEventListener("change", update)
     );
     reset.addEventListener("click", () => {
@@ -96,7 +93,6 @@
       status.value = "";
       priority.value = "";
       mvp.value = "";
-      iteration.value = "";
       sorting.value = "";
       update();
       search.focus();

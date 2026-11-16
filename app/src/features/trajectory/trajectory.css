@@ -1,5 +1,7 @@
 .trajectory-page {
-    max-width: 760px;
+    width: 100%;
+    min-width: 0;
+    max-width: 960px;
     margin-inline: auto;
     padding-bottom: 28px;
 }
@@ -197,12 +199,39 @@
 }
 @media (min-width: 700px) {
     .trajectory-page {
-        max-width: 680px;
+        max-width: 960px;
+    }
+    .trajectory-fields {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+    }
+    .trajectory-field:nth-of-type(n + 3) {
+        grid-column: 1 / -1;
+    }
+    .trajectory-form > .button {
+        max-width: 360px;
+        justify-self: end;
     }
     .trajectory-notice {
         padding: 20px 24px;
     }
     .trajectory-field textarea {
-        min-height: 120px;
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 380px) {
+    .trajectory-photo-picker {
+        padding: 12px;
+        gap: 8px;
+    }
+    .trajectory-photo-add {
+        width: 40px;
+        height: 40px;
+        margin: 0;
+        font-size: 36px;
+    }
+    .trajectory-success-dialog {
+        padding: 24px 16px;
     }
 }

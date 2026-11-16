@@ -69,11 +69,11 @@ describe("App — rotas da recuperação de acesso (HU10)", () => {
     it("leva do login para a recuperação de acesso pelo botão", async () => {
         renderAt("/entrar");
 
-        await userEvent
-            .setup()
-            .click(
-                await screen.findByRole("button", { name: "Recuperar acesso" }),
-            );
+        await userEvent.setup().click(
+            await screen.findByRole("button", {
+                name: "Esqueci minha senha",
+            }),
+        );
 
         expect(
             await screen.findByRole("heading", {

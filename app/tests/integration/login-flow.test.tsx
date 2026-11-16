@@ -45,20 +45,24 @@ describe("HU09 — fluxo de autenticação no app", () => {
     });
 
     it.each([
-        ["consumer", "Criar conta de consumidor", "Criar conta de produtor"],
-        ["producer", "Criar conta de produtor", "Criar conta de consumidor"],
+        ["consumer", "#/cadastro/consumidor"],
+        ["producer", "#/cadastro"],
     ] as const)(
-        "shows only the %s signup action on its login route",
-        async (profile, signupLabel, otherSignupLabel) => {
+        "leva o login de %s ao cadastro do seu perfil pela única ação Criar uma conta",
+        async (profile, expectedHash) => {
             window.location.hash = `#/login/${profile}`;
             render(<App />);
 
-            expect(
-                await screen.findByRole("button", { name: signupLabel }),
-            ).toBeTruthy();
-            expect(
-                screen.queryByRole("button", { name: otherSignupLabel }),
-            ).toBeNull();
+            const buttons = await screen.findAllByRole("button", {
+                name: "Criar uma conta",
+            });
+            expect(buttons).toHaveLength(1);
+
+            await userEvent.setup().click(buttons[0]);
+
+            await waitFor(() =>
+                expect(window.location.hash).toBe(expectedHash),
+            );
         },
     );
 

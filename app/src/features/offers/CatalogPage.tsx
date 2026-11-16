@@ -4,15 +4,28 @@ import type { Offer } from "../../shared/types";
 type CatalogPageProps = {
     offers: Offer[];
     onNavigate: (path: string) => void;
+    canRegisterProduct?: boolean;
 };
 
-export function CatalogPage({ offers, onNavigate }: CatalogPageProps) {
+export function CatalogPage({
+    offers,
+    onNavigate,
+    canRegisterProduct = false,
+}: CatalogPageProps) {
     return (
         <>
             <BackButton label="Voltar" onClick={() => onNavigate("/perfil")} />
             <section className="catalog-page">
                 <p className="eyebrow">Dona Maria</p>
                 <h1>Catálogo do perfil</h1>
+                {canRegisterProduct && (
+                    <button
+                        className="product-submit"
+                        onClick={() => onNavigate("/produtos/novo")}
+                    >
+                        Adicionar produto
+                    </button>
+                )}
                 <div className="offer-list">
                     {offers.map((offer) => (
                         <button

@@ -282,4 +282,21 @@ describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
 
         expect(screen.queryByRole("link")).toBeNull();
     });
+
+    // Protótipo 09: o endereço informado aparece em um bloco de destaque próprio
+    it("destaca o endereço informado em um bloco próprio, separado do aviso de reenvio", async () => {
+        const { user } = renderPage();
+        await sendEmail(user);
+
+        const shown = await screen.findByText(
+            "Endereço informado: ana@exemplo.com",
+        );
+        expect(shown.className).toContain("recovery-sent");
+
+        await user.click(
+            screen.getByRole("button", { name: "Reenviar e-mail" }),
+        );
+        const resent = await screen.findByText("E-mail reenviado.");
+        expect(resent.className).not.toContain("recovery-sent");
+    });
 });

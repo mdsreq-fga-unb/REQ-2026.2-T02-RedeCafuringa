@@ -39,7 +39,7 @@ describe("integração do cadastro de consumidor — HU01", () => {
         ).toBeTruthy();
         await user.click(
             screen.getByRole("button", {
-                name: "Criar conta de consumidor",
+                name: "Criar uma conta",
             }),
         );
 
