@@ -29,7 +29,8 @@
 	# JSON nunca passa de 1 MB. Exceções são os envios de foto:
 	# - foto de perfil (HU12/RF12): a API aceita até 5 MB;
 	# - cadastro de produto (HU15): galeria de até 10 fotos de 5 MB cada
-	#   (PHOTO_GALLERY_POLICIES.produto; o valor sai de maxRequestBytes()).
+	#   (PHOTO_GALLERY_POLICIES.produto; o valor sai de maxRequestBytes());
+	# - cadastro de experiência (HU21): mesma galeria (PHOTO_GALLERY_POLICIES.experiencia).
 	# A margem cobre o envelope multipart. O app reduz as fotos antes de enviar,
 	# então o normal é ficar em centenas de KB (o read_body de 10s acima conta).
 	# Nova galeria (ex.: propriedade) = nova rota aqui, com o valor da política dela.
@@ -44,11 +45,22 @@
 	request_body @productUpload {
 		max_size 51MB
 	}
+	@experienceUpload {
+		method POST
+		path /api/v1/experiences
+	}
+	request_body @experienceUpload {
+		max_size 51MB
+	}
 	@jsonOnly {
 		not path /api/v1/producers/me/photo
 		not {
 			method POST
 			path /api/v1/products
+		}
+		not {
+			method POST
+			path /api/v1/experiences
 		}
 	}
 	request_body @jsonOnly {

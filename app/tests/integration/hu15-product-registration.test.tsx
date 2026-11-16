@@ -275,17 +275,24 @@ describe("HU15 — cadastro, vínculo e recuperação", () => {
         expect(await screen.findByText(/Horta da Joana/)).toBeTruthy();
     });
 
-    it("permite selecionar Experiência e envia a categoria escolhida", async () => {
+    it("selecionar Experiência troca os campos do cadastro conforme HU21", async () => {
         session();
         const api = mockProductApi();
         const { user } = await openProduct();
         const f = await fillProduct(user);
         await user.selectOptions(f.categoria, "Experiência");
-        submit();
-        await waitFor(() => expect(submissions(api)).toHaveLength(1));
         expect(
-            (submissions(api)[0][1]?.body as FormData).get("categoria"),
-        ).toBe("Experiência");
+            screen.getByRole("heading", { name: "Divulgue uma experiência" }),
+        ).toBeTruthy();
+        expect(screen.getByLabelText(/^Título/i)).toHaveProperty(
+            "value",
+            product.nome,
+        );
+        expect(screen.getByLabelText(/^Local/i)).toBeTruthy();
+        expect(screen.getByLabelText(/^Duração/i)).toBeTruthy();
+        expect(screen.getByLabelText(/^Valor por pessoa/i)).toBeTruthy();
+        expect(screen.queryByLabelText(/^Gramas por unidade/i)).toBeNull();
+        expect(submissions(api)).toHaveLength(0);
     });
 
     it("anexa fotos arrastadas, exibe prévias e envia os arquivos", async () => {

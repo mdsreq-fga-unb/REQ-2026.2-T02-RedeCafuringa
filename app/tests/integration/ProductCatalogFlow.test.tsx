@@ -2,10 +2,16 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
+import { getProductDetails } from "@/features/offers/productDetailsService";
 import { listProducts } from "@/features/offers/productService";
 import type { Product } from "@/features/offers/productTypes";
 
 vi.mock("@/features/offers/productService");
+vi.mock("@/features/offers/productDetailsService");
+vi.mock("@/features/profile/publicProfileService", () => ({
+    listPublicProducers: vi.fn().mockResolvedValue([]),
+    listProducerOffers: vi.fn().mockResolvedValue([]),
+}));
 
 const products: Product[] = [
     {
@@ -28,6 +34,9 @@ const products: Product[] = [
 
 beforeEach(() => {
     vi.mocked(listProducts).mockResolvedValue(products);
+    vi.mocked(getProductDetails).mockImplementation(
+        async (id) => products.find((item) => item.id === id) ?? null,
+    );
     localStorage.clear();
     window.location.hash = "#/produtos";
 });
@@ -107,16 +116,23 @@ describe("catálogo de produtos no app", () => {
         expect(await screen.findByText("Sítio Raízes")).toBeTruthy();
     });
 
-    it("chega ao catálogo pelo Explorar (CA01)", async () => {
+    it("Explorar abre a consulta pública de produtores após integrar a HU14", async () => {
         window.location.hash = "#/perfil";
         const user = userEvent.setup();
         render(<App />);
-
         await user.click(screen.getByRole("button", { name: "Explorar" }));
+        expect(window.location.hash).toBe("#/explorar");
+        expect(
+            await screen.findByRole("heading", {
+                name: "Conheça nossos produtores",
+            }),
+        ).toBeTruthy();
+        expect(
+            screen.queryByRole("heading", { name: "Entre em sua conta" }),
+        ).toBeNull();
         await user.click(
-            screen.getByRole("button", { name: "Ver catálogo de produtos" }),
+            screen.getByRole("button", { name: /Ver mais produtos/ }),
         );
-
         expect(window.location.hash).toBe("#/produtos");
         expect(
             await screen.findByRole("heading", {

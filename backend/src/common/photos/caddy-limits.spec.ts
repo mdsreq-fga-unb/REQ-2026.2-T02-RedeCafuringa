@@ -28,4 +28,11 @@ describe('Caddy acompanha as políticas de galeria', () => {
       Math.ceil(maxRequestBytes(policy) / (1024 * 1024)),
     );
   });
+
+  it('POST /experiences aceita o maior envio que a política da experiência permite (HU21)', () => {
+    const policy = PHOTO_GALLERY_POLICIES[PhotoOwnerType.EXPERIENCIA];
+    expect(caddyLimitMb('experienceUpload')).toBe(
+      Math.ceil(maxRequestBytes(policy) / (1024 * 1024)),
+    );
+  });
 });

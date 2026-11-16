@@ -436,6 +436,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/experiences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar o catálogo de experiências
+         * @description Catálogo público: experiências disponíveis de produtores ativos, da mais nova à mais antiga, paginadas. `produtor` restringe ao catálogo de um perfil. Cada item tem o mesmo formato de `GET /experiences/{id}`.
+         */
+        get: operations["experiencesList"];
+        put?: never;
+        /**
+         * Cadastrar experiência
+         * @description HU21/RF21 (CA02-CA05, CA07): cadastra uma experiência, atividade ou atrativo do produtor autenticado, que fica vinculada à conta do token (RN09). Exclusivo do perfil PRODUTOR (RN01, RNF08). Textos são simples (sem HTML). As fotos (1 a 10) têm o formato conferido pelos bytes e são regravadas em WebP sem metadados (EXIF/GPS).
+         */
+        post: operations["experiencesCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/experiences/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar uma experiência
+         * @description HU21 (CA08, RN11): aberta a visitantes e consumidores. Traz os dados da oferta e o responsável (id, nome da iniciativa e localidade). Experiências indisponíveis ou de produtor desativado não aparecem.
+         */
+        get: operations["experiencesGetOne"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/experiences/{id}/photos/{photoId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Foto de uma experiência
+         * @description HU21: visível nas mesmas condições da experiência. Use o caminho de `fotos`. Responde com `ETag` e aceita `If-None-Match`.
+         */
+        get: operations["experiencesGetPhoto"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -928,6 +992,11 @@ export interface components {
             id: string;
             /** @example Horta da Joana */
             nomeIniciativa: string;
+            /**
+             * @description Localidade ou propriedade informada pelo produtor para divulgação (HU20, RN11); ausente quando não informada
+             * @example Fazenda Cafuringa
+             */
+            localidade?: string;
         };
         ProductResponse: {
             /** @example 64b0c0ffee0000000000beef */
@@ -973,6 +1042,66 @@ export interface components {
             /**
              * @description Total de produtos que atendem aos filtros
              * @example 42
+             */
+            total: number;
+            /**
+             * @description Página devolvida
+             * @example 1
+             */
+            pagina: number;
+            /**
+             * @description Tamanho da página
+             * @example 20
+             */
+            limite: number;
+        };
+        ExperienceResponse: {
+            /** @example 64b0c0ffee0000000000e001 */
+            id: string;
+            /** @example Trilha guiada da nascente */
+            nome: string;
+            /**
+             * @example Experiência
+             * @enum {string}
+             */
+            categoria: "Experiência";
+            /** @example Caminhada de 3 km até a nascente, com parada para café da roça. */
+            descricao: string;
+            /**
+             * @description Reais, até 2 casas decimais
+             * @example 45
+             */
+            valorPorPessoa: number;
+            /** @example Sítio Boa Vista, Núcleo Rural Cafuringa */
+            local: string;
+            /** @example 2 horas */
+            duracao: string;
+            /**
+             * @description Caminhos das fotos, na ordem enviada, relativos à URL base da API. Mudam a cada foto nova, então podem ficar em cache indefinidamente.
+             * @example [
+             *       "/experiences/64b0c0ffee0000000000e001/photos/64b0c0ffee0000000000f001?v=Q2FmdXJpbmdhRm90"
+             *     ]
+             */
+            fotos: string[];
+            /** @description Responsável pela oferta (CA03, CA08, RN09): só dados de divulgação, nunca e-mail, telefone ou documentos */
+            produtor: components["schemas"]["ProductProducerResponse"];
+            /**
+             * @description Data do cadastro
+             * @example 2026-11-16T12:00:00.000Z
+             */
+            criadoEm: string;
+            /**
+             * @description Se a oferta está disponível (RN10). As rotas públicas só devolvem disponíveis.
+             * @example true
+             */
+            disponivel: boolean;
+        };
+        ExperienceListResponse: {
+            /** @description Experiências da página, da mais nova à mais antiga; vazio quando não há registros. */
+            itens: components["schemas"]["ExperienceResponse"][];
+            /**
+             * @description Total que atende aos filtros
+             * @example 12
              */
             total: number;
             /**
@@ -2474,6 +2603,215 @@ export interface operations {
                 content?: never;
             };
             /** @description Produto ou foto inexistente, ou produto não visível */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    experiencesList: {
+        parameters: {
+            query?: {
+                /** @description Só as experiências deste produtor (catálogo do perfil) */
+                produtor?: string;
+                /** @description Página desejada, a partir de 1 */
+                pagina?: number;
+                /** @description Quantidade de experiências por página */
+                limite?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Página do catálogo */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExperienceListResponse"];
+                };
+            };
+            /** @description Filtro ou paginação inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    experiencesCreate: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Opcional. Identificador gerado pelo app para este cadastro (8 a 64 letras, números, "-" ou "_"). Reenviar com a mesma chave após uma falha de conexão devolve a experiência já criada, sem duplicar (CA07). */
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    nome: string;
+                    /** @enum {string} */
+                    categoria: "Experiência";
+                    descricao: string;
+                    /** @description Reais, com ponto e até 2 casas decimais */
+                    valorPorPessoa: number;
+                    local: string;
+                    /**
+                     * @description Número inteiro seguido de minutos ou horas
+                     * @example 2 horas
+                     */
+                    duracao: string;
+                    /** @description De 1 a 10 imagens PNG, JPEG ou WebP de até 5 MB cada, na ordem da galeria (a primeira é a capa) */
+                    fotos: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description Experiência cadastrada */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExperienceResponse"];
+                };
+            };
+            /** @description Campos ausentes ou inválidos, sem foto, fotos demais ou ilegíveis (mensagens em `message`) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de produtor (consumidor ou administrador) (CA06)
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta de produtor inexistente ou desativada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Alguma foto acima de 5 MB */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Alguma foto não é PNG, JPEG ou WebP */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    experiencesGetOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Experiência */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExperienceResponse"];
+                };
+            };
+            /** @description Experiência inexistente, indisponível, de produtor desativado ou identificador inválido */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    experiencesGetPhoto: {
+        parameters: {
+            query?: {
+                /** @description Versão da foto, como vem em `fotos`. Com a versão atual a resposta fica em cache para sempre; sem ela, o navegador revalida. */
+                v?: unknown;
+            };
+            header?: never;
+            path: {
+                id: string;
+                photoId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Imagem WebP sem metadados */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/webp": string;
+                };
+            };
+            /** @description O navegador já tem esta versão */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Experiência ou foto inexistente, ou experiência não visível */
             404: {
                 headers: {
                     [name: string]: unknown;

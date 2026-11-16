@@ -25,6 +25,10 @@ import {
 import { ProfilePage } from "@/features/profile";
 import { ExplorePage } from "@/features/profile/ExplorePage";
 import type { AuthResult } from "@/shared/types";
+import {
+    rememberOfferOrigin,
+    offerReturnRoute,
+} from "@/features/offers/offerNavigation";
 import { useHashRoute } from "./useHashRoute";
 import { RegisterPage } from "@/features/register";
 import "../App.css";
@@ -46,14 +50,24 @@ import {
 } from "@/features/offers";
 import { ProductRegistrationPage } from "@/features/offers/ProductRegistrationPage";
 import { ProductPublishedPage } from "@/features/offers/ProductPublishedPage";
+import type { RegisteredExperience } from "@/features/offers/experienceService";
 import type { RegisteredProduct } from "@/features/offers/productService";
 import { apiResourceUrl } from "@/shared/api";
 
 export function App() {
+    const [exploreCategory, setExploreCategory] = useState("Produtos");
+    const [exploreSearch, setExploreSearch] = useState("");
     const [publishedProducts, setPublishedProducts] = useState<
-        RegisteredProduct[]
+        (RegisteredProduct | RegisteredExperience)[]
     >([]);
-    const { route, navigate } = useHashRoute();
+    const { route, navigate: changeRoute } = useHashRoute();
+    const navigate = useCallback(
+        (next: string) => {
+            rememberOfferOrigin(next, route);
+            changeRoute(next);
+        },
+        [route, changeRoute],
+    );
     const { role, consumerName, email, cpf, userId, signIn, signOut } =
         useDemoSession();
     const signup = useProducerSignup((auth) => {
@@ -79,20 +93,34 @@ export function App() {
                     ? product.fotos[0]
                     : apiResourceUrl(product.fotos[0])
                 : "",
-            price: `${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(product.precoPorUnidade)} / unidade`,
+            price: `${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format("valorPorPessoa" in product ? product.valorPorPessoa : product.precoPorUnidade)} / ${"valorPorPessoa" in product ? "pessoa" : "unidade"}`,
             details: [
                 `Produtor: ${product.produtor.nomeIniciativa}`,
-                `${product.gramasPorUnidade} g por unidade`,
+                // HU20 CA03 / HU21 CA08: propriedade divulgada pelo responsável.
+                ...("localidade" in product.produtor &&
+                product.produtor.localidade
+                    ? [`Propriedade: ${product.produtor.localidade}`]
+                    : []),
+                ...("local" in product
+                    ? [product.local, product.duracao]
+                    : [`${product.gramasPorUnidade} g por unidade`]),
             ],
             description: product.descricao,
         })),
-        ...offers,
+        // Ofertas fictícias só na demonstração; com a API real o catálogo
+        // mostra apenas o que os produtores cadastraram (HU19 CA02).
+        ...(isMockAuthEnabled ? offers : []),
     ];
     useEffect(() => {
         if (path === "/oferta-publicada" && !published) navigate("/catalogo");
     }, [path, published, navigate]);
+    const isExperienceRegisterRoute = path === "/experiencias/nova";
+    const isOfferRegisterRoute = [
+        "/produtos/novo",
+        "/experiencias/nova",
+    ].includes(path);
     const productBlocked =
-        path === "/produtos/novo" &&
+        isOfferRegisterRoute &&
         (role !== "producer" || !localStorage.getItem("cafuringa-token"));
     useEffect(() => {
         if (productBlocked) navigate(role ? "/conta" : "/login/producer");
@@ -163,7 +191,9 @@ export function App() {
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
         : undefined;
-    const currentOffer = catalogOffers.find((offer) => offer.id === offerId);
+    const currentOffer = catalogOffers.find(
+        (offer) => offer.id === offerId && offer.category.startsWith("Experi"),
+    );
     const productOfferId = offerId && !currentOffer ? offerId : undefined;
     const contactAvailable = isWhatsAppContactAvailable(
         settings.authorized,
@@ -199,6 +229,21 @@ export function App() {
         signIn(auth);
         if (nextRole === "admin") {
             navigate("/admin/acesso");
+            return;
+        }
+
+        if (subjectId?.startsWith("produto/")) {
+            navigate(
+                `/oferta/${encodeURIComponent(subjectId.slice("produto/".length))}?falar=1`,
+            );
+            return;
+        }
+
+        // Experiência (HU21) volta para a rota de experiência, não a de produto.
+        if (subjectId?.startsWith("experiencia/")) {
+            navigate(
+                `/oferta/${encodeURIComponent(subjectId.slice("experiencia/".length))}?tipo=experiencia&falar=1`,
+            );
             return;
         }
 
@@ -250,7 +295,15 @@ export function App() {
                 <DemoNavigation onNavigate={navigate} onSignIn={signIn} />
             )}
             <main className="main-content">
-                {path === "/explorar" && <ExplorePage onNavigate={navigate} />}
+                {path === "/explorar" && (
+                    <ExplorePage
+                        onNavigate={navigate}
+                        initialCategory={exploreCategory}
+                        initialSearch={exploreSearch}
+                        onCategoryChange={setExploreCategory}
+                        onSearchChange={setExploreSearch}
+                    />
+                )}
                 {usersRoute && !adminBlocked && (
                     <AdminUsersPage
                         key={path}
@@ -288,7 +341,15 @@ export function App() {
                 )}
                 {path === "/catalogo" && (
                     <CatalogPage
-                        offers={catalogOffers}
+                        offers={
+                            role === "producer"
+                                ? catalogOffers.filter((offer) =>
+                                      publishedProducts.some(
+                                          (item) => item.id === offer.id,
+                                      ),
+                                  )
+                                : catalogOffers
+                        }
                         onNavigate={navigate}
                         canRegisterProduct={
                             role === "producer" &&
@@ -296,8 +357,14 @@ export function App() {
                         }
                     />
                 )}
-                {path === "/produtos/novo" && !productBlocked && (
+                {isOfferRegisterRoute && !productBlocked && (
                     <ProductRegistrationPage
+                        key="offer-registration"
+                        initialCategory={
+                            isExperienceRegisterRoute
+                                ? "Experiência"
+                                : "Produtos"
+                        }
                         onNavigate={navigate}
                         onPublished={(product) => {
                             setPublishedProducts((previous) => [
@@ -316,12 +383,20 @@ export function App() {
                         onNavigate={navigate}
                     />
                 )}
+                {path === "/experiencias" && (
+                    <ProductCatalog
+                        key="experiences"
+                        category="Experiências"
+                        onNavigate={navigate}
+                    />
+                )}
                 {path === "/produtos" && (
-                    <ProductCatalog onNavigate={navigate} />
+                    <ProductCatalog key="products" onNavigate={navigate} />
                 )}
                 {currentOffer && (
                     <OfferDetailsPage
                         offer={currentOffer}
+                        backRoute={offerReturnRoute(route, "/catalogo")}
                         contactAvailable={contactAvailable}
                         onNavigate={navigate}
                         onStartContact={() =>
@@ -331,7 +406,16 @@ export function App() {
                 )}
                 {productOfferId && (
                     <ProductOfferDetails
-                        key={productOfferId}
+                        key={route}
+                        consumer={role === "consumer"}
+                        resumeContact={query.get("falar") === "1"}
+                        experience={query.get("tipo") === "experiencia"}
+                        backPath={offerReturnRoute(
+                            route,
+                            query.get("tipo") === "experiencia"
+                                ? "/experiencias"
+                                : "/produtos",
+                        )}
                         id={productOfferId}
                         onNavigate={navigate}
                     />

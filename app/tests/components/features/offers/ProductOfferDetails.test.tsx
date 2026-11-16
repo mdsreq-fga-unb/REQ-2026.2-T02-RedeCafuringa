@@ -1,10 +1,10 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ProductOfferDetails } from "@/features/offers/ProductOfferDetails";
-import { listProducts } from "@/features/offers/productService";
+import { getProductDetails } from "@/features/offers/productDetailsService";
 import type { Product } from "@/features/offers/productTypes";
 
-vi.mock("@/features/offers/productService");
+vi.mock("@/features/offers/productDetailsService");
 
 const cesta: Product = {
     id: "cesta",
@@ -16,7 +16,9 @@ const cesta: Product = {
 };
 
 beforeEach(() => {
-    vi.mocked(listProducts).mockResolvedValue([cesta]);
+    vi.mocked(getProductDetails).mockImplementation(async (id) =>
+        id === "cesta" ? cesta : null,
+    );
 });
 
 afterEach(() => {
@@ -60,7 +62,7 @@ describe("ProductOfferDetails", () => {
     });
 
     it("avisa enquanto carrega", () => {
-        vi.mocked(listProducts).mockReturnValue(new Promise(() => {}));
+        vi.mocked(getProductDetails).mockReturnValue(new Promise(() => {}));
         renderDetails();
 
         expect(screen.getByRole("status").textContent).toBe(
@@ -71,15 +73,19 @@ describe("ProductOfferDetails", () => {
     it("avisa quando o produto não existe", async () => {
         renderDetails("inexistente");
 
-        expect(await screen.findByText("Oferta não encontrada.")).toBeTruthy();
+        expect(
+            await screen.findByText(
+                "Produto não encontrado ou indisponível para consulta.",
+            ),
+        ).toBeTruthy();
     });
 
     it("avisa quando o carregamento falha", async () => {
-        vi.mocked(listProducts).mockRejectedValue(new Error("falhou"));
+        vi.mocked(getProductDetails).mockRejectedValue(new Error("falhou"));
         renderDetails();
 
         expect((await screen.findByRole("alert")).textContent).toBe(
-            "Não foi possível carregar a oferta.",
+            "Não foi possível carregar a oferta. Verifique sua conexão e tente novamente.",
         );
     });
 });

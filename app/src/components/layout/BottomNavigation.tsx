@@ -28,9 +28,7 @@ export function BottomNavigation({
             <button
                 className={panelActive ? "active" : ""}
                 aria-current={panelActive ? "page" : undefined}
-                onClick={() =>
-                    onNavigate(isProducer ? "/catalogo" : "/explorar")
-                }
+                onClick={() => onNavigate("/explorar")}
             >
                 <svg
                     className="nav-icon"
@@ -71,19 +69,33 @@ export function BottomNavigation({
             <button
                 data-action={isProducer ? "add-product" : undefined}
                 aria-current={
-                    path === (isProducer ? "/produtos/novo" : "/reservas")
+                    (
+                        isProducer
+                            ? ["/produtos/novo", "/experiencias/nova"].includes(
+                                  path,
+                              )
+                            : path === "/reservas"
+                    )
                         ? "page"
                         : undefined
                 }
                 className={
-                    path === "/produtos/novo" || path === "/reservas"
+                    [
+                        "/produtos/novo",
+                        "/experiencias/nova",
+                        "/reservas",
+                    ].includes(path)
                         ? "active"
                         : ""
                 }
                 onClick={() =>
                     onNavigate(
                         role === "producer"
-                            ? "/produtos/novo"
+                            ? ["/experiencias", "/experiencias/nova"].includes(
+                                  path,
+                              )
+                                ? "/experiencias/nova"
+                                : "/produtos/novo"
                             : role
                               ? "/reservas"
                               : "/escolher-perfil",

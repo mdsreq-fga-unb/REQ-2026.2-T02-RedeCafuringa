@@ -15,6 +15,13 @@ describe("useHashRoute", () => {
         expect(result.current.route).toBe("/produtos");
     });
 
+    it("reconhece a rota de cadastro de experiência", () => {
+        window.location.hash = "#/experiencias/nova";
+        const { result } = renderHook(() => useHashRoute());
+
+        expect(result.current.route).toBe("/experiencias/nova");
+    });
+
     it("manda rotas desconhecidas para Explorar", () => {
         window.location.hash = "#/nao-existe";
         const { result } = renderHook(() => useHashRoute());
