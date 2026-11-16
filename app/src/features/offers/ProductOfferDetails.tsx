@@ -84,7 +84,7 @@ export function ProductOfferDetails({
                                         "noopener,noreferrer",
                                     );
                                     onNavigate(
-                                        `/oferta/${encodeURIComponent(id)}`,
+                                        `/oferta/${encodeURIComponent(id)}${experience ? "?tipo=experiencia" : ""}`,
                                     );
                                 }
                             }
@@ -104,7 +104,7 @@ export function ProductOfferDetails({
         if (!state.phone || !state.product) return;
         if (!consumer) {
             onNavigate(
-                `/entrar?contato=${encodeURIComponent(`produto/${id}`)}`,
+                `/entrar?contato=${encodeURIComponent(`${experience ? "experiencia" : "produto"}/${id}`)}`,
             );
             return;
         }

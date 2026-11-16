@@ -107,7 +107,9 @@ export function App() {
             ],
             description: product.descricao,
         })),
-        ...offers,
+        // Ofertas fictícias só na demonstração; com a API real o catálogo
+        // mostra apenas o que os produtores cadastraram (HU19 CA02).
+        ...(isMockAuthEnabled ? offers : []),
     ];
     useEffect(() => {
         if (path === "/oferta-publicada" && !published) navigate("/catalogo");
@@ -233,6 +235,14 @@ export function App() {
         if (subjectId?.startsWith("produto/")) {
             navigate(
                 `/oferta/${encodeURIComponent(subjectId.slice("produto/".length))}?falar=1`,
+            );
+            return;
+        }
+
+        // Experiência (HU21) volta para a rota de experiência, não a de produto.
+        if (subjectId?.startsWith("experiencia/")) {
+            navigate(
+                `/oferta/${encodeURIComponent(subjectId.slice("experiencia/".length))}?tipo=experiencia&falar=1`,
             );
             return;
         }

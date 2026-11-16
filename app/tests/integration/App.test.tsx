@@ -23,6 +23,22 @@ vi.mock("@/features/offers/productDetailsService", () => ({
         description: "Mel produzido no território da Cafuringa.",
     }),
 }));
+// Com a API real, experiências vêm de GET /experiences/{id} (HU21), não da
+// lista fictícia da demonstração.
+vi.mock("@/features/offers/catalogItems", async (original) => ({
+    ...(await original<typeof import("@/features/offers/catalogItems")>()),
+    getExperienceDetails: vi.fn().mockResolvedValue({
+        id: "queijos",
+        name: "Visita e Degustação de Queijos",
+        category: "Experiências",
+        producerId: "demo-maria",
+        producerName: "Dona Maria",
+        price: 45,
+        unit: "pessoa",
+        image: "/folha-logo.svg",
+        description: "Visita guiada com degustação.",
+    }),
+}));
 vi.mock("@/features/trajectory/trajectoryService", async (original) => ({
     ...(await original<
         typeof import("@/features/trajectory/trajectoryService")
@@ -116,7 +132,7 @@ describe("fluxo de contato da aplicação", () => {
     it.each([
         { route: "#/oferta/mel", title: "Mel do Cerrado" },
         {
-            route: "#/oferta/queijos",
+            route: "#/oferta/queijos?tipo=experiencia",
             title: "Visita e Degustação de Queijos",
         },
     ])(
