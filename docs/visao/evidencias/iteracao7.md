@@ -4,9 +4,18 @@
 
 ## Descrição das Atividades Realizadas
 
-A **Iteração 7** integra a fase de Construção do AUP e possui histórias planejadas no [cronograma](../cronograma.md). O repositório contém implementações, documentação técnica e testes para determinados fluxos; contudo, **a existência de código, de checklists ou de uma HU no cronograma não comprova, por si só, que todas as entregas da iteração foram concluídas e aceitas**.
+A **Iteração 7** integrou a fase de Construção do AUP e teve como foco o desenvolvimento das funcionalidades relacionadas ao cadastro e à consulta de produtos e experiências oferecidos pelos produtores da Rede Cafuringa.
 
-A conferência de conclusão deve relacionar cada HU ao PR/commit integrado, à execução de testes e do CI, à revisão e à decisão de aceite. Quando o vínculo individual ainda não estiver registrado, a situação permanece **não comprovada documentalmente**, sem invalidar implementações que possam existir. Consulte a [matriz de execução do AUP](marcos_aup.md) para localizar as fontes e pendências.
+Nesta etapa, foram trabalhados os recursos que permitem aos produtores apresentar seus produtos na plataforma e aos consumidores conhecer as opções disponíveis. O desenvolvimento contemplou o cadastro de produtos, a visualização do catálogo e a consulta de informações detalhadas sobre cada item. Também foi abordado o cadastro de experiências, ampliando as possibilidades de divulgação das atividades oferecidas pelos produtores e comunidades participantes.
+
+As atividades foram organizadas em torno dos seguintes fluxos:
+
+- **Cadastro de produtos:** desenvolvimento do fluxo para que os produtores possam registrar produtos na plataforma, disponibilizando informações que permitam sua identificação e apresentação aos consumidores.
+- **Consulta ao catálogo de produtos:** implementação da funcionalidade de visualização dos produtos cadastrados, permitindo que os usuários conheçam as opções disponíveis na Rede Cafuringa.
+- **Consulta aos detalhes dos produtos:** desenvolvimento da visualização individual de cada produto, possibilitando o acesso a informações mais específicas sobre os itens apresentados no catálogo.
+- **Cadastro de experiências:** desenvolvimento do fluxo de registro de experiências oferecidas pelos produtores e comunidades, permitindo ampliar a divulgação de atividades e oportunidades de visitação na região.
+
+Essas funcionalidades contribuem diretamente para o objetivo da Rede Cafuringa de dar visibilidade à produção local e aproximar produtores e consumidores. Com o cadastro e a organização dos produtos e experiências em um ambiente digital, a plataforma passa a oferecer meios para que os produtores divulguem suas ofertas e os usuários descubram o que está disponível na rede.
 
 ---
 
@@ -14,27 +23,29 @@ A conferência de conclusão deve relacionar cada HU ao PR/commit integrado, à 
 
 ### Verificação e Validação
 
-**Relação entre planejamento e evidência:** a lista a seguir é extraída das atribuições da fonte única de HUs; **não é uma relação de itens aprovados no DoD**.
+??? info "Funcionalidades Desenvolvidas na Iteração"
 
-| HU | Funcionalidade planejada | Situação da comprovação neste registro |
-|---|---|---|
-| [HU15](../historias/HU15.md) | Cadastrar produto | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU19](../historias/HU19.md) | Consultar catálogo de produtos | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU20](../historias/HU20.md) | Consultar detalhes do produto | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU21](../historias/HU21.md) | Cadastrar experiência | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU24](../historias/HU24.md) | Consultar catálogo de experiências | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU36](../historias/HU36.md) | Buscar ofertas | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU14](../historias/HU14.md) | Consultar perfil de produtor | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+    A tabela relaciona as funcionalidades trabalhadas nesta etapa às respectivas histórias de usuário.
 
-Há [código, testes e implementação técnica](../arquitetura/backend/guia-estrutura-e-tdd.md) e [esteiras automatizadas](../arquitetura/engenharia/visao-geral.md) no repositório. Para afirmar a conclusão de cada HU, consulte os [PRs do projeto](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pulls?q=is%3Apr) e registre o link específico e o resultado do check correspondente.
+    | HU | Funcionalidade | Descrição |
+    |---|---|---|
+    | [HU15](../historias/HU15.md) | Cadastrar produto | Registro de produtos pelos produtores na plataforma. |
+    | [HU19](../historias/HU19.md) | Consultar catálogo de produtos | Visualização dos produtos cadastrados e disponíveis na Rede Cafuringa. |
+    | [HU20](../historias/HU20.md) | Consultar detalhes do produto | Acesso às informações específicas de um produto selecionado. |
+    | [HU21](../historias/HU21.md) | Cadastrar experiência | Registro de experiências oferecidas pelos produtores e comunidades participantes. |
+
+    O desenvolvimento dessas funcionalidades também contou com a estrutura técnica e as orientações descritas no [Guia do Backend — Estrutura de pastas e TDD](../arquitetura/backend/guia-estrutura-e-tdd.md). As práticas de integração e validação do projeto estão documentadas na [Visão Geral de Engenharia](../arquitetura/engenharia/visao-geral.md).
 
 ### Organização e Atualização
 
-??? info "Refinamento Iterativo de Requisitos"  
-    Não foi preciso refinar os requisitos nessa etapa, pois permaneceram os mesmos.
+??? info "Revisão e Refinamento dos Requisitos"
+
+    Durante a Iteração 7, não foram identificadas necessidades de alteração nos requisitos definidos para as funcionalidades planejadas. Assim, as histórias de usuário e seus critérios foram mantidos, concentrando-se o trabalho no desenvolvimento dos fluxos previstos.
 
 ---
 
 ## Vídeos Comprobatórios
+
+O vídeo a seguir registra um alinhamento entre as equipes de desenvolvimento, servindo como evidência complementar das atividades de comunicação e organização realizadas durante o andamento do projeto.
 
 <iframe width="800" height="450" src="https://www.youtube.com/embed/krf_uStQ5Pw" title="Vídeo de alinhamento entre as equipes de Desenvolvimento" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

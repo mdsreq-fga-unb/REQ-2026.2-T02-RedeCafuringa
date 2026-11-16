@@ -26,7 +26,7 @@
 
 **Interpretação:** código-fonte e arquivos de configuração constituem evidência de existência/implementação. Uma execução bem-sucedida exige logs ou resultados identificáveis; TDD exige ainda o histórico da sequência de desenvolvimento. Não foram inferidos resultados de testes a partir da presença dos arquivos.
 
-## 3. Evidências da Construção por iteração
+## 3. Evidências da Construção por Iteração
 
 | Iteração | Planejamento e evidência | Situação documental e próximo passo |
 |---|---|---|
@@ -34,4 +34,5 @@
 | 6 | [Registro da Iteração 6](iteracao6.md) | Conferir PR, revisão e DoD e testes por HU; |
 | 7 | [Registro da Iteração 7](iteracao7.md) | Relacionar versões, execuções e resultados de integração às histórias. |
 | 8 | [Registro da Iteração 8](iteracao8.md) | Vincular PRs, testes, impedimentos e decisões por HU; distinguir planejado de concluído. |
+| 9 | [Registro da Iteração 9](iteracao9.md) | Vincular PRs, testes, impedimentos e decisões por HU; distinguir planejado de concluído. |
 
