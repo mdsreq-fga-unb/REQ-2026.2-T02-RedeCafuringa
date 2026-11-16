@@ -8,7 +8,7 @@ Execução manual opcional, para atualizar snapshots no repositório:
     py -3 scripts/requisitos_unificados.py --sync --repo .
     py -3 scripts/requisitos_unificados.py --check --repo .
 
-Durante o MkDocs build, o hook em organizacao_requisitos_hook.py chama
+Durante o MkDocs build, o hook em scripts/mkdocs_hooks.py chama
 render_page para gerar as visões diretamente das fontes vigentes.
 """
 from __future__ import annotations
@@ -44,7 +44,7 @@ def read_json(repo: Path) -> list[dict]:
         for attr in ('titulo', 'situacao', 'prioridade'):
             if not isinstance(item.get(attr), str) or not item[attr].strip():
                 raise ValueError(f'HU{n:02d}: campo obrigatório {attr} ausente')
-        if item['situacao'] not in ('Em execução', 'Planejado'):
+        if item['situacao'] not in ('Em execução', 'Planejado', 'Concluído'):
             raise ValueError(f'HU{n:02d}: situação desconhecida')
         if item['prioridade'] not in ('Alta', 'Média', 'Baixa'):
             raise ValueError(f'HU{n:02d}: prioridade inválida')
@@ -58,10 +58,21 @@ def read_json(repo: Path) -> list[dict]:
                 raise ValueError(f'HU{n:02d}: identificador inválido em {key}')
         if not item['cps'] or not item['oes']:
             raise ValueError(f'HU{n:02d}: CP e OE são obrigatórios')
+        deps = item.get('dependencias', None)
+        if item['mvp'] and not isinstance(deps, list):
+            raise ValueError(f'HU{n:02d}: dependências de MVP devem estar mapeadas')
+        if deps is not None:
+            if not isinstance(deps, list) or any(not isinstance(d,str) or not re.fullmatch(r'HU\d{2}',d) for d in deps):
+                raise ValueError(f'HU{n:02d}: dependências inválidas')
+            if len(deps)!=len(set(deps)) or f'HU{n:02d}' in deps:
+                raise ValueError(f'HU{n:02d}: dependências repetidas ou autorreferência')
+        for field in ('responsavel','revisor'):
+            if item.get(field) is not None and (not isinstance(item[field],str) or not item[field].strip()):
+                raise ValueError(f'HU{n:02d}: campo {field} inválido')
         if not isinstance(item.get('mvp'), bool):
             raise ValueError(f'HU{n:02d}: mvp precisa ser booleano')
         if item['mvp']:
-            if item.get('iteracao') not in (6, 7, 8):
+            if item.get('iteracao') not in (6, 7, 8, 9):
                 raise ValueError(f'HU{n:02d}: iteração inválida para MVP')
             if not isinstance(item.get('ordem'), int) or not 1 <= item['ordem'] <= 20:
                 raise ValueError(f'HU{n:02d}: ordem inválida')
@@ -73,6 +84,16 @@ def read_json(repo: Path) -> list[dict]:
         raise ValueError('Ordens de 1º a 20º devem ser únicas')
     if sum(x['mvp'] for x in data) != 20:
         raise ValueError('MVP deve ter 20 histórias')
+    by_id={x['id']:x for x in data}
+    for item in data:
+        for dep in item.get('dependencias') or []:
+            other = by_id.get(int(dep[2:]))
+            if other is None:raise ValueError(f'HU{item["id"]:02d}: dependência inexistente {dep}')
+            if item['mvp']:
+                if not other['mvp']:
+                    raise ValueError(f'HU{item["id"]:02d}: depende de HU fora do MVP: {dep}')
+                if other['ordem'] >= item['ordem']:
+                    raise ValueError(f'HU{item["id"]:02d}: {dep} deve precedê-la na ordem do MVP')
     return sorted(data, key=lambda x: x['id'])
 
 
@@ -115,7 +136,7 @@ def render_hu_meta(item: dict, names: dict[str, str]) -> str:
 
 def render_cards(data: list[dict]) -> str:
     result = []
-    for item in data:
+    for item in sorted(data, key=lambda x: (0 if x['mvp'] else 1, x['ordem'] if x['mvp'] else x['id'])):
         n=item['id']; title = f'HU{n:02d} — {item["titulo"]}'
         parts = []
         order = item['ordem']
@@ -125,6 +146,17 @@ def render_cards(data: list[dict]) -> str:
         for key in ('rf','rnfs','regras','cps','oes'):
             val = item[key]
             attrs += f' data-{key}="{escape(" ".join(val) if isinstance(val,list) else val, quote=True)}"'
+        dep = item.get('dependencias')
+        if dep is None:
+            dep_view, dep_state = 'A mapear', 'pendente'
+        elif not dep:
+            dep_view, dep_state = 'Nenhuma identificada', 'nenhuma'
+        else:
+            dep_view, dep_state = ', '.join(f'<a href="../historias/HU{int(d[2:])}/">{d}</a>' for d in dep), 'proposta'
+        dono = item.get('responsavel') or 'A definir'
+        rev = item.get('revisor') or 'A definir'
+        attrs += f' data-dependencias="{escape(" ".join(dep or []),quote=True)}" data-dependencias-status="{dep_state}"'
+        attrs += f' data-responsavel="{escape(dono,quote=True)}" data-revisor="{escape(rev,quote=True)}"'
         parts.append(f'      <span class="hu-status hu-status-{ "execucao" if item["situacao"]=="Em execução" else "planejada" }">{escape(item["situacao"])}</span>')
         if item['mvp']:
             parts.append('      <span class="hu-status hu-status-mvp">MVP</span>')
@@ -139,6 +171,11 @@ def render_cards(data: list[dict]) -> str:
             *parts,
             '    </div>',
             f'    <h3><a class="hu-card-title-link" href="../historias/HU{n}/">{escape(title)}</a></h3>',
+            '    <div class="hu-card-planning">',
+            f'      <span><strong>Dependências:</strong> {dep_view}</span>',
+            f'      <span><strong>Responsável:</strong> {escape(dono)}</span>',
+            f'      <span><strong>Revisor:</strong> {escape(rev)}</span>',
+            '    </div>',
             '  </div>',
             '</div>',
         ]))
@@ -147,21 +184,34 @@ def render_cards(data: list[dict]) -> str:
 
 def render_mvp(data: list[dict], names: dict[str,str]) -> str:
     lines = [
-        '| RF | Requisito funcional | História de usuário correspondente | CP | Prioridade | Iteração |',
-        '|---|---|---|---|---|---|',
+        '| Ordem | RF | Requisito funcional | História de usuário | VN | ES | CX | CP | ET | IPA | Prioridade | Iteração |',
+        '|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|---|',
     ]
-    for item in sorted((x for x in data if x['mvp']),key=lambda r:r['ordem']):
+    for item in sorted((x for x in data if x['mvp']), key=lambda x: x['ordem']):
         n = item['id']
-        lines.append(f'| {item["rf"]} | {names.get(item["rf"], item["titulo"])} | '
-                     f'[HU{n:02d} — {item["titulo"]}](historias/HU{n}.md) | '
-                     f'{", ".join(item["cps"])} | {item["prioridade"]} | '
-                     f'[Iteração {item["iteracao"]}](evidencias/iteracao{item["iteracao"]}.md) |')
+        a = item.get('avaliacao_priorizacao') or {}
+        if any(type(a.get(k)) is not int or not 1 <= a[k] <= 4 for k in ('vn','es','cx','cp')):
+            raise ValueError(f'HU{n:02d}: notas de priorização não estão completas')
+        et = (a['es']+a['cx']+a['cp']) / 3
+        ipa = (a['vn']+5-et) / 2
+        classe = 'Alta' if ipa >= 3 else 'Média' if ipa >= 2.5 else 'Baixa'
+        if item['prioridade'] != classe:
+            raise ValueError(f'HU{n:02d}: prioridade do JSON diverge da fórmula')
+        lines.append(
+            f'| {item["ordem"]}º | {item["rf"]} | {names.get(item["rf"], item["titulo"])} | '
+            f'[HU{n:02d} — {item["titulo"]}](historias/HU{n}.md) | '
+            f'{a["vn"]} | {a["es"]} | {a["cx"]} | {a["cp"]} | '
+            f'{et:.2f} | {ipa:.2f} | **{classe}** | '
+            f'[Iteração {item["iteracao"]}](evidencias/iteracao{item["iteracao"]}.md) |'
+        )
     return '\n'.join(lines)
 
 
 def render_iteration_cell(data: list[dict], n: int) -> str:
     matching = sorted((x for x in data if x['iteracao'] == n), key=lambda x:x['ordem'])
     return ', '.join(f'[HU{x["id"]:02d}](historias/HU{x["id"]}.md)' for x in matching)
+
+
 
 
 def render_page(text: str, uri: str, data: list[dict], names: dict[str,str]) -> str:
@@ -177,9 +227,9 @@ def render_page(text: str, uri: str, data: list[dict], names: dict[str,str]) -> 
     if uri=='visao/mvp.md':
         return replace_between(text,START_MVP,END_MVP,render_mvp(data,names),uri)
     if uri=='visao/cronograma.md':
-        if text.count(START_ITER)!=3 or text.count(END_ITER)!=3:
-            raise ValueError('Cronograma: esperados marcadores para três iterações')
-        for n in (6,7,8):
+        if text.count(START_ITER)!=4 or text.count(END_ITER)!=4:
+            raise ValueError('Cronograma: esperados marcadores para quatro iterações')
+        for n in (6,7,8,9):
             pat=(rf'(\|\s*\*\*Iteração {n}\*\*<br>[^\n]*?\|\s*)'
                  + re.escape(START_ITER) + r'.*?' + re.escape(END_ITER))
             val=render_iteration_cell(data,n)

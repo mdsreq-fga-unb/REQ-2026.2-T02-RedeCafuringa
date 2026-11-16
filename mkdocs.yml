@@ -32,7 +32,6 @@ extra_css:
 extra_javascript:
   - javascript/extra.js
   - javascript/hu-filters.js
-  - javascript/hu-modal.js
   - javascript/hu-table.js
 
 nav:
@@ -43,6 +42,7 @@ nav:
     - 3. Intervenção Social: visao/intervencao.md
     - 4. Estratégias de Engenharia de Software: visao/estrategias.md
     - 5. Engenharia de Requisitos: visao/engenharia_requisitos.md
+    - 5.3 Evidências e Decisões de ER: visao/evidencias/registro_er.md
     - 6. Interação Entre Equipe e Cliente: visao/interacao.md
     - 7. Requisitos de Software: visao/requisitos_software.md
     - 8. DoR e DoD: visao/dor_dod.md
@@ -53,12 +53,8 @@ nav:
     - 13. Referências Bibliográficas: visao/referencias.md
     - 14. Vídeo de Apresentação: visao/videos.md
 
-  - Organização e Atualização:
-    - Visão Geral: organizacao_atualizacao/index.md
-    - Rastreabilidade: organizacao_atualizacao/rastreabilidade.md
-    - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
-
   - AUP - Iterações:
+    - Governança AUP e Evidências: visao/evidencias/marcos_aup.md
     - Concepção:
       - Iteração 1: visao/evidencias/iteracao1.md
       - Iteração 2: visao/evidencias/iteracao2.md
@@ -70,31 +66,14 @@ nav:
       - Iteração 6: visao/evidencias/iteracao6.md
       - Iteração 7: visao/evidencias/iteracao7.md
       - Iteração 8: visao/evidencias/iteracao8.md
-    - Transição:
       - Iteração 9: visao/evidencias/iteracao9.md
+    - Transição:
       - Iteração 10: visao/evidencias/iteracao10.md
-
-  - Arquitetura:
-    - Backend:
-        - POC: arquitetura/backend/poc.md
-        - Guia de estrutura e TDD: arquitetura/backend/guia-estrutura-e-tdd.md
-        - Operação e infraestrutura: arquitetura/backend/operacao.md
-        - Segurança e auditoria: arquitetura/backend/seguranca.md
-        - Implementação das HUs:
-            - HU09 — Autenticar usuário: arquitetura/backend/implementacao/HU09.md
-            - HU10 — Recuperar acesso: arquitetura/backend/implementacao/HU10.md
-            - HU12 — Trajetória do produtor: arquitetura/backend/implementacao/HU12.md
-            - HU15 — Cadastrar produto: arquitetura/backend/implementacao/HU15.md
-            - HU19 — Consultar catálogo: arquitetura/backend/implementacao/HU19.md
-    - Frontend:
-        - Operação: arquitetura/frontend/operacao.md
-    - Engenharia:
-        - Como contribuir: arquitetura/contribuindo.md
-        - Padrão de Pull Request: arquitetura/pull-requests.md
-        - Infraestrutura: arquitetura/infra/visao-geral.md
-    - Contrato da API:
-        - Referência da API (Swagger): arquitetura/shared/api.md
-        - Versionamento e contrato: arquitetura/shared/contratos.md
+      
+  - Organização e Atualização:
+      - Visão Geral: organizacao_atualizacao/index.md
+      - Rastreabilidade: organizacao_atualizacao/rastreabilidade.md
+      - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
 
 hooks:
   - scripts/mkdocs_hooks.py

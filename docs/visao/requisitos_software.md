@@ -4,56 +4,56 @@ Abaixo, são apresentados os requisitos levantados para o desenvolvimento da pla
 
 ## 7.1 Requisitos Funcionais
 
-| **Código** | **Nome do requisito** | **Descrição** | 
+| **Código** | **Nome do requisito** | **Descrição** |
 |---|---|---|
 | **RF01** | Cadastrar perfil de consumidor | O sistema deve permitir o cadastro do perfil do consumidor contendo nome completo, CPF, e-mail e senha. |
 | **RF02** | Cadastrar perfil de produtor | O sistema deve permitir o cadastro do perfil do produtor ou comunidade contendo nome da iniciativa, quando houver, nome do responsável, CPF, CNPJ, quando aplicável, localidade, categorias ofertadas, formas de pagamento, e-mail e senha. |
-| **RF03** | Cadastrar usuário administrador | O sistema deve permitir o cadastro do perfil de administrador contendo e-mail e senha. | 
-| **RF04** | Consultar usuários cadastrados | O sistema deve permitir que o administrador consulte os dados cadastrais dos usuários, incluindo consumidores, produtores e administradores, exceto suas credenciais de autenticação e demais informações protegidas. | 
+| **RF03** | Cadastrar usuário administrador | O sistema deve permitir o cadastro do perfil de administrador contendo e-mail e senha. |
+| **RF04** | Consultar usuários cadastrados | O sistema deve permitir que o administrador consulte os dados cadastrais dos usuários, incluindo consumidores, produtores e administradores, exceto suas credenciais de autenticação e demais informações protegidas. |
 | **RF05** | Excluir usuário | O sistema deve permitir que o administrador exclua a conta de um usuário quando houver necessidade administrativa ou descumprimento das regras da plataforma. |
-| **RF06** | Consultar conteúdos cadastrados | O sistema deve permitir que os usuários consultem os produtos, experiências e eventos cadastrados na plataforma. | 
-| **RF07** | Remover conteúdo inadequado | O sistema deve permitir que o administrador remova produtos, experiências ou eventos que violem as regras da plataforma. | 
-| **RF08** | Atualizar informações institucionais | O sistema deve permitir que o administrador atualize as informações institucionais disponibilizadas pela Rede Cafuringa na plataforma. | 
+| **RF06** | Consultar conteúdos cadastrados | O sistema deve permitir que os usuários consultem os produtos, experiências e eventos cadastrados na plataforma. |
+| **RF07** | Remover conteúdo inadequado | O sistema deve permitir que o administrador remova produtos, experiências ou eventos que violem as regras da plataforma. |
+| **RF08** | Atualizar informações institucionais | O sistema deve permitir que o administrador atualize as informações institucionais disponibilizadas pela Rede Cafuringa na plataforma. |
 | **RF09** | Autenticar usuário | O sistema deve permitir que usuários cadastrados acessem suas contas por meio do e-mail e da senha cadastrados. |
-| **RF10** | Recuperar acesso à conta | O sistema deve permitir que o usuário recupere o acesso à sua conta em caso de esquecimento da senha. | 
-| **RF11** | Excluir própria conta | O sistema deve permitir que o usuário exclua sua própria conta. | 
-| **RF12** | Registrar trajetória do produtor | O sistema deve permitir que o produtor registre informações sobre sua trajetória, atividades desenvolvidas, telefone de contato, quando desejar disponibilizá-lo, e foto de perfil. | 
+| **RF10** | Recuperar acesso à conta | O sistema deve permitir que o usuário recupere o acesso à sua conta em caso de esquecimento da senha. |
+| **RF11** | Excluir própria conta | O sistema deve permitir que o usuário exclua sua própria conta. |
+| **RF12** | Registrar trajetória do produtor | O sistema deve permitir que o produtor registre informações sobre sua trajetória, atividades desenvolvidas, telefone de contato, quando desejar disponibilizá-lo, e foto de perfil. |
 | **RF13** | Atualizar perfil de produtor | O sistema deve permitir que o produtor atualize as informações do próprio perfil. |
-| **RF14** | Consultar perfil de produtor | O sistema deve permitir a consulta pública do perfil do produtor ou iniciativa, incluindo nome, categorias ofertadas, trajetória, atividades desenvolvidas e telefone de contato, quando disponibilizado. Dados como CPF, CNPJ e e-mail devem permanecer privados. | 
-| **RF15** | Cadastrar produto | O sistema deve permitir que o produtor cadastre produtos e os vincule ao seu perfil ou à propriedade associada. | 
-| **RF16** | Atualizar produto | O sistema deve permitir que o produtor altere as informações de um produto cadastrado. | 
+| **RF14** | Consultar perfil de produtor | O sistema deve permitir a consulta pública do perfil do produtor ou iniciativa, incluindo nome, categorias ofertadas, trajetória, atividades desenvolvidas e telefone de contato, quando disponibilizado. Dados como CPF, CNPJ e e-mail devem permanecer privados. |
+| **RF15** | Cadastrar produto | O sistema deve permitir que o produtor cadastre produtos e os vincule ao seu perfil ou à propriedade associada. |
+| **RF16** | Atualizar produto | O sistema deve permitir que o produtor altere as informações de um produto cadastrado. |
 | **RF17** | Excluir produto | O sistema deve permitir que o produtor exclua um produto cadastrado em seu catálogo. |
-| **RF18** | Informar disponibilidade de produto | O sistema deve permitir que o produtor marque um produto como disponível ou indisponível e, quando aplicável, informe sua sazonalidade. Produtos indisponíveis não devem ser apresentados como ofertas disponíveis, mas devem permanecer cadastrados. | 
+| **RF18** | Informar disponibilidade de produto | O sistema deve permitir que o produtor marque um produto como disponível ou indisponível e, quando aplicável, informe sua sazonalidade. Produtos indisponíveis não devem ser apresentados como ofertas disponíveis, mas devem permanecer cadastrados. |
 | **RF19** | Consultar catálogo de produtos | O sistema deve permitir que os usuários consultem os produtos disponibilizados pelos produtores cadastrados. |
-| **RF20** | Consultar detalhes do produto | O sistema deve permitir que os usuários visualizem informações detalhadas de um produto, incluindo descrição, produtor responsável e preço por unidade. | 
+| **RF20** | Consultar detalhes do produto | O sistema deve permitir que os usuários visualizem informações detalhadas de um produto, incluindo descrição, produtor responsável e preço por unidade. |
 | **RF21** | Cadastrar experiência | O sistema deve permitir que o produtor cadastre experiências, atividades e atrativos oferecidos por ele ou pela propriedade associada. |
-| **RF22** | Atualizar experiência | O sistema deve permitir que o produtor altere as informações de uma experiência cadastrada. | 
+| **RF22** | Atualizar experiência | O sistema deve permitir que o produtor altere as informações de uma experiência cadastrada. |
 | **RF23** | Excluir experiência | O sistema deve permitir que o produtor exclua uma experiência cadastrada em seu catálogo. |
-| **RF24** | Consultar catálogo de experiências | O sistema deve permitir que os usuários consultem as experiências disponibilizadas pelos produtores cadastrados. | 
+| **RF24** | Consultar catálogo de experiências | O sistema deve permitir que os usuários consultem as experiências disponibilizadas pelos produtores cadastrados. |
 | **RF25** | Consultar detalhes da experiência | O sistema deve permitir que os usuários visualizem informações detalhadas de uma experiência, incluindo descrição, produtor ou anfitrião responsável e valor por pessoa. |
 | **RF26** | Cadastrar evento | O sistema deve permitir que o produtor cadastre eventos oferecidos por ele ou pela propriedade associada. |
-| **RF27** | Atualizar evento | O sistema deve permitir que o produtor altere as informações de um evento cadastrado. | 
+| **RF27** | Atualizar evento | O sistema deve permitir que o produtor altere as informações de um evento cadastrado. |
 | **RF28** | Excluir evento | O sistema deve permitir que o produtor exclua um evento cadastrado em seu catálogo. |
 | **RF29** | Consultar catálogo de eventos | O sistema deve permitir que os usuários consultem os eventos disponibilizados pelos produtores cadastrados. |
-| **RF30** | Consultar detalhes do evento | O sistema deve permitir que os usuários visualizem informações detalhadas de um evento, incluindo descrição, produtor ou responsável e valor por pessoa, quando aplicável. | 
-| **RF31** | Auxiliar cadastro de ofertas | O sistema deve fornecer um agente de inteligência artificial para auxiliar o produtor no preenchimento das informações necessárias ao cadastro de produtos, experiências e eventos. | 
-| **RF32** | Apresentar informações da Cafuringa | O sistema deve disponibilizar informações sobre a história, as características e os principais pontos de interesse da região da Cafuringa. | 
-| **RF33** | Consultar guia de boas práticas | O sistema deve disponibilizar aos usuários um guia com orientações e boas práticas relacionadas à utilização da plataforma e às atividades oferecidas na região. | 
-| **RF34** | Notificar novos eventos | O sistema deve informar os usuários, por meio de e-mail, sobre novos eventos cadastrados na plataforma. | 
-| **RF35** | Visualizar ofertas no mapa | O sistema deve apresentar em mapa os produtores, propriedades, produtos, experiências e eventos que possuam localização cadastrada. | 
-| **RF36** | Buscar ofertas | O sistema deve permitir que os usuários pesquisem por produtores, produtos, experiências e eventos cadastrados na plataforma. | 
-| **RF37** | Filtrar ofertas | O sistema deve permitir que os usuários filtrem os resultados de produtos, experiências e eventos de acordo com os critérios disponibilizados pela plataforma. | 
-| **RF38** | Buscar ofertas por localização | O sistema deve permitir que os usuários encontrem produtores, propriedades, experiências e atrativos considerando uma localização ou região selecionada. | 
-| **RF39** | Disponibilizar contato direto | O sistema deve disponibilizar, nos perfis e detalhes das ofertas, um botão para iniciar uma conversa externa pelo WhatsApp com o produtor ou responsável, quando este tiver optado por divulgar seu contato. Apenas usuários autenticados poderão utilizar o recurso de contato. | 
-| **RF40** | Enviar feedback | O sistema deve permitir que usuários autenticados enviem feedback relacionado a produtos, experiências ou eventos, conforme as regras definidas pela plataforma. | 
-| **RF41** | Visualizar feedback | O sistema deve permitir que usuários e produtores visualizem os feedbacks relacionados às ofertas com as quais estejam envolvidos. | 
-| **RF42** | Editar feedback | O sistema deve permitir que o usuário edite um feedback enviado anteriormente por ele. | 
-| **RF43** | Excluir feedback | O sistema deve permitir que o usuário exclua um feedback enviado anteriormente por ele. | 
-| **RF44** | Solicitar pré-reserva de experiência | O sistema deve permitir que um consumidor autenticado solicite uma pré-reserva de experiência informando a data, o horário, a quantidade de participantes e a forma de pagamento. A solicitação deve iniciar com o status Pendente e não deve confirmar automaticamente a reserva. | 
-| **RF45** | Consultar pré-reserva | O sistema deve permitir que o solicitante e o produtor responsável consultem os dados e o estado da solicitação de pré-reserva, incluindo os estados Pendente, Aceita e Recusada, além da identificação de eventual cancelamento realizado pelo solicitante ou pelo responsável. | 
-| **RF46** | Cancelar pré-reserva | O sistema deve permitir que o solicitante cancele uma solicitação de pré-reserva pendente. Após o envio, a data, o horário e a quantidade de participantes não poderão ser editados; para solicitar outra data ou horário, o solicitante deverá cancelar a solicitação anterior e realizar uma nova solicitação. | 
-| **RF47** | Responder pré-reserva de experiência | O sistema deve permitir que o produtor aceite ou recuse uma solicitação de pré-reserva pendente. Em caso de recusa, o produtor poderá informar uma justificativa. Solicitações aceitas não poderão ser recusadas posteriormente pela plataforma, e solicitações referentes a datas e horários já passados não poderão ser aceitas. | 
-| **RF48** | Notificar alteração de pré-reserva | O sistema deve notificar, por e-mail, o solicitante e o produtor responsável sobre alterações no estado da pré-reserva, incluindo aceitação, recusa ou cancelamento. A solicitação não deve expirar automaticamente. | 
+| **RF30** | Consultar detalhes do evento | O sistema deve permitir que os usuários visualizem informações detalhadas de um evento, incluindo descrição, produtor ou responsável e valor por pessoa, quando aplicável. |
+| **RF31** | Auxiliar cadastro de ofertas | O sistema deve fornecer um agente de inteligência artificial para auxiliar o produtor no preenchimento das informações necessárias ao cadastro de produtos, experiências e eventos. |
+| **RF32** | Apresentar informações da Cafuringa | O sistema deve disponibilizar informações sobre a história, as características e os principais pontos de interesse da região da Cafuringa. |
+| **RF33** | Consultar guia de boas práticas | O sistema deve disponibilizar aos usuários um guia com orientações e boas práticas relacionadas à utilização da plataforma e às atividades oferecidas na região. |
+| **RF34** | Notificar novos eventos | O sistema deve informar os usuários, por meio de e-mail, sobre novos eventos cadastrados na plataforma. |
+| **RF35** | Visualizar ofertas no mapa | O sistema deve apresentar em mapa os produtores, propriedades, produtos, experiências e eventos que possuam localização cadastrada. |
+| **RF36** | Buscar ofertas | O sistema deve permitir que os usuários pesquisem por produtores, produtos, experiências e eventos cadastrados na plataforma. Para a primeira versão (MVP), o escopo de pesquisa proposto abrange produtores, produtos e experiências cadastrados; a busca por eventos depende da implementação posterior das funcionalidades de eventos. |
+| **RF37** | Filtrar ofertas | O sistema deve permitir que os usuários filtrem os resultados de produtos, experiências e eventos de acordo com os critérios disponibilizados pela plataforma. |
+| **RF38** | Buscar ofertas por localização | O sistema deve permitir que os usuários encontrem produtores, propriedades, experiências e atrativos considerando uma localização ou região selecionada. |
+| **RF39** | Disponibilizar contato direto | O sistema deve disponibilizar, nos perfis e detalhes das ofertas, um botão para iniciar uma conversa externa pelo WhatsApp com o produtor ou responsável, quando este tiver optado por divulgar seu contato. A abertura do WhatsApp poderá ser realizada por visitantes não autenticados quando o responsável tiver autorizado a divulgação do contato. A edição das informações de contato permanece restrita ao perfil autorizado. |
+| **RF40** | Enviar feedback | O sistema deve permitir que usuários autenticados enviem feedback relacionado a produtos, experiências ou eventos, conforme as regras definidas pela plataforma. |
+| **RF41** | Visualizar feedback | O sistema deve permitir que usuários e produtores visualizem os feedbacks relacionados às ofertas com as quais estejam envolvidos. |
+| **RF42** | Editar feedback | O sistema deve permitir que o usuário edite um feedback enviado anteriormente por ele. |
+| **RF43** | Excluir feedback | O sistema deve permitir que o usuário exclua um feedback enviado anteriormente por ele. |
+| **RF44** | Solicitar pré-reserva de experiência | O sistema deve permitir que um consumidor autenticado solicite uma pré-reserva de experiência informando a data, o horário, a quantidade de participantes e a forma de pagamento. A solicitação deve iniciar com o status Pendente e não deve confirmar automaticamente a reserva. |
+| **RF45** | Consultar pré-reserva | O sistema deve permitir que o solicitante e o produtor responsável consultem os dados e o estado da solicitação de pré-reserva, incluindo os estados Pendente, Aceita e Recusada, além da identificação de eventual cancelamento realizado pelo solicitante ou pelo responsável. |
+| **RF46** | Cancelar pré-reserva | O sistema deve permitir que o solicitante cancele uma solicitação de pré-reserva pendente. Após o envio, a data, o horário e a quantidade de participantes não poderão ser editados; para solicitar outra data ou horário, o solicitante deverá cancelar a solicitação anterior e realizar uma nova solicitação. |
+| **RF47** | Responder pré-reserva de experiência | O sistema deve permitir que o produtor aceite ou recuse uma solicitação de pré-reserva pendente. Em caso de recusa, o produtor poderá informar uma justificativa. Solicitações aceitas não poderão ser recusadas posteriormente pela plataforma, e solicitações referentes a datas e horários já passados não poderão ser aceitas. |
+| **RF48** | Notificar alteração de pré-reserva | O sistema deve notificar, por e-mail, o solicitante e o produtor responsável sobre alterações no estado da pré-reserva, incluindo aceitação, recusa ou cancelamento. A solicitação não deve expirar automaticamente. |
 
 ---
 

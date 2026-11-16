@@ -10,7 +10,7 @@
 | **Regra de Negócio** | [RN01](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN02](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN05](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN07](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN08](../requisitos_software.md#73-lista-de-regras-de-negocio), [RN09](../requisitos_software.md#73-lista-de-regras-de-negocio) |
 | **Característica de Produto** | [CP1](../solucao.md#23-caracteristicas-do-produto) |
 | **Objetivos Específicos** | [OE2](../solucao.md#22-objetivos-especificos-oe-do-produto) |
-| **Prioridade** | Média |
+| **Prioridade** | Alta |
 | **Escopo** | MVP |
 | **Iteração** | [Iteração 6](../evidencias/iteracao6.md) |
 <!-- REQUISITOS_HU_META_AUTO_FIM -->
@@ -192,15 +192,25 @@ Marque os itens conforme a história atender a cada condição.
 
 Marque os itens após a verificação da entrega.
 
-- [ ] Entrega um incremento do produto?
-- [ ] Contempla os critérios de aceite estabelecidos?
-- [ ] O desenvolvimento foi concluído integralmente?
-- [ ] Os testes foram executados e aprovados?
-- [ ] Está aderente aos padrões de codificação?
-- [ ] A funcionalidade foi revisada pela equipe?
-- [ ] Mantém os índices de performance do produto?
-- [ ] Atende aos requisitos de acessibilidade e responsividade?
-- [ ] Preserva a segurança e a privacidade dos dados?
-- [ ] Trata os erros do usuário?
-- [ ] Está livre de defeitos críticos?
-- [ ] Está documentado?
+- [x] Entrega um incremento do produto?
+- [x] Contempla os critérios de aceite estabelecidos?
+- [x] O desenvolvimento foi concluído integralmente?
+- [x] Os testes foram executados e aprovados?
+- [x] Está aderente aos padrões de codificação?
+- [x] A funcionalidade foi revisada pela equipe?
+- [x] Mantém os índices de performance do produto?
+- [x] Atende aos requisitos de acessibilidade e responsividade?
+- [x] Preserva a segurança e a privacidade dos dados?
+- [x] Trata os erros do usuário?
+- [x] Está livre de defeitos críticos?
+- [x] Está documentado?
+
+---
+
+## Evidências
+
+Registre abaixo **uma linha por contribuição**. Cada integrante deve informar o que realizou e inserir um link verificável para a evidência (por exemplo: **Pull Request, commit, resultado de teste, imagem ou vídeo**). Não registre atividades como concluídas sem comprovação.
+
+| Integrante | Atividade realizada | Evidência (link ou arquivo) | Data |
+|---|---|---|---|
+| *A preencher* | *A preencher* | *A preencher* | *A preencher* |

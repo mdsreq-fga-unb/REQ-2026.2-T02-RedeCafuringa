@@ -2,22 +2,21 @@
 
 [Voltar para o Cronograma](../cronograma.md)
 
-
 ## Descrição das Atividades Realizadas
 
-## Descrição das Atividades Realizadas
+A **Iteração 8** integrou a fase de Construção do AUP e teve como foco o desenvolvimento de funcionalidades voltadas à consulta de experiências, à busca por ofertas e à visualização dos perfis dos produtores cadastrados na Rede Cafuringa.
 
-Durante a Iteração 8, na fase de Construção do processo AUP, a equipe concentrou seus esforços na finalização das últimas histórias de usuário previstas para o MVP da plataforma Rede Cafuringa, dando continuidade ao desenvolvimento incremental iniciado nas iterações anteriores.
+Nesta etapa, foram trabalhados recursos que facilitam a descoberta do que é oferecido na plataforma e permitem que os usuários conheçam melhor os produtores responsáveis pelos produtos e experiências divulgados. O desenvolvimento contemplou a consulta ao catálogo de experiências, a busca por ofertas disponíveis e a consulta aos perfis dos produtores.
 
-As atividades envolveram a implementação das funcionalidades restantes, seguindo as especificações, regras de negócio e critérios de aceitação previamente estabelecidos. Por se tratar da última iteração dedicada à conclusão das histórias de usuário planejadas, houve um direcionamento especial para finalizar as entregas pendentes e assegurar que o conjunto de funcionalidades previsto para o MVP estivesse contemplado.
+As atividades foram organizadas em torno dos seguintes fluxos:
 
-À medida que as histórias de usuário eram concluídas, foram realizadas verificações com base nos critérios de Definition of Done (DoD), registrando o atendimento às condições estabelecidas e documentando os resultados nas respectivas páginas. Esse procedimento permitiu manter o acompanhamento das entregas e verificar sua conformidade com as definições acordadas.
+- **Consulta ao catálogo de experiências:** desenvolvimento da funcionalidade que permite aos usuários visualizar as experiências cadastradas na plataforma, conhecendo as atividades oferecidas pelos produtores e comunidades participantes.
+- **Busca por ofertas:** implementação de um mecanismo de busca que facilita a localização de produtos e experiências disponibilizados na Rede Cafuringa, tornando a navegação mais prática e ajudando os usuários a encontrar ofertas de seu interesse.
+- **Consulta ao perfil do produtor:** desenvolvimento da visualização dos perfis dos produtores, permitindo que os usuários acessem informações sobre quem está por trás dos produtos e experiências apresentados na plataforma.
 
-Em relação à Engenharia de Requisitos, não foram necessárias alterações ou novos refinamentos, uma vez que os requisitos permaneceram consistentes com o escopo consolidado do MVP. Dessa forma, a equipe manteve as especificações existentes como referência para a conclusão do desenvolvimento.
+Essas funcionalidades complementam os recursos desenvolvidos nas iterações anteriores. Enquanto as etapas anteriores estabeleceram os cadastros de produtos, produtores e experiências, esta iteração avançou na disponibilização dessas informações para consulta e descoberta pelos usuários.
 
-Paralelamente, foram atualizados os registros e artefatos de documentação, preservando a rastreabilidade entre os requisitos, as histórias de usuário e suas respectivas evidências de conclusão.
-
-Ao final da Iteração 8, foram finalizadas as últimas histórias de usuário planejadas, encerrando o ciclo de implementação das funcionalidades previstas para o MVP. Assim, essa iteração representou a conclusão das atividades de desenvolvimento planejadas para a fase de Construção, consolidando o trabalho realizado ao longo das iterações e deixando documentadas as entregas e suas respectivas verificações.
+Com isso, a plataforma evolui como um ambiente de aproximação entre consumidores e produtores locais, facilitando o acesso às ofertas da região, ampliando a visibilidade dos participantes da Rede Cafuringa e contribuindo para a divulgação da produção e das experiências locais.
 
 ---
 
@@ -25,60 +24,28 @@ Ao final da Iteração 8, foram finalizadas as últimas histórias de usuário p
 
 ### Verificação e Validação
 
-??? info "DoD e DoD"
-    Para está iteração foram finalizados as seguintes HU's e os respectivos DoD e DoD se encontram no final de cada página a seguir:
+??? info "Funcionalidades Desenvolvidas na Iteração"
 
-    <div class="hu-button-container">
-        <a href="/visao" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-    </div>
-    <div class="hu-button-container">
-        <a href="/visao" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-    </div>
-    
+    A tabela relaciona as funcionalidades trabalhadas nesta etapa às respectivas histórias de usuário.
+
+    | HU | Funcionalidade | Descrição |
+    |---|---|---|
+    | [HU24](../historias/HU24.md) | Consultar catálogo de experiências | Visualização das experiências cadastradas e oferecidas na Rede Cafuringa. |
+    | [HU36](../historias/HU36.md) | Buscar ofertas | Busca por ofertas disponibilizadas na plataforma, facilitando sua localização pelos usuários. |
+    | [HU14](../historias/HU14.md) | Consultar perfil de produtor | Acesso às informações dos produtores cadastrados na plataforma. |
+
+    O desenvolvimento dessas funcionalidades também contou com a estrutura técnica e as orientações descritas no [Guia do Backend — Estrutura de pastas e TDD](../arquitetura/backend/guia-estrutura-e-tdd.md). As práticas de integração e validação do projeto estão documentadas na [Visão Geral de Engenharia](../arquitetura/engenharia/visao-geral.md).
+
 ### Organização e Atualização
 
-??? info "Refinamento Iterativo de Requisitos"  
-    Não foi preciso refinar os requisitos nessa etapa, pois permaneceram os mesmos.
+??? info "Revisão e Refinamento dos Requisitos"
+
+    Durante a Iteração 8, não foram identificadas necessidades de alteração nos requisitos definidos para as funcionalidades planejadas. Dessa forma, as histórias de usuário e seus critérios foram mantidos, concentrando-se o trabalho no desenvolvimento dos fluxos previstos.
 
 ---
 
 ## Vídeos Comprobatórios
 
+O vídeo a seguir registra uma reunião de alinhamento do grupo, documentando as atividades de comunicação e organização entre os integrantes durante o desenvolvimento do projeto.
+
+<iframe width="800" height="450" src="https://www.youtube.com/embed/SVerI_gHiyw" title="Reunião de alinhamento do Grupo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

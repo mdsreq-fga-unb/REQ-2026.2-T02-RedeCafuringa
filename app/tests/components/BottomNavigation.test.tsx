@@ -13,7 +13,7 @@ function renderNav(path: string) {
 }
 
 describe("BottomNavigation: Explorar", () => {
-    it("leva à tela Explorar da HU14", () => {
+    it("leva à exploração de produtores (HU14 CA01)", () => {
         const { onNavigate } = renderNav("/perfil");
 
         fireEvent.click(screen.getByRole("button", { name: "Explorar" }));

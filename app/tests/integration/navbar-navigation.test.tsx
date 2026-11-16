@@ -56,16 +56,14 @@ describe("navegação da navbar", () => {
         },
     );
     it.each(["consumer", "producer"] as const)(
-        "casinha abre Explorar e preserva a sessão de %s",
+        "atalho de início abre Explorar e preserva a sessão de %s",
         async (role) => {
             localStorage.setItem("cafuringa-role", role);
             localStorage.setItem("cafuringa-token", "jwt-navbar");
             const user = userEvent.setup();
             render(<App />);
             await user.click(
-                screen.getByRole("button", {
-                    name: role === "producer" ? "Painel" : "Explorar",
-                }),
+                screen.getByRole("button", { name: "Cafuringa, início" }),
             );
             expect(
                 await screen.findByRole("heading", {

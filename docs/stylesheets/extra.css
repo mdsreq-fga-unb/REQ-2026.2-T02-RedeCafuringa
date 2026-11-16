@@ -1804,3 +1804,12 @@ body.sidebar-collapsed-primary.sidebar-collapsed-secondary .md-content {
   color: #103b43 !important; background: #c7eaee;
 }
 /* REDECAFURINGA_TEMA_BACKLOG_FIM */
+
+/* Issue #17 — informações de planejamento do Backlog */
+.hu-card-planning { display: flex; flex-wrap: wrap; gap: .25rem .8rem; margin: .35rem 0 0; font-size: .72rem; color: var(--md-default-fg-color--light); }
+.hu-card-planning strong { color: var(--md-default-fg-color); font-weight: 600; }
+.hu-card-planning a { text-decoration: underline; text-underline-offset: 2px; }
+.hu-table__management { min-width: 10.5rem; font-size: .75rem; }
+.hu-table__management > div + div { margin-top: .3rem; }
+.hu-table__management strong { margin-right: .2rem; }
+.hu-backlog-guidance { margin: .6rem 0; font-size: .8rem; color: var(--md-default-fg-color--light); }

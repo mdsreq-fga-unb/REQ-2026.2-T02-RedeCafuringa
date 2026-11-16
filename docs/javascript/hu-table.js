@@ -84,6 +84,39 @@
     relations.appendChild(detailBox);
     tr.appendChild(relations);
 
+    const management = document.createElement("td");
+    management.className = "hu-table__management";
+    const addField = (label, text) => {
+      const line = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = label + ":";
+      line.appendChild(title);
+      line.appendChild(document.createTextNode(" " + text));
+      management.appendChild(line);
+    };
+    const dependencies = (card.dataset.dependencias || "").split(/\s+/).filter(Boolean);
+    if (card.dataset.dependenciasStatus === "pendente") {
+      addField("Dependências", "A mapear");
+    } else if (!dependencies.length) {
+      addField("Dependências", "Nenhuma identificada");
+    } else {
+      const line = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = "Dependências:";
+      line.appendChild(title);
+      dependencies.forEach((code, index) => {
+        if (index) line.appendChild(document.createTextNode(", "));
+        const a = document.createElement("a");
+        a.href = "../historias/HU" + Number(code.slice(2)) + "/";
+        a.textContent = code;
+        line.appendChild(a);
+      });
+      management.appendChild(line);
+    }
+    addField("Responsável", card.dataset.responsavel || "A definir");
+    addField("Revisor", card.dataset.revisor || "A definir");
+    tr.appendChild(management);
+
     const delivery = document.createElement("td");
     delivery.className = "hu-table__stack";
     appendBadge(delivery,card,".hu-status-mvp","Fora do MVP");
@@ -131,7 +164,7 @@
     table.className="hu-table";
     const thead=document.createElement("thead");
     const head=document.createElement("tr");
-    ["História de usuário","RF e origem","RNFs e regras","Entrega","Prioridade e situação"].forEach((label) => {
+    ["História de usuário","RF e origem","RNFs e regras","Dependências e gestão","Entrega","Prioridade e situação"].forEach((label) => {
       const th=document.createElement("th");th.scope="col";th.textContent=label;head.appendChild(th);
     });
     thead.appendChild(head);table.appendChild(thead);

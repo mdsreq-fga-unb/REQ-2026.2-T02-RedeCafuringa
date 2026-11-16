@@ -4,15 +4,18 @@
 
 ## Descrição das Atividades Realizadas
 
-Durante a Iteração 7, na fase de Construção do processo AUP, a equipe deu continuidade ao desenvolvimento incremental da plataforma Rede Cafuringa, concentrando os esforços na implementação das funcionalidades previstas no MVP e na conclusão das histórias de usuário planejadas para o período.
+A **Iteração 7** integrou a fase de Construção do AUP e teve como foco o desenvolvimento das funcionalidades relacionadas ao cadastro e à consulta de produtos e experiências oferecidos pelos produtores da Rede Cafuringa.
 
-As atividades envolveram a continuidade do desenvolvimento das soluções, respeitando as especificações e os critérios de aceitação definidos anteriormente. À medida que as funcionalidades eram concluídas, foram realizadas verificações com base nos critérios de Definition of Done (DoD), permitindo avaliar se as entregas atendiam às condições estabelecidas e registrar formalmente sua conclusão nas respectivas documentações.
+Nesta etapa, foram trabalhados os recursos que permitem aos produtores apresentar seus produtos na plataforma e aos consumidores conhecer as opções disponíveis. O desenvolvimento contemplou o cadastro de produtos, a visualização do catálogo e a consulta de informações detalhadas sobre cada item. Também foi abordado o cadastro de experiências, ampliando as possibilidades de divulgação das atividades oferecidas pelos produtores e comunidades participantes.
 
-Nesta iteração, também foi mantida a organização e a atualização dos artefatos do projeto, garantindo que as histórias de usuário e seus registros de validação permanecessem acessíveis e alinhados ao progresso do desenvolvimento.
+As atividades foram organizadas em torno dos seguintes fluxos:
 
-Em relação à Engenharia de Requisitos, não foram identificadas necessidades de alteração ou refinamento das especificações existentes. Os requisitos permaneceram consistentes com o escopo definido para o MVP, permitindo que a equipe mantivesse o direcionamento estabelecido nas iterações anteriores e concentrasse seus esforços na implementação.
+- **Cadastro de produtos:** desenvolvimento do fluxo para que os produtores possam registrar produtos na plataforma, disponibilizando informações que permitam sua identificação e apresentação aos consumidores.
+- **Consulta ao catálogo de produtos:** implementação da funcionalidade de visualização dos produtos cadastrados, permitindo que os usuários conheçam as opções disponíveis na Rede Cafuringa.
+- **Consulta aos detalhes dos produtos:** desenvolvimento da visualização individual de cada produto, possibilitando o acesso a informações mais específicas sobre os itens apresentados no catálogo.
+- **Cadastro de experiências:** desenvolvimento do fluxo de registro de experiências oferecidas pelos produtores e comunidades, permitindo ampliar a divulgação de atividades e oportunidades de visitação na região.
 
-Ao final da iteração, foram concluídas novas entregas de funcionalidades, acompanhadas de seus respectivos registros de verificação e critérios de conclusão. Dessa forma, a Iteração 7 contribuiu para a evolução incremental da plataforma, ampliando o conjunto de funcionalidades implementadas e mantendo a rastreabilidade entre os requisitos, as histórias de usuário e os resultados obtidos.
+Essas funcionalidades contribuem diretamente para o objetivo da Rede Cafuringa de dar visibilidade à produção local e aproximar produtores e consumidores. Com o cadastro e a organização dos produtos e experiências em um ambiente digital, a plataforma passa a oferecer meios para que os produtores divulguem suas ofertas e os usuários descubram o que está disponível na rede.
 
 ---
 
@@ -20,60 +23,29 @@ Ao final da iteração, foram concluídas novas entregas de funcionalidades, aco
 
 ### Verificação e Validação
 
-??? info "DoD e DoD"
-    Para está iteração foram finalizados as seguintes HU's e os respectivos DoD e DoD se encontram no final de cada página a seguir:
+??? info "Funcionalidades Desenvolvidas na Iteração"
 
-    <div class="hu-button-container">
-        <a href="/visao" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-    </div>
-    <div class="hu-button-container">
-        <a href="/visao" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-    </div>
-    
+    A tabela relaciona as funcionalidades trabalhadas nesta etapa às respectivas histórias de usuário.
+
+    | HU | Funcionalidade | Descrição |
+    |---|---|---|
+    | [HU15](../historias/HU15.md) | Cadastrar produto | Registro de produtos pelos produtores na plataforma. |
+    | [HU19](../historias/HU19.md) | Consultar catálogo de produtos | Visualização dos produtos cadastrados e disponíveis na Rede Cafuringa. |
+    | [HU20](../historias/HU20.md) | Consultar detalhes do produto | Acesso às informações específicas de um produto selecionado. |
+    | [HU21](../historias/HU21.md) | Cadastrar experiência | Registro de experiências oferecidas pelos produtores e comunidades participantes. |
+
+    O desenvolvimento dessas funcionalidades também contou com a estrutura técnica e as orientações descritas no [Guia do Backend — Estrutura de pastas e TDD](../arquitetura/backend/guia-estrutura-e-tdd.md). As práticas de integração e validação do projeto estão documentadas na [Visão Geral de Engenharia](../arquitetura/engenharia/visao-geral.md).
+
 ### Organização e Atualização
 
-??? info "Refinamento Iterativo de Requisitos"  
-    Não foi preciso refinar os requisitos nessa etapa, pois permaneceram os mesmos.
+??? info "Revisão e Refinamento dos Requisitos"
+
+    Durante a Iteração 7, não foram identificadas necessidades de alteração nos requisitos definidos para as funcionalidades planejadas. Assim, as histórias de usuário e seus critérios foram mantidos, concentrando-se o trabalho no desenvolvimento dos fluxos previstos.
 
 ---
 
 ## Vídeos Comprobatórios
 
+O vídeo a seguir registra um alinhamento entre as equipes de desenvolvimento, servindo como evidência complementar das atividades de comunicação e organização realizadas durante o andamento do projeto.
+
+<iframe width="800" height="450" src="https://www.youtube.com/embed/krf_uStQ5Pw" title="Vídeo de alinhamento entre as equipes de Desenvolvimento" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

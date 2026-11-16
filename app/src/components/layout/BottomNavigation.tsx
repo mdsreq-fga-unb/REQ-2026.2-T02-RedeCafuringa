@@ -28,7 +28,9 @@ export function BottomNavigation({
             <button
                 className={panelActive ? "active" : ""}
                 aria-current={panelActive ? "page" : undefined}
-                onClick={() => onNavigate("/explorar")}
+                onClick={() =>
+                    onNavigate(isProducer ? "/catalogo" : "/explorar")
+                }
             >
                 <svg
                     className="nav-icon"

@@ -2,8 +2,8 @@
   {
     "id": 1,
     "titulo": "Cadastrar perfil de consumidor",
-    "situacao": "Em execução",
-    "prioridade": "Média",
+    "situacao": "Concluído",
+    "prioridade": "Alta",
     "mvp": true,
     "iteracao": 6,
     "ordem": 1,
@@ -30,13 +30,26 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 2,
+      "cx": 2,
+      "cp": 1,
+      "justificativa": "Cadastro de consumidor é base para acesso aos fluxos autenticados; implementação e validação moderadas.",
+      "evidencia": "docs/visao/historias/HU1.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [],
+    "responsavel": "Pedro Luiz e Pedro Augusto",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 2,
     "titulo": "Cadastrar perfil de produtor",
-    "situacao": "Em execução",
-    "prioridade": "Média",
+    "situacao": "Concluído",
+    "prioridade": "Alta",
     "mvp": true,
     "iteracao": 6,
     "ordem": 2,
@@ -62,16 +75,29 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 2,
+      "cx": 2,
+      "cp": 2,
+      "justificativa": "Perfil de produtor sustenta oferta, divulgação e gestão; custo moderado de dados e validações.",
+      "evidencia": "docs/visao/historias/HU2.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [],
+    "responsavel": "Luccas Rodrigues e Pedro Agusto",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 3,
     "titulo": "Cadastrar usuário administrador",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
-    "ordem": 3,
+    "ordem": 5,
     "rf": "RF03",
     "rnfs": [
       "RNF03",
@@ -92,16 +118,31 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Conta administrativa é importante para governança, mas envolve regras de privilégio e segurança.",
+      "evidencia": "docs/visao/historias/HU3.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU09"
+    ],
+    "responsavel": "Ítalo Alves e Lucas Gabriel",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 4,
     "titulo": "Consultar usuários cadastrados",
-    "situacao": "Em execução",
-    "prioridade": "Alta",
+    "situacao": "Concluído",
+    "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
-    "ordem": 4,
+    "ordem": 6,
     "rf": "RF04",
     "rnfs": [
       "RNF03",
@@ -120,7 +161,25 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Consulta administrativa depende de autenticação e permissões, com cuidados de privacidade.",
+      "evidencia": "docs/visao/historias/HU4.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU01",
+      "HU02",
+      "HU03",
+      "HU09"
+    ],
+    "responsavel": "Pedro Luiz e Lucas Gabriel",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 5,
@@ -146,7 +205,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 6,
@@ -184,7 +246,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 7,
@@ -213,7 +278,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 8,
@@ -238,16 +306,19 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 9,
     "titulo": "Autenticar usuário",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 6,
-    "ordem": 5,
+    "ordem": 3,
     "rf": "RF09",
     "rnfs": [
       "RNF03",
@@ -264,16 +335,32 @@
     ],
     "oes": [
       "OE1"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Autenticação é pré-requisito dos fluxos privados; exige gestão de credenciais e segurança.",
+      "evidencia": "docs/visao/historias/HU9.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU01",
+      "HU02"
+    ],
+    "responsavel": "Pedro Luiz e Lucas Gabriel",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 10,
     "titulo": "Recuperar acesso à conta",
-    "situacao": "Em execução",
-    "prioridade": "Alta",
+    "situacao": "Concluído",
+    "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
-    "ordem": 6,
+    "ordem": 7,
     "rf": "RF10",
     "rnfs": [
       "RNF03",
@@ -289,7 +376,22 @@
     ],
     "oes": [
       "OE1"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Recuperação de acesso é complementar ao login, com requisitos de segurança e verificação.",
+      "evidencia": "docs/visao/historias/HU10.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU09"
+    ],
+    "responsavel": "Ítalo Alves e Pedro Augusto",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 11,
@@ -315,16 +417,19 @@
     ],
     "oes": [
       "OE1"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 12,
     "titulo": "Registrar trajetória do produtor",
-    "situacao": "Em execução",
-    "prioridade": "Baixa",
+    "situacao": "Concluído",
+    "prioridade": "Média",
     "mvp": true,
     "iteracao": 6,
-    "ordem": 7,
+    "ordem": 4,
     "rf": "RF12",
     "rnfs": [
       "RNF03",
@@ -346,7 +451,23 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 2,
+      "es": 2,
+      "cx": 2,
+      "cp": 1,
+      "justificativa": "História do produtor enriquece conteúdo, mas depende do cadastro e tem menor urgência relativa.",
+      "evidencia": "docs/visao/historias/HU12.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU02",
+      "HU09"
+    ],
+    "responsavel": "Ítalo Alves e Pedro Augusto",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 13,
@@ -374,16 +495,19 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 14,
     "titulo": "Consultar perfil de produtor",
-    "situacao": "Em execução",
-    "prioridade": "Alta",
+    "situacao": "Concluído",
+    "prioridade": "Média",
     "mvp": true,
-    "iteracao": 7,
-    "ordem": 8,
+    "iteracao": 8,
+    "ordem": 14,
     "rf": "RF14",
     "rnfs": [
       "RNF01",
@@ -404,16 +528,32 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 2,
+      "cx": 3,
+      "cp": 2,
+      "justificativa": "Consulta do perfil é relevante para descoberta, mas depende de perfil e trajetória cadastrados.",
+      "evidencia": "docs/visao/historias/HU14.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU02",
+      "HU12"
+    ],
+    "responsavel": "Luccas Rodrigues e Pedro Agusto",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 15,
     "titulo": "Cadastrar produto",
-    "situacao": "Em execução",
-    "prioridade": "Média",
+    "situacao": "Concluído",
+    "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 9,
+    "ordem": 8,
     "rf": "RF15",
     "rnfs": [
       "RNF03",
@@ -433,7 +573,23 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 3,
+      "cx": 3,
+      "cp": 2,
+      "justificativa": "Cadastro de produto é pré-requisito do catálogo; inclui validação de campos e associação ao produtor.",
+      "evidencia": "docs/visao/historias/HU15.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU02",
+      "HU09"
+    ],
+    "responsavel": "Ítalo Alves e Pedro Augusto",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 16,
@@ -462,7 +618,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 17,
@@ -489,7 +648,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 18,
@@ -515,16 +677,19 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 19,
     "titulo": "Consultar catálogo de produtos",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 10,
+    "ordem": 9,
     "rf": "RF19",
     "rnfs": [
       "RNF01",
@@ -543,16 +708,31 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 2,
+      "cx": 2,
+      "cp": 2,
+      "justificativa": "Consulta do catálogo entrega valor diretamente, com complexidade menor após o cadastro de produtos.",
+      "evidencia": "docs/visao/historias/HU19.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU15"
+    ],
+    "responsavel": "Pedro Luiz e Lucas Gabriel",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 20,
     "titulo": "Consultar detalhes do produto",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 11,
+    "ordem": 10,
     "rf": "RF20",
     "rnfs": [
       "RNF01",
@@ -572,16 +752,32 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 2,
+      "cx": 2,
+      "cp": 2,
+      "justificativa": "Detalhes de produto complementam catálogo existente e aproveitam sua fonte de dados.",
+      "evidencia": "docs/visao/historias/HU20.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU15",
+      "HU19"
+    ],
+    "responsavel": "Pedro Luiz e Lucas Gabriel",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 21,
     "titulo": "Cadastrar experiência",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
     "iteracao": 7,
-    "ordem": 12,
+    "ordem": 11,
     "rf": "RF21",
     "rnfs": [
       "RNF03",
@@ -601,7 +797,23 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Cadastro de experiências é essencial para pré-reserva, com regras e dados próprios.",
+      "evidencia": "docs/visao/historias/HU21.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU02",
+      "HU09"
+    ],
+    "responsavel": "Pedro Augusto e Lucas Gabriel",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 22,
@@ -630,7 +842,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 23,
@@ -656,16 +871,19 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 24,
     "titulo": "Consultar catálogo de experiências",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
-    "iteracao": 7,
-    "ordem": 13,
+    "iteracao": 8,
+    "ordem": 12,
     "rf": "RF24",
     "rnfs": [
       "RNF01",
@@ -684,7 +902,22 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 2,
+      "cx": 3,
+      "cp": 2,
+      "justificativa": "Catálogo de experiências reutiliza cadastros e permite descoberta das ofertas.",
+      "evidencia": "docs/visao/historias/HU24.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU21"
+    ],
+    "responsavel": "Pedro Augusto e Lucas Gabriel",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 25,
@@ -714,7 +947,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 26,
@@ -743,7 +979,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 27,
@@ -772,7 +1011,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 28,
@@ -799,7 +1041,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 29,
@@ -831,7 +1076,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 30,
@@ -863,7 +1111,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 31,
@@ -892,7 +1143,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 32,
@@ -917,7 +1171,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 33,
@@ -941,7 +1198,10 @@
     ],
     "oes": [
       "OE1"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 34,
@@ -966,7 +1226,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 35,
@@ -992,16 +1255,19 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 36,
     "titulo": "Buscar ofertas",
-    "situacao": "Em execução",
+    "situacao": "Concluído",
     "prioridade": "Alta",
     "mvp": true,
-    "iteracao": 7,
-    "ordem": 14,
+    "iteracao": 9,
+    "ordem": 13,
     "rf": "RF36",
     "rnfs": [
       "RNF01",
@@ -1020,7 +1286,26 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Busca de ofertas agrega produtos e experiências; integra índices, filtros e consultas.",
+      "evidencia": "docs/visao/historias/HU36.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU02",
+      "HU15",
+      "HU19",
+      "HU21",
+      "HU24"
+    ],
+    "responsavel": "Pedro Augusto e Lucas Gabriel",
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 37,
@@ -1048,7 +1333,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 38,
@@ -1079,7 +1367,10 @@
     ],
     "oes": [
       "OE2"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 39,
@@ -1106,7 +1397,23 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 2,
+      "cx": 2,
+      "cp": 1,
+      "justificativa": "Contato direto usa link externo do WhatsApp, não chat interno; exige consentimento explícito.",
+      "evidencia": "docs/visao/historias/HU39.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU02",
+      "HU14"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 40,
@@ -1134,7 +1441,10 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 41,
@@ -1161,7 +1471,10 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 42,
@@ -1188,7 +1501,10 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 43,
@@ -1215,15 +1531,18 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "dependencias": null,
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 44,
     "titulo": "Solicitar pré-reserva de experiência",
     "situacao": "Em execução",
-    "prioridade": "Alta",
+    "prioridade": "Média",
     "mvp": true,
-    "iteracao": 8,
+    "iteracao": 9,
     "ordem": 16,
     "rf": "RF44",
     "rnfs": [
@@ -1243,7 +1562,24 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 4,
+      "es": 4,
+      "cx": 4,
+      "cp": 4,
+      "justificativa": "Pré-reserva completa envolve validações, estados e vínculo entre usuário e experiência; custo alto.",
+      "evidencia": "docs/visao/historias/HU44.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU09",
+      "HU21",
+      "HU24"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 45,
@@ -1251,7 +1587,7 @@
     "situacao": "Em execução",
     "prioridade": "Alta",
     "mvp": true,
-    "iteracao": 8,
+    "iteracao": 9,
     "ordem": 17,
     "rf": "RF45",
     "rnfs": [
@@ -1269,15 +1605,30 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 2,
+      "cx": 2,
+      "cp": 2,
+      "justificativa": "Consulta de pré-reservas é necessária ao acompanhamento e depende do registro de solicitações.",
+      "evidencia": "docs/visao/historias/HU45.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU44"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 46,
     "titulo": "Cancelar pré-reserva",
     "situacao": "Em execução",
-    "prioridade": "Média",
+    "prioridade": "Alta",
     "mvp": true,
-    "iteracao": 8,
+    "iteracao": 9,
     "ordem": 18,
     "rf": "RF46",
     "rnfs": [
@@ -1296,7 +1647,23 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 2,
+      "cx": 2,
+      "cp": 2,
+      "justificativa": "Cancelamento de pré-reserva reutiliza dados de solicitação e exige validações de titularidade.",
+      "evidencia": "docs/visao/historias/HU46.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU44",
+      "HU45"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 47,
@@ -1304,7 +1671,7 @@
     "situacao": "Em execução",
     "prioridade": "Média",
     "mvp": true,
-    "iteracao": 8,
+    "iteracao": 9,
     "ordem": 19,
     "rf": "RF47",
     "rnfs": [
@@ -1323,7 +1690,23 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 2,
+      "cx": 3,
+      "cp": 2,
+      "justificativa": "Resposta do produtor à pré-reserva exige autorização e atualização de estado.",
+      "evidencia": "docs/visao/historias/HU47.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU02",
+      "HU44"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   },
   {
     "id": 48,
@@ -1331,7 +1714,7 @@
     "situacao": "Em execução",
     "prioridade": "Média",
     "mvp": true,
-    "iteracao": 8,
+    "iteracao": 9,
     "ordem": 20,
     "rf": "RF48",
     "rnfs": [
@@ -1349,6 +1732,22 @@
     ],
     "oes": [
       "OE3"
-    ]
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 3,
+      "cx": 3,
+      "cp": 3,
+      "justificativa": "Notificação de alteração depende dos estados da pré-reserva e requer integração adicional.",
+      "evidencia": "docs/visao/historias/HU48.md; docs/visao/requisitos_software.md; Issue #18",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU44",
+      "HU47"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
   }
 ]

@@ -4,15 +4,25 @@
 
 ## Descrição das Atividades Realizadas
 
-Durante a Iteração 6, já na fase de Construção do processo AUP, as atividades foram direcionadas à implementação gradual das funcionalidades definidas para o MVP da Rede Cafuringa, utilizando como referência os requisitos, as histórias de usuário e o protótipo elaborados nas iterações anteriores.
+A Iteração 6 integrou a fase de Construção do AUP e teve como foco o desenvolvimento dos recursos de gerenciamento de usuários e controle de acesso à plataforma Rede Cafuringa.
 
-Nesta etapa, a equipe concentrou seus esforços no desenvolvimento das funcionalidades planejadas, seguindo as especificações e os critérios de aceitação estabelecidos para cada história de usuário. As atividades envolveram a implementação das soluções, a verificação dos resultados obtidos e a avaliação do atendimento aos critérios definidos para considerar cada entrega concluída.
+Nesta etapa, foram trabalhadas funcionalidades essenciais para permitir que diferentes perfis utilizem a plataforma de acordo com suas necessidades. O desenvolvimento contemplou o cadastro de consumidores e produtores, a criação e consulta de usuários administradores, a autenticação de usuários, a recuperação de acesso às contas e o registro da trajetória dos produtores.
 
-Não foram necessárias alterações ou novos refinamentos nos requisitos durante essa iteração, uma vez que as especificações permaneceram adequadas às necessidades e ao escopo previamente estabelecidos. Assim, a equipe manteve o planejamento e as definições consolidadas nas etapas anteriores, direcionando os esforços à execução das atividades de desenvolvimento.
+As atividades foram organizadas em torno dos seguintes fluxos:
 
-Paralelamente, foram aplicados os critérios de Definition of Ready (DoR) e Definition of Done (DoD), utilizados como referências para verificar a prontidão das atividades e a conclusão das entregas. As histórias de usuário finalizadas tiveram seus respectivos critérios documentados, permitindo registrar as condições atendidas e fornecer evidências do progresso alcançado.
+- **Cadastro de consumidores:** desenvolvimento do fluxo de registro de novos consumidores, permitindo sua identificação como usuários da plataforma e o acesso às funcionalidades destinadas a esse perfil.
 
-Ao final da iteração, foram concluídas as entregas planejadas para o período, com suas respectivas verificações e registros de conclusão. Dessa forma, a Iteração 6 marcou o início efetivo da construção incremental da plataforma, mantendo a rastreabilidade entre os requisitos especificados e as funcionalidades desenvolvidas.
+- **Cadastro de produtores:** implementação do cadastro de produtores, contemplando a criação de perfis que representam os responsáveis pela oferta de produtos e experiências na Rede Cafuringa.
+
+- **Autenticação de usuários:** desenvolvimento do mecanismo de acesso à plataforma, permitindo que os usuários identificados realizem login em suas contas.
+
+- **Registro da trajetória do produtor:** desenvolvimento do recurso destinado ao registro das informações sobre a trajetória do produtor, contribuindo para apresentar sua história e fortalecer a identificação de sua atuação na rede.
+
+- **Gerenciamento de administradores:** implementação de funcionalidades para cadastrar usuários administradores e consultar os usuários registrados, apoiando a gestão e a organização dos acessos à plataforma.
+
+- **Recuperação de acesso:** desenvolvimento do fluxo para recuperação de acesso à conta, oferecendo uma alternativa ao usuário que não consegue entrar na plataforma.
+
+Essas funcionalidades representam uma etapa importante na construção da Rede Cafuringa, pois estabelecem os mecanismos necessários para identificação dos usuários, diferenciação dos perfis e gerenciamento dos acessos. Também preparam a plataforma para as demais funcionalidades que dependem da existência de contas e de informações cadastradas.
 
 ---
 
@@ -20,54 +30,21 @@ Ao final da iteração, foram concluídas as entregas planejadas para o período
 
 ### Verificação e Validação
 
-??? info "DoD e DoD"
-    Para está iteração foram finalizados as seguintes HU's e os respectivos DoD e DoD se encontram no final de cada página a seguir:
+??? info "Relação Entre Planejamento e Evidência"  
+    A lista a seguir é extraída das atribuições da fonte única de HUs; não é uma relação de itens aprovados no DoD.
 
-    <div class="hu-button-container">
-        <a href="/visao" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-    </div>
-    <div class="hu-button-container">
-        <a href="/visao" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-        <a href="/visao/historia_usuario/" class="hu-button">
-            <span>HU01</span>
-            <span class="hu-button-icon">→</span>
-        </a>
-    </div>
-    
+    | HU | Funcionalidade planejada | Situação da comprovação neste registro |
+    |---|---|---|
+    | [HU01](../historias/HU1.md) | Cadastrar perfil de consumidor | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+    | [HU02](../historias/HU2.md) | Cadastrar perfil de produtor | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+    | [HU09](../historias/HU9.md) | Autenticar usuário | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+    | [HU12](../historias/HU12.md) | Registrar trajetória do produtor | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+    | [HU03](../historias/HU3.md) | Cadastrar usuário administrador | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+    | [HU04](../historias/HU4.md) | Consultar usuários cadastrados | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+    | [HU10](../historias/HU10.md) | Recuperar acesso à conta | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+
+    Há [código, testes e implementação técnica](../arquitetura/backend/guia-estrutura-e-tdd.md) e [esteiras automatizadas](../arquitetura/engenharia/visao-geral.md) no repositório. Para afirmar a conclusão de cada HU, consulte os [PRs do projeto](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pulls?q=is%3Apr) e registre o link específico e o resultado do check correspondente.
+
 ### Organização e Atualização
 
 ??? info "Refinamento Iterativo de Requisitos"  
@@ -77,3 +54,4 @@ Ao final da iteração, foram concluídas as entregas planejadas para o período
 
 ## Vídeos Comprobatórios
 
+<iframe width="800" height="450" src="https://www.youtube.com/embed/Upym_cfxbUQ" title="Vídeo de Validação do Protótipo do MVP" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

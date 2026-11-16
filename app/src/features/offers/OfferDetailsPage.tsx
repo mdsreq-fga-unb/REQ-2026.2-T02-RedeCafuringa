@@ -6,9 +6,9 @@ import type { Offer } from "../../shared/types";
 type OfferDetailsPageProps = {
     offer: Offer;
     contactAvailable: boolean;
-    backPath?: string;
     onNavigate: (path: string) => void;
     onStartContact: () => void;
+    backPath?: string;
     backRoute?: string;
     catalogRoute?: string;
 };
@@ -16,9 +16,9 @@ type OfferDetailsPageProps = {
 export function OfferDetailsPage({
     offer,
     contactAvailable,
-    backPath = "/catalogo",
     onNavigate,
     onStartContact,
+    backPath,
     backRoute,
 }: OfferDetailsPageProps) {
     const photos = offer.images?.length ? offer.images : [offer.image];
@@ -27,7 +27,7 @@ export function OfferDetailsPage({
         <>
             <BackButton
                 label="Voltar"
-                onClick={() => onNavigate(backRoute ?? backPath)}
+                onClick={() => onNavigate(backRoute ?? backPath ?? "/catalogo")}
             />
             <section className="offer-page">
                 <h1>{offer.title}</h1>

@@ -25,7 +25,7 @@ Para viabilizar esse fluxo, o projeto utiliza as seguintes ferramentas e rotinas
 
 * **Microsoft Teams:** Ferramenta oficial para as videoconferências. A equipe de desenvolvimento realiza duas reuniões internas semanais para acompanhar o progresso e solucionar impedimentos. Nesses encontros, espera-se a participação de todos os integrantes da equipe, sempre que possível, sendo obrigatória a presença do monitor em pelo menos uma dessas reuniões.
 
-* **GitHub Projects:** Ferramenta oficial para gerenciar o quadro de projetos, centralizando a criação, priorização e movimentação das tarefas durante o desenvolvimento.
+* **GitHub Projects:** [Quadro de acompanhamento da equipe](https://github.com/orgs/mdsreq-fga-unb/projects/115) (sujeito às permissões de acesso), utilizado para consultar tarefas, estados e responsáveis. Dependências e impedimentos específicos devem estar nos itens correspondentes e vinculados ao [registro de execução do AUP](evidencias/marcos_aup.md).
 
 * **Reuniões de Revisão com o Cliente:** Ocorrem via Microsoft Teams a cada 7 ou 15 dias, conforme a necessidade e a disponibilidade do cliente. Durante as agendas, o cliente participa ativamente da revisão dos cartões concluídos, validação de funcionalidades, coleta de feedbacks e priorização do backlog. Espera-se a presença de todos os integrantes da equipe técnica, sempre que possível.
 
@@ -41,8 +41,6 @@ Para viabilizar esse fluxo, o projeto utiliza as seguintes ferramentas e rotinas
 O processo de validação não ocorre apenas na entrega final, ele acontece de forma contínua e precoce, com foco na entrega iterativa e incremental de um software funcional que agregue valor. Para garantir a qualidade de ponta a ponta e a rastreabilidade visual (uso de storyboards validados com usuários reais), o fluxo de trabalho é regido por políticas explícitas em diferentes estágios:
 
 * **Critérios de Puxada (Definition of Ready):** Ponto de comprometimento. Para que um cartão do GitHub Projects seja puxado para a etapa de desenvolvimento, os requisitos devem estar bem definidos, documentados e com critérios de aceitação previamente estabelecidos.
-
-* **Integração de Práticas Técnicas (TDD):** A equipe emprega validação por meio de testes de aceitação e aplica fortemente o Desenvolvimento Orientado a Testes (TDD), permitindo validar requisitos técnicos por testes automatizados antes da implementação completa.
 
 * **Critérios de Saída (Definition of Done):** Um cartão só avança para a etapa de entrega se cumprir as políticas de saída da engenharia. Isso exige que a funcionalidade seja aprovada em testes unitários e de integração, além de passar por uma revisão técnica e visual por parte da equipe.
 
