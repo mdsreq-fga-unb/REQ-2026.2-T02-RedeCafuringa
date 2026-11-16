@@ -303,6 +303,14 @@
     max-width: 680px;
     margin-inline: auto;
 }
+.producer-catalog .offer-list {
+    grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 700px) {
+    .producer-catalog .offer-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
 .explore-category > span:last-child,
 .explore-page,
 .public-trajectory-page,
