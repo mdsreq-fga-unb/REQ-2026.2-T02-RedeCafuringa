@@ -91,7 +91,11 @@ export function BottomNavigation({
                 onClick={() =>
                     onNavigate(
                         role === "producer"
-                            ? "/produtos/novo"
+                            ? ["/experiencias", "/experiencias/nova"].includes(
+                                  path,
+                              )
+                                ? "/experiencias/nova"
+                                : "/produtos/novo"
                             : role
                               ? "/reservas"
                               : "/escolher-perfil",
