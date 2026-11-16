@@ -30,7 +30,7 @@ it.each([
     [30, "minutos", "30 minutos"],
     [1, "horas", "1 hora"],
     [1, "minutos", "1 minuto"],
-])(
+])(catalogo
     "envia duração numérica %s com unidade %s",
     async (value, unit, expected) => {
         session();
@@ -121,17 +121,41 @@ it("conta de produtor desativada (404) preserva o formulário sem simular public
     ).toBeNull();
 });
 
-it("CA01: produtor abre cadastro pela área de gerenciamento", async () => {
+it("CA01: produtor abre cadastro pela área de gerenciamento e atualiza a rota para /experiencias/nova", async () => {
     session();
     mockExperienceApi();
     window.location.hash = "#/catalogo";
     render(<App />);
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Adicionar produto" }));
+    expect(window.location.hash).toBe("#/produtos/novo");
     await user.selectOptions(
         await screen.findByLabelText(/^Categoria/i),
         "Experiência",
     );
+    expect(window.location.hash).toBe("#/experiencias/nova");
+    expect(
+        await screen.findByRole("heading", {
+            name: "Divulgue uma experiência",
+        }),
+    ).toBeTruthy();
+    await user.selectOptions(
+        await screen.findByLabelText(/^Categoria/i),
+        "Produtos",
+    );
+    expect(window.location.hash).toBe("#/produtos/novo");
+});
+
+it("abre cadastro de experiência diretamente pela rota /experiencias/nova e pelo botão do catálogo", async () => {
+    session();
+    mockExperienceApi();
+    window.location.hash = "#/catalogo";
+    render(<App />);
+    const user = userEvent.setup();
+    await user.click(
+        screen.getByRole("button", { name: "Adicionar experiência" }),
+    );
+    expect(window.location.hash).toBe("#/experiencias/nova");
     expect(
         await screen.findByRole("heading", {
             name: "Divulgue uma experiência",

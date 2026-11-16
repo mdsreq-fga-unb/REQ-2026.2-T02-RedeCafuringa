@@ -148,6 +148,17 @@ export function ProductRegistrationPage({
     const formRef = useRef<HTMLFormElement>(null);
     const photoInput = useRef<HTMLInputElement>(null);
     const idempotencyKey = useRef(newIdempotencyKey());
+    const prevInitialCategory = useRef(initialCategory);
+
+    useEffect(() => {
+        if (prevInitialCategory.current !== initialCategory) {
+            prevInitialCategory.current = initialCategory;
+            setDraft((previous) => {
+                if (previous.categoria === initialCategory) return previous;
+                return { ...previous, categoria: initialCategory };
+            });
+        }
+    }, [initialCategory]);
 
     function update<K extends keyof OfferDraft>(key: K, value: OfferDraft[K]) {
         // Dados novos = cadastro novo; repetir sem editar reaproveita a chave (CA07).
@@ -157,6 +168,13 @@ export function ProductRegistrationPage({
             key === "categoria" ? {} : { ...previous, [key]: undefined },
         );
         setFailure("");
+        if (key === "categoria") {
+            if (value === "Experiência") {
+                onNavigate("/experiencias/nova");
+            } else if (value === "Produtos") {
+                onNavigate("/produtos/novo");
+            }
+        }
     }
 
     async function save(event: FormEvent<HTMLFormElement>) {

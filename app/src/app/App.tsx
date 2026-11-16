@@ -112,8 +112,13 @@ export function App() {
     useEffect(() => {
         if (path === "/oferta-publicada" && !published) navigate("/catalogo");
     }, [path, published, navigate]);
+    const isExperienceRegisterRoute = path === "/experiencias/nova";
+    const isOfferRegisterRoute = [
+        "/produtos/novo",
+        "/experiencias/nova",
+    ].includes(path);
     const productBlocked =
-        ["/produtos/novo", "/experiencias/nova"].includes(path) &&
+        isOfferRegisterRoute &&
         (role !== "producer" || !localStorage.getItem("cafuringa-token"));
     useEffect(() => {
         if (productBlocked) navigate(role ? "/conta" : "/login/producer");
@@ -342,27 +347,26 @@ export function App() {
                         }
                     />
                 )}
-                {["/produtos/novo", "/experiencias/nova"].includes(path) &&
-                    !productBlocked && (
-                        <ProductRegistrationPage
-                            key={path}
-                            initialCategory={
-                                path === "/experiencias/nova"
-                                    ? "Experiência"
-                                    : "Produtos"
-                            }
-                            onNavigate={navigate}
-                            onPublished={(product) => {
-                                setPublishedProducts((previous) => [
-                                    ...previous.filter(
-                                        (item) => item.id !== product.id,
-                                    ),
-                                    product,
-                                ]);
-                                navigate("/oferta-publicada");
-                            }}
-                        />
-                    )}
+                {isOfferRegisterRoute && !productBlocked && (
+                    <ProductRegistrationPage
+                        key="offer-registration"
+                        initialCategory={
+                            isExperienceRegisterRoute
+                                ? "Experiência"
+                                : "Produtos"
+                        }
+                        onNavigate={navigate}
+                        onPublished={(product) => {
+                            setPublishedProducts((previous) => [
+                                ...previous.filter(
+                                    (item) => item.id !== product.id,
+                                ),
+                                product,
+                            ]);
+                            navigate("/oferta-publicada");
+                        }}
+                    />
+                )}
                 {path === "/oferta-publicada" && published && (
                     <ProductPublishedPage
                         id={published.id}

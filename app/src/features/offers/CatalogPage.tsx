@@ -61,12 +61,20 @@ export function CatalogPage({
                         : "ofertas disponíveis"}
                 </p>
                 {canRegisterProduct && (
-                    <button
-                        className="product-submit"
-                        onClick={() => onNavigate("/produtos/novo")}
-                    >
-                        Adicionar produto
-                    </button>
+                    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1rem" }}>
+                        <button
+                            className="product-submit"
+                            onClick={() => onNavigate("/produtos/novo")}
+                        >
+                            Adicionar produto
+                        </button>
+                        <button
+                            className="product-submit"
+                            onClick={() => onNavigate("/experiencias/nova")}
+                        >
+                            Adicionar experiência
+                        </button>
+                    </div>
                 )}
                 {products.status === "loading" && !available.length && (
                     <p role="status">Carregando ofertas…</p>
