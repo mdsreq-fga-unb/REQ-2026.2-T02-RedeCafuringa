@@ -28,9 +28,11 @@ theme:
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/organizacao-requisitos.css
 extra_javascript:
   - javascript/extra.js
   - javascript/hu-filters.js
+  - javascript/hu-table.js
 
 nav:
   - Início: index.md
@@ -52,9 +54,9 @@ nav:
     - 14. Vídeo de Apresentação: visao/videos.md
 
   - Organização e Atualização:
-    - Rastreabilidade: organizacao_atualizacao/index.md
-    - Análise de Impacto: organizacao_atualizacao/rastreabilidade.md
-    - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
+      - Visão Geral: organizacao_atualizacao/index.md
+      - Rastreabilidade: organizacao_atualizacao/rastreabilidade.md
+      - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
 
   - AUP - Iterações:
     - Governança AUP e Evidências: visao/evidencias/marcos_aup.md
