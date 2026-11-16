@@ -63,7 +63,7 @@
 <div class="hu-card" data-priority-order="1" data-iteration="6" data-rf="RF01" data-rnfs="RNF03 RNF04 RNF05 RNF07 RNF08 RNF10 RNF11 RNF12 RNF15" data-regras="RN01 RN02 RN05 RN08" data-cps="CP1" data-oes="OE2" data-dependencias="" data-dependencias-status="nenhuma" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">1º</span>
@@ -81,7 +81,7 @@
 <div class="hu-card" data-priority-order="2" data-iteration="6" data-rf="RF02" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF11 RNF15" data-regras="RN01 RN02 RN05 RN07 RN08 RN09" data-cps="CP1" data-oes="OE2" data-dependencias="" data-dependencias-status="nenhuma" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">2º</span>
@@ -99,7 +99,7 @@
 <div class="hu-card" data-priority-order="3" data-iteration="6" data-rf="RF09" data-rnfs="RNF03 RNF08 RNF10 RNF11" data-regras="RN01 RN05" data-cps="CP1" data-oes="OE1" data-dependencias="HU01 HU02" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">3º</span>
@@ -117,7 +117,7 @@
 <div class="hu-card" data-priority-order="4" data-iteration="6" data-rf="RF12" data-rnfs="RNF03 RNF04 RNF05 RNF07 RNF08 RNF10 RNF11" data-regras="RN01 RN02 RN07 RN09" data-cps="CP1" data-oes="OE2" data-dependencias="HU02 HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">4º</span>
@@ -135,7 +135,7 @@
 <div class="hu-card" data-priority-order="5" data-iteration="6" data-rf="RF03" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF10 RNF11 RNF12" data-regras="RN01 RN03 RN05" data-cps="CP1" data-oes="OE2" data-dependencias="HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">5º</span>
@@ -153,7 +153,7 @@
 <div class="hu-card" data-priority-order="6" data-iteration="6" data-rf="RF04" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF11 RNF12" data-regras="RN01 RN03" data-cps="CP1" data-oes="OE2" data-dependencias="HU01 HU02 HU03 HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">6º</span>
@@ -171,7 +171,7 @@
 <div class="hu-card" data-priority-order="7" data-iteration="6" data-rf="RF10" data-rnfs="RNF03 RNF08 RNF10 RNF11" data-regras="RN05" data-cps="CP1" data-oes="OE1" data-dependencias="HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 6">7º</span>
@@ -189,7 +189,7 @@
 <div class="hu-card" data-priority-order="8" data-iteration="7" data-rf="RF15" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF15" data-regras="RN01 RN02 RN09 RN11" data-cps="CP2" data-oes="OE2" data-dependencias="HU02 HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">8º</span>
@@ -207,7 +207,7 @@
 <div class="hu-card" data-priority-order="9" data-iteration="7" data-rf="RF19" data-rnfs="RNF01 RNF02 RNF04 RNF05 RNF06 RNF10" data-regras="RN10 RN15" data-cps="CP2" data-oes="OE2" data-dependencias="HU15" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">9º</span>
@@ -225,7 +225,7 @@
 <div class="hu-card" data-priority-order="10" data-iteration="7" data-rf="RF20" data-rnfs="RNF01 RNF02 RNF04 RNF05 RNF06 RNF10 RNF11" data-regras="RN09 RN11" data-cps="CP2" data-oes="OE2" data-dependencias="HU15 HU19" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">10º</span>
@@ -243,7 +243,7 @@
 <div class="hu-card" data-priority-order="11" data-iteration="7" data-rf="RF21" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF15" data-regras="RN01 RN02 RN09 RN11" data-cps="CP3" data-oes="OE2" data-dependencias="HU02 HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
       <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">11º</span>
@@ -258,14 +258,14 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="12" data-iteration="7" data-rf="RF24" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF06 RNF15" data-regras="RN10 RN15" data-cps="CP3" data-oes="OE2" data-dependencias="HU21" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="12" data-iteration="8" data-rf="RF24" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF06 RNF15" data-regras="RN10 RN15" data-cps="CP3" data-oes="OE2" data-dependencias="HU21" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
-      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">12º</span>
-      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao7/" title="Ver evidências da Iteração 7">Iteração 7</a>
+      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">12º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
     </div>
     <h3><a class="hu-card-title-link" href="../historias/HU24/">HU24 — Consultar catálogo de experiências</a></h3>
     <div class="hu-card-planning">
@@ -276,14 +276,14 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="13" data-iteration="7" data-rf="RF36" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF05 RNF06 RNF12" data-regras="RN15" data-cps="CP4" data-oes="OE2" data-dependencias="HU02 HU15 HU19 HU21 HU24" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="13" data-iteration="9" data-rf="RF36" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF05 RNF06 RNF12" data-regras="RN15" data-cps="CP4" data-oes="OE2" data-dependencias="HU02 HU15 HU19 HU21 HU24" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
-      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">13º</span>
-      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao7/" title="Ver evidências da Iteração 7">Iteração 7</a>
+      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 9">13º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao9/" title="Ver evidências da Iteração 9">Iteração 9</a>
     </div>
     <h3><a class="hu-card-title-link" href="../historias/HU36/">HU36 — Buscar ofertas</a></h3>
     <div class="hu-card-planning">
@@ -294,14 +294,14 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="14" data-iteration="7" data-rf="RF14" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF06 RNF11" data-regras="RN07 RN09 RN11 RN16" data-cps="CP1" data-oes="OE2" data-dependencias="HU02 HU12" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="14" data-iteration="8" data-rf="RF14" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF06 RNF11" data-regras="RN07 RN09 RN11 RN16" data-cps="CP1" data-oes="OE2" data-dependencias="HU02 HU12" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
-      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-planejada">Concluído</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
-      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 7">14º</span>
-      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao7/" title="Ver evidências da Iteração 7">Iteração 7</a>
+      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">14º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
     </div>
     <h3><a class="hu-card-title-link" href="../historias/HU14/">HU14 — Consultar perfil de produtor</a></h3>
     <div class="hu-card-planning">
@@ -330,14 +330,14 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="16" data-iteration="8" data-rf="RF44" data-rnfs="RNF03 RNF04 RNF05 RNF07 RNF08 RNF10 RNF11" data-regras="RN19" data-cps="CP6" data-oes="OE3" data-dependencias="HU09 HU21 HU24" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="16" data-iteration="9" data-rf="RF44" data-rnfs="RNF03 RNF04 RNF05 RNF07 RNF08 RNF10 RNF11" data-regras="RN19" data-cps="CP6" data-oes="OE3" data-dependencias="HU09 HU21 HU24" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
-      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">16º</span>
-      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
+      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 9">16º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao9/" title="Ver evidências da Iteração 9">Iteração 9</a>
     </div>
     <h3><a class="hu-card-title-link" href="../historias/HU44/">HU44 — Solicitar pré-reserva de experiência</a></h3>
     <div class="hu-card-planning">
@@ -348,14 +348,14 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="17" data-iteration="8" data-rf="RF45" data-rnfs="RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN20" data-cps="CP6" data-oes="OE3" data-dependencias="HU44" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="17" data-iteration="9" data-rf="RF45" data-rnfs="RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN20" data-cps="CP6" data-oes="OE3" data-dependencias="HU44" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
-      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">17º</span>
-      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
+      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 9">17º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao9/" title="Ver evidências da Iteração 9">Iteração 9</a>
     </div>
     <h3><a class="hu-card-title-link" href="../historias/HU45/">HU45 — Consultar pré-reserva</a></h3>
     <div class="hu-card-planning">
@@ -366,14 +366,14 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="18" data-iteration="8" data-rf="RF46" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN21" data-cps="CP6" data-oes="OE3" data-dependencias="HU44 HU45" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="18" data-iteration="9" data-rf="RF46" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN21" data-cps="CP6" data-oes="OE3" data-dependencias="HU44 HU45" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Alta</span>
-      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">18º</span>
-      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
+      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 9">18º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao9/" title="Ver evidências da Iteração 9">Iteração 9</a>
     </div>
     <h3><a class="hu-card-title-link" href="../historias/HU46/">HU46 — Cancelar pré-reserva</a></h3>
     <div class="hu-card-planning">
@@ -384,14 +384,14 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="19" data-iteration="8" data-rf="RF47" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN22" data-cps="CP6" data-oes="OE3" data-dependencias="HU02 HU44" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="19" data-iteration="9" data-rf="RF47" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN22" data-cps="CP6" data-oes="OE3" data-dependencias="HU02 HU44" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
-      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">19º</span>
-      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
+      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 9">19º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao9/" title="Ver evidências da Iteração 9">Iteração 9</a>
     </div>
     <h3><a class="hu-card-title-link" href="../historias/HU47/">HU47 — Responder pré-reserva de experiência</a></h3>
     <div class="hu-card-planning">
@@ -402,14 +402,14 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="20" data-iteration="8" data-rf="RF48" data-rnfs="RNF03 RNF05 RNF10 RNF11 RNF12" data-regras="RN22" data-cps="CP6" data-oes="OE3" data-dependencias="HU44 HU47" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="20" data-iteration="9" data-rf="RF48" data-rnfs="RNF03 RNF05 RNF10 RNF11 RNF12" data-regras="RN22" data-cps="CP6" data-oes="OE3" data-dependencias="HU44 HU47" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
       <span class="hu-status hu-status-mvp">MVP</span>
       <span class="hu-status hu-status-prioridade">Média</span>
-      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 8">20º</span>
-      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao8/" title="Ver evidências da Iteração 8">Iteração 8</a>
+      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 9">20º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao9/" title="Ver evidências da Iteração 9">Iteração 9</a>
     </div>
     <h3><a class="hu-card-title-link" href="../historias/HU48/">HU48 — Notificar alteração de pré-reserva</a></h3>
     <div class="hu-card-planning">

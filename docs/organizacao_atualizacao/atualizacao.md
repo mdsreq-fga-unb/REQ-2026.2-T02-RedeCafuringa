@@ -4,7 +4,7 @@
 
 A proposta de atualização segue a abordagem híbrida e iterativa descrita nas [Estratégias de Engenharia de Software](../visao/estrategias.md): acolher mudanças, avaliar impactos, decidir o que passa a valer e atualizar os registros relacionados, preservando o histórico necessário.
 
-## Fluxo de tratamento de mudanças
+## Fluxo de Tratamento de Mudanças
 
 <div class="orc-flow" aria-label="Processo de atualização de requisitos">
   <div><span>01</span><strong>Identificar</strong><p>Feedback do cliente, teste, revisão ou nova demanda.</p></div>
@@ -14,7 +14,7 @@ A proposta de atualização segue a abordagem híbrida e iterativa descrita nas 
   <div><span>05</span><strong>Comunicar</strong><p>Revisar por PR, informar envolvidos e vincular evidências.</p></div>
 </div>
 
-## Fonte única de metadados e atualização automática
+## Fonte Única de Metadados e Atualização Automática
 
 A sincronização estruturada **já está implementada** com uma fonte central e visões derivadas. Há **três fontes por responsabilidade**, em vez de copiar as mesmas informações em várias tabelas:
 
@@ -26,7 +26,7 @@ A sincronização estruturada **já está implementada** com uma fonte central e
 
 **Não edite manualmente as tags dos cards, as linhas derivadas do MVP, as atribuições do cronograma nem o bloco de identificação gerado nas HUs.** Eles são apenas apresentações dos metadados mantidos em `historias.json`.
 
-### Como realizar uma atualização
+### Como Realizar uma Atualização
 
 1. Identifique a HU e registre a mudança em issue ou PR, com justificativa e pessoas envolvidas.
 2. Altere **uma vez** os atributos em `docs/data/historias.json` (ex.: `iteracao`, `prioridade`, `rnfs`). Se mudar a declaração de RF ou os critérios da HU, edite também **a fonte textual própria daquele conteúdo**.
@@ -36,13 +36,13 @@ A sincronização estruturada **já está implementada** com uma fonte central e
 
 Uma alteração em um **atributo central** aparece automaticamente nas demais visões; **não** se trata de edição direta pelo navegador do Pages, que é um site estático. Trechos narrativos, protótipos e testes que sofram impacto continuam exigindo revisão humana — o gerador não presume decisões ou aprovações.
 
-### Garantias de integridade
+### Garantias de Integridade
 
 O validador bloqueia IDs duplicados, RF incoerente com a HU, 48 registros incompletos, ordens repetidas, atribuições de iteração a HUs fora do MVP e dados estruturados inválidos. A integração não substitui a validação de conteúdo com a equipe e o cliente.
 
 ---
 
-## Histórico da repriorização do MVP — Issue #18
+## Histórico da Repriorização do MVP — Issue #18
 
 **Data do registro:** 13/11/2026. **Natureza:** proposta técnica de reavaliação para revisão da equipe e do cliente; não constitui aceite formal.
 
@@ -74,7 +74,7 @@ A nova **ordem de implementação** primeiro respeita as iterações 6, 7 e 8 e 
 | 19º | [HU47](../visao/historias/HU47.md) — Responder pré-reserva de experiência | Média | 19º | Média | 2.83 |
 | 20º | [HU48](../visao/historias/HU48.md) — Notificar alteração de pré-reserva | Média | 20º | Média | 2.50 |
 
-### Notas técnicas propostas e fundamentos
+### Notas Técnicas Propostas e Fundamentos
 
 | HU | VN | ES | CX | CP | ET | Justificativa técnica / fonte de inspeção |
 |---|---:|---:|---:|---:|---:|---|
@@ -102,7 +102,7 @@ A nova **ordem de implementação** primeiro respeita as iterações 6, 7 e 8 e 
 **Contagem histórica:** Alta 12; Média 7; Baixa 1. **Contagem revisada:** Alta 12; Média 8; Baixa 0.
 
 ---
-## Pontos de controle ao longo do AUP
+## Pontos de Controle ao Longo do AUP
 
 | Momento | Conferência | Registros de apoio |
 |---|---|---|
@@ -111,7 +111,7 @@ A nova **ordem de implementação** primeiro respeita as iterações 6, 7 e 8 e 
 | Revisão da iteração | Critérios, resultados, feedback e pendências (DoD) | [Evidências das iterações](../visao/cronograma.md) |
 | Fechamento | Entregas, itens adiados/retirados e versão identificável | [Histórico de revisão](../index.md#historico-de-revisao) e repositório |
 
-## Modelo para registrar uma mudança
+## Modelo para Registrar uma Mudança
 
 > Este é um modelo para uso em uma issue ou registro de decisão. Não representa uma mudança aprovada ou já executada.
 
@@ -129,11 +129,11 @@ A nova **ordem de implementação** primeiro respeita as iterações 6, 7 e 8 e 
 ---
 
 <!-- ISSUE_17_BACKLOG_INICIO -->
-## Gestão de dependências e limites operacionais do Backlog — Issue #17
+## Gestão de Dependências e Limites Operacionais do Backlog — Issue #17
 
 > **Registro de revisão técnica:** 13/11/2026. Os vínculos são uma **proposta de precedência para integração e testes** e aguardam validação da equipe. A situação exibida no Backlog é a situação documental registrada, não prova de conclusão de código. Os responsáveis ainda não designados permanecem **A definir**. A revisão das 48 HUs foi atribuída à **Equipe ByteLab**, conforme decisão da equipe; dependências propostas ainda requerem validação.
 
-### Encadeamento de entregas
+### Encadeamento de Entregas
 
 - **Iteração 6 — identidade e base dos perfis:** cadastros de consumidor/produtor (HU01/HU02), autenticação (HU09), trajetória do produtor (HU12), cadastro administrativo (HU03), consulta administrativa (HU04) e recuperação de acesso (HU10). Para testar autenticação de ambos os perfis, é necessária base de cadastros reais ou massa de teste controlada; a precedência documenta a integração, sem afirmar que toda implementação depende de telas prontas.
 - **Iteração 7 — oferta e descoberta:** cadastrar produtos/experiências (HU15/HU21) antes de consultá-los (HU19/HU20/HU24); a busca (HU36) integra dados de produtores, produtos e experiências. O perfil público (HU14) requer produtor e trajetória. O escopo de eventos é posterior à primeira entrega.
@@ -141,11 +141,11 @@ A nova **ordem de implementação** primeiro respeita as iterações 6, 7 e 8 e 
 
 A ordem de execução já fixada na Issue #18 **não foi alterada por esta revisão**. O Backlog passa a apresentar os vínculos de dependência por HU e os campos de gestão. HUs fora do MVP exibem **dependências a mapear** até seu refinamento.
 
-### Ajuste do registro da Iteração 5
+### Ajuste do Registro da Iteração 5
 
 O apontamento da Issue #17 descreve uma **versão histórica** na qual a Iteração 5 selecionava HUs identificadas como HU15, HU04, HU05, HU08, HU09 e HU10. A numeração e o escopo das histórias foram posteriormente reorganizados: hoje HU15 significa **Cadastrar produto** e HU39 significa **Contato direto**. Conforme [registro existente da Iteração 5](../visao/evidencias/iteracao5.md), houve impedimento de aprovação de protótipo e a equipe não avançou significativamente na implementação. O [cronograma vigente](../visao/cronograma.md) mantém a Iteração 5 sem HUs atribuídas e distribui as 20 HUs do MVP entre as Iterações 6, 7 e 8. Isso registra a mudança sem atribuir entregas inexistentes.
 
-### Alternativa operacional para correção, exclusão e moderação
+### Alternativa Operacional para Correção, Exclusão e Moderação
 
 Enquanto as histórias específicas de atualizar/excluir conteúdo e de moderação (como HU16, HU17, HU22, HU23 e HU07) estiverem fora do MVP, propõe-se o seguinte **procedimento manual assistido**, a ser aprovado pela equipe e cliente **antes do uso em produção**:
 
@@ -157,7 +157,7 @@ Enquanto as histórias específicas de atualizar/excluir conteúdo e de moderaç
 
 **Pendências explícitas:** escolher canal oficial e equipe autorizada, testar o mecanismo seguro de ocultação e obter aprovação do Product Owner. Este texto documenta a **alternativa proposta**, não atesta uma capacidade já implementada ou aprovada.
 
-### Recorte da busca RF36 / HU36
+### Recorte da Busca RF36 / HU36
 
 O RF36 descreve o escopo completo (produtores, produtos, experiências **e eventos**). A entrega inicial da HU36 no MVP abrange **produtores, produtos e experiências** existentes. Eventos ficam para uma versão posterior, dependentes do cadastro e catálogo correspondentes fora do MVP. Essa é uma **proposta de delimitação da entrega**, a validar antes de considerá-la acordada com o cliente.
 

@@ -42,8 +42,6 @@ O processo de validação não ocorre apenas na entrega final, ele acontece de f
 
 * **Critérios de Puxada (Definition of Ready):** Ponto de comprometimento. Para que um cartão do GitHub Projects seja puxado para a etapa de desenvolvimento, os requisitos devem estar bem definidos, documentados e com critérios de aceitação previamente estabelecidos.
 
-* **Integração de Práticas Técnicas (TDD):** A equipe emprega validação por meio de testes de aceitação e aplica fortemente o Desenvolvimento Orientado a Testes (TDD), permitindo validar requisitos técnicos por testes automatizados antes da implementação completa.
-
 * **Critérios de Saída (Definition of Done):** Um cartão só avança para a etapa de entrega se cumprir as políticas de saída da engenharia. Isso exige que a funcionalidade seja aprovada em testes unitários e de integração, além de passar por uma revisão técnica e visual por parte da equipe.
 
 * **Homologação pelo Cliente (UAT) e Feedback Rápido:** Na etapa final, o produto é disponibilizado ao cliente para testes de aceitação diretos. O feedback coletado é imediatamente incorporado nas iterações seguintes, permitindo ajustes constantes no produto e garantindo total coerência com a visão de uso inicial.

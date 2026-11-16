@@ -201,7 +201,7 @@ A seção 5.1 classifica a **natureza** das atividades; a seção 5.2 resume as 
 
     #### Preparação e Revisão dos Cenários de Aceitação
 
-    - **Descrição:** Rever os critérios das HUs e preparar cenários que sustentem os testes de aceitação. **TDD é prática de implementação e teste do software, apoiada por esses critérios, não uma técnica de elicitação de ER nem atividade exclusiva da Transição.**
+    - **Descrição:** Rever os critérios das HUs e preparar cenários que sustentem os testes de aceitação.
     - **Entradas:** Versão candidata, HUs e critérios vigentes.
     - **Saídas:** Cenários de aceitação e registro de dúvidas a resolver, quando efetivamente produzidos.
     - **Participantes:** Equipe de requisitos, desenvolvedores, testadores e cliente na validação.

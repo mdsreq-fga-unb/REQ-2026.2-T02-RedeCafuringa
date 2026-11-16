@@ -2,12 +2,21 @@
 
 [Voltar para o Cronograma](../cronograma.md)
 
-
 ## Descrição das Atividades Realizadas
 
-A **Iteração 8** integra a fase de Construção do AUP e possui histórias planejadas no [cronograma](../cronograma.md). O repositório contém implementações, documentação técnica e testes para determinados fluxos; contudo, **a existência de código, de checklists ou de uma HU no cronograma não comprova, por si só, que todas as entregas da iteração foram concluídas e aceitas**.
+A **Iteração 8** integrou a fase de Construção do AUP e teve como foco o desenvolvimento de funcionalidades voltadas à consulta de experiências, à busca por ofertas e à visualização dos perfis dos produtores cadastrados na Rede Cafuringa.
 
-A conferência de conclusão deve relacionar cada HU ao PR/commit integrado, à execução de testes e do CI, à revisão e à decisão de aceite. Quando o vínculo individual ainda não estiver registrado, a situação permanece **não comprovada documentalmente**, sem invalidar implementações que possam existir. Consulte a [matriz de execução do AUP](marcos_aup.md) para localizar as fontes e pendências.
+Nesta etapa, foram trabalhados recursos que facilitam a descoberta do que é oferecido na plataforma e permitem que os usuários conheçam melhor os produtores responsáveis pelos produtos e experiências divulgados. O desenvolvimento contemplou a consulta ao catálogo de experiências, a busca por ofertas disponíveis e a consulta aos perfis dos produtores.
+
+As atividades foram organizadas em torno dos seguintes fluxos:
+
+- **Consulta ao catálogo de experiências:** desenvolvimento da funcionalidade que permite aos usuários visualizar as experiências cadastradas na plataforma, conhecendo as atividades oferecidas pelos produtores e comunidades participantes.
+- **Busca por ofertas:** implementação de um mecanismo de busca que facilita a localização de produtos e experiências disponibilizados na Rede Cafuringa, tornando a navegação mais prática e ajudando os usuários a encontrar ofertas de seu interesse.
+- **Consulta ao perfil do produtor:** desenvolvimento da visualização dos perfis dos produtores, permitindo que os usuários acessem informações sobre quem está por trás dos produtos e experiências apresentados na plataforma.
+
+Essas funcionalidades complementam os recursos desenvolvidos nas iterações anteriores. Enquanto as etapas anteriores estabeleceram os cadastros de produtos, produtores e experiências, esta iteração avançou na disponibilização dessas informações para consulta e descoberta pelos usuários.
+
+Com isso, a plataforma evolui como um ambiente de aproximação entre consumidores e produtores locais, facilitando o acesso às ofertas da região, ampliando a visibilidade dos participantes da Rede Cafuringa e contribuindo para a divulgação da produção e das experiências locais.
 
 ---
 
@@ -15,26 +24,28 @@ A conferência de conclusão deve relacionar cada HU ao PR/commit integrado, à 
 
 ### Verificação e Validação
 
-**Relação entre planejamento e evidência:** a lista a seguir é extraída das atribuições da fonte única de HUs; **não é uma relação de itens aprovados no DoD**.
+??? info "Funcionalidades Desenvolvidas na Iteração"
 
-| HU | Funcionalidade planejada | Situação da comprovação neste registro |
-|---|---|---|
-| [HU39](../historias/HU39.md) | Disponibilizar contato direto | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU44](../historias/HU44.md) | Solicitar pré-reserva de experiência | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU45](../historias/HU45.md) | Consultar pré-reserva | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU46](../historias/HU46.md) | Cancelar pré-reserva | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU47](../historias/HU47.md) | Responder pré-reserva de experiência | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
-| [HU48](../historias/HU48.md) | Notificar alteração de pré-reserva | Planejada nesta iteração; comprovação individual de entrega a vincular ao PR, teste e revisão. |
+    A tabela relaciona as funcionalidades trabalhadas nesta etapa às respectivas histórias de usuário.
 
-Há [código, testes e implementação técnica](../arquitetura/backend/guia-estrutura-e-tdd.md) e [esteiras automatizadas](../arquitetura/engenharia/visao-geral.md) no repositório. Para afirmar a conclusão de cada HU, consulte os [PRs do projeto](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pulls?q=is%3Apr) e registre o link específico e o resultado do check correspondente.
+    | HU | Funcionalidade | Descrição |
+    |---|---|---|
+    | [HU24](../historias/HU24.md) | Consultar catálogo de experiências | Visualização das experiências cadastradas e oferecidas na Rede Cafuringa. |
+    | [HU36](../historias/HU36.md) | Buscar ofertas | Busca por ofertas disponibilizadas na plataforma, facilitando sua localização pelos usuários. |
+    | [HU14](../historias/HU14.md) | Consultar perfil de produtor | Acesso às informações dos produtores cadastrados na plataforma. |
+
+    O desenvolvimento dessas funcionalidades também contou com a estrutura técnica e as orientações descritas no [Guia do Backend — Estrutura de pastas e TDD](../arquitetura/backend/guia-estrutura-e-tdd.md). As práticas de integração e validação do projeto estão documentadas na [Visão Geral de Engenharia](../arquitetura/engenharia/visao-geral.md).
 
 ### Organização e Atualização
 
-??? info "Refinamento Iterativo de Requisitos"  
-    Não foi preciso refinar os requisitos nessa etapa, pois permaneceram os mesmos.
+??? info "Revisão e Refinamento dos Requisitos"
+
+    Durante a Iteração 8, não foram identificadas necessidades de alteração nos requisitos definidos para as funcionalidades planejadas. Dessa forma, as histórias de usuário e seus critérios foram mantidos, concentrando-se o trabalho no desenvolvimento dos fluxos previstos.
 
 ---
 
 ## Vídeos Comprobatórios
+
+O vídeo a seguir registra uma reunião de alinhamento do grupo, documentando as atividades de comunicação e organização entre os integrantes durante o desenvolvimento do projeto.
 
 <iframe width="800" height="450" src="https://www.youtube.com/embed/SVerI_gHiyw" title="Reunião de alinhamento do Grupo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

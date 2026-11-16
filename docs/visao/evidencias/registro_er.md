@@ -2,7 +2,7 @@
 
 <span class="version-badge">Unidade 03 · Issue #11</span>
 
-## 1. Eventos e resultados identificáveis
+## 1. Eventos e Resultados Identificáveis
 
 | Data / atividade | Participantes identificáveis | Informação registrada | Decisão ou resultado verificável | Limite da evidência |
 |---|---|---|---|---|
@@ -18,7 +18,7 @@
 | Apresentação do protótipo da Iteração 4 | Equipe; validação individual do cliente a comprovar | Demonstração visual dos fluxos | Protótipo apresentado | Não é relatório de testes com usuários nem aceite formal. [Vídeo](https://www.youtube.com/watch?v=DCNR_vjC-uk) |
 
 
-## 2. Técnicas planejadas e lacunas
+## 2. Técnicas Planejadas e Lacunas
 
 | Técnica | O que está disponível | Evidência ainda necessária |
 |---|---|---|
@@ -30,7 +30,7 @@
 | Aceite dos comportamentos do MVP | Vídeos/reuniões e acordos de escopo | Decisões por fluxo ou critério, cliente responsável, data, versão e ressalvas |
 
 
-## 3. Modelo de consolidação dos feedbacks
+## 3. Modelo de Consolidação dos Feedbacks
 
 Preencher cada linha a partir de reunião, vídeo, mensagem ou PR comprovável, sem presumir decisões:
 
