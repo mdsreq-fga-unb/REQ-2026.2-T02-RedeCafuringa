@@ -30,7 +30,7 @@ Esta seção apresenta como a equipe **ByteLab** organiza, consulta, acompanha e
     Os atributos estruturados das HUs são mantidos em `docs/data/historias.json`. O Backlog, a Tabela, as identificações das HUs, o MVP e o cronograma são **visões geradas** automaticamente no build; não há outra lista editável desses atributos.
 
 
-## Estrutura de rastreabilidade
+## Estrutura de Rastreabilidade
 
 A árvore abaixo é **navegável**: selecione qualquer caixa para abrir a documentação correspondente. As setas expressam um percurso de consulta e **não afirmam que todos os vínculos individuais estejam completos**.
 
@@ -90,7 +90,7 @@ A árvore abaixo é **navegável**: selecione qualquer caixa para abrir a docume
   </div>
 </div>
 
-## Responsabilidade de cada fonte
+## Responsabilidade de Cada Fonte
 
 <div class="orc-source-list">
   <div><strong>Visão do produto</strong><p><a href="../visao/solucao/">Objetivos e características</a> que explicam a origem e a finalidade.</p></div>
@@ -99,7 +99,7 @@ A árvore abaixo é **navegável**: selecione qualquer caixa para abrir a docume
   <div><strong>Decisões e evidências</strong><p><a href="../visao/cronograma/">Iterações</a>, <a href="../#historico-de-revisao">histórico</a> e <a href="atualizacao/">registro de mudanças</a>.</p></div>
 </div>
 
-## Como verificar na prática
+## Como Verificar na Prática
 
 Uma forma de avaliar a organização é abrir a <a href="../visao/historias/HU1/">HU01</a>, seguir o RF e a origem, consultar os critérios na página da história e verificar o planejamento correspondente. Para examinar impactos, use o <a href="atualizacao/#modelo-para-registrar-uma-mudanca">modelo de mudança</a> e verifique se a decisão alcançou os artefatos afetados.
 

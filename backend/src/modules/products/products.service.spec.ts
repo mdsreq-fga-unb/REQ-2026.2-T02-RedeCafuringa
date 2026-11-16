@@ -226,6 +226,63 @@ describe('ProductsService (HU15/RF15)', () => {
     });
   });
 
+  describe('HU20 — responsável pela oferta (CA03, CA05, RN09, RN11)', () => {
+    const conta = {
+      nomeIniciativa: 'Apiário Cafuringa',
+      localidade: 'Fazenda Cafuringa',
+      nome: 'João da Silva',
+      email: 'joao@exemplo.com',
+      telefone: '61999990000',
+      cpfHash: 'hash',
+    };
+
+    it('detalhe traz a localidade e só os dados públicos do produtor', async () => {
+      const { service, products, users } = setup();
+      products.findOne.mockReturnValue(query(productDoc()));
+      users.findOne.mockReturnValue(query(conta));
+
+      const res = await service.getPublic(new Types.ObjectId().toHexString());
+
+      expect(res.produtor).toEqual({
+        id: producerId.toHexString(),
+        nomeIniciativa: 'Apiário Cafuringa',
+        localidade: 'Fazenda Cafuringa',
+      });
+    });
+
+    it('produtor sem localidade não traz o campo', async () => {
+      const { service, products, users } = setup();
+      products.findOne.mockReturnValue(query(productDoc()));
+      users.findOne.mockReturnValue(query({ nomeIniciativa: 'Horta' }));
+
+      const res = await service.getPublic(new Types.ObjectId().toHexString());
+
+      expect(res.produtor).not.toHaveProperty('localidade');
+    });
+
+    it('catálogo busca e devolve a localidade do responsável', async () => {
+      const { service, products } = setup();
+      const doc = { ...productDoc(), responsavel: conta };
+      products.aggregate.mockReturnValue({
+        exec: vi.fn().mockResolvedValue([{ itens: [doc], total: [{ n: 1 }] }]),
+      });
+
+      const res = await service.list({});
+
+      const pipeline: Array<Record<string, { pipeline?: unknown[] }>> =
+        products.aggregate.mock.calls[0][0];
+      const lookup = pipeline.find((s) => s.$lookup)?.$lookup;
+      expect(lookup?.pipeline).toContainEqual({
+        $project: { _id: 0, nomeIniciativa: 1, localidade: 1 },
+      });
+      expect(res.itens[0].produtor).toEqual({
+        id: producerId.toHexString(),
+        nomeIniciativa: 'Apiário Cafuringa',
+        localidade: 'Fazenda Cafuringa',
+      });
+    });
+  });
+
   describe('getPublicPhoto', () => {
     it('404 para foto que não faz parte do produto', async () => {
       const { service, products, gallery } = setup();

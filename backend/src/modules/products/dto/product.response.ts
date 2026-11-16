@@ -1,13 +1,20 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ProductCategory } from '../domain/product.js';
 
-/** Responsável pela oferta (CA08, RN09): só dados de divulgação. */
+/** Responsável pela oferta (HU15 CA08, HU20 CA03/CA05, RN09): só dados de divulgação. */
 export class ProductProducerResponse {
   @ApiProperty({ example: '64b0c0ffee0000000000abcd' })
   id: string;
 
   @ApiProperty({ example: 'Horta da Joana' })
   nomeIniciativa: string;
+
+  @ApiPropertyOptional({
+    example: 'Fazenda Cafuringa',
+    description:
+      'Localidade ou propriedade informada pelo produtor para divulgação (HU20, RN11); ausente quando não informada',
+  })
+  localidade?: string;
 }
 
 /** Produto como apresentado ao produtor e ao público (HU15). */

@@ -21,7 +21,7 @@ describe("BottomNavigation: Explorar", () => {
         expect(onNavigate).toHaveBeenCalledWith("/explorar");
     });
 
-    it.each(["/explorar", "/perfil", "/catalogo", "/produtos"])(
+    it.each(["/explorar", "/perfil", "/catalogo", "/produtos", "/produtor/p1"])(
         "fica ativo em %s",
         (path) => {
             renderNav(path);

@@ -14,6 +14,7 @@ import { PHOTO_MAX_BYTES } from './photo-processing.js';
  */
 export enum PhotoOwnerType {
   PRODUTO = 'produto',
+  EXPERIENCIA = 'experiencia',
 }
 
 export interface PhotoGalleryPolicy {
@@ -32,6 +33,13 @@ export const PHOTO_GALLERY_POLICIES: Record<
   PhotoGalleryPolicy
 > = {
   [PhotoOwnerType.PRODUTO]: {
+    campo: 'fotos',
+    min: 1,
+    max: 10,
+    maxBytesPorFoto: PHOTO_MAX_BYTES,
+  },
+  // HU21: mesma galeria do produto (o formulário é compartilhado no app).
+  [PhotoOwnerType.EXPERIENCIA]: {
     campo: 'fotos',
     min: 1,
     max: 10,

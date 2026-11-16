@@ -78,6 +78,7 @@ export function PublicTrajectoryPage({
                 profile={data}
                 offerId={offerId}
                 contactAvailable={contactAvailable}
+                consumer={consumer}
                 onNavigate={onNavigate}
                 onStartContact={startContact}
             />

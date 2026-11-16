@@ -44,7 +44,7 @@ def read_json(repo: Path) -> list[dict]:
         for attr in ('titulo', 'situacao', 'prioridade'):
             if not isinstance(item.get(attr), str) or not item[attr].strip():
                 raise ValueError(f'HU{n:02d}: campo obrigatório {attr} ausente')
-        if item['situacao'] not in ('Em execução', 'Planejado'):
+        if item['situacao'] not in ('Em execução', 'Planejado', 'Concluído'):
             raise ValueError(f'HU{n:02d}: situação desconhecida')
         if item['prioridade'] not in ('Alta', 'Média', 'Baixa'):
             raise ValueError(f'HU{n:02d}: prioridade inválida')
@@ -72,7 +72,7 @@ def read_json(repo: Path) -> list[dict]:
         if not isinstance(item.get('mvp'), bool):
             raise ValueError(f'HU{n:02d}: mvp precisa ser booleano')
         if item['mvp']:
-            if item.get('iteracao') not in (6, 7, 8):
+            if item.get('iteracao') not in (6, 7, 8, 9):
                 raise ValueError(f'HU{n:02d}: iteração inválida para MVP')
             if not isinstance(item.get('ordem'), int) or not 1 <= item['ordem'] <= 20:
                 raise ValueError(f'HU{n:02d}: ordem inválida')
@@ -227,9 +227,9 @@ def render_page(text: str, uri: str, data: list[dict], names: dict[str,str]) -> 
     if uri=='visao/mvp.md':
         return replace_between(text,START_MVP,END_MVP,render_mvp(data,names),uri)
     if uri=='visao/cronograma.md':
-        if text.count(START_ITER)!=3 or text.count(END_ITER)!=3:
-            raise ValueError('Cronograma: esperados marcadores para três iterações')
-        for n in (6,7,8):
+        if text.count(START_ITER)!=4 or text.count(END_ITER)!=4:
+            raise ValueError('Cronograma: esperados marcadores para quatro iterações')
+        for n in (6,7,8,9):
             pat=(rf'(\|\s*\*\*Iteração {n}\*\*<br>[^\n]*?\|\s*)'
                  + re.escape(START_ITER) + r'.*?' + re.escape(END_ITER))
             val=render_iteration_cell(data,n)

@@ -175,18 +175,18 @@ Marque os itens conforme a história atender a cada condição.
 
 Marque os itens após a verificação da entrega.
 
-- [ ] Entrega um incremento do produto?
-- [ ] Contempla os critérios de aceite estabelecidos?
-- [ ] O desenvolvimento foi concluído integralmente?
-- [ ] Os testes foram executados e aprovados?
-- [ ] Está aderente aos padrões de codificação?
-- [ ] A funcionalidade foi revisada pela equipe?
-- [ ] Mantém os índices de performance do produto?
-- [ ] Atende aos requisitos de acessibilidade e responsividade?
-- [ ] Preserva a segurança e a privacidade dos dados?
-- [ ] Trata os erros do usuário?
-- [ ] Está livre de defeitos críticos?
-- [ ] Está documentado?
+- [x] Entrega um incremento do produto?
+- [x] Contempla os critérios de aceite estabelecidos?
+- [x] O desenvolvimento foi concluído integralmente?
+- [x] Os testes foram executados e aprovados?
+- [x] Está aderente aos padrões de codificação?
+- [x] A funcionalidade foi revisada pela equipe?
+- [x] Mantém os índices de performance do produto?
+- [x] Atende aos requisitos de acessibilidade e responsividade?
+- [x] Preserva a segurança e a privacidade dos dados?
+- [x] Trata os erros do usuário?
+- [x] Está livre de defeitos críticos?
+- [x] Está documentado?
 
 ---
 

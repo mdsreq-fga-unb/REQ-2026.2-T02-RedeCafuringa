@@ -53,11 +53,6 @@ nav:
     - 13. Referências Bibliográficas: visao/referencias.md
     - 14. Vídeo de Apresentação: visao/videos.md
 
-  - Organização e Atualização:
-      - Visão Geral: organizacao_atualizacao/index.md
-      - Rastreabilidade: organizacao_atualizacao/rastreabilidade.md
-      - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
-
   - AUP - Iterações:
     - Governança AUP e Evidências: visao/evidencias/marcos_aup.md
     - Concepção:
@@ -70,31 +65,16 @@ nav:
       - Iteração 5: visao/evidencias/iteracao5.md
       - Iteração 6: visao/evidencias/iteracao6.md
       - Iteração 7: visao/evidencias/iteracao7.md
+      - Validação HU19–HU21: visao/evidencias/validacao_hu19_hu21.md
       - Iteração 8: visao/evidencias/iteracao8.md
-    - Transição:
       - Iteração 9: visao/evidencias/iteracao9.md
+    - Transição:
       - Iteração 10: visao/evidencias/iteracao10.md
-
-  - Arquitetura:
-    - Backend:
-        - Prova de Conceito: visao/arquitetura/backend/poc.md
-        - Estrutura de Pastas e TDD: visao/arquitetura/backend/guia-estrutura-e-tdd.md
-        - Infraestrutura: visao/arquitetura/backend/operacao.md
-        - Segurança e Auditoria: visao/arquitetura/backend/seguranca.md
-        - Implementação das HUs:
-            - HU09 — Autenticar usuário: visao/arquitetura/backend/implementacao/HU09.md
-            - HU10 — Recuperar acesso: visao/arquitetura/backend/implementacao/HU10.md
-            - HU12 — Trajetória do produtor: visao/arquitetura/backend/implementacao/HU12.md
-            - HU14 — Perfil público do produtor: visao/arquitetura/backend/implementacao/HU14.md
-    - Frontend:
-        - Infraestrutura: visao/arquitetura/frontend/operacao.md
-    - Engenharia:
-        - Como contribuir: visao/arquitetura/engenharia/contribuindo.md
-        - Padrão de Pull Request: visao/arquitetura/engenharia/pull-requests.md
-        - Infraestrutura: visao/arquitetura/engenharia/visao-geral.md
-    - Contrato da API:
-        - Referência da API (Swagger): visao/arquitetura/contrato_api/api.md
-        - Versionamento e contrato: visao/arquitetura/contrato_api/contratos.md
+      
+  - Organização e Atualização:
+      - Visão Geral: organizacao_atualizacao/index.md
+      - Rastreabilidade: organizacao_atualizacao/rastreabilidade.md
+      - Gestão de Mudanças: organizacao_atualizacao/atualizacao.md
 
 hooks:
   - scripts/mkdocs_hooks.py

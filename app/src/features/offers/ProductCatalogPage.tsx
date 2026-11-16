@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { BackButton } from "../../components/navigation/BackButton";
 import { ActionButton } from "../../components/ui/ActionButton";
-import { formatProductPrice } from "./productPrice";
+import { OfferCards } from "./OfferCards";
+import { productToOffer } from "./productOffer";
 import { filterProducts } from "./productSearch";
 import type { Product } from "./productTypes";
 import type { CatalogStatus } from "./useProductCatalog";
 
 type ProductCatalogPageProps = {
     products: Product[];
+    category?: "Produtos" | "Experiências";
     status?: CatalogStatus;
     onRetry?: () => void;
     onNavigate: (path: string) => void;
@@ -16,23 +18,40 @@ type ProductCatalogPageProps = {
 export function ProductCatalogPage({
     products,
     status = "ready",
+    category = "Produtos",
     onRetry,
     onNavigate,
 }: ProductCatalogPageProps) {
+    const experiences = category === "Experiências";
     const [query, setQuery] = useState("");
     const visibleProducts = filterProducts(products, query);
 
     return (
         <>
-            <BackButton label="Voltar" onClick={() => onNavigate("/perfil")} />
-            <section className="catalog-page">
-                <h1>Catálogo de Produtos</h1>
+            <BackButton
+                label="Voltar"
+                onClick={() => onNavigate("/explorar")}
+            />
+            <section
+                className="catalog-page product-catalog"
+                aria-labelledby="product-catalog-title"
+                aria-busy={status === "loading"}
+            >
+                <h1 id="product-catalog-title">Catálogo de {category}</h1>
                 {status === "loading" && (
-                    <p role="status">Carregando produtos...</p>
+                    <p role="status">
+                        {experiences
+                            ? "Carregando experiências..."
+                            : "Carregando produtos..."}
+                    </p>
                 )}
                 {status === "error" && (
                     <div role="alert">
-                        <p>Não foi possível carregar os produtos.</p>
+                        <p>
+                            {experiences
+                                ? "Não foi possível carregar as experiências. A consulta pode estar indisponível no servidor."
+                                : "Não foi possível carregar os produtos."}
+                        </p>
                         {onRetry && (
                             <ActionButton variant="orange" onClick={onRetry}>
                                 Tentar novamente
@@ -41,7 +60,7 @@ export function ProductCatalogPage({
                     </div>
                 )}
                 {status === "ready" && products.length === 0 && (
-                    <p>Não há ofertas disponíveis no momento.</p>
+                    <p role="status">Não há ofertas disponíveis no momento.</p>
                 )}
                 {status === "ready" && products.length > 0 && (
                     <>
@@ -56,8 +75,16 @@ export function ProductCatalogPage({
                             </svg>
                             <input
                                 type="search"
-                                aria-label="Buscar produtos"
-                                placeholder="Buscar produtos"
+                                aria-label={
+                                    experiences
+                                        ? "Buscar experiências"
+                                        : "Buscar produtos"
+                                }
+                                placeholder={
+                                    experiences
+                                        ? "Buscar experiências"
+                                        : "Buscar produtos e experiências"
+                                }
                                 value={query}
                                 onChange={(event) =>
                                     setQuery(event.target.value)
@@ -65,44 +92,16 @@ export function ProductCatalogPage({
                             />
                         </div>
                         {visibleProducts.length === 0 ? (
-                            <p>Nenhum produto encontrado.</p>
+                            <p role="status">
+                                {experiences
+                                    ? "Nenhuma experiência encontrada."
+                                    : "Nenhum produto encontrado."}
+                            </p>
                         ) : (
-                            <ul className="offer-list product-list">
-                                {visibleProducts.map((product) => (
-                                    <li key={product.id}>
-                                        <button
-                                            className="offer-card product-card"
-                                            type="button"
-                                            onClick={() =>
-                                                onNavigate(
-                                                    `/oferta/${product.id}`,
-                                                )
-                                            }
-                                        >
-                                            <img src={product.image} alt="" />
-                                            <span className="offer-card-copy">
-                                                <small>Produto</small>
-                                                <strong>{product.name}</strong>
-                                                <span>
-                                                    {product.producerName}
-                                                </span>
-                                                <span className="product-price">
-                                                    {formatProductPrice(
-                                                        product.price,
-                                                        product.unit,
-                                                    )}
-                                                </span>
-                                                <span className="card-action">
-                                                    Conhecer{" "}
-                                                    <span aria-hidden="true">
-                                                        →
-                                                    </span>
-                                                </span>
-                                            </span>
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
+                            <OfferCards
+                                offers={visibleProducts.map(productToOffer)}
+                                onNavigate={onNavigate}
+                            />
                         )}
                     </>
                 )}
