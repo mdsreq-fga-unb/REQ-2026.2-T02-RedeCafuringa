@@ -1,6 +1,6 @@
-import type { ApiProductDetails } from "./productTypes";
+import type { ApiProduct } from "./productTypes";
 
-export const mockApiProducts: ApiProductDetails[] = [
+export const mockApiProducts: ApiProduct[] = [
     {
         id: "mel",
         nome: "Mel do Cerrado",
@@ -18,10 +18,6 @@ export const mockApiProducts: ApiProductDetails[] = [
         },
         criadoEm: "2026-11-01T12:00:00.000Z",
         disponivel: true,
-        descricao:
-            "Mel produzido no território da Cafuringa. Consulte disponibilidade e formas de retirada diretamente com o produtor.",
-        medida: "500 g",
-        whatsapp: "5561900000001",
     },
     {
         id: "cesta",
@@ -40,10 +36,6 @@ export const mockApiProducts: ApiProductDetails[] = [
         },
         criadoEm: "2026-11-02T12:00:00.000Z",
         disponivel: true,
-        descricao:
-            "Seleção de frutas, legumes e verduras da estação, colhidos pelo Sítio Raízes.",
-        medida: "3 kg",
-        whatsapp: "5561900000002",
     },
     {
         id: "geleia",
@@ -62,9 +54,5 @@ export const mockApiProducts: ApiProductDetails[] = [
         },
         criadoEm: "2026-11-03T12:00:00.000Z",
         disponivel: false,
-        descricao:
-            "Geleia artesanal de pimenta, ótima para acompanhar queijos e pães.",
-        medida: "250 g",
-        whatsapp: "5561900000003",
     },
 ];

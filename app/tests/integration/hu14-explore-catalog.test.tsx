@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
+import { offers } from "@/features/offers/offerData";
 import {
     json,
     mockTrajectoryApi,
@@ -50,10 +51,12 @@ function catalogPage(itens: ReturnType<typeof catalogItem>[] = []) {
 function api({
     directory = () => json([publicTrajectory]),
     catalog = () => catalogPage(),
+    experiences = () => catalogPage(),
     phone,
 }: {
     directory?: () => Response;
     catalog?: () => Response;
+    experiences?: () => Response;
     phone?: string;
 } = {}) {
     const detail = mockTrajectoryApi({
@@ -77,6 +80,9 @@ function api({
             return Promise.resolve(directory());
         if (url.pathname.endsWith("/products"))
             return Promise.resolve(catalog());
+        // HU21: o catálogo do perfil também consulta as experiências.
+        if (url.pathname.endsWith("/experiences"))
+            return Promise.resolve(experiences());
         return detail(input, init);
     });
     vi.stubGlobal("fetch", fetchMock);
