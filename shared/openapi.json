@@ -1110,6 +1110,98 @@
         "tags": [
           "users"
         ]
+      },
+      "delete": {
+        "description": "Exclui definitivamente a conta e o que depende dela (produtos, experiências e fotos, foto de perfil e pedidos de nova senha). As sessões abertas da conta deixam de valer na hora e o perfil e as ofertas saem do catálogo, da busca e do contato. Com o motivo INATIVIDADE, e-mail, CPF e CNPJ ficam livres para novo cadastro (RNF11); com DESCUMPRIMENTO_REGRAS, só o HMAC desses dados é guardado e um novo cadastro com eles é recusado com 403. Exige o motivo (RN04), registrado no log de auditoria sem dados pessoais. O administrador não exclui a própria conta nem a conta administrativa inicial.",
+        "operationId": "usersRemove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "motivo",
+            "required": true,
+            "in": "query",
+            "description": "Por que a conta está sendo excluída (RN04). INATIVIDADE permite um novo cadastro com os mesmos dados; DESCUMPRIMENTO_REGRAS (banimento) bloqueia novos cadastros com o mesmo CPF, CNPJ ou e-mail. Fica no log de auditoria, sem dados pessoais.",
+            "schema": {
+              "example": "DESCUMPRIMENTO_REGRAS",
+              "type": "string",
+              "enum": [
+                "INATIVIDADE",
+                "DESCUMPRIMENTO_REGRAS"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Conta excluída"
+          },
+          "400": {
+            "description": "Motivo ausente ou inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de administrador\n\nExclusivo para: ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Conta inexistente ou já excluída",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A própria conta ou a conta administrativa inicial, que não podem ser excluídas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Excluir usuário",
+        "tags": [
+          "users"
+        ]
       }
     },
     "/api/v1/auth/login": {
@@ -2335,7 +2427,7 @@
         ]
       },
       "get": {
-        "description": "Catálogo público: experiências disponíveis de produtores ativos, da mais nova à mais antiga, paginadas. `produtor` restringe ao catálogo de um perfil. Cada item tem o mesmo formato de `GET /experiences/{id}`.",
+        "description": "HU24/RF24 (CA01-CA04, CA06-CA08, RN10): catálogo público, sem login. Só experiências disponíveis de produtores ativos, da mais nova à mais antiga, paginadas; sem resultados, `itens` vem vazio. `produtor` restringe ao catálogo de um perfil. Cada item tem o mesmo formato de `GET /experiences/{id}`. A resposta traz `ETag` e `Cache-Control: no-cache`: reenvie o `ETag` em `If-None-Match` para receber 304 quando o catálogo não mudou.",
         "operationId": "experiencesList",
         "parameters": [
           {
@@ -2372,11 +2464,35 @@
               "example": 20,
               "type": "number"
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag de uma consulta anterior. Se o catálogo não mudou, a resposta é 304 sem corpo (CA06, RNF06).",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Página do catálogo",
+            "headers": {
+              "ETag": {
+                "description": "Versão desta página do catálogo",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "Sempre `no-cache`: revalidar a cada acesso (CA06)",
+                "schema": {
+                  "type": "string",
+                  "example": "no-cache"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -2384,6 +2500,9 @@
                 }
               }
             }
+          },
+          "304": {
+            "description": "O catálogo não mudou desde o `ETag` enviado (CA06)"
           },
           "400": {
             "description": "Filtro ou paginação inválidos",
@@ -2509,7 +2628,7 @@
   "info": {
     "title": "Rede Cafuringa API",
     "description": "API REST da plataforma **Rede Cafuringa**: produtores rurais da Cafuringa divulgam a produção, e consumidores e visitantes descobrem ofertas da região.\n\n### Primeiros passos\n\n1. **Entre:** em **auth › POST /auth/login**, clique em *Try it out* e envie e-mail e senha. A resposta traz `accessToken`.\n2. **Autorize:** clique em **Authorize** (botão com cadeado, logo abaixo desta apresentação), cole o token e confirme. Ele fica salvo neste navegador até você clicar em *Logout*.\n3. **Teste:** abra qualquer rota, *Try it out* e *Execute*. Rotas com cadeado exigem login; as demais são públicas.\n\nUse o campo de busca (*Filter by tag*) para ir direto a um grupo.\n\n### Perfis de acesso (RN01, RNF08)\n\n| Perfil | O que pode fazer |\n|---|---|\n| Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |\n| `CONSUMIDOR` | O mesmo que o visitante, com sessão |\n| `PRODUTOR` | Registrar trajetória e foto de perfil; cadastrar produtos |\n| `ADMINISTRADOR` | Consultar usuários e cadastrar outros administradores |\n\nToda rota exige login, exceto as marcadas como públicas (negação por padrão). Perfil sem permissão recebe **403**; sem token ou com token inválido, **401**.\n\n### Convenções\n\n| Tema | Como funciona |\n|---|---|\n| **Erros** | Corpo `ErrorResponse` (`statusCode`, `message`, `error`). Em validação (400), `message` é uma lista de orientações em português, prontas para exibir |\n| **Paginação** | Listas devolvem `{ itens, total, pagina, limite }`; use `?pagina=` e `?limite=` |\n| **Fotos** | Envio em `multipart/form-data`. PNG, JPEG ou WebP; a API regrava em WebP **sem metadados** (EXIF/GPS). Os caminhos devolvidos são relativos à base da API e levam a versão: podem ficar em cache para sempre |\n| **Reenvio seguro** | `POST /products` e `POST /experiences` aceitam `Idempotency-Key`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |\n| **Limites de uso** | Login, cadastro e recuperação de acesso têm limite de tentativas por IP: **429** com `Retry-After` (segundos) |\n| **Rastreio** | Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`); ele volta na resposta e nos logs. Sem ele, a API gera um UUID |\n| **Dados pessoais** | Respostas nunca trazem hash de senha nem CPF completo (vem mascarado). Perfis públicos só mostram dados de divulgação (RN07, RNF11) |\n| **Versão** | SemVer em `info.version`; regras em *docs/shared/contratos.md*. Tipos do front gerados a partir deste contrato (`./scripts/dev.sh contract`) |",
-    "version": "0.9.0",
+    "version": "0.10.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
