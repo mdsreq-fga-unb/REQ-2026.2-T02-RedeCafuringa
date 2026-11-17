@@ -8,6 +8,43 @@ afterEach(() => {
 });
 
 describe("configurações de contato da conta", () => {
+    it("HU39/CA03: com a API real, aponta para Minha trajetória em vez de guardar o número no aparelho", () => {
+        const onNavigate = vi.fn();
+        const draft = { whatsappNumber: "", authorized: false };
+        render(
+            <AccountPage
+                role="producer"
+                consumerName=""
+                settings={draft}
+                draft={draft}
+                saved={false}
+                onDraftChange={vi.fn()}
+                onSavedChange={vi.fn()}
+                onSaveContact={vi.fn()}
+                onNavigate={onNavigate}
+                onSignOut={vi.fn()}
+                demoContact={false}
+            />,
+        );
+
+        fireEvent.click(
+            screen.getByText("Contato público", { selector: "summary" }),
+        );
+        expect(
+            screen.queryByLabelText("WhatsApp com código do país"),
+        ).toBeNull();
+        expect(
+            screen.queryByRole("button", { name: "Salvar contato" }),
+        ).toBeNull();
+        expect(
+            screen.getByText(/autorize a divulgação em Minha trajetória/),
+        ).toBeTruthy();
+        fireEvent.click(
+            screen.getByRole("button", { name: "Minha trajetória" }),
+        );
+        expect(onNavigate).toHaveBeenCalledWith("/minha-trajetoria");
+    });
+
     it("permite alterar consentimento e salvar o contato", () => {
         const onDraftChange = vi.fn();
         const onSaveContact = vi.fn((event: React.FormEvent) =>
@@ -30,6 +67,7 @@ describe("configurações de contato da conta", () => {
                 onSaveContact={onSaveContact}
                 onNavigate={vi.fn()}
                 onSignOut={vi.fn()}
+                demoContact
             />,
         );
 
@@ -63,6 +101,7 @@ describe("configurações de contato da conta", () => {
                 onSaveContact={vi.fn()}
                 onNavigate={vi.fn()}
                 onSignOut={vi.fn()}
+                demoContact
             />,
         );
 

@@ -242,8 +242,9 @@ export function TrajectoryForm({
                                 }
                             />
                             <span>
-                                Autorizo a divulgação deste número de contato no
-                                perfil público.
+                                Autorizo a divulgação deste número no meu perfil
+                                público e nas minhas ofertas, para contato pelo
+                                WhatsApp.
                             </span>
                         </label>
                     </div>

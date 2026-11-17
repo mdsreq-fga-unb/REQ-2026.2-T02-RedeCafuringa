@@ -90,23 +90,36 @@ describe("HU09 — fluxo de autenticação no app", () => {
         expect(window.location.hash).toBe("#/conta");
     });
 
-    // Critério 3
-    it("mostra o contato público só para o produtor", async () => {
+    // Critério 3 e HU39 CA03: com a API real, a autorização do contato público
+    // é gravada em "Minha trajetória" (HU12), não no aparelho.
+    it("mostra ao produtor onde gerenciar o contato público", async () => {
         vi.mocked(login).mockResolvedValue(producerAuth);
         window.location.hash = "#/entrar";
         render(<App />);
+        const user = userEvent.setup();
 
-        await submitLogin(userEvent.setup());
-
-        await userEvent
-            .setup()
-            .click(
-                screen.getByText("Contato público", { selector: "summary" }),
-            );
+        await submitLogin(user);
+        await user.click(
+            await screen.findByText("Contato público", { selector: "summary" }),
+        );
 
         expect(
             await screen.findByRole("heading", { name: "Contato público" }),
         ).toBeTruthy();
+        expect(
+            screen.queryByLabelText("WhatsApp com código do país"),
+        ).toBeNull();
+        expect(
+            screen.getByText(/autorize a divulgação em Minha trajetória/),
+        ).toBeTruthy();
+        await user.click(
+            screen.getByRole("button", {
+                name: "Minha trajetória",
+            }),
+        );
+        await waitFor(() =>
+            expect(window.location.hash).toBe("#/minha-trajetoria"),
+        );
     });
 
     it("não mostra o contato público para o consumidor", async () => {

@@ -74,7 +74,7 @@ afterEach(() => {
 });
 
 describe("fluxo de contato da aplicação", () => {
-    it("leva visitante ao login ao tentar falar com a responsável", async () => {
+    it("CA04: com a API real, o perfil de demonstração não usa o contato salvo no aparelho", () => {
         localStorage.setItem(
             "cafuringa-contact",
             JSON.stringify({
@@ -83,51 +83,40 @@ describe("fluxo de contato da aplicação", () => {
             }),
         );
         render(<App />);
-
-        fireEvent.click(
-            screen.getByRole("button", { name: "Conversar pelo WhatsApp" }),
-        );
 
         expect(
-            await screen.findByRole("heading", {
-                name: "Entre para falar com o responsável",
-            }),
-        ).toBeTruthy();
-        expect(window.location.hash).toBe("#/entrar?contato=perfil");
+            screen.queryByRole("link", { name: /Conversar pelo WhatsApp/ }),
+        ).toBeNull();
+        expect(
+            screen.queryByRole("button", { name: /Conversar pelo WhatsApp/ }),
+        ).toBeNull();
     });
 
-    it("abre o WhatsApp depois do login e sem salvar conversa no app", async () => {
-        localStorage.setItem(
-            "cafuringa-contact",
-            JSON.stringify({
-                whatsappNumber: "5561999999999",
-                authorized: true,
-            }),
-        );
-        const openWhatsApp = vi
-            .spyOn(window, "open")
-            .mockImplementation(() => null);
-        render(<App />);
+    it.each([
+        { route: "#/oferta/mel", subject: "produto/mel" },
+        {
+            route: "#/oferta/queijos?tipo=experiencia",
+            subject: "experiencia/queijos",
+        },
+    ])(
+        "RN17: visitante que toca no contato da oferta $subject vai ao login",
+        async ({ route, subject }) => {
+            window.location.hash = route;
+            render(<App />);
 
-        fireEvent.click(
-            screen.getByRole("button", { name: "Conversar pelo WhatsApp" }),
-        );
-        await signInAsConsumer();
+            fireEvent.click(
+                await screen.findByRole("button", {
+                    name: /Conversar pelo WhatsApp/,
+                }),
+            );
 
-        await waitFor(() => expect(openWhatsApp).toHaveBeenCalledOnce());
-        expect(openWhatsApp).toHaveBeenCalledWith(
-            expect.stringContaining("https://wa.me/5561999999999"),
-            "_blank",
-            "noopener,noreferrer",
-        );
-        const contactUrl = new URL(String(openWhatsApp.mock.calls[0][0]));
-        expect(contactUrl.searchParams.get("text")).toContain(
-            "Perfil de Dona Maria",
-        );
-        expect(window.location.hash).toBe("#/perfil");
-        expect(screen.queryByRole("textbox", { name: /mensagem/i })).toBeNull();
-        expect(localStorage.getItem("cafuringa-conversations")).toBeNull();
-    });
+            await waitFor(() =>
+                expect(window.location.hash).toBe(
+                    "#/entrar?contato=" + encodeURIComponent(subject),
+                ),
+            );
+        },
+    );
 
     it.each([
         { route: "#/oferta/mel", title: "Mel do Cerrado" },
@@ -136,37 +125,67 @@ describe("fluxo de contato da aplicação", () => {
             title: "Visita e Degustação de Queijos",
         },
     ])(
-        "mantém a oferta $title ao abrir o WhatsApp",
+        "RN17: consumidor autenticado abre o WhatsApp da oferta $title, sem conversa no app",
         async ({ route, title }) => {
-            localStorage.setItem(
-                "cafuringa-contact",
-                JSON.stringify({
-                    whatsappNumber: "5561999999999",
-                    authorized: true,
-                }),
-            );
+            localStorage.setItem("cafuringa-token", "token-falso");
+            localStorage.setItem("cafuringa-role", "consumer");
             window.location.hash = route;
-            const openWhatsApp = vi
-                .spyOn(window, "open")
-                .mockImplementation(() => null);
             render(<App />);
 
-            fireEvent.click(
-                await screen.findByRole("button", {
-                    name: "Conversar pelo WhatsApp",
-                }),
+            const link = await screen.findByRole("link", {
+                name: /Conversar pelo WhatsApp/,
+            });
+            const contactUrl = new URL(link.getAttribute("href") ?? "");
+            expect(contactUrl.origin + contactUrl.pathname).toBe(
+                "https://wa.me/5561999999999",
             );
-            await signInAsConsumer();
-
-            await waitFor(() => expect(openWhatsApp).toHaveBeenCalledOnce());
-            const contactUrl = new URL(String(openWhatsApp.mock.calls[0][0]));
-            expect(contactUrl.pathname).toBe("/5561999999999");
             expect(contactUrl.searchParams.get("text")).toContain(title);
+            expect(link.getAttribute("target")).toBe("_blank");
+            expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+
+            fireEvent.click(link);
+
             expect(window.location.hash).toBe(route);
             expect(screen.getByRole("heading", { name: title })).toBeTruthy();
             expect(localStorage.getItem("cafuringa-conversations")).toBeNull();
         },
     );
+
+    it.each([
+        ["produto/mel", "#/oferta/mel", "Mel do Cerrado"],
+        [
+            "experiencia/queijos",
+            "#/oferta/queijos?tipo=experiencia",
+            "Visita e Degustação de Queijos",
+        ],
+    ])(
+        "login vindo de um pedido de contato (%s) volta para a oferta",
+        async (subject, expectedHash, title) => {
+            window.location.hash =
+                "#/entrar?contato=" + encodeURIComponent(subject);
+            render(<App />);
+
+            await signInAsConsumer();
+
+            await waitFor(() =>
+                expect(window.location.hash).toBe(expectedHash),
+            );
+            expect(
+                await screen.findByRole("heading", { name: title }),
+            ).toBeTruthy();
+        },
+    );
+
+    it("login vindo do contato de um perfil volta para o perfil público", async () => {
+        window.location.hash = "#/entrar?contato=produtor%2Fdemo-maria";
+        render(<App />);
+
+        await signInAsConsumer();
+
+        await waitFor(() =>
+            expect(window.location.hash).toBe("#/produtor/demo-maria"),
+        );
+    });
 });
 
 describe("entrada e acesso público", () => {

@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { ActionButton } from "../../components/ui/ActionButton";
 import { BackButton } from "../../components/navigation/BackButton";
+import { WhatsAppContactLink } from "../contact/WhatsAppContactLink";
 import type { Offer } from "../../shared/types";
 
 type OfferDetailsPageProps = {
     offer: Offer;
-    contactAvailable: boolean;
+    /** HU39: link wa.me do contato autorizado; sem ele, não há opção de contato (CA04, CA06). */
+    contactUrl?: string;
+    /** RN17: presente para visitante; a opção de contato leva ao login. */
+    onContactRequiresLogin?: () => void;
     onNavigate: (path: string) => void;
-    onStartContact: () => void;
     backPath?: string;
     backRoute?: string;
     catalogRoute?: string;
@@ -15,9 +18,9 @@ type OfferDetailsPageProps = {
 
 export function OfferDetailsPage({
     offer,
-    contactAvailable,
+    contactUrl,
+    onContactRequiresLogin,
     onNavigate,
-    onStartContact,
     backPath,
     backRoute,
 }: OfferDetailsPageProps) {
@@ -90,10 +93,11 @@ export function OfferDetailsPage({
                             Conhecer a Cafuringa Store
                         </a>
                     )}
-                    {contactAvailable && (
-                        <ActionButton variant="green" onClick={onStartContact}>
-                            Conversar pelo WhatsApp
-                        </ActionButton>
+                    {contactUrl && (
+                        <WhatsAppContactLink
+                            url={contactUrl}
+                            onRequireLogin={onContactRequiresLogin}
+                        />
                     )}
                 </div>
             </section>

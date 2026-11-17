@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { OfferDetailsPage } from "@/features/offers";
+import { getContactLoginRoute, whatsAppContactUrl } from "@/features/contact";
 import type { PublicTrajectory } from "@/features/trajectory/trajectoryService";
 import { listProducerOffers } from "./publicProfileService";
 import type { ProducerOffer } from "./publicProfileService";
@@ -13,16 +14,16 @@ export function ProducerCatalogPage({
     profile,
     offerId,
     onNavigate,
-    onStartContact,
-    contactAvailable,
-    consumer = false,
+    contactPhone,
+    authenticated = false,
 }: {
     profile: PublicTrajectory;
     offerId?: string;
     onNavigate: (path: string) => void;
-    onStartContact: () => void;
-    contactAvailable: boolean;
-    consumer?: boolean;
+    /** HU39: telefone público (autorizado) do perfil, reaproveitado nas ofertas dele. */
+    contactPhone?: string;
+    /** RN17: só quem está autenticado recebe o link do wa.me. */
+    authenticated?: boolean;
 }) {
     const [offers, setOffers] = useState<ProducerOffer[]>([]);
     const [loading, setLoading] = useState(true);
@@ -49,7 +50,7 @@ export function ProducerCatalogPage({
         return (
             <ProductOfferDetails
                 id={selected.id}
-                consumer={consumer}
+                authenticated={authenticated}
                 backPath={offerReturnRoute(
                     window.location.hash.slice(1),
                     catalogRoute,
@@ -61,8 +62,17 @@ export function ProducerCatalogPage({
         return (
             <OfferDetailsPage
                 offer={selected}
-                contactAvailable={contactAvailable}
-                onStartContact={onStartContact}
+                contactUrl={whatsAppContactUrl(contactPhone, selected.title)}
+                onContactRequiresLogin={
+                    authenticated
+                        ? undefined
+                        : () =>
+                              onNavigate(
+                                  getContactLoginRoute(
+                                      `experiencia/${selected.id}`,
+                                  ),
+                              )
+                }
                 onNavigate={onNavigate}
                 backRoute={offerReturnRoute(
                     window.location.hash.slice(1),

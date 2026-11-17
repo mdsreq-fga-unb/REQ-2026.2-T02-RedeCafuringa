@@ -16,7 +16,6 @@ import {
     useDemoSession,
 } from "@/features/auth";
 import {
-    canStartWhatsAppContact,
     createWhatsAppUrl,
     getContactLoginRoute,
     isWhatsAppContactAvailable,
@@ -195,87 +194,56 @@ export function App() {
         (offer) => offer.id === offerId && offer.category.startsWith("Experi"),
     );
     const productOfferId = offerId && !currentOffer ? offerId : undefined;
-    const contactAvailable = isWhatsAppContactAvailable(
-        settings.authorized,
-        settings.whatsappNumber,
-    );
+    // HU39: o contato salvo no aparelho só existe na demonstração (sem API).
+    // Com a API real, o contato vem do perfil público do responsável (RN07).
+    const demoContactUrl = (subject: string) =>
+        isMockAuthEnabled &&
+        isWhatsAppContactAvailable(settings.authorized, settings.whatsappNumber)
+            ? createWhatsAppUrl(settings.whatsappNumber, subject)
+            : undefined;
 
-    const startContact = (subjectId: string, subject: string) => {
-        if (role !== "consumer") {
-            navigate(getContactLoginRoute(subjectId));
-            return;
-        }
-        if (
-            !canStartWhatsAppContact(
-                role,
-                settings.authorized,
-                settings.whatsappNumber,
-            )
-        ) {
-            return;
-        }
-        window.open(
-            createWhatsAppUrl(settings.whatsappNumber, subject),
-            "_blank",
-            "noopener,noreferrer",
-        );
-    };
+    // RN17: só usuário autenticado inicia o contato; o visitante vê a opção
+    // (CA05), entra e volta para a mesma oferta ou perfil.
+    const authenticated = role !== null;
+    const contactLogin = (subject: string) =>
+        authenticated
+            ? undefined
+            : () => navigate(getContactLoginRoute(subject));
 
     const handleSignIn = (auth: AuthResult) => {
-        const nextRole = auth.user.role;
-        const subjectId = new URLSearchParams(route.split("?")[1] || "").get(
-            "contato",
-        );
+        const subject = query.get("contato");
         signIn(auth);
-        if (nextRole === "admin") {
+        if (auth.user.role === "admin") {
             navigate("/admin/acesso");
             return;
         }
-
-        if (subjectId?.startsWith("produto/")) {
+        // RN17: quem entrou a partir do contato volta para a oferta ou o perfil.
+        if (subject?.startsWith("produto/")) {
             navigate(
-                `/oferta/${encodeURIComponent(subjectId.slice("produto/".length))}?falar=1`,
+                `/oferta/${encodeURIComponent(subject.slice("produto/".length))}`,
             );
             return;
         }
-
-        // Experiência (HU21) volta para a rota de experiência, não a de produto.
-        if (subjectId?.startsWith("experiencia/")) {
+        if (subject?.startsWith("experiencia/")) {
             navigate(
-                `/oferta/${encodeURIComponent(subjectId.slice("experiencia/".length))}?tipo=experiencia&falar=1`,
+                `/oferta/${encodeURIComponent(subject.slice("experiencia/".length))}?tipo=experiencia`,
             );
             return;
         }
-
-        // O contato público sempre é revalidado no perfil, nunca nas configurações locais.
-        if (subjectId?.startsWith("produtor/")) {
-            navigate(`/${subjectId}`);
-            return;
-        }
-
-        if (
-            nextRole === "consumer" &&
-            subjectId &&
-            canStartWhatsAppContact(
-                nextRole,
-                settings.authorized,
-                settings.whatsappNumber,
-            )
-        ) {
-            const subject =
-                offers.find((offer) => offer.id === subjectId)?.title ||
-                "Perfil de Dona Maria";
-            window.open(
-                createWhatsAppUrl(settings.whatsappNumber, subject),
-                "_blank",
-                "noopener,noreferrer",
-            );
+        if (subject?.startsWith("produtor/")) {
             navigate(
-                subjectId === "perfil" ? "/perfil" : `/oferta/${subjectId}`,
+                `/produtor/${encodeURIComponent(subject.slice("produtor/".length))}`,
             );
             return;
         }
-
+        if (subject === "perfil") {
+            navigate("/perfil");
+            return;
+        }
+        if (subject) {
+            navigate(`/oferta/${encodeURIComponent(subject)}`);
+            return;
+        }
         navigate("/conta");
     };
 
@@ -332,11 +300,9 @@ export function App() {
                 )}
                 {path === "/perfil" && (
                     <ProfilePage
-                        contactAvailable={contactAvailable}
+                        contactUrl={demoContactUrl("Perfil de Dona Maria")}
+                        onContactRequiresLogin={contactLogin("perfil")}
                         onNavigate={navigate}
-                        onStartContact={() =>
-                            startContact("perfil", "Perfil de Dona Maria")
-                        }
                     />
                 )}
                 {path === "/catalogo" && (
@@ -397,18 +363,15 @@ export function App() {
                     <OfferDetailsPage
                         offer={currentOffer}
                         backRoute={offerReturnRoute(route, "/catalogo")}
-                        contactAvailable={contactAvailable}
+                        contactUrl={demoContactUrl(currentOffer.title)}
+                        onContactRequiresLogin={contactLogin(currentOffer.id)}
                         onNavigate={navigate}
-                        onStartContact={() =>
-                            startContact(currentOffer.id, currentOffer.title)
-                        }
                     />
                 )}
                 {productOfferId && (
                     <ProductOfferDetails
                         key={route}
-                        consumer={role === "consumer"}
-                        resumeContact={query.get("falar") === "1"}
+                        authenticated={authenticated}
                         experience={query.get("tipo") === "experiencia"}
                         backPath={offerReturnRoute(
                             route,
@@ -469,7 +432,7 @@ export function App() {
                         onNavigate={navigate}
                         catalogView={query.get("catalogo") === "1"}
                         offerId={query.get("oferta") ?? undefined}
-                        consumer={role === "consumer"}
+                        authenticated={authenticated}
                     />
                 )}
 

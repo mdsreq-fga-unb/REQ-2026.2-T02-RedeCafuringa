@@ -360,33 +360,26 @@ describe("HU14 — ofertas e contato vinculados ao produtor", () => {
         );
         api({ phone: "61988887777" });
         window.location.hash = publicRoute;
-        const open = vi.spyOn(window, "open").mockReturnValue(null);
-        const user = userEvent.setup();
         render(<App />);
-        await user.click(
-            await screen.findByRole("button", {
-                name: "Conversar pelo WhatsApp",
-            }),
-        );
-        expect(open).toHaveBeenCalledOnce();
-        const url = new URL(String(open.mock.calls[0][0]));
+        const link = await screen.findByRole("link", {
+            name: /Conversar pelo WhatsApp/,
+        });
+        const url = new URL(link.getAttribute("href") ?? "");
         expect(url.pathname).toBe("/5561988887777");
         expect(url.searchParams.get("text")).toContain("Horta da Maria");
-        expect(open.mock.calls[0].slice(1)).toEqual([
-            "_blank",
-            "noopener,noreferrer",
-        ]);
+        expect(link.getAttribute("target")).toBe("_blank");
+        expect(link.getAttribute("rel")).toBe("noopener noreferrer");
     });
 
+    // HU39/RN17: o visitante vê a opção, mas iniciar o contato pede login.
     it("visitante consulta o perfil livremente e entra apenas ao iniciar contato", async () => {
         api({ phone: "61988887777" });
         window.location.hash = publicRoute;
-        const open = vi.spyOn(window, "open").mockReturnValue(null);
         const user = userEvent.setup();
         render(<App />);
         await user.click(
             await screen.findByRole("button", {
-                name: "Conversar pelo WhatsApp",
+                name: /Conversar pelo WhatsApp/,
             }),
         );
         await waitFor(() =>
@@ -399,6 +392,5 @@ describe("HU14 — ofertas e contato vinculados ao produtor", () => {
                 name: "Entre para falar com o responsável",
             }),
         ).toBeTruthy();
-        expect(open).not.toHaveBeenCalled();
     });
 });

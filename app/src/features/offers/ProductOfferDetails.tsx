@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { getPublicTrajectory } from "@/features/trajectory/trajectoryService";
-import {
-    createWhatsAppUrl,
-    isWhatsAppContactAvailable,
-} from "@/features/contact";
+import { getContactLoginRoute, whatsAppContactUrl } from "@/features/contact";
 import { getExperienceDetails } from "./catalogItems";
 import { getProductDetails } from "./productDetailsService";
 import { OfferDetailsPage } from "./OfferDetailsPage";
@@ -15,13 +12,14 @@ import type { Product } from "./productTypes";
 type State = {
     status: "loading" | "ready" | "missing" | "error";
     product?: Product;
-    phone?: string;
+    /** HU39: link wa.me do contato autorizado pelo responsável. */
+    contactUrl?: string;
 };
 type Props = {
     id: string;
     experience?: boolean;
-    consumer?: boolean;
-    resumeContact?: boolean;
+    /** RN17: só quem está autenticado recebe o link do wa.me. */
+    authenticated?: boolean;
     backPath?: string;
     onNavigate: (path: string) => void;
 };
@@ -29,8 +27,7 @@ type Props = {
 export function ProductOfferDetails({
     id,
     experience = false,
-    consumer = false,
-    resumeContact = false,
+    authenticated = false,
     backPath = "/produtos",
     onNavigate,
 }: Props) {
@@ -49,45 +46,25 @@ export function ProductOfferDetails({
                     return;
                 }
                 setState({ status: "ready", product });
+                // HU39: o contato vem do perfil público do responsável, que só
+                // traz o telefone quando ele autorizou (RN07). Nunca de dados
+                // locais, e sem exigir login (CA05).
                 if (product.producerId) {
                     void getPublicTrajectory(
                         product.producerId,
                         controller.signal,
                     )
                         .then((profile) => {
-                            if (
-                                !controller.signal.aborted &&
-                                profile.telefone &&
-                                isWhatsAppContactAvailable(
-                                    true,
-                                    profile.telefone,
-                                )
-                            ) {
+                            const contactUrl = whatsAppContactUrl(
+                                profile.telefone,
+                                product.name,
+                            );
+                            if (!controller.signal.aborted && contactUrl)
                                 setState({
                                     status: "ready",
                                     product,
-                                    phone: profile.telefone,
+                                    contactUrl,
                                 });
-                                if (resumeContact && consumer) {
-                                    const digits = profile.telefone.replace(
-                                        /\D/g,
-                                        "",
-                                    );
-                                    window.open(
-                                        createWhatsAppUrl(
-                                            digits.length <= 11
-                                                ? `55${digits}`
-                                                : digits,
-                                            product.name,
-                                        ),
-                                        "_blank",
-                                        "noopener,noreferrer",
-                                    );
-                                    onNavigate(
-                                        `/oferta/${encodeURIComponent(id)}${experience ? "?tipo=experiencia" : ""}`,
-                                    );
-                                }
-                            }
                         })
                         .catch(() => {
                             /* O contato opcional não impede a leitura do produto. */
@@ -98,32 +75,25 @@ export function ProductOfferDetails({
                 if (!controller.signal.aborted) setState({ status: "error" });
             });
         return () => controller.abort();
-    }, [id, experience, attempt, resumeContact, consumer, onNavigate]);
+    }, [id, experience, attempt]);
 
-    const startContact = () => {
-        if (!state.phone || !state.product) return;
-        if (!consumer) {
-            onNavigate(
-                `/entrar?contato=${encodeURIComponent(`${experience ? "experiencia" : "produto"}/${id}`)}`,
-            );
-            return;
-        }
-        const digits = state.phone.replace(/\D/g, "");
-        const number = digits.length <= 11 ? `55${digits}` : digits;
-        window.open(
-            createWhatsAppUrl(number, state.product.name),
-            "_blank",
-            "noopener,noreferrer",
-        );
-    };
     if (state.status === "ready" && state.product)
         return (
             <OfferDetailsPage
                 offer={productToOffer(state.product)}
-                contactAvailable={!!state.phone}
+                contactUrl={state.contactUrl}
+                onContactRequiresLogin={
+                    authenticated
+                        ? undefined
+                        : () =>
+                              onNavigate(
+                                  getContactLoginRoute(
+                                      `${experience ? "experiencia" : "produto"}/${id}`,
+                                  ),
+                              )
+                }
                 backPath={backPath}
                 onNavigate={onNavigate}
-                onStartContact={startContact}
             />
         );
     return (
@@ -138,16 +108,25 @@ export function ProductOfferDetails({
                 )}
                 {state.status === "missing" && (
                     <>
-                        <h1>Produto indisponível</h1>
+                        <h1>
+                            {experience
+                                ? "Experiência indisponível"
+                                : "Produto indisponível"}
+                        </h1>
                         <p role="alert">
-                            Produto não encontrado ou indisponível para
-                            consulta.
+                            {experience
+                                ? "Experiência não encontrada ou indisponível para consulta."
+                                : "Produto não encontrado ou indisponível para consulta."}
                         </p>
                     </>
                 )}
                 {state.status === "error" && (
                     <>
-                        <h1>Detalhes do produto</h1>
+                        <h1>
+                            {experience
+                                ? "Detalhes da experiência"
+                                : "Detalhes do produto"}
+                        </h1>
                         <p role="alert">
                             Não foi possível carregar a oferta. Verifique sua
                             conexão e tente novamente.

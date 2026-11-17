@@ -3,7 +3,8 @@ import type { FormEvent } from "react";
 import { ActionButton } from "../../components/ui/ActionButton";
 import { BackButton } from "../../components/navigation/BackButton";
 import { formatCpf } from "../auth/cpf";
-import { canStartWhatsAppContact } from "../contact/contact-flow.js";
+import { isMockAuthEnabled } from "../auth/authMode";
+import { isWhatsAppContactAvailable } from "../contact/contact-flow.js";
 import { producerName } from "../offers/offerData";
 import type { ContactSettings, Role } from "../../shared/types";
 
@@ -20,6 +21,12 @@ type AccountPageProps = {
     onSaveContact: (event: FormEvent<HTMLFormElement>) => void;
     onNavigate: (path: string) => void;
     onSignOut: () => void;
+    /**
+     * HU39/CA03: na demonstração (sem API) o contato fica no aparelho. Com a
+     * API real, a autorização é gravada em "Minha trajetória" (HU12), que é a
+     * fonte do contato público; a Conta só aponta para lá.
+     */
+    demoContact?: boolean;
 };
 
 export function AccountPage(props: AccountPageProps) {
@@ -36,9 +43,9 @@ export function AccountPage(props: AccountPageProps) {
         onSaveContact,
         onNavigate,
         onSignOut,
+        demoContact = isMockAuthEnabled,
     } = props;
-    const contactReady = canStartWhatsAppContact(
-        "consumer",
+    const contactReady = isWhatsAppContactAvailable(
         settings.authorized,
         settings.whatsappNumber,
     );
@@ -175,65 +182,80 @@ export function AccountPage(props: AccountPageProps) {
                     </form>
                     <details className="account-contact-disclosure">
                         <summary>Contato público</summary>
-                        <form
-                            className="contact-settings"
-                            onSubmit={onSaveContact}
-                        >
-                            <h2>Contato público</h2>
-                            <p className="body-copy">
-                                Informe o WhatsApp que poderá ser divulgado no
-                                seu perfil e nas ofertas.
-                            </p>
-                            <label
-                                className="field-label"
-                                htmlFor="whatsapp-number"
+                        {!demoContact && (
+                            <div className="contact-settings">
+                                <h2>Contato público</h2>
+                                <p className="body-copy">
+                                    Para exibir seu WhatsApp no perfil e nas
+                                    ofertas, informe o número de contato e
+                                    autorize a divulgação em Minha trajetória.
+                                    Sem autorização, o número não aparece para
+                                    ninguém.
+                                </p>
+                            </div>
+                        )}
+                        {demoContact && (
+                            <form
+                                className="contact-settings"
+                                onSubmit={onSaveContact}
                             >
-                                WhatsApp com código do país
-                            </label>
-                            <input
-                                id="whatsapp-number"
-                                className="text-input"
-                                type="tel"
-                                inputMode="tel"
-                                autoComplete="tel"
-                                value={draft.whatsappNumber}
-                                onChange={(event) => {
-                                    onDraftChange({
-                                        ...draft,
-                                        whatsappNumber: event.target.value,
-                                    });
-                                    onSavedChange(false);
-                                }}
-                                placeholder="Ex.: 5561999999999"
-                            />
-                            <label className="consent-row">
+                                <h2>Contato público</h2>
+                                <p className="body-copy">
+                                    Informe o WhatsApp que poderá ser divulgado
+                                    no seu perfil e nas ofertas.
+                                </p>
+                                <label
+                                    className="field-label"
+                                    htmlFor="whatsapp-number"
+                                >
+                                    WhatsApp com código do país
+                                </label>
                                 <input
-                                    type="checkbox"
-                                    checked={draft.authorized}
+                                    id="whatsapp-number"
+                                    className="text-input"
+                                    type="tel"
+                                    inputMode="tel"
+                                    autoComplete="tel"
+                                    value={draft.whatsappNumber}
                                     onChange={(event) => {
                                         onDraftChange({
                                             ...draft,
-                                            authorized: event.target.checked,
+                                            whatsappNumber: event.target.value,
                                         });
                                         onSavedChange(false);
                                     }}
+                                    placeholder="Ex.: 5561999999999"
                                 />
-                                <span>
-                                    Autorizo a divulgação deste número para
-                                    contato pelo WhatsApp.
-                                </span>
-                            </label>
-                            <ActionButton variant="orange" type="submit">
-                                Salvar contato
-                            </ActionButton>
-                            {saved && (
-                                <p className="save-status" role="status">
-                                    {contactReady
-                                        ? "Contato autorizado e disponível no perfil e nas ofertas."
-                                        : "Contato salvo. O botão ficará oculto até que haja um número válido e autorização de divulgação."}
-                                </p>
-                            )}
-                        </form>
+                                <label className="consent-row">
+                                    <input
+                                        type="checkbox"
+                                        checked={draft.authorized}
+                                        onChange={(event) => {
+                                            onDraftChange({
+                                                ...draft,
+                                                authorized:
+                                                    event.target.checked,
+                                            });
+                                            onSavedChange(false);
+                                        }}
+                                    />
+                                    <span>
+                                        Autorizo a divulgação deste número para
+                                        contato pelo WhatsApp.
+                                    </span>
+                                </label>
+                                <ActionButton variant="orange" type="submit">
+                                    Salvar contato
+                                </ActionButton>
+                                {saved && (
+                                    <p className="save-status" role="status">
+                                        {contactReady
+                                            ? "Contato autorizado e disponível no perfil e nas ofertas."
+                                            : "Contato salvo. O botão ficará oculto até que haja um número válido e autorização de divulgação."}
+                                    </p>
+                                )}
+                            </form>
+                        )}
                     </details>
                 </>
             )}

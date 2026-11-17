@@ -109,9 +109,20 @@ describe("HU14 — consulta pública", () => {
             expect(
                 screen.getByText(/\(?61\)?\s*9\s*8888[-\s]*7777/),
             ).toBeTruthy();
-            expect(
-                screen.getByRole("button", { name: "Conversar pelo WhatsApp" }),
-            ).toBeTruthy();
+            // HU39/RN17: a opção aparece para todos; só quem está logado
+            // recebe o link do wa.me (o visitante vai ao login).
+            if (role)
+                expect(
+                    screen
+                        .getByRole("link", { name: /Conversar pelo WhatsApp/ })
+                        .getAttribute("href"),
+                ).toMatch(/^https:\/\/wa\.me\/5561988887777\?text=/);
+            else
+                expect(
+                    screen.getByRole("button", {
+                        name: /Conversar pelo WhatsApp/,
+                    }),
+                ).toBeTruthy();
         },
     );
 

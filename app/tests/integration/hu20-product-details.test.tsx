@@ -64,11 +64,11 @@ function api(
     vi.stubGlobal("fetch", fetch);
     return fetch;
 }
-const open = (consumer = false) =>
+const open = (authenticated = false) =>
     render(
         <ProductOfferDetails
             id={product.id}
-            consumer={consumer}
+            authenticated={authenticated}
             backPath="/explorar"
             onNavigate={vi.fn()}
         />,
@@ -180,23 +180,22 @@ it("privacidade: não usa o telefone salvo na conta local para o produto de outr
     await screen.findByRole("heading", { name: product.nome });
     await waitFor(() =>
         expect(
-            screen.queryByRole("button", { name: "Conversar pelo WhatsApp" }),
+            screen.queryByRole("link", { name: /Conversar pelo WhatsApp/ }),
         ).toBeNull(),
     );
 });
 
 it("contato autorizado vem do perfil público do responsável", async () => {
     api(undefined, "61988887777");
-    const external = vi.spyOn(window, "open").mockReturnValue(null);
     open(true);
-    fireEvent.click(
-        await screen.findByRole("button", { name: "Conversar pelo WhatsApp" }),
+    const link = await screen.findByRole("link", {
+        name: /Conversar pelo WhatsApp/,
+    });
+    expect(link.getAttribute("href")).toMatch(
+        /^https:\/\/wa\.me\/5561988887777\?text=/,
     );
-    expect(external).toHaveBeenCalledWith(
-        expect.stringContaining("https://wa.me/5561988887777"),
-        "_blank",
-        "noopener,noreferrer",
-    );
+    expect(link.getAttribute("target")).toBe("_blank");
+    expect(link.getAttribute("rel")).toBe("noopener noreferrer");
 });
 
 it("RNF04: detalhes sem violações WCAG A/AA detectáveis pelo axe", async () => {

@@ -1,15 +1,16 @@
 import { ActionButton } from "../../components/ui/ActionButton";
+import { WhatsAppContactLink } from "../contact/WhatsAppContactLink";
 
 type ProfilePageProps = {
-    contactAvailable: boolean;
+    contactUrl?: string;
+    onContactRequiresLogin?: () => void;
     onNavigate: (path: string) => void;
-    onStartContact: () => void;
 };
 
 export function ProfilePage({
-    contactAvailable,
+    contactUrl,
+    onContactRequiresLogin,
     onNavigate,
-    onStartContact,
 }: ProfilePageProps) {
     return (
         <>
@@ -46,10 +47,11 @@ export function ProfilePage({
                     >
                         Ver catálogo desse perfil
                     </ActionButton>
-                    {contactAvailable && (
-                        <ActionButton variant="green" onClick={onStartContact}>
-                            Conversar pelo WhatsApp
-                        </ActionButton>
+                    {contactUrl && (
+                        <WhatsAppContactLink
+                            url={contactUrl}
+                            onRequireLogin={onContactRequiresLogin}
+                        />
                     )}
                 </div>
             </section>
