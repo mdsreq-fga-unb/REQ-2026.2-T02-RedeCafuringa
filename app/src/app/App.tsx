@@ -20,8 +20,10 @@ import {
     getContactLoginRoute,
     isWhatsAppContactAvailable,
     useContactSettings,
+    whatsAppContactUrl,
 } from "@/features/contact";
 import { ProfilePage } from "@/features/profile";
+import { demoPublicProfiles } from "@/features/profile/publicProfileDemo";
 import { ExplorePage } from "@/features/profile/ExplorePage";
 import type { AuthResult } from "@/shared/types";
 import {
@@ -197,11 +199,24 @@ export function App() {
     const productOfferId = offerId && !currentOffer ? offerId : undefined;
     // HU39: o contato salvo no aparelho só existe na demonstração (sem API).
     // Com a API real, o contato vem do perfil público do responsável (RN07).
-    const demoContactUrl = (subject: string) =>
-        isMockAuthEnabled &&
-        isWhatsAppContactAvailable(settings.authorized, settings.whatsappNumber)
+    // Enquanto o produtor de teste não informou um número na Conta, a
+    // demonstração usa o telefone autorizado do perfil público fictício do
+    // responsável, o mesmo das ofertas da demonstração.
+    const demoContactUrl = (subject: string, producerId: string) => {
+        if (!isMockAuthEnabled) return undefined;
+        if (!settings.whatsappNumber)
+            return whatsAppContactUrl(
+                demoPublicProfiles.find((profile) => profile.id === producerId)
+                    ?.telefone,
+                subject,
+            );
+        return isWhatsAppContactAvailable(
+            settings.authorized,
+            settings.whatsappNumber,
+        )
             ? createWhatsAppUrl(settings.whatsappNumber, subject)
             : undefined;
+    };
 
     // RN17: só usuário autenticado inicia o contato; o visitante vê a opção
     // (CA05), entra e volta para a mesma oferta ou perfil.
@@ -269,7 +284,10 @@ export function App() {
                 )}
                 {path === "/perfil" && (
                     <ProfilePage
-                        contactUrl={demoContactUrl("Perfil de Dona Maria")}
+                        contactUrl={demoContactUrl(
+                            "Perfil de Dona Maria",
+                            "demo-dona-maria",
+                        )}
                         onContactRequiresLogin={contactLogin("perfil")}
                         onNavigate={navigate}
                     />
@@ -332,7 +350,11 @@ export function App() {
                     <OfferDetailsPage
                         offer={currentOffer}
                         backRoute={offerReturnRoute(route, "/catalogo")}
-                        contactUrl={demoContactUrl(currentOffer.title)}
+                        contactUrl={demoContactUrl(
+                            currentOffer.title,
+                            // Anfitrião das experiências de demonstração (listExperiences).
+                            "demo-jefferson",
+                        )}
                         onContactRequiresLogin={contactLogin(currentOffer.id)}
                         onNavigate={navigate}
                     />
