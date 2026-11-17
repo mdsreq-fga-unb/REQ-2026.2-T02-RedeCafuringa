@@ -28,6 +28,7 @@ import {
     rememberOfferOrigin,
     offerReturnRoute,
 } from "@/features/offers/offerNavigation";
+import { postLoginRoute } from "./postLoginRoute";
 import { useHashRoute } from "./useHashRoute";
 import { RegisterPage } from "@/features/register";
 import "../App.css";
@@ -211,40 +212,8 @@ export function App() {
             : () => navigate(getContactLoginRoute(subject));
 
     const handleSignIn = (auth: AuthResult) => {
-        const subject = query.get("contato");
         signIn(auth);
-        if (auth.user.role === "admin") {
-            navigate("/admin/acesso");
-            return;
-        }
-        // RN17: quem entrou a partir do contato volta para a oferta ou o perfil.
-        if (subject?.startsWith("produto/")) {
-            navigate(
-                `/oferta/${encodeURIComponent(subject.slice("produto/".length))}`,
-            );
-            return;
-        }
-        if (subject?.startsWith("experiencia/")) {
-            navigate(
-                `/oferta/${encodeURIComponent(subject.slice("experiencia/".length))}?tipo=experiencia`,
-            );
-            return;
-        }
-        if (subject?.startsWith("produtor/")) {
-            navigate(
-                `/produtor/${encodeURIComponent(subject.slice("produtor/".length))}`,
-            );
-            return;
-        }
-        if (subject === "perfil") {
-            navigate("/perfil");
-            return;
-        }
-        if (subject) {
-            navigate(`/oferta/${encodeURIComponent(subject)}`);
-            return;
-        }
-        navigate("/conta");
+        navigate(postLoginRoute(auth.user.role, query.get("contato")));
     };
 
     return (

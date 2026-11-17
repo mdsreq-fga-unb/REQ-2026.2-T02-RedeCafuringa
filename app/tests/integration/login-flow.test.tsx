@@ -66,13 +66,42 @@ describe("HU09 — fluxo de autenticação no app", () => {
         },
     );
 
-    // Critério 2
-    it("leva o consumidor autenticado à área da conta com o nome dele", async () => {
+    // Critério 2 e HU39 (redirect): depois do login vai para a página
+    // principal do perfil (protótipo: consumidor em Explorar, produtor no
+    // Início/Painel, que no app é a mesma aba /explorar), e não para a Conta.
+    it.each([
+        ["consumidor", consumerAuth],
+        ["produtor", producerAuth],
+    ] as const)(
+        "leva o %s autenticado à página principal (Explorar/Painel)",
+        async (_profile, auth) => {
+            vi.mocked(login).mockResolvedValue(auth);
+            window.location.hash = "#/entrar";
+            render(<App />);
+
+            await submitLogin(userEvent.setup());
+
+            await waitFor(() =>
+                expect(window.location.hash).toBe("#/explorar"),
+            );
+            const nav = await screen.findByRole("navigation", {
+                name: "Navegação principal",
+            });
+            expect(
+                nav.querySelector('[aria-current="page"]')?.textContent,
+            ).toMatch(auth.user.role === "producer" ? /Painel/ : /Explorar/);
+        },
+    );
+
+    it("a Conta continua mostrando os dados do consumidor autenticado", async () => {
         vi.mocked(login).mockResolvedValue(consumerAuth);
         window.location.hash = "#/entrar";
         render(<App />);
+        const user = userEvent.setup();
 
-        await submitLogin(userEvent.setup());
+        await submitLogin(user);
+        await waitFor(() => expect(window.location.hash).toBe("#/explorar"));
+        await user.click(screen.getByRole("button", { name: /^Conta$/ }));
 
         expect(
             await screen.findByRole("heading", {
@@ -99,6 +128,8 @@ describe("HU09 — fluxo de autenticação no app", () => {
         const user = userEvent.setup();
 
         await submitLogin(user);
+        await waitFor(() => expect(window.location.hash).toBe("#/explorar"));
+        await user.click(screen.getByRole("button", { name: /^Conta$/ }));
         await user.click(
             await screen.findByText("Contato público", { selector: "summary" }),
         );
@@ -126,8 +157,11 @@ describe("HU09 — fluxo de autenticação no app", () => {
         vi.mocked(login).mockResolvedValue(consumerAuth);
         window.location.hash = "#/entrar";
         render(<App />);
+        const user = userEvent.setup();
 
-        await submitLogin(userEvent.setup());
+        await submitLogin(user);
+        await waitFor(() => expect(window.location.hash).toBe("#/explorar"));
+        await user.click(screen.getByRole("button", { name: /^Conta$/ }));
 
         await screen.findByRole("heading", {
             name: "Olá, Gabriela",
