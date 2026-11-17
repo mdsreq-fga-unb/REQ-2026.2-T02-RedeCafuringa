@@ -36,6 +36,10 @@ Com isso, a plataforma evolui como um ambiente de aproximação entre consumidor
 
     O desenvolvimento dessas funcionalidades também contou com a estrutura técnica e as orientações descritas no [Guia do Backend — Estrutura de pastas e TDD](../arquitetura/backend/guia-estrutura-e-tdd.md). As práticas de integração e validação do projeto estão documentadas na [Visão Geral de Engenharia](../arquitetura/engenharia/visao-geral.md).
 
+??? info "Validação da HU24"
+
+    O catálogo de experiências (HU24) foi conferido critério a critério com testes automatizados (E2E do backend e testes do app, incluindo acessibilidade com axe) e com teste manual no ambiente Docker usando a API real, em celular, tablet e computador. O desempenho em conexão limitada (RNF06) foi medido com Lighthouse em 3G. O código está no [PR #78](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/78) e as capturas e commits estão na seção Evidências da [HU24](../historias/HU24.md#evidencias).
+
 ### Organização e Atualização
 
 ??? info "Revisão e Refinamento dos Requisitos"
