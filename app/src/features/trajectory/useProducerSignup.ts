@@ -72,6 +72,8 @@ export function useProducerSignup(onSuccess: (auth: AuthResult) => void) {
                         );
                     if (result.reason === "invalid")
                         throw new Error(result.messages.join(" "));
+                    if (result.reason === "blocked")
+                        throw new Error(result.message);
                     if (result.reason === "rate_limit")
                         throw new Error(
                             result.retryAfterSeconds

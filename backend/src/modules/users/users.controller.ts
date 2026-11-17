@@ -1,9 +1,21 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -16,13 +28,17 @@ import {
   RETRY_AFTER_HEADER,
 } from '../../common/dto/error.response.js';
 import { AuthThrottle } from '../auth/decorators/auth-throttle.decorator.js';
+import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Public } from '../auth/decorators/public.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
+import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
+import { AccountDeletionService } from './account-deletion.service.js';
 import { Role } from './domain/role.js';
 import { AdminResponse } from './dto/admin.response.js';
 import { CreateAdminDto } from './dto/create-admin.dto.js';
 import { CreateConsumerDto } from './dto/create-consumer.dto.js';
 import { CreateProducerDto } from './dto/create-producer.dto.js';
+import { DeleteUserQuery } from './dto/delete-user.query.js';
 import { ListUsersQuery } from './dto/list-users.query.js';
 import { ProducerResponse } from './dto/producer.response.js';
 import { UserDetailResponse } from './dto/user-detail.response.js';
@@ -33,7 +49,10 @@ import { UsersService } from './users.service.js';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly users: UsersService) {}
+  constructor(
+    private readonly users: UsersService,
+    private readonly deletion: AccountDeletionService,
+  ) {}
 
   /** HU01 — cadastro público de consumidor. */
   @Public()
@@ -168,5 +187,45 @@ export class UsersController {
   })
   findOne(@Param('id') id: string): Promise<UserDetailResponse> {
     return this.users.findDetail(id);
+  }
+
+  /** Exclusão administrativa de uma conta (RN01, RN03, RN04). */
+  @Roles(Role.ADMINISTRADOR)
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Excluir usuário',
+    description:
+      'Exclui definitivamente a conta e o que depende dela (produtos, experiências e fotos, foto de perfil e pedidos de nova senha). As sessões abertas da conta deixam de valer na hora e o perfil e as ofertas saem do catálogo, da busca e do contato. Com o motivo INATIVIDADE, e-mail, CPF e CNPJ ficam livres para novo cadastro (RNF11); com DESCUMPRIMENTO_REGRAS, só o HMAC desses dados é guardado e um novo cadastro com eles é recusado com 403. Exige o motivo (RN04), registrado no log de auditoria sem dados pessoais. O administrador não exclui a própria conta nem a conta administrativa inicial.',
+  })
+  @ApiNoContentResponse({ description: 'Conta excluída' })
+  @ApiBadRequestResponse({
+    description: 'Motivo ausente ou inválido',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Perfil diferente de administrador',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Conta inexistente ou já excluída',
+    type: ErrorResponse,
+  })
+  @ApiConflictResponse({
+    description:
+      'A própria conta ou a conta administrativa inicial, que não podem ser excluídas',
+    type: ErrorResponse,
+  })
+  remove(
+    @CurrentUser() admin: AuthenticatedUser,
+    @Param('id') id: string,
+    @Query() { motivo }: DeleteUserQuery,
+  ): Promise<void> {
+    return this.deletion.delete(admin.id, id, motivo);
   }
 }

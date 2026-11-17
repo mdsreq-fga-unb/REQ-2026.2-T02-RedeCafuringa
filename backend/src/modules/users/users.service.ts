@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,6 +11,10 @@ import { PasswordHasher } from '../../common/crypto/password-hasher.js';
 import { PiiCipher } from '../../common/crypto/pii-cipher.js';
 import { maskCnpj, maskCpf } from '../../common/validators/documento.js';
 import type { SessionState } from '../auth/domain/session.js';
+import {
+  BannedIdentitiesService,
+  type Identity,
+} from './banned-identities.service.js';
 import { isAdult } from './domain/age.js';
 import { Role } from './domain/role.js';
 import { buildUserFilter } from './domain/user-filter.js';
@@ -31,6 +36,12 @@ const DETAIL_EXCLUDED_FIELDS = '-senhaHash -cpfHash -cnpjHash';
 const SUMMARY_EXCLUDED_FIELDS = `${DETAIL_EXCLUDED_FIELDS} -cpfCifrado -cnpjCifrado`;
 /** Conta administrativa só tem e-mail e senha (HU03); o nome é fixo. */
 const ADMIN_DISPLAY_NAME = 'Administrador';
+/**
+ * Conta excluída por banimento não volta. A mensagem não confirma o
+ * banimento para quem tenta (não expõe dados de terceiros), só orienta.
+ */
+const BANNED =
+  'Não foi possível concluir o cadastro. Procure a administração da Rede Cafuringa.';
 
 @Injectable()
 export class UsersService {
@@ -38,7 +49,14 @@ export class UsersService {
     @InjectModel(User.name) private readonly users: Model<User>,
     private readonly cipher: PiiCipher,
     private readonly hasher: PasswordHasher,
+    private readonly bans: BannedIdentitiesService,
   ) {}
+
+  /** Recusa o cadastro de quem foi banido (CPF, CNPJ ou e-mail). */
+  private async assertNotBanned(identity: Identity): Promise<void> {
+    if (await this.bans.isBanned(identity))
+      throw new ForbiddenException(BANNED);
+  }
 
   /** HU01: o cadastro público sempre cria um consumidor (RN01). */
   createConsumer(dto: CreateConsumerDto): Promise<UserDocument> {
@@ -48,6 +66,7 @@ export class UsersService {
   /** HU03: cria uma conta ADMINISTRADOR só com e-mail e senha (RF03). */
   async createAdmin(dto: CreateAdminDto): Promise<UserDocument> {
     const email = dto.email.toLowerCase();
+    await this.assertNotBanned({ email });
     if (await this.users.exists({ email }).exec()) {
       throw new ConflictException('E-mail já cadastrado');
     }
@@ -77,6 +96,8 @@ export class UsersService {
   async createProducer(dto: CreateProducerDto): Promise<UserDocument> {
     const email = dto.email.toLowerCase();
     const cpfHash = this.cipher.blindIndex(dto.cpf);
+    const cnpjHash = dto.cnpj ? this.cipher.blindIndex(dto.cnpj) : undefined;
+    await this.assertNotBanned({ cpfHash, cnpjHash, email });
 
     if (await this.users.exists({ cpfHash }).exec()) {
       throw new ConflictException('CPF já cadastrado');
@@ -85,7 +106,6 @@ export class UsersService {
       throw new ConflictException('E-mail já cadastrado');
     }
 
-    const cnpjHash = dto.cnpj ? this.cipher.blindIndex(dto.cnpj) : undefined;
     if (cnpjHash && (await this.users.exists({ cnpjHash }).exec())) {
       throw new ConflictException('CNPJ já cadastrado');
     }
@@ -134,10 +154,11 @@ export class UsersService {
     }
 
     const cpfHash = this.cipher.blindIndex(dto.cpf);
+    const email = dto.email.toLowerCase();
+    await this.assertNotBanned({ cpfHash, email });
     if (await this.users.exists({ cpfHash }).exec()) {
       throw new ConflictException('CPF já cadastrado');
     }
-    const email = dto.email.toLowerCase();
     if (await this.users.exists({ email }).exec()) {
       throw new ConflictException('E-mail já cadastrado');
     }
