@@ -20,6 +20,7 @@ function setup() {
     model as unknown as Model<User>,
     {} as PiiCipher,
     hasher as unknown as PasswordHasher,
+    { isBanned: vi.fn().mockResolvedValue(false) } as never,
   );
 
   return { service, model, hasher };
