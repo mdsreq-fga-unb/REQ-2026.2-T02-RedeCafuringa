@@ -36,7 +36,7 @@ Com isso, a plataforma evolui como um ambiente de aproximação entre consumidor
     | [HU14](../historias/HU14.md) | Consultar perfil de produtor | Acesso às informações dos produtores cadastrados na plataforma. |
     | [HU39](../historias/HU39.md) | Disponibilizar contato direto | Comunicação direta entre usuários e produtores da plataforma. |
 
-    Na HU39, o contato pelo WhatsApp aparece no detalhe do produto, da experiência e no perfil público só quando o produtor autoriza a divulgação do número, e só usuários autenticados iniciam a conversa (RN17). A mesma entrega corrigiu o redirect pós-login para a página principal. Evidências: [PR #77](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/77) e a seção Evidências da [HU39](../historias/HU39.md).
+    Na HU39, o contato pelo WhatsApp aparece no detalhe do produto, da experiência e no perfil público só quando o produtor autoriza a divulgação do número, e só usuários autenticados iniciam a conversa (RN17). A mesma entrega corrigiu o redirect pós-login para a página principal e, após a revisão do PR, o contato no modo de demonstração do frontend. Evidências: [PR #77](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa/pull/77) e a seção Evidências da [HU39](../historias/HU39.md).
 
     O desenvolvimento dessas funcionalidades também contou com a estrutura técnica e as orientações descritas no [Guia do Backend — Estrutura de pastas e TDD](../arquitetura/backend/guia-estrutura-e-tdd.md). As práticas de integração e validação do projeto estão documentadas na [Visão Geral de Engenharia](../arquitetura/engenharia/visao-geral.md).
 
