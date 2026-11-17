@@ -13,6 +13,7 @@ As atividades foram organizadas em torno dos seguintes fluxos:
 - **Consulta ao catálogo de experiências:** desenvolvimento da funcionalidade que permite aos usuários visualizar as experiências cadastradas na plataforma, conhecendo as atividades oferecidas pelos produtores e comunidades participantes.
 - **Busca por ofertas:** implementação de um mecanismo de busca que facilita a localização de produtos e experiências disponibilizados na Rede Cafuringa, tornando a navegação mais prática e ajudando os usuários a encontrar ofertas de seu interesse.
 - **Consulta ao perfil do produtor:** desenvolvimento da visualização dos perfis dos produtores, permitindo que os usuários acessem informações sobre quem está por trás dos produtos e experiências apresentados na plataforma.
+- **Contato direto com produtores:** desenvolvimento do recurso que permite aos usuários entrar em contato diretamente com os produtores, facilitando a comunicação e reduzindo a dependência de intermediários na interação entre as partes.
 
 Essas funcionalidades complementam os recursos desenvolvidos nas iterações anteriores. Enquanto as etapas anteriores estabeleceram os cadastros de produtos, produtores e experiências, esta iteração avançou na disponibilização dessas informações para consulta e descoberta pelos usuários.
 
@@ -33,6 +34,7 @@ Com isso, a plataforma evolui como um ambiente de aproximação entre consumidor
     | [HU24](../historias/HU24.md) | Consultar catálogo de experiências | Visualização das experiências cadastradas e oferecidas na Rede Cafuringa. |
     | [HU36](../historias/HU36.md) | Buscar ofertas | Busca por ofertas disponibilizadas na plataforma, facilitando sua localização pelos usuários. |
     | [HU14](../historias/HU14.md) | Consultar perfil de produtor | Acesso às informações dos produtores cadastrados na plataforma. |
+    | [HU39](../historias/HU39.md) | Disponibilizar contato direto | Comunicação direta entre usuários e produtores da plataforma. |
 
     O desenvolvimento dessas funcionalidades também contou com a estrutura técnica e as orientações descritas no [Guia do Backend — Estrutura de pastas e TDD](../arquitetura/backend/guia-estrutura-e-tdd.md). As práticas de integração e validação do projeto estão documentadas na [Visão Geral de Engenharia](../arquitetura/engenharia/visao-geral.md).
 
