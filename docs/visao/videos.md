@@ -13,5 +13,14 @@
 <span class="version-badge">Unidade 02</span>
 
 <div style="display: flex; justify-content: center; margin: 20px 0;">
-  <iframe width="800" height="450" src="https://www.youtube.com/embed/nm9l7u-xJ2w" title="Unidade 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <iframe width="800" height="450" src="https://www.youtube.com/embed/nm9l7u-xJ2w" title="Unidade 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+---
+
+## Vídeo da Unidade 3
+
+<span class="version-badge">Unidade 03</span>
+
+<div style="display: flex; justify-content: center; margin: 20px 0;">
+  <iframe width="800" height="450" src="https://www.youtube.com/embed/lTQEYEuegGg" title="Unidade 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>

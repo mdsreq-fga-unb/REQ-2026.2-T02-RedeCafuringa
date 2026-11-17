@@ -18,19 +18,8 @@
 | Apresentação do protótipo da Iteração 4 | Equipe; validação individual do cliente a comprovar | Demonstração visual dos fluxos | Protótipo apresentado | Não é relatório de testes com usuários nem aceite formal. [Vídeo](https://www.youtube.com/watch?v=DCNR_vjC-uk) |
 
 
-## 2. Técnicas Planejadas e Lacunas
 
-| Técnica | O que está disponível | Evidência ainda necessária |
-|---|---|---|
-| Visita/entrevista em campo | Registro da conversa com Jefferson e vídeo | Lista de participantes por perfil, necessidades relatadas, RFs/HUs alterados por cada achado |
-| Grupo focal formal | Não há resultado estruturado identificável nos registros consultados | Participantes, roteiro, registro dos apontamentos e consenso; caso não tenha ocorrido, classificar como não executado |
-| Análise documental/normativa | [Material de pesquisa normativa](../../img/aup-elaboracao/pesquisa_normativa.png) e requisitos publicados | Fontes específicas, trechos analisados, efeito em RF/RNF e responsável técnico; não confundir com homologação |
-| Homologação regulatória | Não há termo ou parecer individualizado disponível nos registros consultados | A certificação/legalização formal foi retirada do MVP; não apresentar homologação regulatória como entrega. Caso exista outra obrigação normativa específica, registrar seu escopo e parecer separadamente |
-| Usabilidade do protótipo | Protótipo navegável e vídeo de apresentação | Participantes reais, tarefas, dificuldades, taxa de conclusão, recomendações e ajustes de UI; ainda não comprova teste executado |
-| Aceite dos comportamentos do MVP | Vídeos/reuniões e acordos de escopo | Decisões por fluxo ou critério, cliente responsável, data, versão e ressalvas |
-
-
-## 3. Modelo de Consolidação dos Feedbacks
+## 2. Modelo de Consolidação dos Feedbacks
 
 Preencher cada linha a partir de reunião, vídeo, mensagem ou PR comprovável, sem presumir decisões:
 
