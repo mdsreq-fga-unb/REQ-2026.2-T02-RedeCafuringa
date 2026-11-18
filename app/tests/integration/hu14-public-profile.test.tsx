@@ -98,7 +98,7 @@ describe("HU14 — consulta pública", () => {
     });
 
     it.each([null, "consumer"] as const)(
-        "CA03: %s vê o telefone autorizado e o controle do protótipo",
+        "CA03: telefone autorizado é exibido apenas com sessão (%s)",
         async (role) => {
             if (role) seedSession(role);
             mockTrajectoryApi({
@@ -106,23 +106,23 @@ describe("HU14 — consulta pública", () => {
             });
             render(<App />);
             await loaded();
+            if (!role) {
+                expect(
+                    screen.queryByRole("link", {
+                        name: /Conversar pelo WhatsApp/,
+                    }),
+                ).toBeNull();
+                expect(screen.queryByText(/8888[-\s]*7777/)).toBeNull();
+                return;
+            }
             expect(
                 screen.getByText(/\(?61\)?\s*9\s*8888[-\s]*7777/),
             ).toBeTruthy();
-            // HU39/RN17: a opção aparece para todos; só quem está logado
-            // recebe o link do wa.me (o visitante vai ao login).
-            if (role)
-                expect(
-                    screen
-                        .getByRole("link", { name: /Conversar pelo WhatsApp/ })
-                        .getAttribute("href"),
-                ).toMatch(/^https:\/\/wa\.me\/5561988887777\?text=/);
-            else
-                expect(
-                    screen.getByRole("button", {
-                        name: /Conversar pelo WhatsApp/,
-                    }),
-                ).toBeTruthy();
+            expect(
+                screen
+                    .getByRole("link", { name: /Conversar pelo WhatsApp/ })
+                    .getAttribute("href"),
+            ).toContain("https://wa.me/5561988887777?");
         },
     );
 

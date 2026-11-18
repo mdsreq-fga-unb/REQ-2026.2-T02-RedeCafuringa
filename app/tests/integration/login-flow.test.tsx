@@ -130,10 +130,6 @@ describe("HU09 — fluxo de autenticação no app", () => {
         await submitLogin(user);
         await waitFor(() => expect(window.location.hash).toBe("#/explorar"));
         await user.click(screen.getByRole("button", { name: /^Conta$/ }));
-        await user.click(
-            await screen.findByText("Contato público", { selector: "summary" }),
-        );
-
         expect(
             await screen.findByRole("heading", { name: "Contato público" }),
         ).toBeTruthy();
@@ -145,12 +141,20 @@ describe("HU09 — fluxo de autenticação no app", () => {
         ).toBeTruthy();
         await user.click(
             screen.getByRole("button", {
-                name: "Minha trajetória",
+                name: "Configurar contato público",
             }),
         );
         await waitFor(() =>
-            expect(window.location.hash).toBe("#/minha-trajetoria"),
+            expect(window.location.hash).toBe("#/minha-trajetoria?contato=1"),
         );
+        expect(
+            screen.getByRole("heading", { name: "Conte sua história" }),
+        ).toBeTruthy();
+        expect(
+            screen.queryByRole("heading", {
+                name: "Entre para falar com o responsável",
+            }),
+        ).toBeNull();
     });
 
     it("não mostra o contato público para o consumidor", async () => {

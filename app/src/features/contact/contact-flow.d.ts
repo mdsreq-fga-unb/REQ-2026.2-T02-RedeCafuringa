@@ -9,11 +9,19 @@ export function toWhatsAppNumber(
     phone: string | null | undefined,
 ): string | undefined;
 
-export function createWhatsAppUrl(number: string, subject: string): string;
+export type ContactContext = {
+    kind: "product" | "experience" | "profile";
+    route: string;
+};
+
+export function createWhatsAppUrl(
+    number: string,
+    subject: string,
+    context?: ContactContext,
+): string;
 
 export function whatsAppContactUrl(
     phone: string | null | undefined,
     subject: string,
+    context?: ContactContext,
 ): string | undefined;
-
-export function getContactLoginRoute(subject: string): string;

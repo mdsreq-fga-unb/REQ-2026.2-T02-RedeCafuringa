@@ -14,6 +14,7 @@ type Props = {
     onBack: () => void;
     signup?: boolean;
     loading?: boolean;
+    focusContact?: boolean;
     error?: string;
     saved?: boolean;
     loadFailed?: boolean;
@@ -30,6 +31,7 @@ export function TrajectoryForm({
     onBack,
     signup = false,
     loading = false,
+    focusContact = false,
     error,
     saved,
     loadFailed,
@@ -48,6 +50,14 @@ export function TrajectoryForm({
     const form = useRef<HTMLFormElement>(null);
     const successDialog = useRef<HTMLDialogElement>(null);
     const submitting = useRef(false);
+    useEffect(() => {
+        if (focusContact && !loading && !loadFailed)
+            form.current
+                ?.querySelector<HTMLInputElement>(
+                    '[data-trajectory-field="phone"]',
+                )
+                ?.focus();
+    }, [focusContact, loading, loadFailed]);
     useEffect(() => {
         const dialog = successDialog.current;
         if (!dialog) return;
@@ -233,18 +243,30 @@ export function TrajectoryForm({
                                 {errors.phone}
                             </p>
                         )}
-                        <label className="consent-row">
+                        <label className="trajectory-contact-permission">
                             <input
                                 type="checkbox"
                                 checked={draft.phonePublic}
+                                aria-labelledby={`${id}-contact-title`}
+                                aria-describedby={`${id}-contact-description`}
                                 onChange={(event) =>
                                     change("phonePublic", event.target.checked)
                                 }
                             />
-                            <span>
-                                Autorizo a divulgação deste número no meu perfil
-                                público e nas minhas ofertas, para contato pelo
-                                WhatsApp.
+                            <span className="trajectory-contact-copy">
+                                <strong id={`${id}-contact-title`}>
+                                    Autorizo compartilhar meu número de WhatsApp
+                                </strong>
+                                <span id={`${id}-contact-description`}>
+                                    Marque e salve para permitir que usuários
+                                    logados entrem em contato pelo WhatsApp no
+                                    seu perfil e nas suas ofertas.
+                                </span>
+                                <span className="trajectory-contact-state">
+                                    {draft.phonePublic
+                                        ? "Compartilhamento marcado"
+                                        : "Compartilhamento desmarcado"}
+                                </span>
                             </span>
                         </label>
                     </div>

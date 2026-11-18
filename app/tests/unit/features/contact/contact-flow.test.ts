@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
     createWhatsAppUrl,
-    getContactLoginRoute,
     isWhatsAppContactAvailable,
     normalizeWhatsAppNumber,
     toWhatsAppNumber,
@@ -70,16 +69,5 @@ describe("HU39 — número E.164 a partir do telefone público (CA02)", () => {
     it("CA06: sem telefone válido não há link de contato", () => {
         expect(whatsAppContactUrl(undefined, "Mel")).toBeUndefined();
         expect(whatsAppContactUrl("123", "Mel")).toBeUndefined();
-    });
-});
-
-describe("HU39/RN17 — login antes de iniciar o contato", () => {
-    it("cria a rota de login com a origem do contato codificada", () => {
-        expect(getContactLoginRoute("produto/abc")).toBe(
-            "/entrar?contato=produto%2Fabc",
-        );
-        expect(getContactLoginRoute("visita com acento & queijo")).toBe(
-            "/entrar?contato=visita%20com%20acento%20%26%20queijo",
-        );
     });
 });

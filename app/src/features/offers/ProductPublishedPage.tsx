@@ -1,12 +1,15 @@
 import { useEffect, useRef } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
+import { offerDetailsRoute } from "./offerNavigation";
 import "./product-registration.css";
 
 export function ProductPublishedPage({
     id,
+    experience = false,
     onNavigate,
 }: {
     id: string;
+    experience?: boolean;
     onNavigate: (path: string) => void;
 }) {
     const title = useRef<HTMLHeadingElement>(null);
@@ -35,7 +38,7 @@ export function ProductPublishedPage({
                 <button
                     className="product-submit"
                     onClick={() =>
-                        onNavigate(`/oferta/${encodeURIComponent(id)}`)
+                        onNavigate(offerDetailsRoute(id, experience))
                     }
                 >
                     Visualizar

@@ -1,25 +1,27 @@
+import { whatsAppContactUrl } from "@/features/contact";
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
-import { getPublicTrajectory } from "@/features/trajectory/trajectoryService";
-import { getContactLoginRoute, whatsAppContactUrl } from "@/features/contact";
+import {
+    getPublicTrajectory,
+    type PublicTrajectory,
+} from "@/features/trajectory/trajectoryService";
 import { getExperienceDetails } from "./catalogItems";
 import { getProductDetails } from "./productDetailsService";
 import { OfferDetailsPage } from "./OfferDetailsPage";
 import { productToOffer } from "./productOffer";
+import { offerDetailsRoute } from "./offerNavigation";
 import type { Product } from "./productTypes";
 
 type State = {
     status: "loading" | "ready" | "missing" | "error";
     product?: Product;
-    /** HU39: link wa.me do contato autorizado pelo responsável. */
-    contactUrl?: string;
+    profile?: PublicTrajectory;
 };
 type Props = {
     id: string;
     experience?: boolean;
-    /** RN17: só quem está autenticado recebe o link do wa.me. */
-    authenticated?: boolean;
+    canViewContact?: boolean;
     backPath?: string;
     onNavigate: (path: string) => void;
 };
@@ -27,7 +29,7 @@ type Props = {
 export function ProductOfferDetails({
     id,
     experience = false,
-    authenticated = false,
+    canViewContact = false,
     backPath = "/produtos",
     onNavigate,
 }: Props) {
@@ -55,15 +57,11 @@ export function ProductOfferDetails({
                         controller.signal,
                     )
                         .then((profile) => {
-                            const contactUrl = whatsAppContactUrl(
-                                profile.telefone,
-                                product.name,
-                            );
-                            if (!controller.signal.aborted && contactUrl)
+                            if (!controller.signal.aborted)
                                 setState({
                                     status: "ready",
                                     product,
-                                    contactUrl,
+                                    profile,
                                 });
                         })
                         .catch(() => {
@@ -75,27 +73,30 @@ export function ProductOfferDetails({
                 if (!controller.signal.aborted) setState({ status: "error" });
             });
         return () => controller.abort();
-    }, [id, experience, attempt]);
+    }, [id, experience, attempt, canViewContact]);
 
-    if (state.status === "ready" && state.product)
+    if (state.status === "ready" && state.product) {
+        const { product, profile } = state;
         return (
             <OfferDetailsPage
-                offer={productToOffer(state.product)}
-                contactUrl={state.contactUrl}
-                onContactRequiresLogin={
-                    authenticated
-                        ? undefined
-                        : () =>
-                              onNavigate(
-                                  getContactLoginRoute(
-                                      `${experience ? "experiencia" : "produto"}/${id}`,
-                                  ),
-                              )
+                offer={productToOffer(product)}
+                producerName={product.producerName}
+                producerRoute={
+                    profile && `/produtor/${encodeURIComponent(profile.id)}`
                 }
+                contactUrl={whatsAppContactUrl(
+                    canViewContact ? profile?.telefone : undefined,
+                    product.name,
+                    {
+                        kind: experience ? "experience" : "product",
+                        route: offerDetailsRoute(id, experience),
+                    },
+                )}
                 backPath={backPath}
                 onNavigate={onNavigate}
             />
         );
+    }
     return (
         <>
             <BackButton label="Voltar" onClick={() => onNavigate(backPath)} />

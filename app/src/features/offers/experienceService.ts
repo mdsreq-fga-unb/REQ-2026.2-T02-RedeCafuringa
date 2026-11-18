@@ -2,6 +2,7 @@ import { ApiHttpError, getApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { saveDemoOffer, notifyOffersChanged } from "./publishedOffers";
 import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
+import type { ApiProduct } from "./productTypes";
 
 export type ExperienceDraft = {
     nome: string;
@@ -23,7 +24,7 @@ export type RegisteredExperience = {
     duracao: string;
     fotos: string[];
     /** Responsável pela oferta (CA03, CA08): só dados de divulgação. */
-    produtor: { id: string; nomeIniciativa: string; localidade?: string };
+    produtor: ApiProduct["produtor"];
     /** Presente nas respostas da API (RN10); as rotas públicas só trazem disponíveis. */
     disponivel?: boolean;
 };

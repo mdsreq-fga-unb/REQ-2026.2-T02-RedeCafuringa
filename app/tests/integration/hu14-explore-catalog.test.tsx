@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -371,26 +371,15 @@ describe("HU14 — ofertas e contato vinculados ao produtor", () => {
         expect(link.getAttribute("rel")).toBe("noopener noreferrer");
     });
 
-    // HU39/RN17: o visitante vê a opção, mas iniciar o contato pede login.
-    it("visitante consulta o perfil livremente e entra apenas ao iniciar contato", async () => {
+    it("visitante consulta o perfil sem acessar o telefone autorizado", async () => {
         api({ phone: "61988887777" });
         window.location.hash = publicRoute;
-        const user = userEvent.setup();
         render(<App />);
-        await user.click(
-            await screen.findByRole("button", {
-                name: /Conversar pelo WhatsApp/,
-            }),
-        );
-        await waitFor(() =>
-            expect(window.location.hash).toBe(
-                `#/entrar?contato=${encodeURIComponent(`produtor/${producerId}`)}`,
-            ),
-        );
+        await screen.findByRole("heading", { name: "Horta da Maria" });
         expect(
-            await screen.findByRole("heading", {
-                name: "Entre para falar com o responsável",
-            }),
-        ).toBeTruthy();
+            screen.queryByRole("link", { name: /Conversar pelo WhatsApp/ }),
+        ).toBeNull();
+        expect(screen.queryByText(/8888[-\s]*7777/)).toBeNull();
+        expect(window.location.hash).toBe(publicRoute);
     });
 });

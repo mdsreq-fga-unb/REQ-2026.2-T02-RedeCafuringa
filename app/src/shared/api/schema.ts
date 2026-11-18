@@ -993,6 +993,11 @@ export interface components {
             /** @example Horta da Joana */
             nomeIniciativa: string;
             /**
+             * @description Primeiro nome de quem responde pela oferta.
+             * @example Joana
+             */
+            primeiroNome?: string;
+            /**
              * @description Localidade ou propriedade informada pelo produtor para divulgação (HU20, RN11); ausente quando não informada
              * @example Fazenda Cafuringa
              */

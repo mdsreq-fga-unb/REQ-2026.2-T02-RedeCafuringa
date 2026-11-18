@@ -4,7 +4,7 @@ import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
 import { toProductList } from "./productAdapter";
 import { saveDemoOffer, notifyOffersChanged } from "./publishedOffers";
 import { listMockProducts } from "./mockProductService";
-import type { ApiProductList, Product } from "./productTypes";
+import type { ApiProduct, ApiProductList, Product } from "./productTypes";
 
 /** Máximo por requisição aceito por GET /products. */
 const CATALOG_LIMIT = 50;
@@ -51,7 +51,7 @@ export type RegisteredProduct = {
     precoPorUnidade: number;
     gramasPorUnidade: number;
     fotos: string[];
-    produtor: { id: string; nomeIniciativa: string; localidade?: string };
+    produtor: ApiProduct["produtor"];
     /** Presente nas respostas da API (RN10); as rotas públicas só trazem disponíveis. */
     disponivel?: boolean;
 };

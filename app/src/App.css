@@ -264,6 +264,16 @@ h2 {
     color: var(--ink);
 }
 
+.button.button-whatsapp {
+    gap: 8px;
+    background: #07b107;
+    color: #072c18;
+}
+
+.button-whatsapp svg {
+    flex-shrink: 0;
+}
+
 .button-green-soft {
     background: #52c544;
 }
@@ -645,20 +655,57 @@ h2 {
     margin-top: 16px;
 }
 
-.account-contact-disclosure {
+.public-contact-card {
+    display: grid;
+    gap: 16px;
     margin-top: 24px;
-    border-top: 1px solid var(--line);
+    padding: clamp(16px, 3vw, 24px);
+    border: 1px solid #c9decd;
+    border-radius: 18px;
+    background: #f1f8f2;
+    color: #233a29;
 }
 
-.account-contact-disclosure summary {
-    padding: 16px 0 8px;
-    color: var(--orange-text);
-    cursor: pointer;
-    font-weight: 700;
+.public-contact-card h2 {
+    margin: 0 0 6px;
+    font-size: 18px;
 }
 
-.account-contact-disclosure[open] summary {
+.public-contact-card p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.public-contact-card .contact-name {
+    font-weight: 750;
+}
+
+.public-contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.public-contact-actions p {
+    flex-basis: 100%;
+}
+
+.public-contact-actions .button {
+    gap: 8px;
+    margin: 0;
+}
+
+.public-contact-actions .button-outline {
+    border-color: #829988;
+    background: #fff;
+    color: #233a29;
+}
+
+.account-contact-card .contact-settings {
+    margin: 0;
     padding-bottom: 0;
+    border-bottom: 0;
 }
 
 .button-danger {
@@ -888,7 +935,7 @@ h2 {
     }
 
     .account-profile-form > .button,
-    .account-contact-disclosure {
+    .account-contact-card {
         grid-column: 1 / -1;
     }
 

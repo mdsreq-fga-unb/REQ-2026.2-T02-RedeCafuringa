@@ -64,11 +64,11 @@ function api(
     vi.stubGlobal("fetch", fetch);
     return fetch;
 }
-const open = (authenticated = false) =>
+const open = (canViewContact = false) =>
     render(
         <ProductOfferDetails
             id={product.id}
-            authenticated={authenticated}
+            canViewContact={canViewContact}
             backPath="/explorar"
             onNavigate={vi.fn()}
         />,
@@ -176,7 +176,7 @@ it("privacidade: não usa o telefone salvo na conta local para o produto de outr
         "cafuringa-contact",
         JSON.stringify({ authorized: true, whatsappNumber: "5561999999999" }),
     );
-    open(true);
+    open();
     await screen.findByRole("heading", { name: product.nome });
     await waitFor(() =>
         expect(

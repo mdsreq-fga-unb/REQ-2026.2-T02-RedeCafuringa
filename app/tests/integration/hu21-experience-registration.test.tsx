@@ -399,6 +399,9 @@ it("CA03/CA05/CA08: publica dados e fotos sem escolher dono, confirma e identifi
     ).toBeNull();
     await user.click(screen.getByRole("button", { name: "Visualizar" }));
     expect(await screen.findByText(experience.nome)).toBeTruthy();
+    expect(window.location.hash).toBe(
+        `#/oferta/${experience.id}?tipo=experiencia`,
+    );
     expect(screen.getByText(/Horta da Joana/)).toBeTruthy();
     expect(screen.getByText(new RegExp(experience.local))).toBeTruthy();
 });

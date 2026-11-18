@@ -49,15 +49,6 @@ describe("detalhes da oferta", () => {
         },
     );
 
-    it("RN17: visitante vê a opção como botão que leva ao login", () => {
-        const onContactRequiresLogin = vi.fn();
-        renderDetails({ contactUrl: url, onContactRequiresLogin });
-
-        expect(screen.queryByRole("link", { name: CONTACT })).toBeNull();
-        fireEvent.click(screen.getByRole("button", { name: CONTACT }));
-        expect(onContactRequiresLogin).toHaveBeenCalledOnce();
-    });
-
     it("volta para o catálogo do perfil por padrão", () => {
         const { onNavigate } = renderDetails();
 

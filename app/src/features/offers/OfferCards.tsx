@@ -1,10 +1,11 @@
 import type { Offer } from "@/shared/types";
+import { offerDetailsRoute } from "./offerNavigation";
 
 export function OfferCards({
     offers,
     onNavigate,
     routeFor = (offer) =>
-        `/oferta/${encodeURIComponent(offer.id)}${offer.category.startsWith("Experi") ? "?tipo=experiencia" : ""}`,
+        offerDetailsRoute(offer.id, offer.category.startsWith("Experi")),
 }: {
     offers: Offer[];
     onNavigate: (path: string) => void;

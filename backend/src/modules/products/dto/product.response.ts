@@ -10,6 +10,12 @@ export class ProductProducerResponse {
   nomeIniciativa: string;
 
   @ApiPropertyOptional({
+    example: 'Joana',
+    description: 'Primeiro nome de quem responde pela oferta.',
+  })
+  primeiroNome?: string;
+
+  @ApiPropertyOptional({
     example: 'Fazenda Cafuringa',
     description:
       'Localidade ou propriedade informada pelo produtor para divulgação (HU20, RN11); ausente quando não informada',

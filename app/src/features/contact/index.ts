@@ -1,6 +1,5 @@
 export {
     createWhatsAppUrl,
-    getContactLoginRoute,
     isWhatsAppContactAvailable,
     normalizeWhatsAppNumber,
     toWhatsAppNumber,

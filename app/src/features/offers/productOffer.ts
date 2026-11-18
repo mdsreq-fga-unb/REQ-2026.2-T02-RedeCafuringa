@@ -3,6 +3,7 @@ import { formatProductPrice } from "./productPrice";
 import type { Product } from "./productTypes";
 
 export function productToOffer(product: Product): Offer {
+    const producerName = product.producerFirstName || product.producerName;
     // Experiência (HU21/HU24, protótipo): Anfitrião, Duração e Local, uma vez cada.
     const experience =
         product.local !== undefined || product.duracao !== undefined;
@@ -15,14 +16,14 @@ export function productToOffer(product: Product): Offer {
         price: formatProductPrice(product.price, product.unit),
         details: experience
             ? [
-                  `Anfitrião: ${product.producerName}`,
+                  `Anfitrião: ${producerName}`,
                   ...(product.duracao ? [`Duração: ${product.duracao}`] : []),
                   ...(product.local || product.producerLocation
                       ? [`Local: ${product.local || product.producerLocation}`]
                       : []),
               ]
             : [
-                  `Produtor: ${product.producerName}`,
+                  `Produtor: ${producerName}`,
                   ...(product.producerLocation
                       ? [`Propriedade: ${product.producerLocation}`]
                       : []),

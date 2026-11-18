@@ -58,18 +58,25 @@ afterEach(() => {
 });
 
 describe("HU12 — acesso, formulário e contrato HTTP", () => {
-    it("CA01: a conta do produtor oferece Minha trajetória e abre o formulário", async () => {
+    it("CA01: a conta do produtor abre a trajetória no campo de contato", async () => {
         seedSession();
         mockTrajectoryApi();
         window.location.hash = "#/conta";
         render(<App />);
-        await userEvent
-            .setup()
-            .click(screen.getByRole("button", { name: /minha trajetória/i }));
+        await userEvent.setup().click(
+            screen.getByRole("button", {
+                name: "Configurar contato público",
+            }),
+        );
         expect(
             await screen.findByRole("heading", { name: "Conte sua história" }),
         ).toBeTruthy();
-        expect(window.location.hash).toBe(editorRoute);
+        expect(window.location.hash).toBe(`${editorRoute}?contato=1`);
+        await waitFor(() =>
+            expect(document.activeElement).toBe(
+                screen.getByLabelText("Número de Contato"),
+            ),
+        );
     });
 
     it("CA01/CA02: consulta os dados do titular com Bearer e preenche os campos", async () => {
@@ -198,7 +205,9 @@ describe("HU12 — acesso, formulário e contrato HTTP", () => {
             name: /autorizo.*(telefone|número|contato)/i,
         });
         expect(consent).toHaveProperty("checked", false);
+        expect(screen.getByText("Compartilhamento desmarcado")).toBeTruthy();
         await user.click(consent);
+        expect(screen.getByText("Compartilhamento marcado")).toBeTruthy();
         await user.click(screen.getByRole("button", { name: /salvar/i }));
         await waitFor(() =>
             expect(callsTo(api, ownPath, "PUT")).toHaveLength(1),

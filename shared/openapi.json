@@ -3316,6 +3316,11 @@
             "type": "string",
             "example": "Horta da Joana"
           },
+          "primeiroNome": {
+            "type": "string",
+            "example": "Joana",
+            "description": "Primeiro nome de quem responde pela oferta."
+          },
           "localidade": {
             "type": "string",
             "example": "Fazenda Cafuringa",

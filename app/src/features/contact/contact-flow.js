@@ -17,17 +17,27 @@ export const toWhatsAppNumber = (phone) => {
     return undefined;
 };
 
-export const createWhatsAppUrl = (number, subject) => {
-    const text = `Olá! Encontrei ${subject} na Rede Cafuringa e gostaria de tirar uma dúvida.`;
+export const createWhatsAppUrl = (number, subject, context) => {
+    let text = `Olá! Encontrei ${subject} na Rede Cafuringa e gostaria de tirar uma dúvida.`;
+    if (context) {
+        const question = {
+            product:
+                "Você pode me informar se o produto está disponível e como posso fazer o pedido ou combinar a retirada?",
+            experience:
+                "Você pode me informar quais datas estão disponíveis e como faço para reservar?",
+            profile:
+                "Gostaria de conhecer melhor a sua iniciativa e saber quais produtos ou experiências estão disponíveis.",
+        }[context.kind];
+        const page = new URL(window.location.href);
+        page.search = "";
+        page.hash = context.route;
+        text = `Olá! Encontrei ${subject} na Rede Cafuringa.\n\n${question}\n\nLink: ${page.href}`;
+    }
     return `https://wa.me/${normalizeWhatsAppNumber(number)}?text=${encodeURIComponent(text)}`;
 };
 
 /** Link de contato a partir do telefone público; undefined sem contato (CA04, CA06). */
-export const whatsAppContactUrl = (phone, subject) => {
+export const whatsAppContactUrl = (phone, subject, context) => {
     const number = toWhatsAppNumber(phone);
-    return number ? createWhatsAppUrl(number, subject) : undefined;
+    return number ? createWhatsAppUrl(number, subject, context) : undefined;
 };
-
-/** RN17: só usuário autenticado inicia o contato; o visitante entra e volta à origem. */
-export const getContactLoginRoute = (subject) =>
-    `/entrar?contato=${encodeURIComponent(subject)}`;

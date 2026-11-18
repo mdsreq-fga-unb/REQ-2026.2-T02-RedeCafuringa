@@ -1,6 +1,6 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import axe from "axe-core";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { WhatsAppContactLink } from "@/features/contact";
 
 afterEach(cleanup);
@@ -18,7 +18,7 @@ describe("HU39 — link de contato pelo WhatsApp", () => {
         expect(link.getAttribute("target")).toBe("_blank");
         expect(link.getAttribute("rel")).toBe("noopener noreferrer");
         expect(link.textContent).toContain("Conversar pelo WhatsApp");
-        expect(link.className).toContain("button-green");
+        expect(link.classList.contains("button-whatsapp")).toBe(true);
     });
 
     it("RNF04: sem violações WCAG A/AA detectáveis", async () => {
@@ -28,21 +28,5 @@ describe("HU39 — link de contato pelo WhatsApp", () => {
             runOnly: { type: "tag", values: ["wcag2a", "wcag2aa"] },
         });
         expect(result.violations).toEqual([]);
-    });
-
-    it("RN17: para visitante é um botão que pede login, sem expor o link do wa.me", () => {
-        const onRequireLogin = vi.fn();
-        const { container } = render(
-            <WhatsAppContactLink url={url} onRequireLogin={onRequireLogin} />,
-        );
-
-        expect(screen.queryByRole("link")).toBeNull();
-        expect(container.innerHTML).not.toContain("wa.me");
-        const button = screen.getByRole("button", {
-            name: "Conversar pelo WhatsApp (entre na sua conta para continuar)",
-        });
-        expect(button.className).toContain("button-green");
-        fireEvent.click(button);
-        expect(onRequireLogin).toHaveBeenCalledOnce();
     });
 });

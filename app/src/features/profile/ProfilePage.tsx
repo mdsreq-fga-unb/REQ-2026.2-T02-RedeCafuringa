@@ -3,15 +3,10 @@ import { WhatsAppContactLink } from "../contact/WhatsAppContactLink";
 
 type ProfilePageProps = {
     contactUrl?: string;
-    onContactRequiresLogin?: () => void;
     onNavigate: (path: string) => void;
 };
 
-export function ProfilePage({
-    contactUrl,
-    onContactRequiresLogin,
-    onNavigate,
-}: ProfilePageProps) {
+export function ProfilePage({ contactUrl, onNavigate }: ProfilePageProps) {
     return (
         <>
             <div className="back-row">
@@ -47,12 +42,7 @@ export function ProfilePage({
                     >
                         Ver catálogo desse perfil
                     </ActionButton>
-                    {contactUrl && (
-                        <WhatsAppContactLink
-                            url={contactUrl}
-                            onRequireLogin={onContactRequiresLogin}
-                        />
-                    )}
+                    {contactUrl && <WhatsAppContactLink url={contactUrl} />}
                 </div>
             </section>
         </>

@@ -1,10 +1,4 @@
-import {
-    cleanup,
-    fireEvent,
-    render,
-    screen,
-    waitFor,
-} from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -18,8 +12,7 @@ vi.mock("@/features/auth/authService");
  * HU39 — Disponibilizar contato direto, com a API real (sem demonstração).
  * O contato vem do perfil público do responsável, que só traz o telefone
  * quando o produtor autorizou (RN07); o app nunca usa dados locais.
- * RN17: qualquer pessoa vê a opção (CA05), mas só usuário autenticado inicia
- * o contato; o visitante vai ao login e volta para a mesma tela.
+ * RN17: o contato autorizado abre externamente apenas para usuários autenticados.
  */
 
 const AUTHORIZED = "61988887777";
@@ -33,7 +26,11 @@ const product = {
     precoPorUnidade: 32,
     gramasPorUnidade: 500,
     fotos: [],
-    produtor: { id: "produtor-a", nomeIniciativa: "Sítio Raízes" },
+    produtor: {
+        id: "produtor-a",
+        nomeIniciativa: "Sítio Raízes",
+        primeiroNome: "Joana",
+    },
     criadoEm: "2026-11-16T12:00:00.000Z",
     disponivel: true,
 };
@@ -46,7 +43,11 @@ const experience = {
     local: "Núcleo Rural Cafuringa",
     duracao: "2 horas",
     fotos: [],
-    produtor: { id: "produtor-a", nomeIniciativa: "Sítio Raízes" },
+    produtor: {
+        id: "produtor-a",
+        nomeIniciativa: "Sítio Raízes",
+        primeiroNome: "Joana",
+    },
     criadoEm: "2026-11-16T12:00:00.000Z",
     disponivel: true,
 };
@@ -88,19 +89,16 @@ const pages = [
         name: "produto",
         hash: `#/oferta/${product.id}`,
         heading: product.nome,
-        subject: `produto/${product.id}`,
     },
     {
         name: "experiência",
         hash: `#/oferta/${experience.id}?tipo=experiencia`,
         heading: experience.nome,
-        subject: `experiencia/${experience.id}`,
     },
     {
         name: "perfil do produtor",
         hash: "#/produtor/produtor-a",
         heading: "Sítio Raízes",
-        subject: "produtor/produtor-a",
     },
 ];
 
@@ -124,38 +122,29 @@ afterEach(() => {
 });
 
 describe("HU39 — contato direto pelo WhatsApp", () => {
-    describe.each(pages)("na página de $name", ({ hash, heading, subject }) => {
-        it("CA01/CA05/RN17: visitante vê a opção, mas iniciar o contato pede login (sem expor o link)", async () => {
-            api(AUTHORIZED);
+    describe.each(pages)("na página de $name", ({ hash, heading }) => {
+        it("RN17: visitante consulta a página sem receber o número ou link na interface", async () => {
+            const fetch = api(AUTHORIZED);
             window.location.hash = hash;
             const { container } = render(<App />);
-
             await screen.findByRole("heading", { name: heading });
-            const button = await screen.findByRole("button", {
-                name: CONTACT,
-            });
-            expect(screen.queryByRole("link", { name: CONTACT })).toBeNull();
-            expect(container.innerHTML).not.toContain("wa.me");
-
-            fireEvent.click(button);
-
             await waitFor(() =>
-                expect(window.location.hash).toBe(
-                    `#/entrar?contato=${encodeURIComponent(subject)}`,
-                ),
+                expect(
+                    fetch.mock.calls.some(([url]) =>
+                        String(url).includes("/trajectory"),
+                    ),
+                ).toBe(true),
             );
-            expect(
-                await screen.findByRole("heading", {
-                    name: "Entre para falar com o responsável",
-                }),
-            ).toBeTruthy();
+            expect(screen.queryByRole("link", { name: CONTACT })).toBeNull();
+            expect(container.innerHTML).not.toContain(AUTHORIZED);
+            expect(container.innerHTML).not.toContain("wa.me");
         });
 
         it.each(["consumer", "producer"] as const)(
-            "CA01/CA02/RN17: autenticado como %s abre o wa.me do contato autorizado",
+            "CA01/CA02/CA05: sessão %s abre o wa.me do contato autorizado",
             async (role) => {
                 api(AUTHORIZED);
-                signedInAs(role);
+                if (role) signedInAs(role);
                 window.location.hash = hash;
                 render(<App />);
 
@@ -171,6 +160,25 @@ describe("HU39 — contato direto pelo WhatsApp", () => {
                 expect(url.searchParams.get("text")).toMatch(
                     /^Olá! Encontrei .+ na Rede Cafuringa/,
                 );
+                expect(url.searchParams.get("text")).toContain(
+                    `Link: ${new URL(hash, window.location.href).href}`,
+                );
+                if (!hash.startsWith("#/produtor/")) {
+                    expect(
+                        screen.getByText(
+                            hash.includes("tipo=experiencia")
+                                ? "Anfitrião: Joana"
+                                : "Produtor: Joana",
+                        ),
+                    ).toBeTruthy();
+                    expect(
+                        screen
+                            .getByRole("link", {
+                                name: "Ver perfil do produtor",
+                            })
+                            .getAttribute("href"),
+                    ).toBe("#/produtor/produtor-a");
+                }
                 expect(link.getAttribute("target")).toBe("_blank");
                 expect(link.getAttribute("rel")).toBe("noopener noreferrer");
                 expect(window.location.hash).toBe(hash);
@@ -215,16 +223,14 @@ describe("HU39 — contato direto pelo WhatsApp", () => {
         );
     });
 
-    it("RN17: depois do login vindo do contato, volta à oferta já com o link do WhatsApp", async () => {
+    it("um link antigo de login retorna à oferta após autenticação", async () => {
         api(AUTHORIZED);
         vi.mocked(login).mockResolvedValue({
             token: "token-falso",
             user: { id: 1, name: "Ana", role: "consumer" },
         });
-        window.location.hash = `#/oferta/${product.id}`;
+        window.location.hash = `#/entrar?contato=${encodeURIComponent(`produto/${product.id}`)}`;
         render(<App />);
-
-        fireEvent.click(await screen.findByRole("button", { name: CONTACT }));
         const user = userEvent.setup();
         await user.type(await screen.findByLabelText("E-mail"), "ana@ex.com");
         await user.type(screen.getByLabelText("Senha"), "senha123");
@@ -252,14 +258,14 @@ describe("HU39 — contato direto pelo WhatsApp", () => {
         expect(screen.queryByRole("button", { name: CONTACT })).toBeNull();
     });
 
-    it.each([null, "consumer"] as const)(
+    it.each(["consumer", "producer"] as const)(
         "RNF04: oferta com contato sem violações WCAG A/AA detectáveis (sessão: %s)",
         async (role) => {
             api(AUTHORIZED);
             if (role) signedInAs(role);
             window.location.hash = `#/oferta/${product.id}`;
             const { container } = render(<App />);
-            await screen.findByRole(role ? "link" : "button", {
+            await screen.findByRole("link", {
                 name: CONTACT,
             });
 

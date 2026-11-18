@@ -6,11 +6,7 @@ import { formatPhone } from "@/features/register/validators";
 import { getPublicTrajectory, photoSrc } from "./trajectoryService";
 import type { PublicTrajectory } from "./trajectoryService";
 import { ProducerCatalogPage } from "@/features/profile/ProducerCatalogPage";
-import {
-    getContactLoginRoute,
-    WhatsAppContactLink,
-    whatsAppContactUrl,
-} from "@/features/contact";
+import { WhatsAppContactLink, whatsAppContactUrl } from "@/features/contact";
 import "./trajectory.css";
 import "@/features/profile/publicProfile.css";
 
@@ -19,14 +15,13 @@ export function PublicTrajectoryPage({
     onNavigate,
     catalogView = false,
     offerId,
-    authenticated = false,
+    canViewContact = false,
 }: {
     id: string;
     onNavigate: (path: string) => void;
     catalogView?: boolean;
     offerId?: string;
-    /** RN17: só quem está autenticado recebe o link do wa.me. */
-    authenticated?: boolean;
+    canViewContact?: boolean;
 }) {
     const [data, setData] = useState<PublicTrajectory | null>(null);
     const [error, setError] = useState("");
@@ -55,12 +50,13 @@ export function PublicTrajectoryPage({
                 if (!controller.signal.aborted) setLoading(false);
             });
         return () => controller.abort();
-    }, [id, attempt]);
+    }, [id, attempt, canViewContact]);
     // HU39: o telefone só vem da API quando o produtor autorizou (RN07);
     // todos veem a opção (CA05), mas só quem está logado inicia o contato (RN17).
     const contactUrl = whatsAppContactUrl(
-        data?.telefone,
+        canViewContact ? data?.telefone : undefined,
         `Perfil de ${data?.nomeIniciativa || "produtor"}`,
+        { kind: "profile", route: `/produtor/${encodeURIComponent(id)}` },
     );
     if (data && catalogView)
         return (
@@ -69,7 +65,7 @@ export function PublicTrajectoryPage({
                 profile={data}
                 offerId={offerId}
                 contactPhone={contactUrl ? data.telefone : undefined}
-                authenticated={authenticated}
+                canViewContact={canViewContact}
                 onNavigate={onNavigate}
             />
         );
@@ -134,7 +130,7 @@ export function PublicTrajectoryPage({
                             </p>
                         </>
                     )}
-                    {data.telefone && (
+                    {canViewContact && data.telefone && (
                         <>
                             <h2>Número de Contato</h2>
                             <p className="body-copy">
@@ -161,21 +157,7 @@ export function PublicTrajectoryPage({
                         >
                             Ver catálogo desse perfil
                         </ActionButton>
-                        {contactUrl && (
-                            <WhatsAppContactLink
-                                url={contactUrl}
-                                onRequireLogin={
-                                    authenticated
-                                        ? undefined
-                                        : () =>
-                                              onNavigate(
-                                                  getContactLoginRoute(
-                                                      `produtor/${id}`,
-                                                  ),
-                                              )
-                                }
-                            />
-                        )}
+                        {contactUrl && <WhatsAppContactLink url={contactUrl} />}
                     </div>
                 </>
             )}

@@ -95,12 +95,6 @@ export function AccountPage(props: AccountPageProps) {
             </p>
             {role === "producer" && (
                 <>
-                    <ActionButton
-                        variant="orange"
-                        onClick={() => onNavigate("/minha-trajetoria")}
-                    >
-                        Minha trajetória
-                    </ActionButton>
                     <form
                         className="account-profile-form"
                         onSubmit={saveProducerProfile}
@@ -180,18 +174,36 @@ export function AccountPage(props: AccountPageProps) {
                             </p>
                         )}
                     </form>
-                    <details className="account-contact-disclosure">
-                        <summary>Contato público</summary>
+                    <section
+                        className="public-contact-card account-contact-card"
+                        aria-labelledby="account-contact-heading"
+                    >
+                        <div>
+                            <h2 id="account-contact-heading">
+                                Contato público
+                            </h2>
+                            <p>
+                                Receba perguntas sobre seus produtos e
+                                experiências pelo WhatsApp.
+                            </p>
+                        </div>
                         {!demoContact && (
-                            <div className="contact-settings">
-                                <h2>Contato público</h2>
-                                <p className="body-copy">
-                                    Para exibir seu WhatsApp no perfil e nas
-                                    ofertas, informe o número de contato e
-                                    autorize a divulgação em Minha trajetória.
-                                    Sem autorização, o número não aparece para
-                                    ninguém.
+                            <div className="public-contact-actions">
+                                <p>
+                                    Cadastre o número e autorize a divulgação em
+                                    Minha trajetória.
                                 </p>
+                                <ActionButton
+                                    variant="outline"
+                                    onClick={() =>
+                                        onNavigate(
+                                            "/minha-trajetoria?contato=1",
+                                        )
+                                    }
+                                >
+                                    Configurar contato público{" "}
+                                    <span aria-hidden="true">→</span>
+                                </ActionButton>
                             </div>
                         )}
                         {demoContact && (
@@ -199,10 +211,10 @@ export function AccountPage(props: AccountPageProps) {
                                 className="contact-settings"
                                 onSubmit={onSaveContact}
                             >
-                                <h2>Contato público</h2>
-                                <p className="body-copy">
-                                    Informe o WhatsApp que poderá ser divulgado
-                                    no seu perfil e nas ofertas.
+                                <p className="contact-name">
+                                    {contactReady
+                                        ? "WhatsApp disponível no perfil e nas ofertas"
+                                        : "WhatsApp oculto no perfil e nas ofertas"}
                                 </p>
                                 <label
                                     className="field-label"
@@ -256,7 +268,7 @@ export function AccountPage(props: AccountPageProps) {
                                 )}
                             </form>
                         )}
-                    </details>
+                    </section>
                 </>
             )}
             {role === "consumer" && (

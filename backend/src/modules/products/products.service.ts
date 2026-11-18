@@ -41,8 +41,12 @@ type ProductDoc = Product & { _id: Types.ObjectId };
  * RN11). Só estes campos são lidos da conta: e-mail, telefone e documentos
  * nunca chegam à resposta.
  */
-type PublicProducer = { nomeIniciativa?: string; localidade?: string };
-const PUBLIC_PRODUCER_FIELDS = 'nomeIniciativa localidade';
+type PublicProducer = {
+  nome?: string;
+  nomeIniciativa?: string;
+  localidade?: string;
+};
+const PUBLIC_PRODUCER_FIELDS = 'nome nomeIniciativa localidade';
 
 const owner = (id: Types.ObjectId | string) => ({
   tipo: PhotoOwnerType.PRODUTO,
@@ -148,7 +152,9 @@ export class ProductsService {
             foreignField: '_id',
             pipeline: [
               { $match: { perfil: Role.PRODUTOR, ativo: true } },
-              { $project: { _id: 0, nomeIniciativa: 1, localidade: 1 } },
+              {
+                $project: { _id: 0, nome: 1, nomeIniciativa: 1, localidade: 1 },
+              },
             ],
             as: 'responsavel',
           },
@@ -234,9 +240,10 @@ export class ProductsService {
 
   private toResponse(
     product: ProductDoc,
-    { nomeIniciativa, localidade }: PublicProducer,
+    { nome, nomeIniciativa, localidade }: PublicProducer,
   ): ProductResponse {
     const id = product._id.toString();
+    const primeiroNome = nome?.trim().split(/\s+/, 1)[0];
     return {
       id,
       nome: product.nome,
@@ -250,6 +257,7 @@ export class ProductsService {
       produtor: {
         id: product.produtor.toString(),
         nomeIniciativa: nomeIniciativa ?? '',
+        ...(primeiroNome ? { primeiroNome } : {}),
         ...(localidade ? { localidade } : {}),
       },
       criadoEm: (product.criadoEm ?? new Date()).toISOString(),

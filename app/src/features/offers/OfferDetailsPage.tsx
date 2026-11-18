@@ -8,8 +8,9 @@ type OfferDetailsPageProps = {
     offer: Offer;
     /** HU39: link wa.me do contato autorizado; sem ele, não há opção de contato (CA04, CA06). */
     contactUrl?: string;
+    producerName?: string;
+    producerRoute?: string;
     /** RN17: presente para visitante; a opção de contato leva ao login. */
-    onContactRequiresLogin?: () => void;
     onNavigate: (path: string) => void;
     backPath?: string;
     backRoute?: string;
@@ -19,13 +20,17 @@ type OfferDetailsPageProps = {
 export function OfferDetailsPage({
     offer,
     contactUrl,
-    onContactRequiresLogin,
+    producerName,
+    producerRoute,
     onNavigate,
     backPath,
     backRoute,
 }: OfferDetailsPageProps) {
     const photos = offer.images?.length ? offer.images : [offer.image];
     const [photo, setPhoto] = useState(0);
+    const producerDetail = offer.details.find((detail) =>
+        /^(Produtor|Anfitrião):/.test(detail),
+    );
     return (
         <>
             <BackButton
@@ -68,9 +73,14 @@ export function OfferDetailsPage({
                 )}
                 <h2 className="price-heading">{offer.price}</h2>
                 <div className="offer-facts">
-                    {offer.details.map((detail) => (
-                        <p key={detail}>{detail}</p>
-                    ))}
+                    {offer.details
+                        .filter(
+                            (detail) =>
+                                !producerName || detail !== producerDetail,
+                        )
+                        .map((detail) => (
+                            <p key={detail}>{detail}</p>
+                        ))}
                 </div>
                 <h2 className="description-heading">Descrição</h2>
                 <p className="body-copy">{offer.description}</p>
@@ -93,13 +103,52 @@ export function OfferDetailsPage({
                             Conhecer a Cafuringa Store
                         </a>
                     )}
-                    {contactUrl && (
-                        <WhatsAppContactLink
-                            url={contactUrl}
-                            onRequireLogin={onContactRequiresLogin}
-                        />
-                    )}
                 </div>
+                {(producerName || producerRoute || contactUrl) && (
+                    <section
+                        className="public-contact-card"
+                        aria-labelledby="offer-contact-heading"
+                    >
+                        <div>
+                            <h2 id="offer-contact-heading">
+                                Contato com o produtor
+                            </h2>
+                            {producerName && (
+                                <p className="contact-name">
+                                    {producerDetail ?? producerName}
+                                </p>
+                            )}
+                            {!contactUrl && (
+                                <p>WhatsApp indisponível para esta oferta.</p>
+                            )}
+                        </div>
+                        <div className="public-contact-actions">
+                            {contactUrl && (
+                                <WhatsAppContactLink url={contactUrl} />
+                            )}
+                            {producerRoute && (
+                                <a
+                                    className="button button-outline"
+                                    href={`#${producerRoute}`}
+                                    onClick={(event) => {
+                                        if (
+                                            event.metaKey ||
+                                            event.ctrlKey ||
+                                            event.shiftKey ||
+                                            event.altKey
+                                        )
+                                            return;
+                                        event.preventDefault();
+                                        onNavigate(producerRoute);
+                                    }}
+                                >
+                                    Ver perfil do produtor{" "}
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            )}
+                        </div>
+                    </section>
+                )}
             </section>
         </>
     );

@@ -27,9 +27,6 @@ describe("configurações de contato da conta", () => {
             />,
         );
 
-        fireEvent.click(
-            screen.getByText("Contato público", { selector: "summary" }),
-        );
         expect(
             screen.queryByLabelText("WhatsApp com código do país"),
         ).toBeNull();
@@ -40,9 +37,9 @@ describe("configurações de contato da conta", () => {
             screen.getByText(/autorize a divulgação em Minha trajetória/),
         ).toBeTruthy();
         fireEvent.click(
-            screen.getByRole("button", { name: "Minha trajetória" }),
+            screen.getByRole("button", { name: "Configurar contato público" }),
         );
-        expect(onNavigate).toHaveBeenCalledWith("/minha-trajetoria");
+        expect(onNavigate).toHaveBeenCalledWith("/minha-trajetoria?contato=1");
     });
 
     it("permite alterar consentimento e salvar o contato", () => {
@@ -71,9 +68,6 @@ describe("configurações de contato da conta", () => {
             />,
         );
 
-        fireEvent.click(
-            screen.getByText("Contato público", { selector: "summary" }),
-        );
         fireEvent.click(screen.getByRole("checkbox"));
         expect(onDraftChange).toHaveBeenCalledWith({
             ...draft,
@@ -105,9 +99,6 @@ describe("configurações de contato da conta", () => {
             />,
         );
 
-        fireEvent.click(
-            screen.getByText("Contato público", { selector: "summary" }),
-        );
         expect(screen.getByRole("status").textContent).toMatch(
             /Contato autorizado e disponível/,
         );

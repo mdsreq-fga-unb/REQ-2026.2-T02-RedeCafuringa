@@ -99,22 +99,15 @@ describe("fluxo de contato da aplicação", () => {
             subject: "experiencia/queijos",
         },
     ])(
-        "RN17: visitante que toca no contato da oferta $subject vai ao login",
-        async ({ route, subject }) => {
+        "RN17: visitante consulta a oferta $subject sem link de contato",
+        async ({ route }) => {
             window.location.hash = route;
             render(<App />);
-
-            fireEvent.click(
-                await screen.findByRole("button", {
-                    name: /Conversar pelo WhatsApp/,
-                }),
-            );
-
-            await waitFor(() =>
-                expect(window.location.hash).toBe(
-                    "#/entrar?contato=" + encodeURIComponent(subject),
-                ),
-            );
+            await screen.findByRole("heading", { name: "Descrição" });
+            expect(
+                screen.queryByRole("link", { name: /Conversar pelo WhatsApp/ }),
+            ).toBeNull();
+            expect(window.location.hash).toBe(route);
         },
     );
 
