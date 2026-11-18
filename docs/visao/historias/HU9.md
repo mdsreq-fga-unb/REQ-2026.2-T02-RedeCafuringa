@@ -104,7 +104,7 @@ A autenticação permite que os usuários cadastrados acessem os recursos da pla
 
 ## 8. Protótipo
 
-![Protótipo HU09](../../img/prototipo/HU9.png)
+![Protótipo HU09](../../img/prototipo/HU09.png)
 
 ---
 

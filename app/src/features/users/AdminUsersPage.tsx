@@ -1,7 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ApiHttpError } from "@/shared/api";
-import { getUser, listUsers, profileLabels } from "./usersService";
+import { DeleteUserDialog } from "./DeleteUserDialog";
+import {
+    accountLabel,
+    getUser,
+    listUsers,
+    profileLabels,
+} from "./usersService";
 import type { UserDetail, UserList, UserQuery } from "./usersService";
 import "./users.css";
 
@@ -12,12 +18,24 @@ type Props = {
 };
 type Result = { key: string; data?: UserDetail | UserList; error?: string };
 
+/**
+ * Aviso de sucesso que sobrevive à volta para a lista. Fica na
+ * sessão do navegador (nunca na URL, RNF11) e é lido uma vez.
+ */
+const DELETED_NOTICE = "cafuringa-admin-deleted-notice";
+
 export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
     const [busca, setBusca] = useState("");
     const [perfil, setPerfil] = useState<UserQuery["perfil"]>();
     const [pagina, setPagina] = useState(1);
     const [retry, setRetry] = useState(0);
     const [result, setResult] = useState<Result>();
+    const [notice] = useState(() =>
+        id ? null : sessionStorage.getItem(DELETED_NOTICE),
+    );
+    useEffect(() => {
+        if (notice) sessionStorage.removeItem(DELETED_NOTICE);
+    }, [notice]);
     const key = JSON.stringify([id, busca, perfil, pagina, retry]);
 
     useEffect(() => {
@@ -79,6 +97,11 @@ export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
                 }
             />
             <h1 id="admin-users-heading">Usuários Cadastrados</h1>
+            {notice && (
+                <p className="admin-users-notice" role="status">
+                    {notice}
+                </p>
+            )}
             {!id && (
                 <div className="admin-users-tools">
                     <div className="admin-users-search">
@@ -89,7 +112,7 @@ export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
                         <input
                             type="search"
                             aria-label="Buscar usuário"
-                            placeholder="Busque por nome, e-mail ou iniciativa"
+                            placeholder="Nome, e-mail ou iniciativa"
                             maxLength={100}
                             value={busca}
                             onChange={(event) => {
@@ -195,12 +218,42 @@ export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
                     )}
                 </>
             )}
-            {detail && <UserDetails user={detail} />}
+            {detail && (
+                <UserDetails
+                    user={detail}
+                    onUnauthorized={onUnauthorized}
+                    onDeleted={() => {
+                        sessionStorage.setItem(
+                            DELETED_NOTICE,
+                            `A conta de ${accountLabel(detail)} foi excluída com sucesso.`,
+                        );
+                        onNavigate("/admin/usuarios");
+                    }}
+                />
+            )}
         </section>
     );
 }
 
-function UserDetails({ user }: { user: UserDetail }) {
+function UserDetails({
+    user,
+    onDeleted,
+    onUnauthorized,
+}: {
+    user: UserDetail;
+    onDeleted: () => void;
+    onUnauthorized: () => void;
+}) {
+    const [confirming, setConfirming] = useState(false);
+    const trigger = useRef<HTMLButtonElement>(null);
+    const wasConfirming = useRef(false);
+    useEffect(() => {
+        // CA05: ao fechar a confirmação, o foco volta para onde a pessoa estava.
+        if (!confirming && wasConfirming.current) trigger.current?.focus();
+        wasConfirming.current = confirming;
+    }, [confirming]);
+    // RF11 é outra história: aqui o administrador não exclui a si mesmo.
+    const own = localStorage.getItem("cafuringa-user-id") === user.id;
     const producer = user.perfil === "PRODUTOR";
     const fields: [string, string | undefined][] = producer
         ? [
@@ -231,12 +284,29 @@ function UserDetails({ user }: { user: UserDetail }) {
                         </div>
                     ))}
             </dl>
-            <button
-                type="button"
-                className="button button-danger admin-user-delete"
-            >
-                Excluir conta
-            </button>
+            {own ? (
+                <p className="admin-user-delete-note">
+                    Você não pode excluir a sua própria conta.
+                </p>
+            ) : (
+                <button
+                    ref={trigger}
+                    type="button"
+                    className="button button-danger admin-user-delete"
+                    aria-haspopup="dialog"
+                    onClick={() => setConfirming(true)}
+                >
+                    Excluir conta
+                </button>
+            )}
+            {confirming && (
+                <DeleteUserDialog
+                    user={user}
+                    onDeleted={onDeleted}
+                    onUnauthorized={onUnauthorized}
+                    onCancel={() => setConfirming(false)}
+                />
+            )}
         </>
     );
 }

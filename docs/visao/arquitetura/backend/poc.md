@@ -107,7 +107,7 @@ As bibliotecas complementares foram selecionadas para atender necessidades espec
 - **Implementadas:** autenticação com JWT e Argon2 (28/10/2026), limitação de requisições (24/10/2026) e processamento de imagens com Sharp.
 - **A implementar:** envio de e-mails, tarefas agendadas e armazenamento de imagens no OCI Object Storage.
 
-A foto de perfil do produtor será armazenada diretamente no MongoDB, considerando a previsão de uma imagem por produtor. A estratégia está relacionada à implementação da [HU12](implementacao/HU12.md).
+A foto de perfil do produtor será armazenada diretamente no MongoDB, considerando a previsão de uma imagem por produtor. A estratégia está relacionada à implementação da [HU12](../../historias/HU12.md).
 
 ---
 

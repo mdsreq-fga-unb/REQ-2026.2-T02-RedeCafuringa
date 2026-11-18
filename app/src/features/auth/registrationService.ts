@@ -30,6 +30,12 @@ export async function registerAdmin(data: AdminSignupData): Promise<void> {
         if (error instanceof ApiHttpError) {
             if (error.status === 409)
                 throw new Error("E-mail já cadastrado", { cause: error });
+            // E-mail de administrador banido (403 com orientação).
+            if (
+                error.status === 403 &&
+                error.message.startsWith("Não foi possível concluir o cadastro")
+            )
+                throw new Error(error.message, { cause: error });
             if (error.status === 401 || error.status === 403)
                 throw new Error(notAuthorized, { cause: error });
             if (error.status === 400) {

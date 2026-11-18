@@ -26,6 +26,8 @@ export type RegisterResult =
     | { ok: false; reason: "duplicate"; field?: DuplicateField }
     | { ok: false; reason: "invalid"; messages: string[] }
     | { ok: false; reason: "rate_limit"; retryAfterSeconds?: number }
+    /** CPF, CNPJ ou e-mail de conta banida; `message` orienta a pessoa. */
+    | { ok: false; reason: "blocked"; message: string }
     | { ok: false; reason: "error" };
 
 export type MockAccountDirectory = {
@@ -57,7 +59,8 @@ const mockService = createMockRegisterService({
 });
 
 // POST /users/producers (corpo montado em registerApi.ts)  ->  201
-//   400 dados inválidos | 409 CPF/CNPJ ou e-mail já cadastrado | 429 muitas tentativas
+//   400 dados inválidos | 403 pessoa banida | 409 CPF/CNPJ ou e-mail já cadastrado
+//   429 muitas tentativas
 export async function registerProducer(
     payload: RegisterPayload,
 ): Promise<RegisterResult> {
@@ -87,6 +90,8 @@ export async function registerProducer(
                     error.details.length > 0 ? error.details : [error.message];
                 return { ok: false, reason: "invalid", messages };
             }
+            if (error.status === 403)
+                return { ok: false, reason: "blocked", message: error.message };
             if (error.status === 429) {
                 return {
                     ok: false,
