@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BackButton } from "../../components/navigation/BackButton";
 import { ActionButton } from "../../components/ui/ActionButton";
+import { CATALOG_PAGE_SIZE, useCatalogPages } from "./catalogPagination";
 import { OfferCards } from "./OfferCards";
 import { productToOffer } from "./productOffer";
 import { filterProducts } from "./productSearch";
@@ -25,6 +26,9 @@ export function ProductCatalogPage({
     const experiences = category === "Experiências";
     const [query, setQuery] = useState("");
     const visibleProducts = filterProducts(products, query);
+    // HU24 CA08: a busca filtra o catálogo inteiro; a lista aparece em partes.
+    const pages = useCatalogPages(visibleProducts, query);
+    const noun = experiences ? "experiências" : "produtos";
 
     return (
         <>
@@ -60,7 +64,11 @@ export function ProductCatalogPage({
                     </div>
                 )}
                 {status === "ready" && products.length === 0 && (
-                    <p role="status">Não há ofertas disponíveis no momento.</p>
+                    <p role="status">
+                        {experiences
+                            ? "Não há experiências disponíveis no momento."
+                            : "Não há ofertas disponíveis no momento."}
+                    </p>
                 )}
                 {status === "ready" && products.length > 0 && (
                     <>
@@ -98,10 +106,32 @@ export function ProductCatalogPage({
                                     : "Nenhum produto encontrado."}
                             </p>
                         ) : (
-                            <OfferCards
-                                offers={visibleProducts.map(productToOffer)}
-                                onNavigate={onNavigate}
-                            />
+                            <>
+                                <OfferCards
+                                    offers={pages.visible.map(productToOffer)}
+                                    onNavigate={onNavigate}
+                                    listRef={pages.listRef}
+                                />
+                                {pages.total > CATALOG_PAGE_SIZE && (
+                                    <p
+                                        className="catalog-pagination"
+                                        role="status"
+                                        aria-live="polite"
+                                    >
+                                        Mostrando {pages.visible.length} de{" "}
+                                        {pages.total} {noun}
+                                    </p>
+                                )}
+                                {pages.hasMore && (
+                                    <button
+                                        type="button"
+                                        className="catalog-more"
+                                        onClick={pages.showMore}
+                                    >
+                                        Mostrar mais {noun}
+                                    </button>
+                                )}
+                            </>
                         )}
                     </>
                 )}

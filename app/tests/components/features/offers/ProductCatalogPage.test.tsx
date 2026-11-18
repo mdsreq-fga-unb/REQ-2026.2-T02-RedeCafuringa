@@ -84,7 +84,13 @@ describe("ProductCatalogPage", () => {
             copy.compareDocumentPosition(image) &
                 Node.DOCUMENT_POSITION_FOLLOWING,
         ).toBeTruthy();
-        expect(image.getAttribute("loading")).toBe("lazy");
+        // HU24/RNF06: a primeira foto (LCP) carrega de imediato; as demais, sob demanda.
+        expect(image.getAttribute("loading")).toBe("eager");
+        expect(
+            container
+                .querySelectorAll(".product-card img")[1]
+                .getAttribute("loading"),
+        ).toBe("lazy");
     });
 
     it("retorna à tela Explorar sem exigir autenticação", () => {

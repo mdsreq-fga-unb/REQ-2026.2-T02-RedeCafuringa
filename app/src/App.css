@@ -1561,6 +1561,18 @@ h2 {
     font-weight: 600;
 }
 
+/* HU24 CA08: progresso da lista em partes, logo abaixo da grade. */
+.catalog-pagination {
+    margin: 20px 0 0;
+    color: var(--ink);
+    font-size: 14px;
+    text-align: center;
+}
+
+.catalog-pagination + .catalog-more {
+    margin-top: 10px;
+}
+
 .profile-catalog .product-submit {
     margin-top: 12px;
 }

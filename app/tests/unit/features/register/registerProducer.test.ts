@@ -226,3 +226,25 @@ describe("registerProducer (modo mock)", () => {
         expect(fetchMock).not.toHaveBeenCalled();
     });
 });
+
+describe("cadastro de pessoa banida", () => {
+    it("403 vira o motivo blocked com a orientação do servidor, sem culpar a conexão", async () => {
+        const message =
+            "Não foi possível concluir o cadastro. Procure a administração da Rede Cafuringa.";
+        vi.stubGlobal(
+            "fetch",
+            vi
+                .fn<typeof fetch>()
+                .mockResolvedValue(
+                    jsonResponse({ message, statusCode: 403 }, 403),
+                ),
+        );
+        const { registerProducer } = await load();
+
+        await expect(registerProducer(payload)).resolves.toEqual({
+            ok: false,
+            reason: "blocked",
+            message,
+        });
+    });
+});

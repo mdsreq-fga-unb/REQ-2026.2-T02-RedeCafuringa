@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
 import { makeConsumer, makeProducer } from '@test/factories';
@@ -58,16 +59,63 @@ function setup() {
   const hasher = {
     hash: vi.fn(async (value: string) => `hash:${value}`),
   };
+  const bans = { isBanned: vi.fn().mockResolvedValue(false) };
   const service = new UsersService(
     model as unknown as Model<User>,
     cipher as unknown as PiiCipher,
     hasher as unknown as PasswordHasher,
+    bans as never,
   );
 
-  return { service, model, cipher, hasher };
+  return { service, model, cipher, hasher, bans };
 }
 
 describe('UsersService', () => {
+  describe('banimento impede novo cadastro', () => {
+    const BANNED =
+      'Não foi possível concluir o cadastro. Procure a administração da Rede Cafuringa.';
+
+    it('consumidor banido (CPF ou e-mail) não volta', async () => {
+      const { service, model, bans, cipher } = setup();
+      bans.isBanned.mockResolvedValue(true);
+      const dto = makeConsumer();
+
+      await expect(service.createConsumer(dto)).rejects.toThrow(
+        new ForbiddenException(BANNED),
+      );
+      expect(bans.isBanned).toHaveBeenCalledWith({
+        cpfHash: cipher.blindIndex(dto.cpf),
+        email: dto.email.toLowerCase(),
+      });
+      expect(model.create).not.toHaveBeenCalled();
+    });
+
+    it('produtor banido (CPF, CNPJ ou e-mail) não volta', async () => {
+      const { service, model, bans } = setup();
+      bans.isBanned.mockResolvedValue(true);
+      const dto = makeProducer();
+
+      await expect(service.createProducer(dto)).rejects.toBeInstanceOf(
+        ForbiddenException,
+      );
+      expect(bans.isBanned).toHaveBeenCalledWith(
+        expect.objectContaining({ cnpjHash: expect.any(String) }),
+      );
+      expect(model.create).not.toHaveBeenCalled();
+    });
+
+    it('administrador banido (e-mail) não é recriado', async () => {
+      const { service, model, bans } = setup();
+      bans.isBanned.mockResolvedValue(true);
+
+      await expect(
+        service.createAdmin({ email: 'Adm@Exemplo.com', senha: 'Senha1234' }),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(bans.isBanned).toHaveBeenCalledWith({ email: 'adm@exemplo.com' });
+      expect(model.create).not.toHaveBeenCalled();
+    });
+  });
+
   describe('createConsumer (HU01)', () => {
     it('CA03: cria o perfil com papel CONSUMIDOR', async () => {
       const { service, model } = setup();

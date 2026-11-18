@@ -271,6 +271,12 @@ function FailureAlert({
                     {rateLimitMessage(failure.retryAfterSeconds)}
                 </p>
             );
+        case "blocked":
+            return (
+                <p className="form-alert" role="alert">
+                    {failure.message}
+                </p>
+            );
         case "error":
             return (
                 <p className="form-alert" role="alert">

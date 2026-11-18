@@ -64,6 +64,7 @@ describe('contrato OpenAPI', () => {
       operations.map((o) => `${o.method.toUpperCase()} ${o.path}`).sort(),
     ).toEqual([
       'DELETE /api/v1/producers/me/photo',
+      'DELETE /api/v1/users/{id}',
       'GET /api/v1/auth/me',
       'GET /api/v1/experiences',
       'GET /api/v1/experiences/{id}',
@@ -119,6 +120,7 @@ describe('contrato OpenAPI', () => {
       .map((o) => `${o.method} ${o.path}`);
     expect(protectedOps.sort()).toEqual([
       'delete /api/v1/producers/me/photo',
+      'delete /api/v1/users/{id}',
       'get /api/v1/auth/me',
       'get /api/v1/producers/me/trajectory',
       'get /api/v1/users',
