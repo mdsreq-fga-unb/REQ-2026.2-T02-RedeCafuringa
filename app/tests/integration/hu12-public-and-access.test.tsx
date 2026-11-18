@@ -113,17 +113,29 @@ describe("HU12 — CA05/CA06 e privacidade do perfil", () => {
         ).toBeNull();
     });
 
-    it("RN07: mostra o contato autorizado devolvido pela consulta pública", async () => {
-        mockTrajectoryApi({
-            publicData: { ...publicTrajectory, telefone: "61988887777" },
-        });
-        window.location.hash = publicRoute;
-        render(<App />);
-        expect(await screen.findByText(story)).toBeTruthy();
-        expect(document.body.textContent?.replace(/\D/g, "")).toContain(
-            "61988887777",
-        );
-    });
+    it.each([null, "consumer"] as const)(
+        "RN07: mostra o contato autorizado apenas com sessão (%s)",
+        async (role) => {
+            if (role) seedSession(role);
+            mockTrajectoryApi({
+                publicData: { ...publicTrajectory, telefone: "61988887777" },
+            });
+            window.location.hash = publicRoute;
+            render(<App />);
+            expect(await screen.findByText(story)).toBeTruthy();
+            const number = document.body.textContent?.replace(/\D/g, "");
+            const link = screen.queryByRole("link", { name: /whatsapp/i });
+            if (role) {
+                expect(number).toContain("61988887777");
+                expect(link?.getAttribute("href")).toContain(
+                    "https://wa.me/5561988887777?",
+                );
+            } else {
+                expect(number).not.toContain("61988887777");
+                expect(link).toBeNull();
+            }
+        },
+    );
 
     it("RNF11: renderiza somente os campos públicos mesmo se a resposta contiver dados privados inesperados", async () => {
         mockTrajectoryApi({
