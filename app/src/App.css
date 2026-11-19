@@ -526,7 +526,8 @@ h2 {
     margin: 0 0 2px;
 }
 
-.register-page .choice-option {
+.register-page .choice-option,
+.account-payment-methods .choice-option {
     min-height: 58px;
     margin: 0;
     padding: 12px;
@@ -651,8 +652,16 @@ h2 {
 }
 
 .account-payment-methods {
+    display: grid;
     grid-column: 1 / -1;
+    gap: 8px;
     margin-top: 14px;
+}
+
+@media (min-width: 480px) {
+    .account-payment-methods {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 .account-profile-form > .form-alert {

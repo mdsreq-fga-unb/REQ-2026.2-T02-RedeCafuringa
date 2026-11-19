@@ -164,11 +164,11 @@ export function ProducerAccountForm({ userId }: Props) {
                 className="account-payment-methods choice-group"
                 disabled={saving}
             >
-                <legend className="field-label">
-                    Formas de pagamento <span aria-hidden="true">*</span>
+                <legend className="field-label field-label-required">
+                    Formas de pagamento
                 </legend>
                 {paymentOptions.map((option) => (
-                    <label className="consent-row" key={option}>
+                    <label className="choice-option" key={option}>
                         <input
                             type="checkbox"
                             checked={details.formasPagamento.includes(option)}

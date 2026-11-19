@@ -85,3 +85,5 @@
 00:06:06 [vite] (client) hmr update /src/features/trajectory/trajectory.css
 00:07:54 [vite] (client) hmr update /src/features/auth/LoginPage.tsx
 00:07:54 [vite] (client) hmr update /src/features/register/RegisterPage.tsx
+00:11:20 [vite] (client) hmr update /src/features/account/ProducerAccountForm.tsx
+00:11:20 [vite] (client) hmr update /src/App.css
