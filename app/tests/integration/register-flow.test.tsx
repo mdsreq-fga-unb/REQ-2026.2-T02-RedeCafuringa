@@ -135,5 +135,15 @@ describe("HU02 — do cadastro à área do produtor", () => {
         );
 
         expect(window.location.hash).toBe("#/conta");
+        expect(
+            screen.getByRole("textbox", { name: /nome da iniciativa/i }),
+        ).toHaveProperty("value", "Seu João");
+        expect(screen.getByRole("checkbox", { name: "Pix" })).toHaveProperty(
+            "checked",
+            true,
+        );
+        expect(
+            screen.getByRole("checkbox", { name: "Cartão de crédito" }),
+        ).toHaveProperty("checked", false);
     }, 15000);
 });

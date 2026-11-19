@@ -267,7 +267,7 @@ h2 {
 .button.button-whatsapp {
     gap: 8px;
     background: #07b107;
-    color: #072c18;
+    color: #fff;
 }
 
 .button-whatsapp svg {
@@ -650,6 +650,15 @@ h2 {
     font-size: 16px;
 }
 
+.account-payment-methods {
+    grid-column: 1 / -1;
+    margin-top: 14px;
+}
+
+.account-profile-form > .form-alert {
+    grid-column: 1 / -1;
+}
+
 .account-profile-form > .button {
     width: 100%;
     margin-top: 16px;
@@ -818,6 +827,10 @@ h2 {
 
 .bottom-nav-producer button[aria-current="page"] {
     color: #536a60;
+}
+
+.bottom-nav button[aria-current="page"] .nav-icon {
+    color: #2a2119;
 }
 
 .bottom-nav-producer button[aria-current="page"] .nav-icon {

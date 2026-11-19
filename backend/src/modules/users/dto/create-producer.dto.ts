@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   ArrayMinSize,
@@ -118,3 +118,15 @@ export class CreateProducerDto {
   @Matches(/\d/, { message: 'Senha deve conter pelo menos um número' })
   senha: string;
 }
+
+export class CheckProducerIdentityDto extends PickType(CreateProducerDto, [
+  'cpf',
+  'cnpj',
+  'email',
+] as const) {}
+
+export class ProducerAccountDto extends PickType(CreateProducerDto, [
+  'nomeIniciativa',
+  'categoriaOfertada',
+  'formasPagamento',
+] as const) {}

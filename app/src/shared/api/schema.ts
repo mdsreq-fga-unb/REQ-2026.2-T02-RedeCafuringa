@@ -84,6 +84,39 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/users/producers/check-identity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validar CPF, CNPJ e e-mail antes de avançar no cadastro */
+        post: operations["usersCheckProducerIdentity"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/producers/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["usersGetProducerAccount"];
+        put: operations["usersUpdateProducerAccount"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/users/producers": {
         parameters: {
             query?: never;
@@ -579,6 +612,38 @@ export interface components {
              * @example Bad Request
              */
             error: string;
+        };
+        CheckProducerIdentityDto: {
+            /**
+             * @description Com ou sem máscara
+             * @example 529.982.247-25
+             */
+            cpf: string;
+            /**
+             * @description Com ou sem máscara; opcional quando não houver CNPJ
+             * @example 12.345.678/0001-95
+             */
+            cnpj?: string;
+            /** @example produtor@exemplo.com */
+            email: string;
+        };
+        ProducerAccountDto: {
+            /** @example Horta Comunitária Cafuringa */
+            nomeIniciativa: string;
+            /**
+             * @description Tipo de oferta do produtor
+             * @example Produtos e Experiências
+             * @enum {string}
+             */
+            categoriaOfertada: "Produtos" | "Experiências" | "Produtos e Experiências";
+            /**
+             * @description Formas de pagamento aceitas
+             * @example [
+             *       "PIX",
+             *       "Dinheiro"
+             *     ]
+             */
+            formasPagamento: string[];
         };
         CreateProducerDto: {
             /** @example Horta Comunitária Cafuringa */
@@ -1622,6 +1687,129 @@ export interface operations {
                 headers: {
                     /** @description Segundos até a próxima tentativa ser aceita */
                     "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersCheckProducerIdentity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckProducerIdentityDto"];
+            };
+        };
+        responses: {
+            /** @description Dados disponíveis para cadastro */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            429: {
+                headers: {
+                    /** @description Segundos até a próxima tentativa ser aceita */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersGetProducerAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProducerAccountDto"];
+                };
+            };
+            /** @description Exclusivo para: PRODUTOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersUpdateProducerAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProducerAccountDto"];
+            };
+        };
+        responses: {
+            /** @description Dados da conta salvos */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: PRODUTOR */
+            403: {
+                headers: {
                     [name: string]: unknown;
                 };
                 content: {

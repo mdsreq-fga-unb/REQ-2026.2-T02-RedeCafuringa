@@ -5,6 +5,7 @@ import { AccountPage } from "@/features/account";
 afterEach(() => {
     cleanup();
     localStorage.clear();
+    vi.unstubAllGlobals();
 });
 
 describe("configurações de contato da conta", () => {
@@ -104,10 +105,21 @@ describe("configurações de contato da conta", () => {
         );
     });
 
-    it("mostra e salva os dados principais do perfil produtor", () => {
+    it("mostra e salva os dados principais do perfil produtor", async () => {
+        const profile = {
+            nomeIniciativa: "Horta da Maria",
+            categoriaOfertada: "Experiências",
+            formasPagamento: ["Dinheiro", "Cartão de débito"],
+        };
+        const fetchMock = vi
+            .fn<typeof fetch>()
+            .mockResolvedValueOnce(Response.json(profile))
+            .mockResolvedValueOnce(new Response(null, { status: 204 }));
+        vi.stubGlobal("fetch", fetchMock);
         render(
             <AccountPage
                 role="producer"
+                userId="produtor-maria"
                 consumerName="Maria"
                 settings={{ whatsappNumber: "", authorized: false }}
                 draft={{ whatsappNumber: "", authorized: false }}
@@ -123,21 +135,31 @@ describe("configurações de contato da conta", () => {
         expect(
             screen.getByRole("heading", { name: "Olá, Maria" }),
         ).toBeTruthy();
-        expect(screen.getByLabelText("Nome da iniciativa")).toHaveProperty(
-            "placeholder",
-            "Ex.: Sítio Raízes",
-        );
-        fireEvent.change(screen.getByLabelText("Nome da iniciativa"), {
-            target: { value: "Sítio Raízes" },
+        const initiative = await screen.findByRole("textbox", {
+            name: /nome da iniciativa/i,
         });
+        expect(initiative).toHaveProperty("value", profile.nomeIniciativa);
+        expect(
+            screen.getByRole("combobox", { name: /categoria/i }),
+        ).toHaveProperty("value", profile.categoriaOfertada);
+        expect(
+            screen.getByRole("checkbox", { name: "Cartão de débito" }),
+        ).toHaveProperty("checked", true);
+        expect(screen.getByRole("checkbox", { name: "Pix" })).toHaveProperty(
+            "checked",
+            false,
+        );
+        fireEvent.change(initiative, { target: { value: "Sítio Raízes" } });
         fireEvent.click(screen.getByRole("button", { name: "Salvar" }));
 
-        expect(localStorage.getItem("cafuringa-producer-initiative")).toBe(
-            "Sítio Raízes",
-        );
-        expect(screen.getByRole("status").textContent).toBe(
-            "Alterações salvas.",
-        );
+        expect(await screen.findByText("Alterações salvas.")).toBeTruthy();
+        const [url, request] = fetchMock.mock.calls[1];
+        expect(url).toBe("/api/v1/users/producers/me");
+        expect(request?.method).toBe("PUT");
+        expect(JSON.parse(String(request?.body))).toEqual({
+            ...profile,
+            nomeIniciativa: "Sítio Raízes",
+        });
     });
 
     it.each([

@@ -8,9 +8,9 @@ type OfferDetailsPageProps = {
     offer: Offer;
     /** HU39: link wa.me do contato autorizado; sem ele, não há opção de contato (CA04, CA06). */
     contactUrl?: string;
+    contactLoginSubject?: string;
     producerName?: string;
     producerRoute?: string;
-    /** RN17: presente para visitante; a opção de contato leva ao login. */
     onNavigate: (path: string) => void;
     backPath?: string;
     backRoute?: string;
@@ -20,12 +20,16 @@ type OfferDetailsPageProps = {
 export function OfferDetailsPage({
     offer,
     contactUrl,
+    contactLoginSubject,
     producerName,
     producerRoute,
     onNavigate,
     backPath,
     backRoute,
 }: OfferDetailsPageProps) {
+    const loginRoute = contactLoginSubject
+        ? `/login/consumer?contato=${encodeURIComponent(contactLoginSubject)}`
+        : undefined;
     const photos = offer.images?.length ? offer.images : [offer.image];
     const [photo, setPhoto] = useState(0);
     const producerDetail = offer.details.find((detail) =>
@@ -104,7 +108,10 @@ export function OfferDetailsPage({
                         </a>
                     )}
                 </div>
-                {(producerName || producerRoute || contactUrl) && (
+                {(producerName ||
+                    producerRoute ||
+                    contactUrl ||
+                    loginRoute) && (
                     <section
                         className="public-contact-card"
                         aria-labelledby="offer-contact-heading"
@@ -118,13 +125,31 @@ export function OfferDetailsPage({
                                     {producerDetail ?? producerName}
                                 </p>
                             )}
-                            {!contactUrl && (
-                                <p>WhatsApp indisponível para esta oferta.</p>
+                            {loginRoute ? (
+                                <p>
+                                    Entre na sua conta para conversar com o
+                                    produtor pelo WhatsApp.
+                                </p>
+                            ) : (
+                                !contactUrl && (
+                                    <p>
+                                        WhatsApp indisponível para esta oferta.
+                                    </p>
+                                )
                             )}
                         </div>
                         <div className="public-contact-actions">
-                            {contactUrl && (
-                                <WhatsAppContactLink url={contactUrl} />
+                            {loginRoute ? (
+                                <a
+                                    className="button button-orange"
+                                    href={`#${loginRoute}`}
+                                >
+                                    Entrar para conversar
+                                </a>
+                            ) : (
+                                contactUrl && (
+                                    <WhatsAppContactLink url={contactUrl} />
+                                )
                             )}
                             {producerRoute && (
                                 <a

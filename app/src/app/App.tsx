@@ -72,10 +72,13 @@ export function App() {
     );
     const { role, consumerName, email, cpf, userId, signIn, signOut } =
         useDemoSession();
-    const signup = useProducerSignup((auth) => {
-        signIn(auth);
-        navigate("/conta-criada/producer");
-    });
+    const signup = useProducerSignup(
+        (auth) => {
+            signIn(auth);
+            navigate("/conta-criada/producer");
+        },
+        () => navigate("/cadastro"),
+    );
     const endAdminSession = useCallback(() => {
         signOut();
         navigate("/admin/entrar");
@@ -154,8 +157,8 @@ export function App() {
     const fromContact = Boolean(contactSubject);
     useEffect(() => {
         if (role && contactSubject)
-            navigate(postLoginRoute(role, contactSubject));
-    }, [role, contactSubject, navigate]);
+            changeRoute(postLoginRoute(role, contactSubject));
+    }, [role, contactSubject, changeRoute]);
     const justRegistered = query.get("cadastro") === "ok";
     const justRecovered = query.get("recuperacao") === "ok";
     const recoveryToken = query.get("token");
@@ -240,7 +243,7 @@ export function App() {
 
     const handleSignIn = (auth: AuthResult) => {
         signIn(auth);
-        navigate(postLoginRoute(auth.user.role, contactSubject));
+        changeRoute(postLoginRoute(auth.user.role, contactSubject));
     };
 
     return (
@@ -362,6 +365,11 @@ export function App() {
                 {currentOffer && (
                     <OfferDetailsPage
                         offer={currentOffer}
+                        contactLoginSubject={
+                            canViewContact
+                                ? undefined
+                                : `experiencia/${currentOffer.id}`
+                        }
                         producerName="Jefferson Sooma"
                         producerRoute="/produtor/demo-jefferson"
                         backRoute={offerReturnRoute(route, "/catalogo")}
@@ -413,6 +421,7 @@ export function App() {
                 {path === "/cadastro" && !lockedSignup && (
                     <RegisterPage
                         initialValues={signup.details ?? undefined}
+                        initialFailure={signup.duplicate}
                         onNavigate={navigate}
                         onContinue={(values) => {
                             signup.start(values);
@@ -481,6 +490,7 @@ export function App() {
                 )}
                 {screenPath === "/conta" && (
                     <AccountPage
+                        userId={userId}
                         role={role}
                         consumerName={consumerName}
                         consumerEmail={email}

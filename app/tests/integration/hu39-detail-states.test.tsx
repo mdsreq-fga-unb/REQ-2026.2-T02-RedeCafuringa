@@ -53,6 +53,32 @@ const experience = {
 };
 
 describe("detalhe da oferta", () => {
+    it("orienta o visitante a entrar para conversar e preserva a oferta de origem", async () => {
+        api({
+            [`/api/v1/experiences/${experience.id}`]: () => json(experience),
+        });
+        render(
+            <ProductOfferDetails
+                id={experience.id}
+                experience
+                onNavigate={vi.fn()}
+            />,
+        );
+
+        const login = await screen.findByRole("link", {
+            name: "Entrar para conversar",
+        });
+        expect(login.getAttribute("href")).toBe(
+            `#/login/consumer?contato=experiencia%2F${experience.id}`,
+        );
+        expect(
+            screen.queryByRole("link", { name: /Conversar pelo WhatsApp/ }),
+        ).toBeNull();
+        expect(
+            screen.queryByText("WhatsApp indisponível para esta oferta."),
+        ).toBeNull();
+    });
+
     it("link antigo de experiência (404) fala em experiência, não em produto", async () => {
         api({});
         render(

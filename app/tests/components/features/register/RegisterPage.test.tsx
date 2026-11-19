@@ -8,7 +8,10 @@ import {
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RegisterPage } from "@/features/register/RegisterPage";
-import { registerProducer } from "@/features/register/registerService";
+import {
+    checkProducerIdentity,
+    registerProducer,
+} from "@/features/register/registerService";
 import type { RegisterResult } from "@/features/register/registerService";
 
 vi.mock("@/features/register/registerService");
@@ -621,4 +624,27 @@ describe("RegisterPage — falhas ao cadastrar", () => {
 
         await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
     });
+});
+
+it("mantém o produtor na primeira etapa quando o CPF já existe", async () => {
+    vi.mocked(checkProducerIdentity).mockResolvedValue({
+        ok: false,
+        reason: "duplicate",
+        field: "document",
+    });
+    const onContinue = vi.fn();
+    const onNavigate = vi.fn();
+    render(<RegisterPage onNavigate={onNavigate} onContinue={onContinue} />);
+    const user = userEvent.setup();
+    await fillForm(user);
+    await user.click(screen.getByRole("button", { name: "Continuar" }));
+
+    const cpf = screen.getByLabelText("CPF");
+    await waitFor(() => expect(document.activeElement).toBe(cpf));
+    expect(screen.getByText("CPF já cadastrado").id).toBe(
+        cpf.getAttribute("aria-describedby"),
+    );
+    expect(onContinue).not.toHaveBeenCalled();
+    expect(onNavigate).not.toHaveBeenCalled();
+    expect(registerProducer).not.toHaveBeenCalled();
 });

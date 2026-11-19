@@ -207,8 +207,34 @@ export function registerMockUser(account: {
     return user;
 }
 
+export function readMockProducerAccount(id: AuthResult["user"]["id"]) {
+    return mockUsers.find(
+        (item) =>
+            String(item.user.id) === String(id) &&
+            item.user.role === "producer",
+    )?.producerDetails;
+}
+
+export function updateMockProducerAccount(
+    id: AuthResult["user"]["id"],
+    details: Pick<
+        ProducerDetails,
+        "nomeIniciativa" | "categoriaOfertada" | "formasPagamento"
+    >,
+) {
+    const account = mockUsers.find(
+        (item) =>
+            String(item.user.id) === String(id) &&
+            item.user.role === "producer",
+    );
+    if (!account) throw new Error("Produtor n?o encontrado.");
+    account.producerDetails = { ...account.producerDetails, ...details };
+}
+
 export function isMockCpfRegistered(cpf: string): boolean {
-    return mockUsers.some((item) => item.cpf === cpf);
+    return [...mockUsers, ...readRegisteredUsers()].some(
+        (item) => item.cpf === cpf,
+    );
 }
 
 function normalizeEmail(email: string): string {

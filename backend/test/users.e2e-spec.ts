@@ -204,6 +204,60 @@ describe('HU02 — Cadastrar perfil de produtor (e2e)', () => {
     });
   });
 
+  it('verifica o CPF na primeira etapa sem criar a conta', async () => {
+    const { cpf, email } = makeProducer();
+    const path = PRODUCER_REGISTER + '/check-identity';
+    await t.request().post(path).send({ cpf, email }).expect(204);
+    expect(await t.connection.collection('users').countDocuments()).toBe(0);
+
+    await t.request().post(REGISTER).send(makeConsumer({ cpf })).expect(201);
+    const response = await t
+      .request()
+      .post(path)
+      .send({ cpf, email })
+      .expect(409);
+    expect(response.body.message).toBe('CPF já cadastrado');
+  });
+
+  it('carrega e atualiza os dados da conta do produtor autenticado', async () => {
+    const dto = makeProducer();
+    const path = PRODUCER_REGISTER + '/me';
+    await t.request().post(PRODUCER_REGISTER).send(dto).expect(201);
+    const login = await t
+      .request()
+      .post('/api/v1/auth/login')
+      .send({ email: dto.email, senha: dto.senha })
+      .expect(200);
+    const authorization = 'Bearer ' + (login.body.accessToken as string);
+
+    await t.request().get(path).expect(401);
+    await t
+      .request()
+      .get(path)
+      .set('Authorization', authorization)
+      .expect(200, {
+        nomeIniciativa: dto.nomeIniciativa,
+        categoriaOfertada: dto.categoriaOfertada,
+        formasPagamento: dto.formasPagamento,
+      });
+    const update = {
+      nomeIniciativa: 'Horta da Serra',
+      categoriaOfertada: 'Experiências',
+      formasPagamento: ['Cartão de débito'],
+    };
+    await t
+      .request()
+      .put(path)
+      .set('Authorization', authorization)
+      .send(update)
+      .expect(204);
+    await t
+      .request()
+      .get(path)
+      .set('Authorization', authorization)
+      .expect(200, update);
+  });
+
   it('CA02/CA03: aceita cadastro sem CNPJ', async () => {
     await t
       .request()

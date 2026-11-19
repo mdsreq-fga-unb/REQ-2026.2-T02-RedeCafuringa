@@ -87,10 +87,23 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
         expect(callsTo(api, "/api/v1/auth/login", "POST")).toHaveLength(2);
     });
+    it("volta ao CPF se ele for cadastrado após a validação da primeira etapa", async () => {
+        const api = mockTrajectoryApi({
+            register: () => json({ message: "CPF já cadastrado" }, 409),
+        });
+        const user = await continueSignup();
+        fillTrajectory();
+        await user.click(screen.getByRole("button", { name: "Criar conta" }));
+
+        await screen.findByText("CPF já cadastrado");
+        const cpf = screen.getByLabelText("CPF");
+        await waitFor(() => expect(document.activeElement).toBe(cpf));
+        expect(window.location.hash).toBe("#/cadastro");
+        expect(callsTo(api, "/api/v1/auth/login", "POST")).toHaveLength(0);
+        expect(callsTo(api, ownPath, "PUT")).toHaveLength(0);
+    });
+
     it.each([
-        [409, "E-mail já cadastrado", /e-mail já cadastrado/i],
-        [409, "CPF já cadastrado", /cpf/i],
-        [409, "CNPJ já cadastrado", /cnpj/i],
         [400, "Dados de cadastro inválidos", /inválidos/i],
         [429, "Muitas tentativas", /muitas tentativas/i],
         [500, "Erro interno", /não foi possível concluir/i],

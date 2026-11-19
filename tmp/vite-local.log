@@ -1,0 +1,32 @@
+
+  VITE v8.3.5  ready in 1914 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+23:42:10 [vite] (client) hmr update /src/app/App.tsx, /src/features/register/RegisterPage.tsx
+23:42:10 [vite] (client) hmr update /src/features/auth/DemoNavigation.tsx, /src/app/App.tsx, /src/features/recovery/ResetPasswordPage.tsx, /src/features/recovery/RecoverAccessPage.tsx, /src/features/auth/LoginPage.tsx, /src/features/auth/adminRegistration.tsx, /src/features/register/RegisterPage.tsx, /src/features/users/AdminUsersPage.tsx, /src/features/users/DeleteUserDialog.tsx, /src/features/trajectory/TrajectoryPage.tsx, /src/features/trajectory/PublicTrajectoryPage.tsx, /src/features/profile/ExplorePage.tsx and 2 more
+23:42:10 [vite] (client) hmr update /src/features/register/RegisterPage.tsx
+23:42:34 [vite] (client) hmr update /src/app/App.tsx
+23:42:34 [vite] (client) hmr update /src/app/App.tsx
+23:42:34 [vite] (client) hmr update /src/features/offers/ProductOfferDetails.tsx
+23:42:34 [vite] (client) hmr update /src/App.css
+23:42:34 [vite] (client) hmr update /src/features/offers/OfferDetailsPage.tsx
+23:43:01 [vite] (client) hmr update /src/features/account/AccountPage.tsx
+23:43:42 [vite] (client) hmr update /src/features/account/AccountPage.tsx
+23:43:42 [vite] (client) hmr update /src/features/auth/DemoNavigation.tsx, /src/app/App.tsx, /src/features/recovery/ResetPasswordPage.tsx, /src/features/recovery/RecoverAccessPage.tsx, /src/features/auth/LoginPage.tsx, /src/features/auth/adminRegistration.tsx, /src/features/register/RegisterPage.tsx, /src/features/users/AdminUsersPage.tsx, /src/features/users/DeleteUserDialog.tsx, /src/features/trajectory/TrajectoryPage.tsx, /src/features/trajectory/PublicTrajectoryPage.tsx, /src/features/profile/ExplorePage.tsx and 3 more
+23:43:42 [vite] (client) hmr update /src/features/register/RegisterPage.tsx
+23:43:42 [vite] (client) hmr update /src/App.css
+23:43:42 [vite] (client) hmr update /src/app/App.tsx, /src/features/register/RegisterPage.tsx
+23:43:54 [vite] (client) hmr update /src/app/App.tsx
+23:43:54 [vite] (client) hmr update /src/features/account/ProducerAccountForm.tsx
+23:43:54 [vite] (client) hmr update /src/features/auth/DemoNavigation.tsx, /src/app/App.tsx, /src/features/recovery/ResetPasswordPage.tsx, /src/features/recovery/RecoverAccessPage.tsx, /src/features/auth/LoginPage.tsx, /src/features/auth/adminRegistration.tsx, /src/features/register/RegisterPage.tsx, /src/features/users/AdminUsersPage.tsx, /src/features/users/DeleteUserDialog.tsx, /src/features/trajectory/TrajectoryPage.tsx, /src/features/trajectory/PublicTrajectoryPage.tsx, /src/features/profile/ExplorePage.tsx and 3 more
+23:43:54 [vite] (client) hmr update /src/features/offers/OfferDetailsPage.tsx
+23:43:54 [vite] (client) hmr update /src/features/offers/ProductOfferDetails.tsx
+23:43:55 [vite] (client) hmr update /src/features/register/RegisterPage.tsx
+23:43:55 [vite] (client) hmr update /src/app/App.tsx, /src/features/register/RegisterPage.tsx
+23:44:30 [vite] (client) hmr update /src/features/account/ProducerAccountForm.tsx
+23:49:49 [vite] (client) hmr update /src/App.css
+23:50:22 [vite] (client) hmr update /src/app/App.tsx
+23:50:22 [vite] (client) hmr update /src/features/account/AccountPage.tsx
+23:51:09 [vite] (client) hmr update /src/app/App.tsx
+23:51:35 [vite] (client) hmr update /src/features/register/RegisterPage.tsx
+23:51:35 [vite] (client) hmr update /src/app/App.tsx, /src/features/register/RegisterPage.tsx

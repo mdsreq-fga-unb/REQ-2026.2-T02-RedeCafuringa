@@ -49,8 +49,7 @@ export function ProductOfferDetails({
                 }
                 setState({ status: "ready", product });
                 // HU39: o contato vem do perfil público do responsável, que só
-                // traz o telefone quando ele autorizou (RN07). Nunca de dados
-                // locais, e sem exigir login (CA05).
+                // traz o telefone autorizado apenas para sessões autenticadas.
                 if (product.producerId) {
                     void getPublicTrajectory(
                         product.producerId,
@@ -80,6 +79,11 @@ export function ProductOfferDetails({
         return (
             <OfferDetailsPage
                 offer={productToOffer(product)}
+                contactLoginSubject={
+                    canViewContact
+                        ? undefined
+                        : `${experience ? "experiencia" : "produto"}/${id}`
+                }
                 producerName={product.producerName}
                 producerRoute={
                     profile && `/produtor/${encodeURIComponent(profile.id)}`

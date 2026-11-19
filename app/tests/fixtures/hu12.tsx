@@ -74,6 +74,11 @@ export function mockTrajectoryApi(
                     email: "maria@example.com",
                     cpf: "***.982.247-**",
                 });
+            if (
+                path === "/api/v1/users/producers/check-identity" &&
+                method === "POST"
+            )
+                return new Response(null, { status: 204 });
             if (path === "/api/v1/users/producers" && method === "POST")
                 return (
                     options.register?.(init) ?? json({ id: producerId }, 201)
@@ -93,6 +98,12 @@ export function mockTrajectoryApi(
                         },
                     } satisfies components["schemas"]["LoginResponse"])
                 );
+            if (path === "/api/v1/users/producers/me" && method === "GET")
+                return json({
+                    nomeIniciativa: "Horta da Maria",
+                    categoriaOfertada: "Produtos",
+                    formasPagamento: ["Pix"],
+                });
             if (path === ownPath && method === "GET")
                 return (
                     options.getOwn?.(init) ?? json(options.own ?? ownTrajectory)

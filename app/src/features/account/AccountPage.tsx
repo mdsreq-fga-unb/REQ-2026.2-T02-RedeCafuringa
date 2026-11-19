@@ -1,4 +1,3 @@
-import { useState } from "react";
 import type { FormEvent } from "react";
 import { ActionButton } from "../../components/ui/ActionButton";
 import { BackButton } from "../../components/navigation/BackButton";
@@ -6,10 +5,12 @@ import { formatCpf } from "../auth/cpf";
 import { isMockAuthEnabled } from "../auth/authMode";
 import { isWhatsAppContactAvailable } from "../contact/contact-flow.js";
 import { producerName } from "../offers/offerData";
-import type { ContactSettings, Role } from "../../shared/types";
+import { ProducerAccountForm } from "./ProducerAccountForm";
+import type { AuthResult, ContactSettings, Role } from "../../shared/types";
 
 type AccountPageProps = {
     role: Role | null;
+    userId?: AuthResult["user"]["id"] | null;
     consumerName: string;
     consumerEmail?: string;
     consumerCpf?: string;
@@ -32,6 +33,7 @@ type AccountPageProps = {
 export function AccountPage(props: AccountPageProps) {
     const {
         role,
+        userId,
         consumerName,
         consumerEmail = "",
         consumerCpf = "",
@@ -49,35 +51,12 @@ export function AccountPage(props: AccountPageProps) {
         settings.authorized,
         settings.whatsappNumber,
     );
-    const [initiative, setInitiative] = useState(
-        () => localStorage.getItem("cafuringa-producer-initiative") ?? "",
-    );
-    const [category, setCategory] = useState(
-        () => localStorage.getItem("cafuringa-producer-category") ?? "Produtos",
-    );
-    const [paymentMethods, setPaymentMethods] = useState(
-        () =>
-            localStorage.getItem("cafuringa-producer-payment-methods") ??
-            "Pix, Cartão de crédito",
-    );
-    const [profileSaved, setProfileSaved] = useState(false);
     const displayName =
         role === "producer"
             ? (consumerName || producerName)
                   .replace(/^Dona\s+/i, "")
                   .split(/\s+/)[0]
             : (consumerName || "Visitante").split(/\s+/)[0];
-
-    const saveProducerProfile = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        localStorage.setItem("cafuringa-producer-initiative", initiative);
-        localStorage.setItem("cafuringa-producer-category", category);
-        localStorage.setItem(
-            "cafuringa-producer-payment-methods",
-            paymentMethods,
-        );
-        setProfileSaved(true);
-    };
 
     return (
         <section className="account-page">
@@ -95,85 +74,9 @@ export function AccountPage(props: AccountPageProps) {
             </p>
             {role === "producer" && (
                 <>
-                    <form
-                        className="account-profile-form"
-                        onSubmit={saveProducerProfile}
-                    >
-                        <div className="account-field">
-                            <label
-                                className="field-label"
-                                htmlFor="producer-initiative"
-                            >
-                                Nome da iniciativa{" "}
-                                <span aria-hidden="true">*</span>
-                            </label>
-                            <input
-                                id="producer-initiative"
-                                className="text-input"
-                                value={initiative}
-                                aria-label="Nome da iniciativa"
-                                placeholder="Ex.: Sítio Raízes"
-                                onChange={(event) => {
-                                    setInitiative(event.target.value);
-                                    setProfileSaved(false);
-                                }}
-                            />
-                        </div>
-                        <div className="account-field">
-                            <label
-                                className="field-label"
-                                htmlFor="producer-category"
-                            >
-                                Categoria <span aria-hidden="true">*</span>
-                            </label>
-                            <select
-                                id="producer-category"
-                                className="text-input"
-                                value={category}
-                                onChange={(event) => {
-                                    setCategory(event.target.value);
-                                    setProfileSaved(false);
-                                }}
-                            >
-                                <option>Produtos</option>
-                                <option>Experiências</option>
-                                <option>Produtos e experiências</option>
-                            </select>
-                        </div>
-                        <div className="account-field">
-                            <label
-                                className="field-label"
-                                htmlFor="producer-payment-methods"
-                            >
-                                Formas de pagamento{" "}
-                                <span aria-hidden="true">*</span>
-                            </label>
-                            <select
-                                id="producer-payment-methods"
-                                className="text-input"
-                                value={paymentMethods}
-                                onChange={(event) => {
-                                    setPaymentMethods(event.target.value);
-                                    setProfileSaved(false);
-                                }}
-                            >
-                                <option>Pix</option>
-                                <option>Pix, Cartão de crédito</option>
-                                <option>Pix, Dinheiro</option>
-                                <option>
-                                    Pix, Cartão de crédito, Dinheiro
-                                </option>
-                            </select>
-                        </div>
-                        <ActionButton variant="orange" type="submit">
-                            Salvar
-                        </ActionButton>
-                        {profileSaved && (
-                            <p className="save-status" role="status">
-                                Alterações salvas.
-                            </p>
-                        )}
-                    </form>
+                    {userId != null && (
+                        <ProducerAccountForm key={userId} userId={userId} />
+                    )}
                     <section
                         className="public-contact-card account-contact-card"
                         aria-labelledby="account-contact-heading"
