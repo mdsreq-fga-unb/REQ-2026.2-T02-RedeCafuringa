@@ -14,6 +14,9 @@ export function toProductList(
             category: item.categoria,
             name: item.nome,
             producerName: item.produtor.nomeIniciativa,
+            ...(item.produtor.primeiroNome
+                ? { producerFirstName: item.produtor.primeiroNome }
+                : {}),
             ...(item.produtor.localidade
                 ? { producerLocation: item.produtor.localidade }
                 : {}),

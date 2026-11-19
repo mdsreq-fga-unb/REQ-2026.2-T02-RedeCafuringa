@@ -6,7 +6,7 @@ import { registerMockAdmin, registerMockConsumer } from "./mockAuth";
 export type AdminSignupData = { email: string; senha: string };
 
 const notAuthorized =
-    "Entre com uma conta autorizada para cadastrar administradores.";
+    "Entre com uma conta autorizada para cadastrar administradoras.";
 
 /**
  * HU03: só um administrador autenticado cadastra outro (RN03). A autorização

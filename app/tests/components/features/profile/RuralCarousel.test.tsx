@@ -113,7 +113,7 @@ describe("carrossel rural", () => {
         fireEvent.error(screen.getByRole("img"));
         expect(screen.queryByRole("img")).toBeNull();
         expect(
-            screen.getByRole("heading", { name: "Servimos a terra." }),
+            screen.getByRole("heading", { name: "Servimos à terra" }),
         ).toBeTruthy();
         fireEvent.click(screen.getByRole("button", { name: "Próxima imagem" }));
         expect(

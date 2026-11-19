@@ -241,10 +241,12 @@ describe('HU21/RF21 — Cadastrar experiência (e2e)', () => {
 
       expect(list.body).toMatchObject({ total: 1, pagina: 1 });
       expect(list.body.itens[0].id).toBe(created.body.id);
+      expect(list.body.itens[0].produtor).toEqual(detail.body.produtor);
       expect(detail.body.produtor).toEqual({
         id: p.id,
         nomeIniciativa: 'Sítio Boa Vista',
         localidade: 'Núcleo Rural Cafuringa',
+        primeiroNome: 'João',
       });
       const body = JSON.stringify([list.body, detail.body]);
       for (const privado of [

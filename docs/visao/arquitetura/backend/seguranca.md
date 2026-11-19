@@ -159,7 +159,7 @@ O time responde em até 5 dias úteis.
 
 - [ ] Nenhum `.env`, chave `age`, token ou dump no histórico (`gitleaks detect`).
 - [ ] CI verde (lint, format, typecheck, audit, testes, Docker build, hadolint, actionlint).
-- [ ] `npm audit --audit-level=high` = 0.
+- [ ] `npm audit --omit=dev --audit-level=high` = 0 (bloqueante no CI). O audit completo, com as ferramentas de desenvolvimento, roda como aviso: alertas sem versão corrigida, como o do `picomatch` (GHSA-fc5q-39xc-vjpf), não chegam ao runtime.
 - [ ] `docker scout cves` da API sem CRITICAL/HIGH não justificados.
 - [ ] Backup restore drill executado e registrado.
 - [ ] Host auditado (`deploy/host-audit.sh`) e checklist aplicado.

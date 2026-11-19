@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -36,8 +37,15 @@ import { AccountDeletionService } from './account-deletion.service.js';
 import { Role } from './domain/role.js';
 import { AdminResponse } from './dto/admin.response.js';
 import { CreateAdminDto } from './dto/create-admin.dto.js';
-import { CreateConsumerDto } from './dto/create-consumer.dto.js';
-import { CreateProducerDto } from './dto/create-producer.dto.js';
+import {
+  CreateConsumerDto,
+  UpdateConsumerNameDto,
+} from './dto/create-consumer.dto.js';
+import {
+  CheckProducerIdentityDto,
+  CreateProducerDto,
+  ProducerAccountDto,
+} from './dto/create-producer.dto.js';
 import { DeleteUserQuery } from './dto/delete-user.query.js';
 import { ListUsersQuery } from './dto/list-users.query.js';
 import { ProducerResponse } from './dto/producer.response.js';
@@ -79,6 +87,81 @@ export class UsersController {
   })
   async createConsumer(@Body() dto: CreateConsumerDto): Promise<UserResponse> {
     return this.users.toResponse(await this.users.createConsumer(dto));
+  }
+
+  @Roles(Role.CONSUMIDOR)
+  @Put('consumers/me')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Alterar nome da consumidora',
+    description: 'Atualiza apenas o nome da titular da sessão.',
+  })
+  @ApiNoContentResponse({ description: 'Nome atualizado' })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiUnauthorizedResponse({ type: ErrorResponse })
+  @ApiForbiddenResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: ErrorResponse })
+  updateConsumerName(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: UpdateConsumerNameDto,
+  ): Promise<void> {
+    return this.users.updateConsumerName(user.id, dto.nome);
+  }
+
+  @Public()
+  @AuthThrottle()
+  @Post('producers/check-identity')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Validar CPF, CNPJ e e-mail antes de avançar no cadastro',
+    description:
+      'Verifica se os dados podem ser usados no cadastro sem criar a conta.',
+  })
+  @ApiNoContentResponse({ description: 'Dados disponíveis para cadastro' })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiForbiddenResponse({ type: ErrorResponse })
+  @ApiConflictResponse({ type: ErrorResponse })
+  @ApiTooManyRequestsResponse({
+    type: ErrorResponse,
+    headers: RETRY_AFTER_HEADER,
+  })
+  async checkProducerIdentity(
+    @Body() dto: CheckProducerIdentityDto,
+  ): Promise<void> {
+    await this.users.checkProducerIdentity(dto);
+  }
+
+  @Roles(Role.PRODUTOR)
+  @Get('producers/me')
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Consultar conta da produtora',
+    description: 'Retorna os dados da iniciativa da titular da sessão.',
+  })
+  @ApiOkResponse({ type: ProducerAccountDto })
+  getProducerAccount(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<ProducerAccountDto> {
+    return this.users.getProducerAccount(user.id);
+  }
+
+  @Roles(Role.PRODUTOR)
+  @Put('producers/me')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Atualizar conta da produtora',
+    description:
+      'Salva iniciativa, categoria e formas de pagamento da titular.',
+  })
+  @ApiNoContentResponse({ description: 'Dados da conta salvos' })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  updateProducerAccount(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: ProducerAccountDto,
+  ): Promise<void> {
+    return this.users.updateProducerAccount(user.id, dto);
   }
 
   /** HU02 — cadastro público de produtor. */

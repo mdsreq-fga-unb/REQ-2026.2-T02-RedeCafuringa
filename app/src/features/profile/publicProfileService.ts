@@ -105,7 +105,7 @@ function toProducerOffer(product: ProductResponse): ProducerOffer {
         ),
         details: [
             `${product.gramasPorUnidade} g por unidade`,
-            `Produtor: ${product.produtor.nomeIniciativa}`,
+            `Produtora: ${product.produtor.primeiroNome || product.produtor.nomeIniciativa}`,
         ],
         description: product.descricao,
     };

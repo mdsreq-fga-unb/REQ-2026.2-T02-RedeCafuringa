@@ -35,7 +35,7 @@ describe("HU04 — compatibilidade com a demonstração existente", () => {
         await renderAdminApp();
         expect(
             await screen.findByRole("heading", {
-                name: /usuários cadastrados/i,
+                name: /usuárias cadastradas/i,
             }),
         ).toBeTruthy();
         for (const perfil of [
@@ -62,9 +62,9 @@ describe("HU04 — compatibilidade com a demonstração existente", () => {
         });
         const user = userEvent.setup();
         await renderAdminApp();
-        await screen.findByRole("heading", { name: /usuários cadastrados/i });
+        await screen.findByRole("heading", { name: /usuárias cadastradas/i });
         await user.type(
-            screen.getByRole("searchbox", { name: /buscar usuário/i }),
+            screen.getByRole("searchbox", { name: /buscar usuária/i }),
             "Consumidora Criada no Teste",
         );
         expect(
@@ -101,9 +101,9 @@ describe("HU04 — compatibilidade com a demonstração existente", () => {
         });
         const user = userEvent.setup();
         await renderAdminApp();
-        await screen.findByRole("heading", { name: /usuários cadastrados/i });
+        await screen.findByRole("heading", { name: /usuárias cadastradas/i });
         await user.type(
-            screen.getByRole("searchbox", { name: /buscar usuário/i }),
+            screen.getByRole("searchbox", { name: /buscar usuária/i }),
             "gestora.nova@exemplo.com",
         );
         await waitFor(() => {
@@ -119,13 +119,13 @@ describe("HU04 — compatibilidade com a demonstração existente", () => {
     it("CA08: busca sem correspondência informa lista vazia", async () => {
         const user = userEvent.setup();
         await renderAdminApp();
-        await screen.findByRole("heading", { name: /usuários cadastrados/i });
+        await screen.findByRole("heading", { name: /usuárias cadastradas/i });
         await user.type(
-            screen.getByRole("searchbox", { name: /buscar usuário/i }),
+            screen.getByRole("searchbox", { name: /buscar usuária/i }),
             "usuario-inexistente-xyz",
         );
         expect(
-            await screen.findByText(/nenhum usuário|não há usuários/i),
+            await screen.findByText(/nenhuma usuária para exibir/i),
         ).toBeTruthy();
         expect(fetchMock).not.toHaveBeenCalled();
     });

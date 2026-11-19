@@ -80,8 +80,13 @@ export async function getPublicTrajectory(
     signal?: AbortSignal,
 ): Promise<PublicTrajectory> {
     if (isMockAuthEnabled) {
+        const authenticated = Boolean(localStorage.getItem("cafuringa-token"));
         const example = demoPublicProfiles.find((profile) => profile.id === id);
-        if (example) return example;
+        if (example) {
+            const profile = { ...example };
+            if (!authenticated) delete profile.telefone;
+            return profile;
+        }
         const profile = readMockUserDetails().find(
             (user) => user.id === id && user.perfil === "PRODUTOR",
         );
@@ -94,7 +99,9 @@ export async function getPublicTrajectory(
             trajetoria: saved.trajetoria,
             atividades: saved.atividades,
             ...(profile.localidade ? { localidade: profile.localidade } : {}),
-            ...(saved.telefonePublico ? { telefone: saved.telefone } : {}),
+            ...(authenticated && saved.telefonePublico
+                ? { telefone: saved.telefone }
+                : {}),
             ...(saved.fotoUrl ? { fotoUrl: saved.fotoUrl } : {}),
         };
     }

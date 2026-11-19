@@ -6,10 +6,7 @@ import { formatPhone } from "@/features/register/validators";
 import { getPublicTrajectory, photoSrc } from "./trajectoryService";
 import type { PublicTrajectory } from "./trajectoryService";
 import { ProducerCatalogPage } from "@/features/profile/ProducerCatalogPage";
-import {
-    createWhatsAppUrl,
-    isWhatsAppContactAvailable,
-} from "@/features/contact";
+import { WhatsAppContactLink, whatsAppContactUrl } from "@/features/contact";
 import "./trajectory.css";
 import "@/features/profile/publicProfile.css";
 
@@ -18,16 +15,18 @@ export function PublicTrajectoryPage({
     onNavigate,
     catalogView = false,
     offerId,
-    consumer = false,
+    canViewContact = false,
 }: {
     id: string;
     onNavigate: (path: string) => void;
     catalogView?: boolean;
     offerId?: string;
-    consumer?: boolean;
+    canViewContact?: boolean;
 }) {
     const [data, setData] = useState<PublicTrajectory | null>(null);
     const [error, setError] = useState("");
+    // 404 (perfil inexistente ou não publicado) não melhora tentando de novo.
+    const [retryable, setRetryable] = useState(false);
     const [loading, setLoading] = useState(true);
     const [attempt, setAttempt] = useState(0);
     useEffect(() => {
@@ -37,50 +36,37 @@ export function PublicTrajectoryPage({
                 if (!controller.signal.aborted) setData(profile);
             })
             .catch((cause: unknown) => {
-                if (!controller.signal.aborted)
-                    setError(
-                        cause instanceof ApiHttpError && cause.status === 404
-                            ? "Perfil indisponível ou não encontrado."
-                            : "Não foi possível carregar este perfil. Verifique a conexão e tente novamente.",
-                    );
+                if (controller.signal.aborted) return;
+                const notFound =
+                    cause instanceof ApiHttpError && cause.status === 404;
+                setRetryable(!notFound);
+                setError(
+                    notFound
+                        ? "Perfil indisponível ou não encontrado."
+                        : "Não foi possível carregar este perfil. Verifique a conexão e tente novamente.",
+                );
             })
             .finally(() => {
                 if (!controller.signal.aborted) setLoading(false);
             });
         return () => controller.abort();
-    }, [id, attempt]);
-    const contactAvailable = Boolean(
-        data?.telefone && isWhatsAppContactAvailable(true, data.telefone),
+    }, [id, attempt, canViewContact]);
+    // HU39: o telefone só vem da API quando o produtor autorizou (RN07);
+    // todos veem a opção (CA05), mas só quem está logado inicia o contato (RN17).
+    const contactUrl = whatsAppContactUrl(
+        canViewContact ? data?.telefone : undefined,
+        `Perfil de ${data?.nomeIniciativa || "produtora"}`,
+        { kind: "profile", route: `/produtor/${encodeURIComponent(id)}` },
     );
-    const startContact = () => {
-        if (!data?.telefone || !contactAvailable) return;
-        if (!consumer) {
-            onNavigate(
-                `/entrar?contato=${encodeURIComponent(`produtor/${id}`)}`,
-            );
-            return;
-        }
-        const digits = data.telefone.replace(/\D/g, "");
-        const number = digits.length <= 11 ? `55${digits}` : digits;
-        window.open(
-            createWhatsAppUrl(
-                number,
-                `Perfil de ${data.nomeIniciativa || "produtor"}`,
-            ),
-            "_blank",
-            "noopener,noreferrer",
-        );
-    };
     if (data && catalogView)
         return (
             <ProducerCatalogPage
                 key={data.id}
                 profile={data}
                 offerId={offerId}
-                contactAvailable={contactAvailable}
-                consumer={consumer}
+                contactPhone={contactUrl ? data.telefone : undefined}
+                canViewContact={canViewContact}
                 onNavigate={onNavigate}
-                onStartContact={startContact}
             />
         );
     return (
@@ -92,26 +78,28 @@ export function PublicTrajectoryPage({
             {loading && <p role="status">Carregando perfil…</p>}
             {error && (
                 <>
-                    <h1>Perfil do produtor</h1>
+                    <h1>Perfil da produtora</h1>
                     <p className="form-alert" role="alert">
                         {error}
                     </p>
-                    <ActionButton
-                        variant="outline"
-                        onClick={() => {
-                            setData(null);
-                            setLoading(true);
-                            setError("");
-                            setAttempt((value) => value + 1);
-                        }}
-                    >
-                        Tentar novamente
-                    </ActionButton>
+                    {retryable && (
+                        <ActionButton
+                            variant="outline"
+                            onClick={() => {
+                                setData(null);
+                                setLoading(true);
+                                setError("");
+                                setAttempt((value) => value + 1);
+                            }}
+                        >
+                            Tentar novamente
+                        </ActionButton>
+                    )}
                 </>
             )}
             {data && (
                 <>
-                    <h1>{data.nomeIniciativa || "Perfil do produtor"}</h1>
+                    <h1>{data.nomeIniciativa || "Perfil da produtora"}</h1>
                     {data.categoriaOfertada && (
                         <p className="eyebrow">{data.categoriaOfertada}</p>
                     )}
@@ -119,7 +107,7 @@ export function PublicTrajectoryPage({
                         <img
                             className="trajectory-public-photo"
                             src={photoSrc(data.fotoUrl)}
-                            alt={`Foto de ${data.nomeIniciativa || "produtor"}`}
+                            alt={`Foto de ${data.nomeIniciativa || "produtora"}`}
                             decoding="async"
                             onError={(event) => {
                                 event.currentTarget.hidden = true;
@@ -142,7 +130,7 @@ export function PublicTrajectoryPage({
                             </p>
                         </>
                     )}
-                    {data.telefone && (
+                    {canViewContact && data.telefone && (
                         <>
                             <h2>Número de Contato</h2>
                             <p className="body-copy">
@@ -169,14 +157,7 @@ export function PublicTrajectoryPage({
                         >
                             Ver catálogo desse perfil
                         </ActionButton>
-                        {contactAvailable && (
-                            <ActionButton
-                                variant="green"
-                                onClick={startContact}
-                            >
-                                Conversar pelo WhatsApp
-                            </ActionButton>
-                        )}
+                        {contactUrl && <WhatsAppContactLink url={contactUrl} />}
                     </div>
                 </>
             )}

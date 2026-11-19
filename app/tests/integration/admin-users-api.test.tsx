@@ -15,7 +15,7 @@ vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: false }));
 vi.mock("@/features/auth/authService", () => ({
     login: async () => ({
         token: "admin-session-token",
-        user: { id: "admin", name: "Administrador", role: "admin" },
+        user: { id: "admin", name: "Administradora", role: "admin" },
     }),
 }));
 
@@ -40,7 +40,7 @@ afterEach(() => {
 });
 
 async function waitForList() {
-    return screen.findByRole("heading", { name: /usuários cadastrados/i });
+    return screen.findByRole("heading", { name: /usuárias cadastradas/i });
 }
 
 // Os detalhes podem usar texto ou campos de leitura, como no protótipo.
@@ -66,7 +66,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
         ]) {
             expect(
                 within(
-                    screen.getByRole("list", { name: "Usuários cadastrados" }),
+                    screen.getByRole("list", { name: "Usuárias cadastradas" }),
                 ).getAllByText(perfil).length,
             ).toBeGreaterThan(0);
         }
@@ -93,7 +93,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
         await renderAdminApp();
         await waitForList();
         await user.type(
-            screen.getByRole("searchbox", { name: /buscar usuário/i }),
+            screen.getByRole("searchbox", { name: /buscar usuária/i }),
             "Maria",
         );
         await waitFor(() => {
@@ -128,7 +128,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
         await renderAdminApp();
         await waitForList();
         await user.type(
-            screen.getByRole("searchbox", { name: /buscar usuário/i }),
+            screen.getByRole("searchbox", { name: /buscar usuária/i }),
             "Bezerra",
         );
         await waitFor(() =>
@@ -157,7 +157,7 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
         );
         await renderAdminApp();
         expect(
-            await screen.findByText(/nenhum usuário|não há usuários/i),
+            await screen.findByText(/nenhuma usuária para exibir/i),
         ).toBeTruthy();
     });
 
@@ -254,13 +254,13 @@ describe("HU04 — consulta integrada ao contrato HTTP existente", () => {
         fetchMock.mockImplementation(async (input) =>
             String(input).endsWith(`/users/${consumer.id}`)
                 ? jsonResponse(
-                      { statusCode: 404, message: "Usuário não encontrado" },
+                      { statusCode: 404, message: "Usuária não encontrada" },
                       404,
                   )
                 : jsonResponse(userPage),
         );
         await renderAdminApp();
-        expect(await screen.findByText(/usuário não encontrado/i)).toBeTruthy();
+        expect(await screen.findByText(/usuária não encontrada/i)).toBeTruthy();
         await user.click(screen.getByRole("button", { name: /voltar/i }));
         await waitFor(() =>
             expect(window.location.hash).toBe("#/admin/usuarios"),

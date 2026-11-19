@@ -65,12 +65,12 @@ describe("Fluxo de cadastro de consumidor — HU01", () => {
         expect(continueButton.disabled).toBe(false);
         expect(
             screen
-                .getByRole("button", { name: /Sou consumidor/ })
+                .getByRole("button", { name: /Sou consumidora/ })
                 .getAttribute("aria-pressed"),
         ).toBe("true");
 
         await user.click(
-            screen.getByRole("button", { name: /Sou consumidor/ }),
+            screen.getByRole("button", { name: /Sou consumidora/ }),
         );
         expect(continueButton.disabled).toBe(false);
         await user.click(continueButton);
@@ -82,7 +82,7 @@ describe("Fluxo de cadastro de consumidor — HU01", () => {
         renderSignup();
 
         expect(
-            screen.getByRole("heading", { name: "Cadastro de consumidor" }),
+            screen.getByRole("heading", { name: "Cadastro de consumidora" }),
         ).toBeTruthy();
         expect(screen.getByLabelText("Nome completo")).toBeTruthy();
         expect(screen.getByLabelText("CPF")).toBeTruthy();
@@ -285,7 +285,9 @@ describe("Fluxo de cadastro de consumidor — HU01", () => {
         render(<ConsumerSignupSuccessPage onNavigate={onNavigate} />);
 
         expect(
-            screen.getByRole("heading", { name: "Você já faz parte da rede" }),
+            screen.getByRole("heading", {
+                name: "Bem-vinda à Rede Cafuringa!",
+            }),
         ).toBeTruthy();
         await user.click(
             screen.getByRole("button", { name: "Entrar na minha conta" }),

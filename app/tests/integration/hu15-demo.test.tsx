@@ -39,7 +39,7 @@ describe("HU15 — modo de testes local", () => {
         expect(
             await screen.findByRole("heading", { name: "Cesta da estação" }),
         ).toBeTruthy();
-        expect(screen.getByText(/Produtor: Horta da Joana/)).toBeTruthy();
+        expect(screen.getByText(/Produtora: Horta da Joana/)).toBeTruthy();
         expect(
             screen
                 .getByRole("img", { name: "Cesta da estação" })

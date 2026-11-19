@@ -13,9 +13,9 @@ export type UserQuery = {
 };
 
 export const profileLabels: Record<UserDetail["perfil"], string> = {
-    CONSUMIDOR: "Consumidor",
-    PRODUTOR: "Produtor",
-    ADMINISTRADOR: "Administrador",
+    CONSUMIDOR: "Consumidora",
+    PRODUTOR: "Produtora",
+    ADMINISTRADOR: "Administradora",
 };
 
 function sessionHeaders() {
@@ -80,7 +80,7 @@ export async function getUser(
         if (!user)
             throw new ApiHttpError({
                 status: 404,
-                message: "Usuário não encontrado",
+                message: "Usuária não encontrada",
             });
         return user;
     }

@@ -32,7 +32,7 @@ describe("cadastro mock ligado ao login mock (HU02, critérios 7 e 9)", () => {
     });
 
     // Critério 9
-    it("deixa a conta cadastrada entrar no login como produtor", async () => {
+    it("deixa a conta cadastrada entrar no login como produtora", async () => {
         const { registerProducer, loginMock } = await loadMock();
 
         const result = await registerProducer(payload);

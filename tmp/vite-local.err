@@ -1,0 +1,25 @@
+23:20:22 [vite] http proxy error: /api/v1/health/ready
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+23:20:27 [vite] http proxy error: /api/v1/health/ready
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+23:20:32 [vite] http proxy error: /api/v1/health/ready
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+23:20:43 [vite] http proxy error: /api/v1/health/ready
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+23:48:43 [vite] http proxy error: /api/v1/users/producers/me
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+23:48:44 [vite] http proxy error: /api/v1/users/producers/check-identity
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+00:29:16 [vite] (client) [console.error] [vite] Failed to reload /src/components/ui/AddressInput.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)

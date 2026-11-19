@@ -1,4 +1,10 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+    cleanup,
+    render,
+    screen,
+    waitFor,
+    within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
@@ -66,55 +72,101 @@ describe("HU09 — fluxo de autenticação no app", () => {
         },
     );
 
-    // Critério 2
-    it("leva o consumidor autenticado à área da conta com o nome dele", async () => {
+    // Critério 2 e HU39 (redirect): depois do login vai para a página
+    // principal do perfil (protótipo: consumidor em Explorar, produtor no
+    // Início/Painel, que no app é a mesma aba /explorar), e não para a Conta.
+    it.each([
+        ["consumidor", consumerAuth],
+        ["produtor", producerAuth],
+    ] as const)(
+        "leva o %s autenticado à página principal (Explorar/Painel)",
+        async (_profile, auth) => {
+            vi.mocked(login).mockResolvedValue(auth);
+            window.location.hash = "#/entrar";
+            render(<App />);
+
+            await submitLogin(userEvent.setup());
+
+            await waitFor(() =>
+                expect(window.location.hash).toBe("#/explorar"),
+            );
+            const nav = await screen.findByRole("navigation", {
+                name: "Navegação principal",
+            });
+            expect(
+                nav.querySelector('[aria-current="page"]')?.textContent,
+            ).toMatch(auth.user.role === "producer" ? /Painel/ : /Explorar/);
+        },
+    );
+
+    it("a Conta continua mostrando os dados do consumidor autenticado", async () => {
         vi.mocked(login).mockResolvedValue(consumerAuth);
         window.location.hash = "#/entrar";
         render(<App />);
+        const user = userEvent.setup();
 
-        await submitLogin(userEvent.setup());
+        await submitLogin(user);
+        await waitFor(() => expect(window.location.hash).toBe("#/explorar"));
+        await user.click(screen.getByRole("button", { name: /^Conta$/ }));
 
         expect(
             await screen.findByRole("heading", {
                 name: "Olá, Gabriela",
             }),
         ).toBeTruthy();
-        expect(screen.getByLabelText("E-mail")).toHaveProperty(
-            "value",
-            "gabriela@exemplo.com",
-        );
-        expect(screen.getByLabelText("CPF")).toHaveProperty(
-            "value",
-            "529.982.247-25",
-        );
+        const details = screen.getByRole("region", { name: "Dados da conta" });
+        expect(within(details).getByText("gabriela@exemplo.com")).toBeTruthy();
+        expect(within(details).getByText("529.982.247-25")).toBeTruthy();
         expect(window.location.hash).toBe("#/conta");
     });
 
-    // Critério 3
-    it("mostra o contato público só para o produtor", async () => {
+    // Critério 3 e HU39 CA03: com a API real, a autorização do contato público
+    // é gravada em "Minha trajetória" (HU12), não no aparelho.
+    it("mostra ao produtor onde gerenciar o contato público", async () => {
         vi.mocked(login).mockResolvedValue(producerAuth);
         window.location.hash = "#/entrar";
         render(<App />);
+        const user = userEvent.setup();
 
-        await submitLogin(userEvent.setup());
-
-        await userEvent
-            .setup()
-            .click(
-                screen.getByText("Contato público", { selector: "summary" }),
-            );
-
+        await submitLogin(user);
+        await waitFor(() => expect(window.location.hash).toBe("#/explorar"));
+        await user.click(screen.getByRole("button", { name: /^Conta$/ }));
         expect(
             await screen.findByRole("heading", { name: "Contato público" }),
         ).toBeTruthy();
+        expect(
+            screen.queryByLabelText("WhatsApp com código do país"),
+        ).toBeNull();
+        expect(
+            screen.getByText(/autorize a divulgação em Minha trajetória/),
+        ).toBeTruthy();
+        await user.click(
+            screen.getByRole("button", {
+                name: "Configurar contato público",
+            }),
+        );
+        await waitFor(() =>
+            expect(window.location.hash).toBe("#/minha-trajetoria?contato=1"),
+        );
+        expect(
+            screen.getByRole("heading", { name: "Conte sua história" }),
+        ).toBeTruthy();
+        expect(
+            screen.queryByRole("heading", {
+                name: "Entre para falar com a responsável",
+            }),
+        ).toBeNull();
     });
 
     it("não mostra o contato público para o consumidor", async () => {
         vi.mocked(login).mockResolvedValue(consumerAuth);
         window.location.hash = "#/entrar";
         render(<App />);
+        const user = userEvent.setup();
 
-        await submitLogin(userEvent.setup());
+        await submitLogin(user);
+        await waitFor(() => expect(window.location.hash).toBe("#/explorar"));
+        await user.click(screen.getByRole("button", { name: /^Conta$/ }));
 
         await screen.findByRole("heading", {
             name: "Olá, Gabriela",

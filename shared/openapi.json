@@ -787,6 +787,239 @@
         ]
       }
     },
+    "/api/v1/users/consumers/me": {
+      "put": {
+        "description": "Atualiza apenas o nome da titular da sessão.",
+        "operationId": "usersUpdateConsumerName",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateConsumerNameDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Nome atualizado"
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: CONSUMIDOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Alterar nome da consumidora",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/v1/users/producers/check-identity": {
+      "post": {
+        "description": "Verifica se os dados podem ser usados no cadastro sem criar a conta.",
+        "operationId": "usersCheckProducerIdentity",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckProducerIdentityDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Dados disponíveis para cadastro"
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "headers": {
+              "Retry-After": {
+                "description": "Segundos até a próxima tentativa ser aceita",
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Validar CPF, CNPJ e e-mail antes de avançar no cadastro",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/v1/users/producers/me": {
+      "get": {
+        "description": "Retorna os dados da iniciativa da titular da sessão.",
+        "operationId": "usersGetProducerAccount",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProducerAccountDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Consultar conta da produtora",
+        "tags": [
+          "users"
+        ]
+      },
+      "put": {
+        "description": "Salva iniciativa, categoria e formas de pagamento da titular.",
+        "operationId": "usersUpdateProducerAccount",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProducerAccountDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Dados da conta salvos"
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Atualizar conta da produtora",
+        "tags": [
+          "users"
+        ]
+      }
+    },
     "/api/v1/users/producers": {
       "post": {
         "description": "Cadastro público da HU02. Documentos, e-mail e senha são protegidos conforme RNF11; o CPF é retornado mascarado.",
@@ -2801,6 +3034,76 @@
           "error"
         ]
       },
+      "UpdateConsumerNameDto": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "Maria das Graças"
+          }
+        },
+        "required": [
+          "nome"
+        ]
+      },
+      "CheckProducerIdentityDto": {
+        "type": "object",
+        "properties": {
+          "cpf": {
+            "type": "string",
+            "example": "529.982.247-25",
+            "description": "Com ou sem máscara"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "12.345.678/0001-95",
+            "description": "Com ou sem máscara; opcional quando não houver CNPJ"
+          },
+          "email": {
+            "type": "string",
+            "example": "produtor@exemplo.com"
+          }
+        },
+        "required": [
+          "cpf",
+          "email"
+        ]
+      },
+      "ProducerAccountDto": {
+        "type": "object",
+        "properties": {
+          "nomeIniciativa": {
+            "type": "string",
+            "example": "Horta Comunitária Cafuringa"
+          },
+          "categoriaOfertada": {
+            "type": "string",
+            "enum": [
+              "Produtos",
+              "Experiências",
+              "Produtos e Experiências"
+            ],
+            "example": "Produtos e Experiências",
+            "description": "Tipo de oferta do produtor"
+          },
+          "formasPagamento": {
+            "example": [
+              "PIX",
+              "Dinheiro"
+            ],
+            "description": "Formas de pagamento aceitas",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "nomeIniciativa",
+          "categoriaOfertada",
+          "formasPagamento"
+        ]
+      },
       "CreateProducerDto": {
         "type": "object",
         "properties": {
@@ -3434,6 +3737,11 @@
           "nomeIniciativa": {
             "type": "string",
             "example": "Horta da Joana"
+          },
+          "primeiroNome": {
+            "type": "string",
+            "example": "Joana",
+            "description": "Primeiro nome de quem responde pela oferta."
           },
           "localidade": {
             "type": "string",

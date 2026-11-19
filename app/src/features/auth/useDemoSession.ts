@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiHttpError, getApiClient } from "../../shared/api";
 import type { components } from "../../shared/api/schema";
 import type { AuthResult, Role } from "../../shared/types";
 import { isMockAuthEnabled } from "./authMode";
+import { updateMockConsumerName } from "./mockAuth";
 
 const sessionKeys = [
     "cafuringa-role",
@@ -74,6 +75,28 @@ export function useDemoSession() {
         localStorage.getItem("cafuringa-user-id"),
     );
 
+    const nameRevision = useRef(0);
+    const saveConsumerName = async (name: string) => {
+        const token = localStorage.getItem("cafuringa-token");
+        if (role !== "consumer" || !token)
+            throw new Error("Sessão indisponível.");
+
+        if (isMockAuthEnabled) updateMockConsumerName(userId, name);
+        else {
+            const body = {
+                nome: name,
+            } satisfies components["schemas"]["UpdateConsumerNameDto"];
+            await getApiClient().put("/users/consumers/me", body, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+        }
+
+        if (localStorage.getItem("cafuringa-token") !== token) return;
+        nameRevision.current += 1;
+        setConsumerName(name);
+        localStorage.setItem("cafuringa-name", name);
+    };
+
     const signIn = ({ token, user }: AuthResult) => {
         setSessionToken(token);
         setRole(user.role);
@@ -120,6 +143,7 @@ export function useDemoSession() {
         const token = localStorage.getItem("cafuringa-token");
         if (isMockAuthEnabled || !token) return;
         let active = true;
+        const revision = nameRevision.current;
         const isCurrentSession = () =>
             active && localStorage.getItem("cafuringa-token") === token;
 
@@ -129,12 +153,14 @@ export function useDemoSession() {
             })
             .then((user) => {
                 if (!isCurrentSession()) return;
-                setConsumerName(user.nome);
+                if (revision === nameRevision.current) {
+                    setConsumerName(user.nome);
+                    localStorage.setItem("cafuringa-name", user.nome);
+                }
                 setUserId(user.id);
                 localStorage.setItem("cafuringa-user-id", user.id);
                 setEmail(user.email);
                 setCpf(user.cpf ?? "");
-                localStorage.setItem("cafuringa-name", user.nome);
                 localStorage.setItem("cafuringa-email", user.email);
                 if (user.cpf) localStorage.setItem("cafuringa-cpf", user.cpf);
                 else localStorage.removeItem("cafuringa-cpf");
@@ -153,5 +179,14 @@ export function useDemoSession() {
         };
     }, [signOut]);
 
-    return { role, consumerName, email, cpf, userId, signIn, signOut };
+    return {
+        role,
+        consumerName,
+        email,
+        cpf,
+        userId,
+        signIn,
+        signOut,
+        saveConsumerName,
+    };
 }

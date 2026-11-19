@@ -10,7 +10,7 @@ export const offers: Offer[] = [
         image: "https://images.unsplash.com/photo-1452195100486-9cc805987862?auto=format&fit=crop&w=1200&q=85",
         price: "R$ 45 / pessoa",
         details: [
-            "Anfitrião: Jefferson Sooma",
+            "Anfitriã: Jefferson Sooma",
             "Duração: 2 horas",
             "Local: Cafuringa, DF",
         ],
@@ -23,8 +23,8 @@ export const offers: Offer[] = [
         category: "Produtos",
         image: "https://images.unsplash.com/photo-1587049352851-8d4e89133924?auto=format&fit=crop&w=1200&q=85",
         price: "R$ 32 / unidade",
-        details: ["Produtor: Dona Maria", "500 g por unidade"],
+        details: ["Produtora: Dona Maria", "500 g por unidade"],
         description:
-            "Mel produzido no território da Cafuringa. Consulte disponibilidade e formas de retirada diretamente com o produtor.",
+            "Mel produzido no território da Cafuringa. Consulte disponibilidade e formas de retirada diretamente com a produtora.",
     },
 ];

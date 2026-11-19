@@ -29,6 +29,7 @@ function escapeRegExp(value: string): string {
  * se estiver offline). Cuidados com privacidade (LGPD) e correção:
  *  - só GET: o Workbox nunca cacheia POST/PUT/PATCH/DELETE;
  *  - nunca cacheia /auth/* (sessão e dados da pessoa);
+ *  - nunca cacheia perfis com telefone público, cuja autorização pode ser revogada;
  *  - nunca grava resposta de requisição com Authorization (dados pessoais ficariam no
  *    aparelho depois do logout); cacheia só dados públicos, como o catálogo;
  *  - só status 200 e no máximo 50 itens por 24 h.
@@ -51,7 +52,9 @@ export function apiCacheRule(apiUrl: string): RuntimeCachingRule | undefined {
     );
 
     return {
-        urlPattern: new RegExp(`^${prefix}(?!auth/)`),
+        urlPattern: new RegExp(
+            `^${prefix}(?!auth/|producers(?:/?(?:[?#]|$)|/[^/?#]+/trajectory(?:[/?#]|$)))`,
+        ),
         method: "GET",
         handler: "NetworkFirst",
         options: {

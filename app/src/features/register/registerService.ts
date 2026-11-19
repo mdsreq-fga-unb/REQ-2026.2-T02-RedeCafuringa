@@ -4,6 +4,7 @@ import { ApiHttpError, getApiClient } from "@/shared/api";
 import { toCreateProducerBody } from "./registerApi";
 import {
     isMockCpfRegistered,
+    isMockEmailRegistered,
     registerMockUser,
 } from "@/features/auth/mockAuth";
 
@@ -32,11 +33,13 @@ export type RegisterResult =
 
 export type MockAccountDirectory = {
     hasDocument(document: string): boolean;
+    hasEmail?(email: string): boolean;
     add(payload: RegisterPayload): void;
 };
 
 const mockService = createMockRegisterService({
     hasDocument: isMockCpfRegistered,
+    hasEmail: isMockEmailRegistered,
     add: (payload) => {
         registerMockUser({
             cpf: payload.document,
@@ -65,15 +68,35 @@ export async function registerProducer(
     payload: RegisterPayload,
 ): Promise<RegisterResult> {
     if (isMockAuthEnabled) return mockService.register(payload);
+    return submitRegistration(
+        "/users/producers",
+        toCreateProducerBody(payload),
+    );
+}
 
+export async function checkProducerIdentity(
+    payload: RegisterPayload,
+    signal?: AbortSignal,
+): Promise<RegisterResult> {
+    if (isMockAuthEnabled) return mockService.checkIdentity(payload);
+    return submitRegistration(
+        "/users/producers/check-identity",
+        {
+            cpf: payload.document,
+            cnpj: payload.cnpj,
+            email: payload.email,
+        },
+        signal,
+    );
+}
+
+async function submitRegistration(
+    path: string,
+    body: object,
+    signal?: AbortSignal,
+): Promise<RegisterResult> {
     try {
-        await getApiClient().post<unknown>(
-            "/users/producers",
-            toCreateProducerBody(payload),
-            {
-                auth: false,
-            },
-        );
+        await getApiClient().post<unknown>(path, body, { auth: false, signal });
         return { ok: true };
     } catch (error) {
         if (error instanceof ApiHttpError) {
@@ -107,25 +130,33 @@ export async function registerProducer(
 export function createMockRegisterService(directory?: MockAccountDirectory) {
     const accounts: RegisterPayload[] = [];
 
+    function checkIdentity(payload: RegisterPayload): RegisterResult {
+        if (
+            directory?.hasDocument(payload.document) ||
+            accounts.some((account) => account.document === payload.document)
+        ) {
+            return { ok: false, reason: "duplicate", field: "document" };
+        }
+        if (
+            directory?.hasEmail?.(payload.email) ||
+            accounts.some((account) => account.email === payload.email)
+        ) {
+            return { ok: false, reason: "duplicate", field: "email" };
+        }
+        if (
+            payload.cnpj &&
+            accounts.some((account) => account.cnpj === payload.cnpj)
+        ) {
+            return { ok: false, reason: "duplicate", field: "cnpj" };
+        }
+        return { ok: true };
+    }
+
     return {
+        checkIdentity,
         async register(payload: RegisterPayload): Promise<RegisterResult> {
-            if (
-                directory?.hasDocument(payload.document) ||
-                accounts.some(
-                    (account) => account.document === payload.document,
-                )
-            ) {
-                return { ok: false, reason: "duplicate", field: "document" };
-            }
-            if (accounts.some((account) => account.email === payload.email)) {
-                return { ok: false, reason: "duplicate", field: "email" };
-            }
-            if (
-                payload.cnpj &&
-                accounts.some((account) => account.cnpj === payload.cnpj)
-            ) {
-                return { ok: false, reason: "duplicate", field: "cnpj" };
-            }
+            const result = checkIdentity(payload);
+            if (!result.ok) return result;
             accounts.push(payload);
             directory?.add(payload);
             return { ok: true };

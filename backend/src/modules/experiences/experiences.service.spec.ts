@@ -222,9 +222,12 @@ describe('ExperiencesService (HU21/RF21)', () => {
 
   describe('getPublic', () => {
     it('CA08: devolve a experiência disponível com o responsável', async () => {
-      const { service, experiences } = setup();
+      const { service, experiences, users } = setup();
       const doc = experienceDoc();
       experiences.findOne.mockReturnValue(query(doc));
+      users.findOne.mockReturnValue(
+        query({ ...PRODUCER, nome: 'Joana Silva' }),
+      );
 
       const res = await service.getPublic(doc._id.toHexString());
 
@@ -232,7 +235,11 @@ describe('ExperiencesService (HU21/RF21)', () => {
         _id: doc._id.toHexString(),
         disponivel: true,
       });
-      expect(res.produtor).toEqual({ id: userId, ...PRODUCER });
+      expect(res.produtor).toEqual({
+        id: userId,
+        ...PRODUCER,
+        primeiroNome: 'Joana',
+      });
     });
 
     it('404 para id inválido, inexistente ou de produtor desativado', async () => {

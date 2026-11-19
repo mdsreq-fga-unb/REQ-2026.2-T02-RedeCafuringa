@@ -264,6 +264,16 @@ h2 {
     color: var(--ink);
 }
 
+.button.button-whatsapp {
+    gap: 8px;
+    background: #07b107;
+    color: #fff;
+}
+
+.button-whatsapp svg {
+    flex-shrink: 0;
+}
+
 .button-green-soft {
     background: #52c544;
 }
@@ -516,7 +526,8 @@ h2 {
     margin: 0 0 2px;
 }
 
-.register-page .choice-option {
+.register-page .choice-option,
+.account-payment-methods .choice-option {
     min-height: 58px;
     margin: 0;
     padding: 12px;
@@ -640,25 +651,79 @@ h2 {
     font-size: 16px;
 }
 
+.account-payment-methods {
+    display: grid;
+    grid-column: 1 / -1;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+@media (min-width: 480px) {
+    .account-payment-methods {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.account-profile-form > .form-alert {
+    grid-column: 1 / -1;
+}
+
 .account-profile-form > .button {
     width: 100%;
     margin-top: 16px;
 }
 
-.account-contact-disclosure {
+.public-contact-card {
+    display: grid;
+    gap: 16px;
     margin-top: 24px;
-    border-top: 1px solid var(--line);
+    padding: clamp(16px, 3vw, 24px);
+    border: 1px solid #c9decd;
+    border-radius: 18px;
+    background: #f1f8f2;
+    color: #233a29;
 }
 
-.account-contact-disclosure summary {
-    padding: 16px 0 8px;
-    color: var(--orange-text);
-    cursor: pointer;
-    font-weight: 700;
+.public-contact-card h2 {
+    margin: 0 0 6px;
+    font-size: 18px;
 }
 
-.account-contact-disclosure[open] summary {
+.public-contact-card p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.public-contact-card .contact-name {
+    font-weight: 750;
+}
+
+.public-contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.public-contact-actions p {
+    flex-basis: 100%;
+}
+
+.public-contact-actions .button {
+    gap: 8px;
+    margin: 0;
+}
+
+.public-contact-actions .button-outline {
+    border-color: #829988;
+    background: #fff;
+    color: #233a29;
+}
+
+.account-contact-card .contact-settings {
+    margin: 0;
     padding-bottom: 0;
+    border-bottom: 0;
 }
 
 .button-danger {
@@ -771,6 +836,10 @@ h2 {
 
 .bottom-nav-producer button[aria-current="page"] {
     color: #536a60;
+}
+
+.bottom-nav button[aria-current="page"] .nav-icon {
+    color: #2a2119;
 }
 
 .bottom-nav-producer button[aria-current="page"] .nav-icon {
@@ -888,7 +957,7 @@ h2 {
     }
 
     .account-profile-form > .button,
-    .account-contact-disclosure {
+    .account-contact-card {
         grid-column: 1 / -1;
     }
 
@@ -1588,4 +1657,197 @@ h2 {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
     line-height: 1.6;
+}
+
+.password-input {
+    position: relative;
+    min-width: 0;
+}
+
+.password-input .text-input {
+    width: 100%;
+    padding-inline-end: 3.5rem;
+}
+
+.password-toggle {
+    position: absolute;
+    inset-inline-end: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #2a2119;
+    cursor: pointer;
+}
+
+.password-toggle svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.account-avatar {
+    display: grid;
+    place-items: center;
+    width: 84px;
+    height: 84px;
+    margin-block: 0.75rem;
+    border-radius: 50%;
+    background: #e9eee5;
+    color: #2a2119;
+    font-size: 2rem;
+    font-weight: 700;
+    object-fit: cover;
+}
+
+.consumer-account-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-block: 16px 20px;
+}
+
+.consumer-account-header .account-avatar {
+    flex: 0 0 64px;
+    height: 64px;
+    margin: 0;
+}
+
+.consumer-account-header h1,
+.consumer-account-header .eyebrow {
+    margin: 0;
+}
+
+.account-details-card {
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: #fffefa;
+}
+
+.account-details-card h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.account-details-card dl {
+    display: grid;
+    gap: 12px;
+    margin: 12px 0 0;
+}
+
+.account-details-card dl > div {
+    padding-block-start: 12px;
+    border-block-start: 1px solid var(--line);
+}
+
+.account-details-card dt {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.account-details-card dd {
+    margin: 3px 0 0;
+    overflow-wrap: anywhere;
+}
+
+.consumer-name-row,
+.consumer-name-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+}
+
+.consumer-name-form {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+}
+
+.account-edit-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.account-edit-icon svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.account-edit-icon:enabled:hover,
+.account-edit-icon:focus-visible {
+    background: #efece4;
+}
+
+.account-edit-icon:focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 2px;
+}
+
+.account-edit-save {
+    background: #e7efe6;
+    color: #233a29;
+}
+
+.account-edit-save:enabled:hover,
+.account-edit-save:focus-visible {
+    background: #d7e8d6;
+}
+
+.account-edit-icon:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+@media (min-width: 600px) {
+    .account-details-card dl {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 20px;
+    }
+
+    .account-details-card dl > div:first-child {
+        grid-column: 1 / -1;
+    }
+}
+
+.producer-account-details {
+    margin-block-start: 12px;
+}
+
+.producer-account-heading,
+.producer-account-edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.producer-account-heading {
+    justify-content: space-between;
+}
+
+.producer-account-edit-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    margin-top: 12px;
 }

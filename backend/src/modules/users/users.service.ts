@@ -16,6 +16,7 @@ import {
   type Identity,
 } from './banned-identities.service.js';
 import { isAdult } from './domain/age.js';
+import { ProducerCategory } from './domain/producer-category.js';
 import { Role } from './domain/role.js';
 import { buildUserFilter } from './domain/user-filter.js';
 import { DEFAULT_PAGE_SIZE, ListUsersQuery } from './dto/list-users.query.js';
@@ -25,7 +26,11 @@ import { UserSummaryResponse } from './dto/user-summary.response.js';
 import { AdminResponse } from './dto/admin.response.js';
 import { CreateAdminDto } from './dto/create-admin.dto.js';
 import { CreateConsumerDto } from './dto/create-consumer.dto.js';
-import { CreateProducerDto } from './dto/create-producer.dto.js';
+import {
+  CheckProducerIdentityDto,
+  CreateProducerDto,
+  ProducerAccountDto,
+} from './dto/create-producer.dto.js';
 import { UserResponse } from './dto/user.response.js';
 import { ProducerResponse } from './dto/producer.response.js';
 import { User, UserDocument } from './schemas/user.schema.js';
@@ -92,8 +97,7 @@ export class UsersService {
     }
   }
 
-  /** HU02: cria uma conta pública com perfil PRODUTOR. */
-  async createProducer(dto: CreateProducerDto): Promise<UserDocument> {
+  async checkProducerIdentity(dto: CheckProducerIdentityDto) {
     const email = dto.email.toLowerCase();
     const cpfHash = this.cipher.blindIndex(dto.cpf);
     const cnpjHash = dto.cnpj ? this.cipher.blindIndex(dto.cnpj) : undefined;
@@ -109,6 +113,49 @@ export class UsersService {
     if (cnpjHash && (await this.users.exists({ cnpjHash }).exec())) {
       throw new ConflictException('CNPJ já cadastrado');
     }
+
+    return { email, cpfHash, cnpjHash };
+  }
+
+  async updateConsumerName(id: string, nome: string): Promise<void> {
+    const result = await this.users
+      .updateOne(
+        { _id: id, perfil: Role.CONSUMIDOR, ativo: true },
+        { $set: { nome } },
+      )
+      .exec();
+    if (!result.matchedCount)
+      throw new NotFoundException('Conta não encontrada');
+  }
+
+  async getProducerAccount(id: string): Promise<ProducerAccountDto> {
+    const user = await this.users
+      .findOne({ _id: id, perfil: Role.PRODUTOR, ativo: true })
+      .select('nomeIniciativa categoriaOfertada formasPagamento -_id')
+      .lean()
+      .exec();
+    if (!user) throw new NotFoundException('Produtor não encontrado');
+    return {
+      nomeIniciativa: user.nomeIniciativa ?? '',
+      categoriaOfertada: user.categoriaOfertada ?? ProducerCategory.PRODUTOS,
+      formasPagamento: user.formasPagamento ?? [],
+    };
+  }
+
+  async updateProducerAccount(
+    id: string,
+    dto: ProducerAccountDto,
+  ): Promise<void> {
+    const result = await this.users
+      .updateOne({ _id: id, perfil: Role.PRODUTOR, ativo: true }, { $set: dto })
+      .exec();
+    if (!result.matchedCount)
+      throw new NotFoundException('Produtor não encontrado');
+  }
+
+  /** HU02: cria uma conta pública com perfil PRODUTOR. */
+  async createProducer(dto: CreateProducerDto): Promise<UserDocument> {
+    const { email, cpfHash, cnpjHash } = await this.checkProducerIdentity(dto);
 
     const producerData = {
       nome: dto.nomeResponsavel,

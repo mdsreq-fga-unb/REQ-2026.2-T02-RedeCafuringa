@@ -1,38 +1,25 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ProfilePage } from "@/features/profile";
 
 afterEach(cleanup);
 
+const CONTACT = /Conversar pelo WhatsApp/;
+
 describe("página de perfil", () => {
     it("não exibe contato quando o número não está autorizado", () => {
-        render(
-            <ProfilePage
-                contactAvailable={false}
-                onNavigate={vi.fn()}
-                onStartContact={vi.fn()}
-            />,
-        );
+        render(<ProfilePage onNavigate={vi.fn()} />);
 
-        expect(
-            screen.queryByRole("button", { name: "Conversar pelo WhatsApp" }),
-        ).toBeNull();
+        expect(screen.queryByRole("link", { name: CONTACT })).toBeNull();
+        expect(screen.queryByRole("button", { name: CONTACT })).toBeNull();
     });
 
-    it("exibe e aciona o contato quando ele está disponível", () => {
-        const onStartContact = vi.fn();
-        render(
-            <ProfilePage
-                contactAvailable
-                onNavigate={vi.fn()}
-                onStartContact={onStartContact}
-            />,
-        );
+    it("exibe o link de contato quando ele está disponível", () => {
+        const url = "https://wa.me/5561999999999?text=Ol%C3%A1";
+        render(<ProfilePage contactUrl={url} onNavigate={vi.fn()} />);
 
-        fireEvent.click(
-            screen.getByRole("button", { name: "Conversar pelo WhatsApp" }),
-        );
-
-        expect(onStartContact).toHaveBeenCalledOnce();
+        expect(
+            screen.getByRole("link", { name: CONTACT }).getAttribute("href"),
+        ).toBe(url);
     });
 });

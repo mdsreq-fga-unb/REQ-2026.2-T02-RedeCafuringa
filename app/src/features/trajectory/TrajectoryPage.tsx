@@ -14,9 +14,11 @@ import { TrajectoryForm } from "./TrajectoryForm";
 export function TrajectoryPage({
     onNavigate,
     userId,
+    focusContact,
 }: {
     onNavigate: (path: string) => void;
     userId: string | null;
+    focusContact?: boolean;
 }) {
     const [draft, setDraft] = useState<TrajectoryDraft>(emptyTrajectory);
     const [loading, setLoading] = useState(true);
@@ -95,6 +97,7 @@ export function TrajectoryPage({
             onSubmit={save}
             onBack={() => onNavigate("/conta")}
             loading={loading}
+            focusContact={focusContact}
             error={error}
             saved={saved}
             loadFailed={loadFailed}
