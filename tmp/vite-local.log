@@ -31,3 +31,57 @@
 23:51:35 [vite] (client) hmr update /src/features/register/RegisterPage.tsx
 23:51:35 [vite] (client) hmr update /src/app/App.tsx, /src/features/register/RegisterPage.tsx
 23:56:04 [vite] (client) hmr update /src/features/account/ProducerAccountForm.tsx
+00:02:30 [vite] (client) hmr update /src/features/auth/LoginPage.tsx
+00:02:30 [vite] (client) hmr update /src/features/auth/adminRegistration.tsx
+00:02:30 [vite] (client) hmr update /src/features/recovery/ResetPasswordPage.tsx
+00:02:30 [vite] (client) hmr update /src/features/register/RegisterPage.tsx
+00:02:30 [vite] (client) hmr update /src/features/profile/RuralCarousel.tsx
+00:02:30 [vite] (client) hmr update /src/features/auth/registration.tsx
+00:02:30 [vite] (client) hmr update /src/app/App.tsx
+00:02:30 [vite] (client) hmr update /src/features/trajectory/TrajectoryForm.tsx
+00:02:30 [vite] (client) hmr update /src/app/App.tsx
+00:02:30 [vite] (client) hmr update /src/features/auth/LoginPage.tsx
+00:02:49 [vite] (client) hmr update /src/features/account/AccountPage.tsx
+00:02:49 [vite] (client) hmr update /src/App.css
+00:02:49 [vite] (client) hmr update /src/features/trajectory/trajectory.css
+00:03:10 [vite] (client) hmr update /src/app/App.tsx
+00:03:11 [vite] (client) hmr update /src/features/account/AccountPage.tsx
+00:03:11 [vite] (client) hmr update /src/features/auth/adminRegistration.tsx
+00:03:11 [vite] (client) hmr update /src/features/auth/DemoNavigation.tsx
+00:03:11 [vite] (client) hmr update /src/features/auth/LoginPage.tsx
+00:03:11 [vite] (client) hmr update /src/features/auth/DemoNavigation.tsx, /src/app/App.tsx, /src/features/recovery/ResetPasswordPage.tsx, /src/features/recovery/RecoverAccessPage.tsx, /src/features/auth/LoginPage.tsx, /src/features/auth/adminRegistration.tsx, /src/features/register/RegisterPage.tsx, /src/features/users/AdminUsersPage.tsx, /src/features/users/DeleteUserDialog.tsx, /src/features/trajectory/TrajectoryPage.tsx, /src/features/trajectory/PublicTrajectoryPage.tsx, /src/features/profile/ExplorePage.tsx and 4 more
+00:03:11 [vite] (client) hmr update /src/features/auth/registration.tsx
+00:03:11 [vite] (client) hmr update /src/app/App.tsx
+00:03:11 [vite] (client) hmr update /src/features/offers/ProductRegistrationPage.tsx
+00:03:11 [vite] (client) hmr update /src/features/offers/ProductRegistrationPage.tsx, /src/features/offers/CatalogPage.tsx, /src/features/offers/ProductCatalog.tsx, /src/features/offers/OfferPreview.tsx, /src/features/offers/ProductOfferDetails.tsx
+00:03:11 [vite] (client) hmr update /src/features/offers/OfferCards.tsx
+00:03:11 [vite] (client) hmr update /src/app/App.tsx, /src/features/profile/ProducerCatalogPage.tsx, /src/features/trajectory/TrajectoryPage.tsx, /src/features/trajectory/PublicTrajectoryPage.tsx, /src/features/profile/ExplorePage.tsx, /src/features/offers/ProductOfferDetails.tsx, /src/features/account/AccountPage.tsx, /src/features/auth/DemoNavigation.tsx, /src/features/recovery/ResetPasswordPage.tsx, /src/features/recovery/RecoverAccessPage.tsx, /src/features/auth/LoginPage.tsx, /src/features/auth/adminRegistration.tsx and 8 more
+00:03:11 [vite] (client) hmr update /src/features/offers/OfferDetailsPage.tsx
+00:03:11 [vite] (client) hmr update /src/features/offers/CatalogPage.tsx, /src/features/offers/OfferPreview.tsx, /src/features/profile/ExplorePage.tsx, /src/features/profile/ProducerCatalogPage.tsx, /src/features/offers/ProductOfferDetails.tsx, /src/features/offers/ProductCatalogPage.tsx
+00:03:11 [vite] (client) hmr update /src/features/offers/ProductRegistrationPage.tsx
+00:03:11 [vite] (client) hmr update /src/features/profile/ExplorePage.tsx
+00:03:11 [vite] (client) hmr update /src/features/offers/ProductRegistrationPage.tsx, /src/features/offers/CatalogPage.tsx, /src/features/offers/ProductCatalog.tsx, /src/features/offers/OfferPreview.tsx
+00:03:11 [vite] (client) hmr update /src/features/profile/ProducerCatalogPage.tsx
+00:03:11 [vite] (client) hmr update /src/features/profile/ExplorePage.tsx, /src/features/profile/ProducerCatalogPage.tsx
+00:03:11 [vite] (client) hmr update /src/features/register/RegisterPage.tsx
+00:03:11 [vite] (client) hmr update /src/features/trajectory/PublicTrajectoryPage.tsx
+00:04:36 [vite] (client) hmr update /src/features/auth/adminRegistration.tsx
+00:04:36 [vite] (client) hmr update /src/features/auth/DemoNavigation.tsx
+00:04:36 [vite] (client) hmr update /src/features/trajectory/TrajectoryForm.tsx
+00:04:36 [vite] (client) hmr update /src/features/users/AdminUsersPage.tsx
+00:04:36 [vite] (client) hmr update /src/features/users/AdminUsersPage.tsx, /src/features/users/DeleteUserDialog.tsx
+00:04:50 [vite] (client) hmr update /src/app/App.tsx
+00:04:51 [vite] (client) hmr update /src/features/account/AccountPage.tsx
+00:04:51 [vite] (client) hmr update /src/features/auth/LoginPage.tsx
+00:04:51 [vite] (client) hmr update /src/features/offers/OfferDetailsPage.tsx
+00:04:51 [vite] (client) hmr update /src/features/profile/ProducerCatalogPage.tsx
+00:04:52 [vite] (client) hmr update /src/features/trajectory/TrajectoryForm.tsx
+00:04:52 [vite] (client) hmr update /src/features/trajectory/trajectory.css
+00:04:53 [vite] (client) hmr update /src/features/trajectory/trajectory.css
+00:05:29 [vite] (client) hmr update /src/features/auth/adminRegistration.tsx
+00:05:30 [vite] (client) hmr update /src/features/auth/adminRegistration.tsx
+00:06:05 [vite] (client) hmr update /src/App.css
+00:06:05 [vite] (client) hmr update /src/features/trajectory/trajectory.css
+00:06:06 [vite] (client) hmr update /src/features/trajectory/trajectory.css
+00:07:54 [vite] (client) hmr update /src/features/auth/LoginPage.tsx
+00:07:54 [vite] (client) hmr update /src/features/register/RegisterPage.tsx

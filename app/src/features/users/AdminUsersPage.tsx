@@ -68,8 +68,8 @@ export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
                     key,
                     error:
                         error instanceof ApiHttpError && error.status === 404
-                            ? "Usuário não encontrado"
-                            : "Não foi possível carregar os usuários. Verifique sua conexão e tente novamente.",
+                            ? "Usuária não encontrada"
+                            : "Não foi possível carregar as usuárias. Verifique sua conexão e tente novamente.",
                 });
             });
         return () => {
@@ -96,7 +96,7 @@ export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
                     onNavigate(id ? "/admin/usuarios" : "/admin/acesso")
                 }
             />
-            <h1 id="admin-users-heading">Usuários Cadastrados</h1>
+            <h1 id="admin-users-heading">Usuárias Cadastradas</h1>
             {notice && (
                 <p className="admin-users-notice" role="status">
                     {notice}
@@ -111,7 +111,7 @@ export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
                         </svg>
                         <input
                             type="search"
-                            aria-label="Buscar usuário"
+                            aria-label="Buscar usuária"
                             placeholder="Nome, e-mail ou iniciativa"
                             maxLength={100}
                             value={busca}
@@ -147,13 +147,13 @@ export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
             )}
             {!current && (
                 <p className="admin-users-feedback" role="status">
-                    Carregando {id ? "detalhes do usuário" : "usuários"}…
+                    Carregando {id ? "detalhes da usuária" : "usuárias"}…
                 </p>
             )}
             {current?.error && (
                 <div className="admin-users-feedback">
                     <p role="alert">{current.error}</p>
-                    {current.error !== "Usuário não encontrado" && (
+                    {current.error !== "Usuária não encontrada" && (
                         <button
                             className="button button-outline"
                             onClick={() => setRetry((value) => value + 1)}
@@ -167,13 +167,13 @@ export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
                 <>
                     {list.itens.length === 0 ? (
                         <p className="admin-users-feedback" role="status">
-                            Nenhum usuário para exibir
+                            Nenhuma usuária para exibir
                             {busca ? " nesta busca" : ""}.
                         </p>
                     ) : (
                         <ul
                             className="admin-users-list"
-                            aria-label="Usuários cadastrados"
+                            aria-label="Usuárias cadastradas"
                         >
                             {list.itens.map((user) => (
                                 <li key={user.id} className="admin-user-card">
@@ -195,7 +195,7 @@ export function AdminUsersPage({ id, onNavigate, onUnauthorized }: Props) {
                     {pages > 1 && (
                         <nav
                             className="admin-users-pagination"
-                            aria-label="Paginação de usuários"
+                            aria-label="Paginação de usuárias"
                         >
                             <button
                                 className="button button-outline"

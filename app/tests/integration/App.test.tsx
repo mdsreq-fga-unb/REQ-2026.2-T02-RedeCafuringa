@@ -189,7 +189,7 @@ describe("entrada e acesso público", () => {
 
         expect(
             await screen.findByRole("heading", {
-                name: "Conheça nossos produtores",
+                name: "Conheça nossas produtoras",
             }),
         ).toBeTruthy();
         expect(
@@ -204,7 +204,7 @@ describe("entrada e acesso público", () => {
         );
         expect(
             await screen.findByRole("heading", {
-                name: "Conheça nossos produtores",
+                name: "Conheça nossas produtoras",
             }),
         ).toBeTruthy();
         await user.click(

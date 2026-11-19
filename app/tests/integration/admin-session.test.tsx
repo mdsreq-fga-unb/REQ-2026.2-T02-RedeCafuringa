@@ -43,7 +43,9 @@ describe("sessão administrativa exige autenticação nesta abertura do app", ()
             await screen.findByRole("button", { name: "Entrar como adm" }),
         ).toBeTruthy();
         expect(
-            screen.queryByRole("heading", { name: "Funções do administrador" }),
+            screen.queryByRole("heading", {
+                name: "Funções da administradora",
+            }),
         ).toBeNull();
         expect(localStorage.getItem("cafuringa-token")).toBeNull();
     });
@@ -58,7 +60,7 @@ describe("sessão administrativa exige autenticação nesta abertura do app", ()
             render(<App />);
             expect(
                 screen.queryByRole("heading", {
-                    name: "Funções do administrador",
+                    name: "Funções da administradora",
                 }),
             ).toBeNull();
             expect(
@@ -98,7 +100,7 @@ describe("sessão administrativa exige autenticação nesta abertura do app", ()
         const user = userEvent.setup();
         await user.click(screen.getByRole("button", { name: "Entrar" }));
         await screen.findByRole("heading", {
-            name: "Funções do administrador",
+            name: "Funções da administradora",
         });
         expect(fetchMock).toHaveBeenCalledTimes(1);
         expect(JSON.parse(String(fetchMock.mock.calls[0][1]?.body))).toEqual({
@@ -107,10 +109,10 @@ describe("sessão administrativa exige autenticação nesta abertura do app", ()
         });
         await user.click(
             screen.getByRole("link", {
-                name: /consultar usuários cadastrados/i,
+                name: /consultar usuárias cadastradas/i,
             }),
         );
-        await screen.findByRole("list", { name: "Usuários cadastrados" });
+        await screen.findByRole("list", { name: "Usuárias cadastradas" });
         expect(
             (fetchMock.mock.calls[1][1]?.headers as Record<string, string>)
                 .Authorization,
@@ -122,7 +124,7 @@ describe("sessão administrativa exige autenticação nesta abertura do app", ()
             expect(window.location.hash).toBe("#/admin/entrar"),
         );
         expect(
-            screen.queryByRole("list", { name: "Usuários cadastrados" }),
+            screen.queryByRole("list", { name: "Usuárias cadastradas" }),
         ).toBeNull();
         expect(fetchMock).not.toHaveBeenCalled();
     });
@@ -147,7 +149,9 @@ describe("sessão administrativa exige autenticação nesta abertura do app", ()
             "conectar ao servidor",
         );
         expect(
-            screen.queryByRole("heading", { name: "Funções do administrador" }),
+            screen.queryByRole("heading", {
+                name: "Funções da administradora",
+            }),
         ).toBeNull();
         expect(localStorage.getItem("cafuringa-token")).toBeNull();
     });

@@ -112,12 +112,14 @@ describe("configurações de contato da conta", () => {
             formasPagamento: ["Dinheiro", "Cartão de débito"],
         };
         localStorage.setItem("cafuringa-token", "producer-token");
-        const fetchMock = vi.fn<typeof fetch>(async (_url, request) => {
+        const fetchMock = vi.fn<typeof fetch>(async (url, request) => {
             if (
                 new Headers(request?.headers).get("Authorization") !==
                 "Bearer producer-token"
             )
                 return new Response(null, { status: 401 });
+            if (String(url) === "/api/v1/producers/me/trajectory")
+                return Response.json({ fotoUrl: "/producers/maria/photo" });
             return request?.method === "PUT"
                 ? new Response(null, { status: 204 })
                 : Response.json(profile);
@@ -142,6 +144,11 @@ describe("configurações de contato da conta", () => {
         expect(
             screen.getByRole("heading", { name: "Olá, Maria" }),
         ).toBeTruthy();
+        expect(
+            (
+                await screen.findByRole("img", { name: "Sua foto de perfil" })
+            ).getAttribute("src"),
+        ).toBe("/api/v1/producers/maria/photo");
         const initiative = await screen.findByRole("textbox", {
             name: /nome da iniciativa/i,
         });
@@ -160,7 +167,9 @@ describe("configurações de contato da conta", () => {
         fireEvent.click(screen.getByRole("button", { name: "Salvar" }));
 
         expect(await screen.findByText("Alterações salvas.")).toBeTruthy();
-        const [url, request] = fetchMock.mock.calls[1];
+        const [url, request] = fetchMock.mock.calls.find(
+            ([, init]) => init?.method === "PUT",
+        )!;
         expect(url).toBe("/api/v1/users/producers/me");
         expect(request?.method).toBe("PUT");
         expect(JSON.parse(String(request?.body))).toEqual({
@@ -207,7 +216,7 @@ describe("configurações de contato da conta", () => {
                 displayedCpf,
             );
             fireEvent.click(
-                screen.getByRole("button", { name: "Acessar como produtor" }),
+                screen.getByRole("button", { name: "Acessar como produtora" }),
             );
             fireEvent.click(
                 screen.getByRole("button", { name: "Sair da conta" }),
@@ -225,7 +234,7 @@ describe("conta do administrador — HU03", () => {
         render(
             <AccountPage
                 role="admin"
-                consumerName="Administrador"
+                consumerName="Administradora"
                 settings={draft}
                 draft={draft}
                 saved={false}
@@ -238,7 +247,7 @@ describe("conta do administrador — HU03", () => {
         );
 
         expect(
-            screen.getByText("Administrador", { selector: ".eyebrow" }),
+            screen.getByText("Administradora", { selector: ".eyebrow" }),
         ).toBeTruthy();
         expect(screen.queryByText("Consumidora")).toBeNull();
     });

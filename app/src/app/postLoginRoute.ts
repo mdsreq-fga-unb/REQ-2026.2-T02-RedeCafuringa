@@ -14,18 +14,23 @@ const HOME: Record<Role, string> = {
  * identificador vem da URL e é sempre codificado.
  */
 export function postLoginRoute(role: Role, subject: string | null): string {
-    if (role === "admin" || !subject) return HOME[role];
+    return role === "admin"
+        ? HOME.admin
+        : (contactReturnRoute(subject) ?? HOME[role]);
+}
 
+export function contactReturnRoute(subject: string | null): string | undefined {
+    if (!subject) return undefined;
     const [kind, ...rest] = subject.split("/");
     const id = rest.join("/");
     if (kind === "produto")
-        return id ? `/oferta/${encodeURIComponent(id)}` : HOME[role];
+        return id ? `/oferta/${encodeURIComponent(id)}` : undefined;
     if (kind === "experiencia")
         return id
             ? `/oferta/${encodeURIComponent(id)}?tipo=experiencia`
-            : HOME[role];
+            : undefined;
     if (kind === "produtor")
-        return id ? `/produtor/${encodeURIComponent(id)}` : HOME[role];
+        return id ? `/produtor/${encodeURIComponent(id)}` : undefined;
     if (subject === "perfil") return "/perfil";
     return `/oferta/${encodeURIComponent(subject)}`;
 }

@@ -167,14 +167,14 @@ describe("HU39 — contato direto pelo WhatsApp", () => {
                     expect(
                         screen.getByText(
                             hash.includes("tipo=experiencia")
-                                ? "Anfitrião: Joana"
-                                : "Produtor: Joana",
+                                ? "Anfitriã: Joana"
+                                : "Produtora: Joana",
                         ),
                     ).toBeTruthy();
                     expect(
                         screen
                             .getByRole("link", {
-                                name: "Ver perfil do produtor",
+                                name: "Ver perfil da produtora",
                             })
                             .getAttribute("href"),
                     ).toBe("#/produtor/produtor-a");
@@ -222,6 +222,27 @@ describe("HU39 — contato direto pelo WhatsApp", () => {
             },
         );
     });
+
+    it.each(pages.slice(0, 2))(
+        "Voltar no login retorna à oferta de $name",
+        async ({ hash, heading }) => {
+            api(AUTHORIZED);
+            window.location.hash = hash;
+            render(<App />);
+            const user = userEvent.setup();
+            await user.click(
+                await screen.findByRole("link", {
+                    name: "Entrar para conversar",
+                }),
+            );
+            await screen.findByLabelText("Senha");
+            await user.click(screen.getByRole("button", { name: "Voltar" }));
+            expect(window.location.hash).toBe(hash);
+            expect(
+                await screen.findByRole("heading", { name: heading }),
+            ).toBeTruthy();
+        },
+    );
 
     it("um link antigo de login retorna à oferta após autenticação", async () => {
         api(AUTHORIZED);

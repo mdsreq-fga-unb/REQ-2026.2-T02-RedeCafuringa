@@ -55,7 +55,7 @@ export function PublicTrajectoryPage({
     // todos veem a opção (CA05), mas só quem está logado inicia o contato (RN17).
     const contactUrl = whatsAppContactUrl(
         canViewContact ? data?.telefone : undefined,
-        `Perfil de ${data?.nomeIniciativa || "produtor"}`,
+        `Perfil de ${data?.nomeIniciativa || "produtora"}`,
         { kind: "profile", route: `/produtor/${encodeURIComponent(id)}` },
     );
     if (data && catalogView)
@@ -78,7 +78,7 @@ export function PublicTrajectoryPage({
             {loading && <p role="status">Carregando perfil…</p>}
             {error && (
                 <>
-                    <h1>Perfil do produtor</h1>
+                    <h1>Perfil da produtora</h1>
                     <p className="form-alert" role="alert">
                         {error}
                     </p>
@@ -99,7 +99,7 @@ export function PublicTrajectoryPage({
             )}
             {data && (
                 <>
-                    <h1>{data.nomeIniciativa || "Perfil do produtor"}</h1>
+                    <h1>{data.nomeIniciativa || "Perfil da produtora"}</h1>
                     {data.categoriaOfertada && (
                         <p className="eyebrow">{data.categoriaOfertada}</p>
                     )}
@@ -107,7 +107,7 @@ export function PublicTrajectoryPage({
                         <img
                             className="trajectory-public-photo"
                             src={photoSrc(data.fotoUrl)}
-                            alt={`Foto de ${data.nomeIniciativa || "produtor"}`}
+                            alt={`Foto de ${data.nomeIniciativa || "produtora"}`}
                             decoding="async"
                             onError={(event) => {
                                 event.currentTarget.hidden = true;

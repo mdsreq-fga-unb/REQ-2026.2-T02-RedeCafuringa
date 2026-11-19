@@ -54,7 +54,7 @@ const mockUsers: MockUser[] = [
     {
         email: "admin@exemplo.com",
         password: "senha123",
-        user: { id: 3, name: "Administrador", role: "admin" },
+        user: { id: 3, name: "Administradora", role: "admin" },
     },
 ];
 
@@ -150,7 +150,7 @@ export async function registerMockConsumer(
 }
 
 export const demoHint =
-    "Demonstração: ana@exemplo.com (consumidor) ou produtor@exemplo.com (produtor), senha senha123.";
+    "Demonstração: ana@exemplo.com (consumidora) ou produtor@exemplo.com (produtora), senha senha123.";
 
 export async function loginMock(credentials: {
     email: string;
@@ -163,7 +163,7 @@ export async function loginMock(credentials: {
         password: item.password,
         user: {
             id: `admin-${index + 1}`,
-            name: "Administrador",
+            name: "Administradora",
             role: "admin" as const,
         },
     }));
@@ -227,7 +227,7 @@ export function updateMockProducerAccount(
             String(item.user.id) === String(id) &&
             item.user.role === "producer",
     );
-    if (!account) throw new Error("Produtor n?o encontrado.");
+    if (!account) throw new Error("Produtora não encontrada.");
     account.producerDetails = { ...account.producerDetails, ...details };
 }
 
@@ -329,7 +329,7 @@ export function readMockUserDetails(): UserDetail[] {
             ...item,
             user: {
                 id: `admin-${index + 1}`,
-                name: "Administrador",
+                name: "Administradora",
                 role: "admin",
             },
         })),

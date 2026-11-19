@@ -28,7 +28,7 @@ export const producer: UserDetail = {
 
 export const admin: UserDetail = {
     id: "665f1c2e9b1d4a0012ab34c3",
-    nome: "Administrador",
+    nome: "Administradora",
     email: "admin@exemplo.com",
     perfil: "ADMINISTRADOR",
 };

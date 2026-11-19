@@ -81,7 +81,7 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         await user.click(screen.getByRole("button", { name: "Criar conta" }));
         expect(
             await screen.findByRole("heading", {
-                name: "Você já faz parte da rede",
+                name: "Bem-vinda à Rede Cafuringa!",
             }),
         ).toBeTruthy();
         expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
@@ -159,7 +159,7 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         await user.click(screen.getByRole("button", { name: "Criar conta" }));
         expect(
             await screen.findByRole("heading", {
-                name: "Você já faz parte da rede",
+                name: "Bem-vinda à Rede Cafuringa!",
             }),
         ).toBeTruthy();
         expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
@@ -176,7 +176,7 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         await user.click(screen.getByRole("button", { name: "Criar conta" }));
         expect(
             await screen.findByRole("heading", {
-                name: "Você já faz parte da rede",
+                name: "Bem-vinda à Rede Cafuringa!",
             }),
         ).toBeTruthy();
         expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
@@ -188,7 +188,7 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         expect(window.location.hash).toBe(signupRoute);
         expect(
             screen.queryByRole("heading", {
-                name: "Você já faz parte da rede",
+                name: "Bem-vinda à Rede Cafuringa!",
             }),
         ).toBeNull();
         expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(0);
@@ -252,7 +252,7 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         expect(JSON.parse(String(init?.body))).not.toHaveProperty("senha");
         expect(
             await screen.findByRole("heading", {
-                name: "Você já faz parte da rede",
+                name: "Bem-vinda à Rede Cafuringa!",
             }),
         ).toBeTruthy();
     });
@@ -298,7 +298,7 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         await user.click(screen.getByRole("button", { name: "Criar conta" }));
         expect(
             await screen.findByRole("heading", {
-                name: "Você já faz parte da rede",
+                name: "Bem-vinda à Rede Cafuringa!",
             }),
         ).toBeTruthy();
         const [, init] = callsTo(api, photoPath, "PUT")[0];
@@ -336,7 +336,7 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         await user.click(screen.getByRole("button", { name: "Criar conta" }));
         expect(
             await screen.findByRole("heading", {
-                name: "Você já faz parte da rede",
+                name: "Bem-vinda à Rede Cafuringa!",
             }),
         ).toBeTruthy();
         expect(callsTo(api, "/api/v1/users/producers", "POST")).toHaveLength(1);
@@ -369,7 +369,7 @@ describe("HU12 — etapa de trajetória após os dados do produtor", () => {
         );
         expect(
             screen.queryByRole("heading", {
-                name: "Você já faz parte da rede",
+                name: "Bem-vinda à Rede Cafuringa!",
             }),
         ).toBeNull();
         await user.click(

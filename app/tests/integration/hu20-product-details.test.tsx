@@ -15,7 +15,7 @@ const product = {
     nome: "Mel do Cerrado",
     categoria: "Produtos",
     descricao:
-        "Mel produzido no território da Cafuringa. Consulte disponibilidade e formas de retirada diretamente com o produtor.",
+        "Mel produzido no território da Cafuringa. Consulte disponibilidade e formas de retirada diretamente com a produtora.",
     precoPorUnidade: 32.5,
     gramasPorUnidade: 500,
     fotos: [
@@ -84,7 +84,7 @@ it("CA01–CA05/CA07: consulta individual pública com descrição, preço, peso
     expect(screen.getByText(product.descricao)).toBeTruthy();
     expect(screen.getByText("R$ 32,50 / unidade")).toBeTruthy();
     expect(screen.getByText("500 g por unidade")).toBeTruthy();
-    expect(screen.getByText("Produtor: Dona Maria")).toBeTruthy();
+    expect(screen.getByText("Produtora: Dona Maria")).toBeTruthy();
     expect(container.textContent).not.toMatch(
         /CPF-PRIVADO|privado@example.com/,
     );
@@ -105,7 +105,7 @@ it("CA03: identifica a propriedade responsável quando o produtor a divulga", as
         }),
     );
     open();
-    expect(await screen.findByText("Produtor: Dona Maria")).toBeTruthy();
+    expect(await screen.findByText("Produtora: Dona Maria")).toBeTruthy();
     expect(screen.getByText("Propriedade: Sítio Boa Vista")).toBeTruthy();
 });
 

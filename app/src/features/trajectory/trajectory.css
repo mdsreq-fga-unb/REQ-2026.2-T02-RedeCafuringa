@@ -278,3 +278,36 @@
         padding: 24px 16px;
     }
 }
+
+.trajectory-photo-selection {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.trajectory-photo-selection .trajectory-photo-preview {
+    min-width: 0;
+}
+
+.trajectory-photo-remove {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    background: transparent;
+    color: #8e3029;
+    cursor: pointer;
+}
+
+.trajectory-photo-remove svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}

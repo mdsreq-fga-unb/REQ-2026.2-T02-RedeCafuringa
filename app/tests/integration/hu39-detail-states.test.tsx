@@ -113,10 +113,10 @@ describe("detalhe da oferta", () => {
         );
 
         await screen.findByRole("heading", { name: experience.nome });
-        expect(screen.getByText("Anfitrião: Sítio Boa Vista")).toBeTruthy();
+        expect(screen.getByText("Anfitriã: Sítio Boa Vista")).toBeTruthy();
         expect(screen.getByText("Duração: 2 horas")).toBeTruthy();
         expect(screen.getByText("Local: Núcleo Rural Cafuringa")).toBeTruthy();
-        expect(screen.queryByText(/^Produtor:/)).toBeNull();
+        expect(screen.queryByText(/^Produtora:/)).toBeNull();
         expect(screen.queryByText(/^Propriedade:/)).toBeNull();
         expect(screen.getAllByText(/Núcleo Rural Cafuringa/)).toHaveLength(1);
     });

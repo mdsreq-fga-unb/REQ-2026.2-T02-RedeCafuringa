@@ -40,7 +40,7 @@ describe("ProductOfferDetails", () => {
             await screen.findByRole("heading", { name: "Cesta da estação" }),
         ).toBeTruthy();
         expect(screen.getByText("R$ 40 / cesta")).toBeTruthy();
-        expect(screen.getByText("Produtor: Sítio Raízes")).toBeTruthy();
+        expect(screen.getByText("Produtora: Sítio Raízes")).toBeTruthy();
     });
 
     it("não oferece contato pelo WhatsApp", async () => {

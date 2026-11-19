@@ -1,3 +1,4 @@
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { ActionButton } from "../../components/ui/ActionButton";
@@ -322,10 +323,10 @@ export function ConsumerProfileSelectionPage({
                 >
                     <ConsumerIcon />
                     <span className="profile-option-copy">
-                        <strong>Sou consumidor</strong>
+                        <strong>Sou consumidora</strong>
                         <span>
                             Quero comprar produtos, viver experiências e apoiar
-                            produtores locais.
+                            produtoras locais.
                         </span>
                     </span>
                 </button>
@@ -337,7 +338,7 @@ export function ConsumerProfileSelectionPage({
                 >
                     <ProducerIcon />
                     <span className="profile-option-copy">
-                        <strong>Sou produtor</strong>
+                        <strong>Sou produtora</strong>
                         <span>
                             Quero divulgar meus produtos e experiências.
                         </span>
@@ -468,7 +469,7 @@ export function ConsumerSignupPage({
                 label="Voltar"
                 onClick={() => onNavigate("/escolher-perfil")}
             />
-            <h1>Cadastro de consumidor</h1>
+            <h1>Cadastro de consumidora</h1>
             <form className="signup-form" onSubmit={handleSubmit} noValidate>
                 {formError && (
                     <p className="form-alert" role="alert">
@@ -593,7 +594,7 @@ function SignupSuccessPage({
                     <path d="m5 12 4.5 4.5L19 7" />
                 </svg>
             </div>
-            <h1>Você já faz parte da rede</h1>
+            <h1>Bem-vinda à Rede Cafuringa!</h1>
             <p className="body-copy">
                 {authenticated
                     ? "Seu perfil e sua trajetória foram registrados. Você já pode acessar sua conta."
@@ -640,12 +641,13 @@ function SignupFieldInput({
     placeholder,
     onChange,
 }: SignupFieldInputProps) {
+    const Input = type === "password" ? PasswordInput : "input";
     return (
         <div className="signup-field">
             <label className="field-label" htmlFor={id}>
                 {label} <span aria-hidden="true">*</span>
             </label>
-            <input
+            <Input
                 id={id}
                 className="text-input signup-input"
                 type={type}

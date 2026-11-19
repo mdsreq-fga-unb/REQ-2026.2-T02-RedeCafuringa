@@ -224,7 +224,7 @@ describe("HU14 — Explorar", () => {
         api({ directory: () => json([]) });
         render(<App />);
         expect(
-            await screen.findByText(/ainda não há produtores/i),
+            await screen.findByText(/ainda não há produtoras/i),
         ).toBeTruthy();
         expect(screen.queryByText("Dona Cida")).toBeNull();
     });

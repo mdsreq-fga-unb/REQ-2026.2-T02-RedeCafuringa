@@ -1,3 +1,8 @@
+import { useEffect, useState } from "react";
+import {
+    getOwnTrajectory,
+    photoSrc,
+} from "@/features/trajectory/trajectoryService";
 import type { FormEvent } from "react";
 import { ActionButton } from "../../components/ui/ActionButton";
 import { BackButton } from "../../components/navigation/BackButton";
@@ -29,6 +34,35 @@ type AccountPageProps = {
      */
     demoContact?: boolean;
 };
+
+function ProducerAvatar({ name }: { name: string }) {
+    const [source, setSource] = useState("");
+
+    useEffect(() => {
+        const controller = new AbortController();
+        void getOwnTrajectory(controller.signal)
+            .then(({ fotoUrl }) => {
+                if (!controller.signal.aborted) setSource(photoSrc(fotoUrl));
+            })
+            .catch(() => {
+                // Mantém a inicial quando a foto não está disponível.
+            });
+        return () => controller.abort();
+    }, []);
+
+    return source ? (
+        <img
+            className="account-avatar"
+            src={source}
+            alt="Sua foto de perfil"
+            onError={() => setSource("")}
+        />
+    ) : (
+        <span className="account-avatar" aria-hidden="true">
+            {name.charAt(0).toLocaleUpperCase("pt-BR")}
+        </span>
+    );
+}
 
 export function AccountPage(props: AccountPageProps) {
     const {
@@ -64,12 +98,15 @@ export function AccountPage(props: AccountPageProps) {
                 label="Voltar"
                 onClick={() => onNavigate("/explorar")}
             />
+            {role === "producer" && userId != null && (
+                <ProducerAvatar key={userId} name={displayName} />
+            )}
             <h1>Olá, {displayName}</h1>
             <p className="eyebrow">
                 {role === "producer"
                     ? "Produtora"
                     : role === "admin"
-                      ? "Administrador"
+                      ? "Administradora"
                       : "Consumidora"}
             </p>
             {role === "producer" && (
@@ -211,7 +248,7 @@ export function AccountPage(props: AccountPageProps) {
                         variant="orange"
                         onClick={() => onNavigate("/login/producer")}
                     >
-                        Acessar como produtor
+                        Acessar como produtora
                     </ActionButton>
                 </div>
             )}
@@ -221,13 +258,13 @@ export function AccountPage(props: AccountPageProps) {
                         variant="orange"
                         onClick={() => onNavigate("/admin/usuarios")}
                     >
-                        Usuários cadastrados
+                        Usuárias cadastradas
                     </ActionButton>
                     <ActionButton
                         variant="outline"
                         onClick={() => onNavigate("/cadastro/administrador")}
                     >
-                        Cadastrar administrador
+                        Cadastrar administradora
                     </ActionButton>
                 </div>
             )}

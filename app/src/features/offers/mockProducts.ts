@@ -6,7 +6,7 @@ export const mockApiProducts: ApiProduct[] = [
         nome: "Mel do Cerrado",
         categoria: "Produtos",
         descricao:
-            "Mel produzido no território da Cafuringa. Consulte disponibilidade e formas de retirada diretamente com o produtor.",
+            "Mel produzido no território da Cafuringa. Consulte disponibilidade e formas de retirada diretamente com a produtora.",
         precoPorUnidade: 32,
         gramasPorUnidade: 500,
         fotos: [

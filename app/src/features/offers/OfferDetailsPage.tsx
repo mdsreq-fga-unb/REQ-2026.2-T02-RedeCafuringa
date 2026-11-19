@@ -33,7 +33,7 @@ export function OfferDetailsPage({
     const photos = offer.images?.length ? offer.images : [offer.image];
     const [photo, setPhoto] = useState(0);
     const producerDetail = offer.details.find((detail) =>
-        /^(Produtor|Anfitrião):/.test(detail),
+        /^(Produtor(?:a)?|Anfitriã(?:o)?):/.test(detail),
     );
     return (
         <>
@@ -118,7 +118,7 @@ export function OfferDetailsPage({
                     >
                         <div>
                             <h2 id="offer-contact-heading">
-                                Contato com o produtor
+                                Contato com a produtora
                             </h2>
                             {producerName && (
                                 <p className="contact-name">
@@ -127,8 +127,8 @@ export function OfferDetailsPage({
                             )}
                             {loginRoute ? (
                                 <p>
-                                    Entre na sua conta para conversar com o
-                                    produtor pelo WhatsApp.
+                                    Entre na sua conta para conversar com a
+                                    produtora pelo WhatsApp.
                                 </p>
                             ) : (
                                 !contactUrl && (
@@ -167,7 +167,7 @@ export function OfferDetailsPage({
                                         onNavigate(producerRoute);
                                     }}
                                 >
-                                    Ver perfil do produtor{" "}
+                                    Ver perfil da produtora{" "}
                                     <span aria-hidden="true">→</span>
                                 </a>
                             )}

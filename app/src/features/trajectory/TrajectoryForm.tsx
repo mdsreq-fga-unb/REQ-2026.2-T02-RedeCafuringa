@@ -155,7 +155,7 @@ export function TrajectoryForm({
                     className="trajectory-fields"
                 >
                     <legend className="visually-hidden">
-                        História e atuação do produtor
+                        História e atuação da produtora
                     </legend>
                     {(
                         [
@@ -226,7 +226,7 @@ export function TrajectoryForm({
                             type="tel"
                             autoComplete="tel-national"
                             inputMode="tel"
-                            value={draft.phone}
+                            value={formatPhone(draft.phone)}
                             placeholder="Ex.: (61) 99999-9999"
                             onChange={(event) =>
                                 change("phone", formatPhone(event.target.value))
@@ -258,9 +258,9 @@ export function TrajectoryForm({
                                     Autorizo compartilhar meu número de WhatsApp
                                 </strong>
                                 <span id={`${id}-contact-description`}>
-                                    Marque e salve para permitir que usuários
-                                    logados entrem em contato pelo WhatsApp no
-                                    seu perfil e nas suas ofertas.
+                                    Marque e salve para permitir que pessoas
+                                    conectadas entrem em contato pelo WhatsApp
+                                    no seu perfil e nas suas ofertas.
                                 </span>
                                 <span className="trajectory-contact-state">
                                     {draft.phonePublic
@@ -274,14 +274,6 @@ export function TrajectoryForm({
                         <label className="field-label" htmlFor={`${id}-photo`}>
                             Adicionar foto (opcional)
                         </label>
-                        {draft.photoUrl && !draft.photo && (
-                            <img
-                                className="trajectory-photo-preview"
-                                src={draft.photoUrl}
-                                alt="Sua foto de perfil atual"
-                                decoding="async"
-                            />
-                        )}
                         <div
                             className={`trajectory-photo-picker${draggingPhoto ? " is-dragging" : ""}`}
                             onDragOver={(event) => {
@@ -362,12 +354,50 @@ export function TrajectoryForm({
                                 {draft.photo.name}
                             </p>
                         )}
-                        {draft.photo && preview && (
-                            <img
-                                className="trajectory-photo-preview"
-                                src={preview}
-                                alt="Prévia da foto selecionada"
-                            />
+                        {(draft.photo || draft.photoUrl) && (
+                            <div className="trajectory-photo-selection">
+                                {(draft.photo ? preview : draft.photoUrl) && (
+                                    <img
+                                        className="trajectory-photo-preview"
+                                        src={
+                                            draft.photo
+                                                ? preview
+                                                : draft.photoUrl
+                                        }
+                                        alt={
+                                            draft.photo
+                                                ? "Prévia da foto selecionada"
+                                                : "Sua foto de perfil atual"
+                                        }
+                                        decoding="async"
+                                    />
+                                )}
+                                <button
+                                    className="trajectory-photo-remove"
+                                    type="button"
+                                    aria-label="Remover foto"
+                                    onClick={() => {
+                                        setPreview("");
+                                        setPhotoInputKey((value) => value + 1);
+                                        onChange({
+                                            ...draft,
+                                            photo: null,
+                                            photoUrl: "",
+                                            removePhoto:
+                                                draft.removePhoto ||
+                                                Boolean(draft.photoUrl),
+                                        });
+                                        setErrors((current) => ({
+                                            ...current,
+                                            photo: undefined,
+                                        }));
+                                    }}
+                                >
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 3v7m4-7v7" />
+                                    </svg>
+                                </button>
+                            </div>
                         )}
                         <p
                             className="trajectory-photo-help"
@@ -377,30 +407,6 @@ export function TrajectoryForm({
                             enviada sem dados de localização, e aparece no
                             perfil público.
                         </p>
-                        {(draft.photo || draft.photoUrl) && (
-                            <ActionButton
-                                variant="outline"
-                                type="button"
-                                onClick={() => {
-                                    setPreview("");
-                                    setPhotoInputKey((value) => value + 1);
-                                    onChange({
-                                        ...draft,
-                                        photo: null,
-                                        photoUrl: "",
-                                        removePhoto:
-                                            draft.removePhoto ||
-                                            Boolean(draft.photoUrl),
-                                    });
-                                    setErrors((current) => ({
-                                        ...current,
-                                        photo: undefined,
-                                    }));
-                                }}
-                            >
-                                Remover foto
-                            </ActionButton>
-                        )}
                         {errors.photo && (
                             <p
                                 className="field-error"

@@ -152,7 +152,7 @@ describe("HU09 — fluxo de autenticação no app", () => {
         ).toBeTruthy();
         expect(
             screen.queryByRole("heading", {
-                name: "Entre para falar com o responsável",
+                name: "Entre para falar com a responsável",
             }),
         ).toBeNull();
     });

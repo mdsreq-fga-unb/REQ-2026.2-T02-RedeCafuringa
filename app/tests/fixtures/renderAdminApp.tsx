@@ -15,7 +15,7 @@ export async function renderAdminApp(route = window.location.hash) {
     await userEvent
         .setup()
         .click(screen.getByRole("button", { name: "Entrar" }));
-    await screen.findByRole("heading", { name: "Funções do administrador" });
+    await screen.findByRole("heading", { name: "Funções da administradora" });
     await act(async () => {
         window.location.hash = route;
         window.dispatchEvent(new HashChangeEvent("hashchange"));

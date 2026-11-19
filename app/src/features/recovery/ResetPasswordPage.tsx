@@ -1,3 +1,4 @@
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -101,10 +102,9 @@ export function ResetPasswordPage({
                 <label className="field-label" htmlFor="reset-password">
                     Nova senha
                 </label>
-                <input
+                <PasswordInput
                     id="reset-password"
                     className="text-input"
-                    type="password"
                     autoComplete="new-password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
@@ -122,10 +122,9 @@ export function ResetPasswordPage({
                 <label className="field-label" htmlFor="reset-confirm-password">
                     Confirmar nova senha
                 </label>
-                <input
+                <PasswordInput
                     id="reset-confirm-password"
                     className="text-input"
-                    type="password"
                     autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(event) => setConfirmPassword(event.target.value)}

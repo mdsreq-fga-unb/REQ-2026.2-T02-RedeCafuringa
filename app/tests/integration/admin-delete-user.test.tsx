@@ -15,7 +15,7 @@ vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: false }));
 vi.mock("@/features/auth/authService", () => ({
     login: async () => ({
         token: "admin-session-token",
-        user: { id: admin.id, name: "Administrador", role: "admin" },
+        user: { id: admin.id, name: "Administradora", role: "admin" },
     }),
 }));
 
@@ -44,7 +44,7 @@ beforeEach(() => {
             );
             return user
                 ? jsonResponse(user)
-                : jsonResponse({ message: "Usuário não encontrado" }, 404);
+                : jsonResponse({ message: "Usuária não encontrada" }, 404);
         }
         const itens = userPage.itens.filter((u) => !deleted.includes(u.id));
         return jsonResponse({ ...userPage, itens, total: itens.length });

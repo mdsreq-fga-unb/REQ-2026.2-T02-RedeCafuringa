@@ -390,7 +390,7 @@ describe("HU14 — protótipos e acessibilidade", () => {
             await user.click(screen.getByRole("button", { name: "Explorar" }));
             expect(
                 await screen.findByRole("heading", {
-                    name: "Conheça nossos produtores",
+                    name: "Conheça nossas produtoras",
                 }),
             ).toBeTruthy();
             await user.click(
@@ -411,7 +411,7 @@ describe("HU14 — protótipos e acessibilidade", () => {
         await user.click(screen.getByRole("button", { name: /Voltar/ }));
         expect(
             await screen.findByRole("heading", {
-                name: "Conheça nossos produtores",
+                name: "Conheça nossas produtoras",
             }),
         ).toBeTruthy();
     });

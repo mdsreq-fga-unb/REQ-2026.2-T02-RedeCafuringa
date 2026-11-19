@@ -93,11 +93,10 @@ describe("HU12 — acesso, formulário e contrato HTTP", () => {
             "value",
             activities,
         );
-        expect(
-            (
-                screen.getByLabelText(/^Número de Contato/i) as HTMLInputElement
-            ).value.replace(/\D/g, ""),
-        ).toBe("61999999999");
+        expect(screen.getByLabelText(/^Número de Contato/i)).toHaveProperty(
+            "value",
+            "(61) 99999-9999",
+        );
         expect(callsTo(api, ownPath)[0][1]?.headers).toMatchObject({
             Authorization: `Bearer ${token}`,
         });

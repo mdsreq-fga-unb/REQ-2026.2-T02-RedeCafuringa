@@ -44,7 +44,7 @@ export async function registerExperience(
         throw new ApiHttpError({
             status: 401,
             message:
-                "Entre com seu perfil de produtor para cadastrar experiências.",
+                "Entre com seu perfil de produtora para cadastrar experiências.",
         });
     }
     if (isMockAuthEnabled) {
@@ -79,7 +79,7 @@ export async function registerExperience(
                     "demo-producer",
                 nomeIniciativa:
                     localStorage.getItem("cafuringa-name") ??
-                    "Produtor de teste",
+                    "Produtora de teste",
             },
         } satisfies RegisteredExperience;
         saveDemoOffer(experience);

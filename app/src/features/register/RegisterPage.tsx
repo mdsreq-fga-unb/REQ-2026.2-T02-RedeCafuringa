@@ -1,3 +1,4 @@
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent, InputHTMLAttributes } from "react";
 import { formatCpf } from "@/features/auth/cpf";
@@ -62,6 +63,7 @@ function TextField({
     onChange,
     ...inputProps
 }: TextFieldProps) {
+    const Input = inputProps.type === "password" ? PasswordInput : "input";
     return (
         <div className="register-field" data-field={id}>
             <label
@@ -70,7 +72,7 @@ function TextField({
             >
                 {label}
             </label>
-            <input
+            <Input
                 {...inputProps}
                 id={id}
                 className="text-input"
@@ -406,7 +408,7 @@ export function RegisterPage({
     return (
         <section className="login-page register-page">
             <BackButton label="Voltar" onClick={() => onNavigate("/entrar")} />
-            <h1>Cadastro de produtor</h1>
+            <h1>Cadastro de produtora</h1>
 
             <form
                 className="login-form register-form"
@@ -441,7 +443,7 @@ export function RegisterPage({
                     required
                     type="text"
                     autoComplete="name"
-                    placeholder="Nome completo do responsável"
+                    placeholder="Nome completo da responsável"
                     value={values.responsible}
                     error={errors.responsible}
                     onChange={(value) => setField("responsible", value)}

@@ -2,11 +2,11 @@ import type { Ref } from "react";
 import type { Offer } from "@/shared/types";
 import { offerDetailsRoute } from "./offerNavigation";
 
-const RESPONSIBLE = /^(Produtor|Anfitrião):\s*/;
+const RESPONSIBLE = /^(Produtor(?:a)?|Anfitriã(?:o)?):\s*/;
 
 /**
- * HU24 CA07: primeira informação do card, em geral o responsável ("Produtor:"
- * ou "Anfitrião:", sem o rótulo). Quando o nome não foi informado, a linha não
+ * HU24 CA07: primeira informação do card, em geral o responsável ("Produtora:"
+ * ou "Anfitriã:", sem o rótulo). Quando o nome não foi informado, a linha não
  * aparece, em vez de um rótulo vazio.
  */
 function responsibleOf(offer: Offer): string | undefined {

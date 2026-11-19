@@ -16,14 +16,14 @@ export function productToOffer(product: Product): Offer {
         price: formatProductPrice(product.price, product.unit),
         details: experience
             ? [
-                  `Anfitrião: ${producerName}`,
+                  `Anfitriã: ${producerName}`,
                   ...(product.duracao ? [`Duração: ${product.duracao}`] : []),
                   ...(product.local || product.producerLocation
                       ? [`Local: ${product.local || product.producerLocation}`]
                       : []),
               ]
             : [
-                  `Produtor: ${producerName}`,
+                  `Produtora: ${producerName}`,
                   ...(product.producerLocation
                       ? [`Propriedade: ${product.producerLocation}`]
                       : []),
@@ -35,6 +35,6 @@ export function productToOffer(product: Product): Offer {
               ],
         description:
             product.description ??
-            "Consulte disponibilidade e formas de retirada diretamente com o produtor.",
+            "Consulte disponibilidade e formas de retirada diretamente com a produtora.",
     };
 }

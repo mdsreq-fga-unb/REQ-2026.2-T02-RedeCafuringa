@@ -8,7 +8,7 @@ vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: false }));
 vi.mock("@/features/auth/authService", () => ({
     login: async () => ({
         token: "session",
-        user: { id: "admin", name: "Administrador", role: "admin" },
+        user: { id: "admin", name: "Administradora", role: "admin" },
     }),
 }));
 
@@ -44,7 +44,7 @@ describe("HU04 — acessibilidade WCAG 2.1 A/AA", () => {
             if (detail) await screen.findByText(consumer.email);
             else
                 await screen.findByRole("list", {
-                    name: "Usuários cadastrados",
+                    name: "Usuárias cadastradas",
                 });
             const result = await axe.run(container, {
                 runOnly: {

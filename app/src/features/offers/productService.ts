@@ -76,7 +76,7 @@ export async function registerProduct(
         throw new ApiHttpError({
             status: 401,
             message:
-                "Entre com seu perfil de produtor para cadastrar produtos.",
+                "Entre com seu perfil de produtora para cadastrar produtos.",
         });
     }
     if (isMockAuthEnabled) {
@@ -110,7 +110,7 @@ export async function registerProduct(
                     "demo-producer",
                 nomeIniciativa:
                     localStorage.getItem("cafuringa-name") ??
-                    "Produtor de teste",
+                    "Produtora de teste",
             },
         } satisfies RegisteredProduct;
         saveDemoOffer(product);

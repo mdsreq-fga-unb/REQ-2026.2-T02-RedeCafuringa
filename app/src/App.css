@@ -1649,3 +1649,53 @@ h2 {
     overflow-wrap: anywhere;
     line-height: 1.6;
 }
+
+.password-input {
+    position: relative;
+    min-width: 0;
+}
+
+.password-input .text-input {
+    width: 100%;
+    padding-inline-end: 3.5rem;
+}
+
+.password-toggle {
+    position: absolute;
+    inset-inline-end: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #2a2119;
+    cursor: pointer;
+}
+
+.password-toggle svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.account-avatar {
+    display: grid;
+    place-items: center;
+    width: 84px;
+    height: 84px;
+    margin-block: 0.75rem;
+    border-radius: 50%;
+    background: #e9eee5;
+    color: #2a2119;
+    font-size: 2rem;
+    font-weight: 700;
+    object-fit: cover;
+}

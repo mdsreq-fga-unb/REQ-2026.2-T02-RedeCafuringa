@@ -39,7 +39,7 @@ it("demonstra cadastro e visualização com fotos e responsável sem API", async
     ).toBeTruthy();
     expect(screen.getByText(`Local: ${experience.local}`)).toBeTruthy();
     expect(screen.getByText(`Duração: ${experience.duracao}`)).toBeTruthy();
-    expect(screen.getByText("Anfitrião: Horta da Joana")).toBeTruthy();
+    expect(screen.getByText("Anfitriã: Horta da Joana")).toBeTruthy();
     expect(
         screen.getByRole("img", { name: experience.nome }).getAttribute("src"),
     ).toMatch(/^data:image\/png;base64,/);

@@ -30,7 +30,7 @@ import {
     rememberOfferOrigin,
     offerReturnRoute,
 } from "@/features/offers/offerNavigation";
-import { postLoginRoute } from "./postLoginRoute";
+import { contactReturnRoute, postLoginRoute } from "./postLoginRoute";
 import { useHashRoute } from "./useHashRoute";
 import { RegisterPage } from "@/features/register";
 import "../App.css";
@@ -100,7 +100,7 @@ export function App() {
                 : "",
             price: `${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format("valorPorPessoa" in product ? product.valorPorPessoa : product.precoPorUnidade)} / ${"valorPorPessoa" in product ? "pessoa" : "unidade"}`,
             details: [
-                `Produtor: ${product.produtor.nomeIniciativa}`,
+                `Produtora: ${product.produtor.nomeIniciativa}`,
                 // HU20 CA03 / HU21 CA08: propriedade divulgada pelo responsável.
                 ...("localidade" in product.produtor &&
                 product.produtor.localidade
@@ -412,6 +412,7 @@ export function App() {
                     <LoginPage
                         recovered={justRecovered}
                         fromContact={fromContact}
+                        backPath={contactReturnRoute(contactSubject)}
                         profile={loginProfile}
                         registered={justRegistered}
                         onNavigate={navigate}

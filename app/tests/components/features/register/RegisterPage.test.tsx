@@ -96,7 +96,7 @@ describe("RegisterPage — HU02 Cadastrar perfil de produtor", () => {
         const { onNavigate, user } = renderRegister();
 
         expect(
-            screen.getByRole("heading", { name: "Cadastro de produtor" }),
+            screen.getByRole("heading", { name: "Cadastro de produtora" }),
         ).toBeTruthy();
 
         await user.click(screen.getByRole("button", { name: /Voltar/ }));
