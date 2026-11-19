@@ -1708,3 +1708,74 @@ h2 {
     font-weight: 700;
     object-fit: cover;
 }
+
+.consumer-account-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-block: 16px 20px;
+}
+
+.consumer-account-header .account-avatar {
+    flex: 0 0 64px;
+    height: 64px;
+    margin: 0;
+}
+
+.consumer-account-header h1,
+.consumer-account-header .eyebrow {
+    margin: 0;
+}
+
+.consumer-account-content {
+    display: grid;
+    gap: 16px;
+}
+
+.consumer-account-details {
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: #fffefa;
+}
+
+.consumer-account-details h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.consumer-account-details dl {
+    display: grid;
+    gap: 12px;
+    margin: 12px 0 0;
+}
+
+.consumer-account-details dl > div {
+    padding-block-start: 12px;
+    border-block-start: 1px solid var(--line);
+}
+
+.consumer-account-details dt {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.consumer-account-details dd {
+    margin: 3px 0 0;
+    overflow-wrap: anywhere;
+}
+
+.consumer-account-explore {
+    margin-top: 0;
+}
+
+@media (min-width: 600px) {
+    .consumer-account-details dl {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 20px;
+    }
+
+    .consumer-account-details dl > div:first-child {
+        grid-column: 1 / -1;
+    }
+}

@@ -182,7 +182,7 @@ describe("configurações de contato da conta", () => {
         ["52998224725", "529.982.247-25"],
         ["***.982.247-**", "***.982.247-**"],
     ])(
-        "exibe os dados do consumidor com CPF %s e permite acessar o login de produtor",
+        "exibe os dados da consumidora com CPF %s e oferece acesso ao catálogo",
         (cpf, displayedCpf) => {
             const onNavigate = vi.fn();
             const onSignOut = vi.fn();
@@ -207,22 +207,28 @@ describe("configurações de contato da conta", () => {
             expect(
                 screen.getByRole("heading", { name: "Olá, Gabriela" }),
             ).toBeTruthy();
-            expect(screen.getByLabelText("E-mail")).toHaveProperty(
-                "value",
-                "gabriela@exemplo.com",
-            );
-            expect(screen.getByLabelText("CPF")).toHaveProperty(
-                "value",
-                displayedCpf,
+            expect(screen.getByText("Gabriela Pereira da Silva")).toBeTruthy();
+            expect(screen.getByText("gabriela@exemplo.com")).toBeTruthy();
+            expect(screen.getByText(displayedCpf)).toBeTruthy();
+            expect(
+                screen.queryByRole("button", {
+                    name: "Acessar como produtora",
+                }),
+            ).toBeNull();
+            fireEvent.click(
+                screen.getByRole("button", { name: "Ver produtos" }),
             );
             fireEvent.click(
-                screen.getByRole("button", { name: "Acessar como produtora" }),
+                screen.getByRole("button", { name: "Ver experiências" }),
             );
             fireEvent.click(
                 screen.getByRole("button", { name: "Sair da conta" }),
             );
 
-            expect(onNavigate).toHaveBeenCalledWith("/login/producer");
+            expect(onNavigate.mock.calls).toEqual([
+                ["/produtos"],
+                ["/experiencias"],
+            ]);
             expect(onSignOut).toHaveBeenCalledOnce();
         },
     );

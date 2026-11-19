@@ -87,3 +87,7 @@
 00:07:54 [vite] (client) hmr update /src/features/register/RegisterPage.tsx
 00:11:20 [vite] (client) hmr update /src/features/account/ProducerAccountForm.tsx
 00:11:20 [vite] (client) hmr update /src/App.css
+00:14:03 [vite] (client) hmr update /src/features/account/AccountPage.tsx
+00:14:03 [vite] (client) hmr update /src/App.css
+00:14:04 [vite] (client) hmr update /src/features/account/AccountPage.tsx
+00:14:04 [vite] (client) hmr update /src/features/account/AccountPage.tsx

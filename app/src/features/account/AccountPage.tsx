@@ -101,14 +101,27 @@ export function AccountPage(props: AccountPageProps) {
             {role === "producer" && userId != null && (
                 <ProducerAvatar key={userId} name={displayName} />
             )}
-            <h1>Olá, {displayName}</h1>
-            <p className="eyebrow">
-                {role === "producer"
-                    ? "Produtora"
-                    : role === "admin"
-                      ? "Administradora"
-                      : "Consumidora"}
-            </p>
+            <div
+                className={
+                    role === "consumer" ? "consumer-account-header" : undefined
+                }
+            >
+                {role === "consumer" && (
+                    <span className="account-avatar" aria-hidden="true">
+                        {displayName.charAt(0).toLocaleUpperCase("pt-BR")}
+                    </span>
+                )}
+                <div>
+                    <h1>Olá, {displayName}</h1>
+                    <p className="eyebrow">
+                        {role === "producer"
+                            ? "Produtora"
+                            : role === "admin"
+                              ? "Administradora"
+                              : "Consumidora"}
+                    </p>
+                </div>
+            </div>
             {role === "producer" && (
                 <>
                     {userId != null && (
@@ -212,44 +225,60 @@ export function AccountPage(props: AccountPageProps) {
                 </>
             )}
             {role === "consumer" && (
-                <div className="account-profile-form account-consumer-fields">
-                    <div className="account-field">
-                        <label className="field-label" htmlFor="consumer-email">
-                            E-mail <span aria-hidden="true">*</span>
-                        </label>
-                        <input
-                            id="consumer-email"
-                            placeholder="E-mail não disponível"
-                            className="text-input"
-                            type="email"
-                            value={consumerEmail}
-                            aria-label="E-mail"
-                            readOnly
-                        />
-                    </div>
-                    <div className="account-field">
-                        <label className="field-label" htmlFor="consumer-cpf">
-                            CPF <span aria-hidden="true">*</span>
-                        </label>
-                        <input
-                            id="consumer-cpf"
-                            placeholder="CPF não disponível"
-                            className="text-input"
-                            value={
-                                consumerCpf.includes("*")
-                                    ? consumerCpf
-                                    : formatCpf(consumerCpf)
-                            }
-                            aria-label="CPF"
-                            readOnly
-                        />
-                    </div>
-                    <ActionButton
-                        variant="orange"
-                        onClick={() => onNavigate("/login/producer")}
+                <div className="consumer-account-content">
+                    <section
+                        className="consumer-account-details"
+                        aria-labelledby="consumer-details-heading"
                     >
-                        Acessar como produtora
-                    </ActionButton>
+                        <h2 id="consumer-details-heading">Dados da conta</h2>
+                        <dl>
+                            <div>
+                                <dt>Nome</dt>
+                                <dd>{consumerName || "Não informado"}</dd>
+                            </div>
+                            <div>
+                                <dt>E-mail</dt>
+                                <dd>{consumerEmail || "Não informado"}</dd>
+                            </div>
+                            <div>
+                                <dt>CPF</dt>
+                                <dd>
+                                    {(consumerCpf.includes("*")
+                                        ? consumerCpf
+                                        : formatCpf(consumerCpf)) ||
+                                        "Não informado"}
+                                </dd>
+                            </div>
+                        </dl>
+                    </section>
+                    <section
+                        className="public-contact-card consumer-account-explore"
+                        aria-labelledby="consumer-explore-heading"
+                    >
+                        <div>
+                            <h2 id="consumer-explore-heading">
+                                Explore a Cafuringa
+                            </h2>
+                            <p>
+                                Conheça os produtos e as experiências das
+                                produtoras locais.
+                            </p>
+                        </div>
+                        <div className="public-contact-actions">
+                            <ActionButton
+                                variant="outline"
+                                onClick={() => onNavigate("/produtos")}
+                            >
+                                Ver produtos
+                            </ActionButton>
+                            <ActionButton
+                                variant="outline"
+                                onClick={() => onNavigate("/experiencias")}
+                            >
+                                Ver experiências
+                            </ActionButton>
+                        </div>
+                    </section>
                 </div>
             )}
             {role === "admin" && (
