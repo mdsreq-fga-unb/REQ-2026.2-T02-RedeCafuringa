@@ -23,12 +23,14 @@ function chainQuery<T>(value: T) {
     select: vi.fn<(fields: string) => unknown>(),
     sort: vi.fn<(order: Record<string, number>) => unknown>(),
     collation: vi.fn<(options: object) => unknown>(),
+    lean: vi.fn<() => unknown>(),
     skip: vi.fn<(count: number) => unknown>(),
     limit: vi.fn<(count: number) => unknown>(),
     exec: vi.fn().mockResolvedValue(value),
   };
   for (const step of [
     chain.select,
+    chain.lean,
     chain.sort,
     chain.collation,
     chain.skip,
@@ -50,6 +52,7 @@ function setup() {
     })),
     findOne: vi.fn().mockReturnValue(query(null)),
     findById: vi.fn().mockReturnValue(query(null)),
+    updateOne: vi.fn().mockReturnValue(query({ matchedCount: 1 })),
   };
   const cipher = {
     blindIndex: vi.fn((value: string) => `idx:${value}`),
@@ -71,6 +74,83 @@ function setup() {
 }
 
 describe('UsersService', () => {
+  describe('dados da titular da conta', () => {
+    const id = new Types.ObjectId().toHexString();
+
+    it('consulta apenas os dados da iniciativa da produtora ativa', async () => {
+      const { service, model } = setup();
+      const account = {
+        nomeIniciativa: 'Horta da Maria',
+        categoriaOfertada: 'Experiências',
+        formasPagamento: ['Pix'],
+      };
+      model.findOne.mockReturnValue(chainQuery(account));
+
+      await expect(service.getProducerAccount(id)).resolves.toEqual(account);
+      expect(model.findOne).toHaveBeenCalledWith({
+        _id: id,
+        perfil: Role.PRODUTOR,
+        ativo: true,
+      });
+    });
+
+    it('carrega uma conta de produtora legada sem dados de iniciativa', async () => {
+      const { service, model } = setup();
+      model.findOne.mockReturnValue(chainQuery({}));
+
+      await expect(service.getProducerAccount(id)).resolves.toEqual({
+        nomeIniciativa: '',
+        categoriaOfertada: 'Produtos',
+        formasPagamento: [],
+      });
+
+      model.findOne.mockReturnValue(chainQuery(null));
+      await expect(service.getProducerAccount(id)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
+    });
+
+    it('atualiza só o nome da consumidora ativa', async () => {
+      const { service, model } = setup();
+      await service.updateConsumerName(id, 'Maria');
+      expect(model.updateOne).toHaveBeenCalledWith(
+        { _id: id, perfil: Role.CONSUMIDOR, ativo: true },
+        { $set: { nome: 'Maria' } },
+      );
+    });
+
+    it('atualiza os dados da iniciativa da produtora ativa', async () => {
+      const { service, model } = setup();
+      const dto = makeProducer();
+      const account = {
+        nomeIniciativa: dto.nomeIniciativa,
+        categoriaOfertada: dto.categoriaOfertada,
+        formasPagamento: dto.formasPagamento,
+      };
+      await service.updateProducerAccount(id, account);
+      expect(model.updateOne).toHaveBeenCalledWith(
+        { _id: id, perfil: Role.PRODUTOR, ativo: true },
+        { $set: account },
+      );
+    });
+
+    it('recusa salvar quando a conta ativa não existe', async () => {
+      const { service, model } = setup();
+      model.updateOne.mockReturnValue(query({ matchedCount: 0 }));
+      await expect(
+        service.updateConsumerName(id, 'Maria'),
+      ).rejects.toBeInstanceOf(NotFoundException);
+      const dto = makeProducer();
+      await expect(
+        service.updateProducerAccount(id, {
+          nomeIniciativa: dto.nomeIniciativa,
+          categoriaOfertada: dto.categoriaOfertada,
+          formasPagamento: dto.formasPagamento,
+        }),
+      ).rejects.toBeInstanceOf(NotFoundException);
+    });
+  });
+
   describe('banimento impede novo cadastro', () => {
     const BANNED =
       'Não foi possível concluir o cadastro. Procure a administração da Rede Cafuringa.';

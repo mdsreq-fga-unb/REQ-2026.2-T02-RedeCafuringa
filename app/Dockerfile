@@ -36,9 +36,10 @@ RUN npm run build && node nginx/gen-csp.ts > /app/csp.conf
 # hadolint ignore=DL3006
 FROM ${NGINX_IMAGE} AS prod
 
-# Aplica correções do Alpine aos pacotes da imagem base (musl e zlib).
+# Aplica as correções disponíveis no Alpine aos pacotes da imagem base.
 USER root
-RUN apk upgrade --no-cache musl musl-utils zlib
+RUN apk upgrade --no-cache musl musl-utils zlib \
+    && apk add --no-cache --upgrade 'nginx>=1.30.7-r0'
 USER nginx
 
 LABEL org.opencontainers.image.title="Rede Cafuringa App" \

@@ -1,4 +1,10 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+    cleanup,
+    render,
+    screen,
+    waitFor,
+    within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
@@ -108,14 +114,9 @@ describe("HU09 — fluxo de autenticação no app", () => {
                 name: "Olá, Gabriela",
             }),
         ).toBeTruthy();
-        expect(screen.getByLabelText("E-mail")).toHaveProperty(
-            "value",
-            "gabriela@exemplo.com",
-        );
-        expect(screen.getByLabelText("CPF")).toHaveProperty(
-            "value",
-            "529.982.247-25",
-        );
+        const details = screen.getByRole("region", { name: "Dados da conta" });
+        expect(within(details).getByText("gabriela@exemplo.com")).toBeTruthy();
+        expect(within(details).getByText("529.982.247-25")).toBeTruthy();
         expect(window.location.hash).toBe("#/conta");
     });
 
