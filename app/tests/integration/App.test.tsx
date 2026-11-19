@@ -73,6 +73,61 @@ afterEach(() => {
     window.location.hash = "";
 });
 
+it("edita apenas o nome da consumidora e atualiza sua sessão", async () => {
+    localStorage.setItem("cafuringa-token", "token-consumidora");
+    localStorage.setItem("cafuringa-role", "consumer");
+    localStorage.setItem("cafuringa-name", "Gabriela");
+    window.location.hash = "#/conta";
+    const fetchMock = vi.fn<typeof fetch>(async (_url, request) =>
+        request?.method === "PUT"
+            ? new Response(null, { status: 204 })
+            : Response.json({
+                  id: "consumidora-1",
+                  nome: "Gabriela",
+                  email: "gabriela@exemplo.com",
+                  cpf: "***.982.247-**",
+                  perfil: "CONSUMIDOR",
+              }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    try {
+        render(<App />);
+        const user = userEvent.setup();
+        await screen.findByText("gabriela@exemplo.com");
+        await user.click(screen.getByRole("button", { name: "Editar nome" }));
+        const input = screen.getByRole("textbox", { name: "Nome completo" });
+        expect(document.activeElement).toBe(input);
+        await user.keyboard("{Escape}");
+        expect(document.activeElement).toBe(
+            screen.getByRole("button", { name: "Editar nome" }),
+        );
+        await user.click(screen.getByRole("button", { name: "Editar nome" }));
+        const editableName = screen.getByRole("textbox", {
+            name: "Nome completo",
+        });
+        await user.clear(editableName);
+        await user.type(editableName, "  Ana Gabriela  ");
+        await user.click(screen.getByRole("button", { name: "Salvar nome" }));
+
+        await screen.findByRole("heading", { name: "Olá, Ana" });
+        expect(screen.getByText("Nome atualizado.")).toBeTruthy();
+        expect(screen.getByText("***.982.247-**")).toBeTruthy();
+        expect(localStorage.getItem("cafuringa-name")).toBe("Ana Gabriela");
+        const update = fetchMock.mock.calls.find(
+            ([, request]) => request?.method === "PUT",
+        );
+        expect(update?.[0]).toBe("/api/v1/users/consumers/me");
+        expect(new Headers(update?.[1]?.headers).get("Authorization")).toBe(
+            "Bearer token-consumidora",
+        );
+        expect(JSON.parse(String(update?.[1]?.body))).toEqual({
+            nome: "Ana Gabriela",
+        });
+    } finally {
+        vi.unstubAllGlobals();
+    }
+});
+
 describe("fluxo de contato da aplicação", () => {
     it("CA04: com a API real, o perfil de demonstração não usa o contato salvo no aparelho", () => {
         localStorage.setItem(

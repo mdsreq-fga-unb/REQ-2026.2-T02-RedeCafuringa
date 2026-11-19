@@ -117,6 +117,17 @@ export class UsersService {
     return { email, cpfHash, cnpjHash };
   }
 
+  async updateConsumerName(id: string, nome: string): Promise<void> {
+    const result = await this.users
+      .updateOne(
+        { _id: id, perfil: Role.CONSUMIDOR, ativo: true },
+        { $set: { nome } },
+      )
+      .exec();
+    if (!result.matchedCount)
+      throw new NotFoundException('Conta não encontrada');
+  }
+
   async getProducerAccount(id: string): Promise<ProducerAccountDto> {
     const user = await this.users
       .findOne({ _id: id, perfil: Role.PRODUTOR, ativo: true })

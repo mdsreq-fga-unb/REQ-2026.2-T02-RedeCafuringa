@@ -181,57 +181,45 @@ describe("configurações de contato da conta", () => {
     it.each([
         ["52998224725", "529.982.247-25"],
         ["***.982.247-**", "***.982.247-**"],
-    ])(
-        "exibe os dados da consumidora com CPF %s e oferece acesso ao catálogo",
-        (cpf, displayedCpf) => {
-            const onNavigate = vi.fn();
-            const onSignOut = vi.fn();
+    ])("exibe os dados da consumidora com CPF %s", (cpf, displayedCpf) => {
+        const onNavigate = vi.fn();
+        const onSignOut = vi.fn();
 
-            render(
-                <AccountPage
-                    role="consumer"
-                    consumerName="Gabriela Pereira da Silva"
-                    consumerEmail="gabriela@exemplo.com"
-                    consumerCpf={cpf}
-                    settings={{ whatsappNumber: "", authorized: false }}
-                    draft={{ whatsappNumber: "", authorized: false }}
-                    saved={false}
-                    onDraftChange={vi.fn()}
-                    onSavedChange={vi.fn()}
-                    onSaveContact={vi.fn()}
-                    onNavigate={onNavigate}
-                    onSignOut={onSignOut}
-                />,
-            );
+        render(
+            <AccountPage
+                role="consumer"
+                consumerName="Gabriela Pereira da Silva"
+                consumerEmail="gabriela@exemplo.com"
+                consumerCpf={cpf}
+                settings={{ whatsappNumber: "", authorized: false }}
+                draft={{ whatsappNumber: "", authorized: false }}
+                saved={false}
+                onDraftChange={vi.fn()}
+                onSavedChange={vi.fn()}
+                onSaveContact={vi.fn()}
+                onNavigate={onNavigate}
+                onSignOut={onSignOut}
+            />,
+        );
 
-            expect(
-                screen.getByRole("heading", { name: "Olá, Gabriela" }),
-            ).toBeTruthy();
-            expect(screen.getByText("Gabriela Pereira da Silva")).toBeTruthy();
-            expect(screen.getByText("gabriela@exemplo.com")).toBeTruthy();
-            expect(screen.getByText(displayedCpf)).toBeTruthy();
-            expect(
-                screen.queryByRole("button", {
-                    name: "Acessar como produtora",
-                }),
-            ).toBeNull();
-            fireEvent.click(
-                screen.getByRole("button", { name: "Ver produtos" }),
-            );
-            fireEvent.click(
-                screen.getByRole("button", { name: "Ver experiências" }),
-            );
-            fireEvent.click(
-                screen.getByRole("button", { name: "Sair da conta" }),
-            );
+        expect(
+            screen.getByRole("heading", { name: "Olá, Gabriela" }),
+        ).toBeTruthy();
+        expect(screen.getByText("Gabriela Pereira da Silva")).toBeTruthy();
+        expect(screen.getByText("gabriela@exemplo.com")).toBeTruthy();
+        expect(screen.getByText(displayedCpf)).toBeTruthy();
+        expect(
+            screen.queryByRole("button", {
+                name: "Acessar como produtora",
+            }),
+        ).toBeNull();
+        expect(
+            screen.queryByRole("heading", { name: "Explore a Cafuringa" }),
+        ).toBeNull();
+        fireEvent.click(screen.getByRole("button", { name: "Sair da conta" }));
 
-            expect(onNavigate.mock.calls).toEqual([
-                ["/produtos"],
-                ["/experiencias"],
-            ]);
-            expect(onSignOut).toHaveBeenCalledOnce();
-        },
-    );
+        expect(onSignOut).toHaveBeenCalledOnce();
+    });
 });
 
 describe("conta do administrador — HU03", () => {

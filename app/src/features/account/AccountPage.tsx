@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     getOwnTrajectory,
     photoSrc,
@@ -19,6 +19,7 @@ type AccountPageProps = {
     consumerName: string;
     consumerEmail?: string;
     consumerCpf?: string;
+    onSaveConsumerName?: (name: string) => Promise<void>;
     settings: ContactSettings;
     draft: ContactSettings;
     saved: boolean;
@@ -64,6 +65,146 @@ function ProducerAvatar({ name }: { name: string }) {
     );
 }
 
+function ConsumerName({
+    name,
+    onSave,
+}: {
+    name: string;
+    onSave?: (name: string) => Promise<void>;
+}) {
+    const [draft, setDraft] = useState<string | null>(null);
+    const [saving, setSaving] = useState(false);
+    const [message, setMessage] = useState<{ text: string; error: boolean }>();
+    const editing = draft !== null;
+    const input = useRef<HTMLInputElement>(null);
+    const editButton = useRef<HTMLButtonElement>(null);
+    const wasEditing = useRef(false);
+
+    useEffect(() => {
+        if (editing) input.current?.focus();
+        else if (wasEditing.current) editButton.current?.focus();
+        wasEditing.current = editing;
+    }, [editing]);
+
+    const cancel = () => {
+        setMessage(undefined);
+        setDraft(null);
+    };
+
+    const submit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (saving || draft === null || !onSave) return;
+        const nextName = draft.trim();
+        if (!nextName) {
+            setMessage({ text: "Informe seu nome.", error: true });
+            return;
+        }
+
+        setSaving(true);
+        setMessage(undefined);
+        try {
+            await onSave(nextName);
+            setDraft(null);
+            setMessage({ text: "Nome atualizado.", error: false });
+        } catch {
+            setMessage({
+                text: "Não foi possível atualizar o nome. Tente novamente.",
+                error: true,
+            });
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <div>
+            <dt>Nome</dt>
+            <dd>
+                {draft === null ? (
+                    <div className="consumer-name-row">
+                        <span>{name || "Não informado"}</span>
+                        {onSave && (
+                            <button
+                                ref={editButton}
+                                className="consumer-name-icon"
+                                type="button"
+                                aria-label="Editar nome"
+                                title="Editar nome"
+                                onClick={() => {
+                                    setMessage(undefined);
+                                    setDraft(name);
+                                }}
+                            >
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="m15 5 4 4M4 20l4.5-1L20 7.5a1.4 1.4 0 0 0 0-2l-1.5-1.5a1.4 1.4 0 0 0-2 0L5 15.5 4 20Z" />
+                                </svg>
+                            </button>
+                        )}
+                    </div>
+                ) : (
+                    <form
+                        className="consumer-name-form"
+                        onSubmit={submit}
+                        aria-busy={saving}
+                        onKeyDown={(event) => {
+                            if (event.key === "Escape" && !saving) cancel();
+                        }}
+                        noValidate
+                    >
+                        <input
+                            ref={input}
+                            className="text-input"
+                            type="text"
+                            aria-label="Nome completo"
+                            autoComplete="name"
+                            required
+                            maxLength={120}
+                            value={draft}
+                            readOnly={saving}
+                            onChange={(event) => setDraft(event.target.value)}
+                        />
+                        <button
+                            className="consumer-name-icon consumer-name-save"
+                            type="submit"
+                            aria-label={
+                                saving ? "Salvando nome" : "Salvar nome"
+                            }
+                            title={saving ? "Salvando nome" : "Salvar nome"}
+                            disabled={saving}
+                        >
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m5 12 4 4L19 6" />
+                            </svg>
+                        </button>
+                        <button
+                            className="consumer-name-icon"
+                            type="button"
+                            aria-label="Cancelar edição"
+                            title="Cancelar edição"
+                            disabled={saving}
+                            onClick={cancel}
+                        >
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m6 6 12 12M18 6 6 18" />
+                            </svg>
+                        </button>
+                    </form>
+                )}
+                {message && (
+                    <p
+                        className={
+                            message.error ? "field-error" : "save-status"
+                        }
+                        role={message.error ? "alert" : "status"}
+                    >
+                        {message.text}
+                    </p>
+                )}
+            </dd>
+        </div>
+    );
+}
+
 export function AccountPage(props: AccountPageProps) {
     const {
         role,
@@ -71,6 +212,7 @@ export function AccountPage(props: AccountPageProps) {
         consumerName,
         consumerEmail = "",
         consumerCpf = "",
+        onSaveConsumerName,
         settings,
         draft,
         saved,
@@ -225,61 +367,32 @@ export function AccountPage(props: AccountPageProps) {
                 </>
             )}
             {role === "consumer" && (
-                <div className="consumer-account-content">
-                    <section
-                        className="consumer-account-details"
-                        aria-labelledby="consumer-details-heading"
-                    >
-                        <h2 id="consumer-details-heading">Dados da conta</h2>
-                        <dl>
-                            <div>
-                                <dt>Nome</dt>
-                                <dd>{consumerName || "Não informado"}</dd>
-                            </div>
-                            <div>
-                                <dt>E-mail</dt>
-                                <dd>{consumerEmail || "Não informado"}</dd>
-                            </div>
-                            <div>
-                                <dt>CPF</dt>
-                                <dd>
-                                    {(consumerCpf.includes("*")
-                                        ? consumerCpf
-                                        : formatCpf(consumerCpf)) ||
-                                        "Não informado"}
-                                </dd>
-                            </div>
-                        </dl>
-                    </section>
-                    <section
-                        className="public-contact-card consumer-account-explore"
-                        aria-labelledby="consumer-explore-heading"
-                    >
+                <section
+                    className="consumer-account-details"
+                    aria-labelledby="consumer-details-heading"
+                >
+                    <h2 id="consumer-details-heading">Dados da conta</h2>
+                    <dl>
+                        <ConsumerName
+                            key={userId}
+                            name={consumerName}
+                            onSave={onSaveConsumerName}
+                        />
                         <div>
-                            <h2 id="consumer-explore-heading">
-                                Explore a Cafuringa
-                            </h2>
-                            <p>
-                                Conheça os produtos e as experiências das
-                                produtoras locais.
-                            </p>
+                            <dt>E-mail</dt>
+                            <dd>{consumerEmail || "Não informado"}</dd>
                         </div>
-                        <div className="public-contact-actions">
-                            <ActionButton
-                                variant="outline"
-                                onClick={() => onNavigate("/produtos")}
-                            >
-                                Ver produtos
-                            </ActionButton>
-                            <ActionButton
-                                variant="outline"
-                                onClick={() => onNavigate("/experiencias")}
-                            >
-                                Ver experiências
-                            </ActionButton>
+                        <div>
+                            <dt>CPF</dt>
+                            <dd>
+                                {(consumerCpf.includes("*")
+                                    ? consumerCpf
+                                    : formatCpf(consumerCpf)) ||
+                                    "Não informado"}
+                            </dd>
                         </div>
-                    </section>
-                </div>
+                    </dl>
+                </section>
             )}
             {role === "admin" && (
                 <div className="account-profile-form">

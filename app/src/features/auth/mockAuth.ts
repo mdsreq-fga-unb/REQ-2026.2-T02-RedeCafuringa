@@ -207,6 +207,22 @@ export function registerMockUser(account: {
     return user;
 }
 
+export function updateMockConsumerName(id: string | null, name: string) {
+    const registered = readRegisteredUsers();
+    const account = registered.find((item) => item.user.id === id);
+    if (account) {
+        account.user.name = name;
+        localStorage.setItem(registeredUsersKey, JSON.stringify(registered));
+        return;
+    }
+
+    const example = mockUsers.find(
+        (item) => String(item.user.id) === id && item.user.role === "consumer",
+    );
+    if (!example) throw new Error("Conta não encontrada.");
+    example.user.name = name;
+}
+
 export function readMockProducerAccount(id: AuthResult["user"]["id"]) {
     return mockUsers.find(
         (item) =>

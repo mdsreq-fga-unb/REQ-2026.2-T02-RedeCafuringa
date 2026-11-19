@@ -70,8 +70,16 @@ export function App() {
         },
         [route, changeRoute],
     );
-    const { role, consumerName, email, cpf, userId, signIn, signOut } =
-        useDemoSession();
+    const {
+        role,
+        consumerName,
+        email,
+        cpf,
+        userId,
+        signIn,
+        signOut,
+        saveConsumerName,
+    } = useDemoSession();
     const signup = useProducerSignup(
         (auth) => {
             signIn(auth);
@@ -494,6 +502,7 @@ export function App() {
                         userId={userId}
                         role={role}
                         consumerName={consumerName}
+                        onSaveConsumerName={saveConsumerName}
                         consumerEmail={email}
                         consumerCpf={cpf}
                         settings={settings}

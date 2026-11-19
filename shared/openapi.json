@@ -787,8 +787,80 @@
         ]
       }
     },
+    "/api/v1/users/consumers/me": {
+      "put": {
+        "description": "Atualiza apenas o nome da titular da sessão.",
+        "operationId": "usersUpdateConsumerName",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateConsumerNameDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Nome atualizado"
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: CONSUMIDOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Alterar nome da consumidora",
+        "tags": [
+          "users"
+        ]
+      }
+    },
     "/api/v1/users/producers/check-identity": {
       "post": {
+        "description": "Verifica se os dados podem ser usados no cadastro sem criar a conta.",
         "operationId": "usersCheckProducerIdentity",
         "parameters": [],
         "requestBody": {
@@ -863,6 +935,7 @@
     },
     "/api/v1/users/producers/me": {
       "get": {
+        "description": "Retorna os dados da iniciativa da titular da sessão.",
         "operationId": "usersGetProducerAccount",
         "parameters": [],
         "responses": {
@@ -892,11 +965,13 @@
             "bearer": []
           }
         ],
+        "summary": "Consultar conta da produtora",
         "tags": [
           "users"
         ]
       },
       "put": {
+        "description": "Salva iniciativa, categoria e formas de pagamento da titular.",
         "operationId": "usersUpdateProducerAccount",
         "parameters": [],
         "requestBody": {
@@ -939,6 +1014,7 @@
             "bearer": []
           }
         ],
+        "summary": "Atualizar conta da produtora",
         "tags": [
           "users"
         ]
@@ -2956,6 +3032,18 @@
           "statusCode",
           "message",
           "error"
+        ]
+      },
+      "UpdateConsumerNameDto": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "Maria das Graças"
+          }
+        },
+        "required": [
+          "nome"
         ]
       },
       "CheckProducerIdentityDto": {

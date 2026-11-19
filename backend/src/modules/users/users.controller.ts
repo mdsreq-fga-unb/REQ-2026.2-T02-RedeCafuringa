@@ -37,7 +37,10 @@ import { AccountDeletionService } from './account-deletion.service.js';
 import { Role } from './domain/role.js';
 import { AdminResponse } from './dto/admin.response.js';
 import { CreateAdminDto } from './dto/create-admin.dto.js';
-import { CreateConsumerDto } from './dto/create-consumer.dto.js';
+import {
+  CreateConsumerDto,
+  UpdateConsumerNameDto,
+} from './dto/create-consumer.dto.js';
 import {
   CheckProducerIdentityDto,
   CreateProducerDto,
@@ -86,12 +89,34 @@ export class UsersController {
     return this.users.toResponse(await this.users.createConsumer(dto));
   }
 
+  @Roles(Role.CONSUMIDOR)
+  @Put('consumers/me')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Alterar nome da consumidora',
+    description: 'Atualiza apenas o nome da titular da sessão.',
+  })
+  @ApiNoContentResponse({ description: 'Nome atualizado' })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiUnauthorizedResponse({ type: ErrorResponse })
+  @ApiForbiddenResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: ErrorResponse })
+  updateConsumerName(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: UpdateConsumerNameDto,
+  ): Promise<void> {
+    return this.users.updateConsumerName(user.id, dto.nome);
+  }
+
   @Public()
   @AuthThrottle()
   @Post('producers/check-identity')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Validar CPF, CNPJ e e-mail antes de avançar no cadastro',
+    description:
+      'Verifica se os dados podem ser usados no cadastro sem criar a conta.',
   })
   @ApiNoContentResponse({ description: 'Dados disponíveis para cadastro' })
   @ApiBadRequestResponse({ type: ErrorResponse })
@@ -110,6 +135,10 @@ export class UsersController {
   @Roles(Role.PRODUTOR)
   @Get('producers/me')
   @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Consultar conta da produtora',
+    description: 'Retorna os dados da iniciativa da titular da sessão.',
+  })
   @ApiOkResponse({ type: ProducerAccountDto })
   getProducerAccount(
     @CurrentUser() user: AuthenticatedUser,
@@ -121,6 +150,11 @@ export class UsersController {
   @Put('producers/me')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Atualizar conta da produtora',
+    description:
+      'Salva iniciativa, categoria e formas de pagamento da titular.',
+  })
   @ApiNoContentResponse({ description: 'Dados da conta salvos' })
   @ApiBadRequestResponse({ type: ErrorResponse })
   updateProducerAccount(

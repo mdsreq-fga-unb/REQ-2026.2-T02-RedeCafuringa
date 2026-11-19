@@ -84,6 +84,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/users/consumers/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Alterar nome da consumidora
+         * @description Atualiza apenas o nome da titular da sessão.
+         */
+        put: operations["usersUpdateConsumerName"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/users/producers/check-identity": {
         parameters: {
             query?: never;
@@ -93,7 +113,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Validar CPF, CNPJ e e-mail antes de avançar no cadastro */
+        /**
+         * Validar CPF, CNPJ e e-mail antes de avançar no cadastro
+         * @description Verifica se os dados podem ser usados no cadastro sem criar a conta.
+         */
         post: operations["usersCheckProducerIdentity"];
         delete?: never;
         options?: never;
@@ -108,7 +131,15 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /**
+         * Consultar conta da produtora
+         * @description Retorna os dados da iniciativa da titular da sessão.
+         */
         get: operations["usersGetProducerAccount"];
+        /**
+         * Atualizar conta da produtora
+         * @description Salva iniciativa, categoria e formas de pagamento da titular.
+         */
         put: operations["usersUpdateProducerAccount"];
         post?: never;
         delete?: never;
@@ -612,6 +643,10 @@ export interface components {
              * @example Bad Request
              */
             error: string;
+        };
+        UpdateConsumerNameDto: {
+            /** @example Maria das Graças */
+            nome: string;
         };
         CheckProducerIdentityDto: {
             /**
@@ -1687,6 +1722,61 @@ export interface operations {
                 headers: {
                     /** @description Segundos até a próxima tentativa ser aceita */
                     "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersUpdateConsumerName: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateConsumerNameDto"];
+            };
+        };
+        responses: {
+            /** @description Nome atualizado */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: CONSUMIDOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            404: {
+                headers: {
                     [name: string]: unknown;
                 };
                 content: {

@@ -80,6 +80,7 @@ describe('contrato OpenAPI', () => {
       'GET /api/v1/products/{id}',
       'GET /api/v1/products/{id}/photos/{photoId}',
       'GET /api/v1/users',
+      'GET /api/v1/users/producers/me',
       'GET /api/v1/users/{id}',
       'POST /api/v1/auth/login',
       'POST /api/v1/auth/password-reset/confirm',
@@ -90,8 +91,11 @@ describe('contrato OpenAPI', () => {
       'POST /api/v1/users/admins',
       'POST /api/v1/users/consumers',
       'POST /api/v1/users/producers',
+      'POST /api/v1/users/producers/check-identity',
       'PUT /api/v1/producers/me/photo',
       'PUT /api/v1/producers/me/trajectory',
+      'PUT /api/v1/users/consumers/me',
+      'PUT /api/v1/users/producers/me',
     ]);
   });
 
@@ -124,12 +128,15 @@ describe('contrato OpenAPI', () => {
       'get /api/v1/auth/me',
       'get /api/v1/producers/me/trajectory',
       'get /api/v1/users',
+      'get /api/v1/users/producers/me',
       'get /api/v1/users/{id}',
       'post /api/v1/experiences',
       'post /api/v1/products',
       'post /api/v1/users/admins',
       'put /api/v1/producers/me/photo',
       'put /api/v1/producers/me/trajectory',
+      'put /api/v1/users/consumers/me',
+      'put /api/v1/users/producers/me',
     ]);
   });
 

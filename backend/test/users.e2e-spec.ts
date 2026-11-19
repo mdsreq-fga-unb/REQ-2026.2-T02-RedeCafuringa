@@ -38,6 +38,41 @@ describe('HU01 — Cadastrar perfil de consumidor (e2e)', () => {
     });
   });
 
+  it('permite à consumidora alterar apenas o próprio nome', async () => {
+    const token = await loginAs(t, Role.CONSUMIDOR);
+    const producer = await loginAs(t, Role.PRODUTOR);
+    const path = REGISTER + '/me';
+    const setName = (name: string) =>
+      t
+        .request()
+        .put(path)
+        .set('Authorization', 'Bearer ' + token)
+        .send({ nome: name });
+
+    await t.request().put(path).send({ nome: 'Ana' }).expect(401);
+    await t
+      .request()
+      .put(path)
+      .set('Authorization', 'Bearer ' + producer)
+      .send({ nome: 'Ana' })
+      .expect(403);
+    await t
+      .request()
+      .put(path)
+      .set('Authorization', 'Bearer ' + token)
+      .send({ nome: 'Ana', email: 'outro@exemplo.com' })
+      .expect(400);
+    await setName('   ').expect(400);
+    await setName('  Ana Gabriela  ').expect(204);
+
+    const { body } = await t
+      .request()
+      .get('/api/v1/auth/me')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200);
+    expect(body.nome).toBe('Ana Gabriela');
+  });
+
   it('RF01: aceita cadastro sem telefone', async () => {
     const { nome, cpf, email, senha, dataNascimento } = makeConsumer();
 

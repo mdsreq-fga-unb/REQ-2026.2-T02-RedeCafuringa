@@ -1727,11 +1727,6 @@ h2 {
     margin: 0;
 }
 
-.consumer-account-content {
-    display: grid;
-    gap: 16px;
-}
-
 .consumer-account-details {
     padding: 20px;
     border: 1px solid var(--line);
@@ -1765,8 +1760,64 @@ h2 {
     overflow-wrap: anywhere;
 }
 
-.consumer-account-explore {
-    margin-top: 0;
+.consumer-name-row,
+.consumer-name-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+}
+
+.consumer-name-form {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+}
+
+.consumer-name-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.consumer-name-icon svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.consumer-name-icon:enabled:hover,
+.consumer-name-icon:focus-visible {
+    background: #efece4;
+}
+
+.consumer-name-icon:focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 2px;
+}
+
+.consumer-name-save {
+    background: #e7efe6;
+    color: #233a29;
+}
+
+.consumer-name-save:enabled:hover,
+.consumer-name-save:focus-visible {
+    background: #d7e8d6;
+}
+
+.consumer-name-icon:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
 
 @media (min-width: 600px) {
