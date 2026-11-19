@@ -1,3 +1,4 @@
+import { AccountEditButton } from "./AccountEditButton";
 import { useEffect, useRef, useState } from "react";
 import {
     getOwnTrajectory,
@@ -124,21 +125,15 @@ function ConsumerName({
                     <div className="consumer-name-row">
                         <span>{name || "Não informado"}</span>
                         {onSave && (
-                            <button
+                            <AccountEditButton
+                                action="edit"
+                                label="Editar nome"
                                 ref={editButton}
-                                className="consumer-name-icon"
-                                type="button"
-                                aria-label="Editar nome"
-                                title="Editar nome"
                                 onClick={() => {
                                     setMessage(undefined);
                                     setDraft(name);
                                 }}
-                            >
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="m15 5 4 4M4 20l4.5-1L20 7.5a1.4 1.4 0 0 0 0-2l-1.5-1.5a1.4 1.4 0 0 0-2 0L5 15.5 4 20Z" />
-                                </svg>
-                            </button>
+                            />
                         )}
                     </div>
                 ) : (
@@ -163,31 +158,17 @@ function ConsumerName({
                             readOnly={saving}
                             onChange={(event) => setDraft(event.target.value)}
                         />
-                        <button
-                            className="consumer-name-icon consumer-name-save"
-                            type="submit"
-                            aria-label={
-                                saving ? "Salvando nome" : "Salvar nome"
-                            }
-                            title={saving ? "Salvando nome" : "Salvar nome"}
+                        <AccountEditButton
+                            action="save"
+                            label={saving ? "Salvando nome" : "Salvar nome"}
                             disabled={saving}
-                        >
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="m5 12 4 4L19 6" />
-                            </svg>
-                        </button>
-                        <button
-                            className="consumer-name-icon"
-                            type="button"
-                            aria-label="Cancelar edição"
-                            title="Cancelar edição"
+                        />
+                        <AccountEditButton
+                            action="cancel"
+                            label="Cancelar edição"
                             disabled={saving}
                             onClick={cancel}
-                        >
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="m6 6 12 12M18 6 6 18" />
-                            </svg>
-                        </button>
+                        />
                     </form>
                 )}
                 {message && (
@@ -368,7 +349,7 @@ export function AccountPage(props: AccountPageProps) {
             )}
             {role === "consumer" && (
                 <section
-                    className="consumer-account-details"
+                    className="account-details-card"
                     aria-labelledby="consumer-details-heading"
                 >
                     <h2 id="consumer-details-heading">Dados da conta</h2>

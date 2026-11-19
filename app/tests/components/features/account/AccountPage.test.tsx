@@ -149,6 +149,13 @@ describe("configurações de contato da conta", () => {
                 await screen.findByRole("img", { name: "Sua foto de perfil" })
             ).getAttribute("src"),
         ).toBe("/api/v1/producers/maria/photo");
+        expect(await screen.findByText("Horta da Maria")).toBeTruthy();
+        expect(
+            screen.queryByRole("textbox", { name: /nome da iniciativa/i }),
+        ).toBeNull();
+        fireEvent.click(
+            screen.getByRole("button", { name: "Editar dados da iniciativa" }),
+        );
         const initiative = await screen.findByRole("textbox", {
             name: /nome da iniciativa/i,
         });
@@ -163,10 +170,28 @@ describe("configurações de contato da conta", () => {
             "checked",
             false,
         );
-        fireEvent.change(initiative, { target: { value: "Sítio Raízes" } });
-        fireEvent.click(screen.getByRole("button", { name: "Salvar" }));
+        expect(document.activeElement).toBe(initiative);
+        fireEvent.change(initiative, { target: { value: "Nome descartado" } });
+        fireEvent.keyDown(initiative, { key: "Escape" });
+        expect(screen.getByText("Horta da Maria")).toBeTruthy();
+        const edit = screen.getByRole("button", {
+            name: "Editar dados da iniciativa",
+        });
+        expect(document.activeElement).toBe(edit);
+        expect(
+            fetchMock.mock.calls.some(([, init]) => init?.method === "PUT"),
+        ).toBe(false);
+        fireEvent.click(edit);
+        fireEvent.change(
+            screen.getByRole("textbox", { name: /nome da iniciativa/i }),
+            { target: { value: "Sítio Raízes" } },
+        );
+        fireEvent.click(
+            screen.getByRole("button", { name: "Salvar dados da iniciativa" }),
+        );
 
         expect(await screen.findByText("Alterações salvas.")).toBeTruthy();
+        expect(screen.getByText("Sítio Raízes")).toBeTruthy();
         const [url, request] = fetchMock.mock.calls.find(
             ([, init]) => init?.method === "PUT",
         )!;

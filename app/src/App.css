@@ -1727,35 +1727,35 @@ h2 {
     margin: 0;
 }
 
-.consumer-account-details {
+.account-details-card {
     padding: 20px;
     border: 1px solid var(--line);
     border-radius: 18px;
     background: #fffefa;
 }
 
-.consumer-account-details h2 {
+.account-details-card h2 {
     margin: 0;
     font-size: 18px;
 }
 
-.consumer-account-details dl {
+.account-details-card dl {
     display: grid;
     gap: 12px;
     margin: 12px 0 0;
 }
 
-.consumer-account-details dl > div {
+.account-details-card dl > div {
     padding-block-start: 12px;
     border-block-start: 1px solid var(--line);
 }
 
-.consumer-account-details dt {
+.account-details-card dt {
     font-size: 14px;
     font-weight: 700;
 }
 
-.consumer-account-details dd {
+.account-details-card dd {
     margin: 3px 0 0;
     overflow-wrap: anywhere;
 }
@@ -1772,7 +1772,7 @@ h2 {
     grid-template-columns: minmax(0, 1fr) auto auto;
 }
 
-.consumer-name-icon {
+.account-edit-icon {
     display: grid;
     place-items: center;
     width: 44px;
@@ -1785,7 +1785,7 @@ h2 {
     cursor: pointer;
 }
 
-.consumer-name-icon svg {
+.account-edit-icon svg {
     width: 19px;
     height: 19px;
     fill: none;
@@ -1795,38 +1795,59 @@ h2 {
     stroke-linejoin: round;
 }
 
-.consumer-name-icon:enabled:hover,
-.consumer-name-icon:focus-visible {
+.account-edit-icon:enabled:hover,
+.account-edit-icon:focus-visible {
     background: #efece4;
 }
 
-.consumer-name-icon:focus-visible {
+.account-edit-icon:focus-visible {
     outline: 2px solid var(--orange-text);
     outline-offset: 2px;
 }
 
-.consumer-name-save {
+.account-edit-save {
     background: #e7efe6;
     color: #233a29;
 }
 
-.consumer-name-save:enabled:hover,
-.consumer-name-save:focus-visible {
+.account-edit-save:enabled:hover,
+.account-edit-save:focus-visible {
     background: #d7e8d6;
 }
 
-.consumer-name-icon:disabled {
+.account-edit-icon:disabled {
     opacity: 0.5;
     cursor: default;
 }
 
 @media (min-width: 600px) {
-    .consumer-account-details dl {
+    .account-details-card dl {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         column-gap: 20px;
     }
 
-    .consumer-account-details dl > div:first-child {
+    .account-details-card dl > div:first-child {
         grid-column: 1 / -1;
     }
+}
+
+.producer-account-details {
+    margin-block-start: 12px;
+}
+
+.producer-account-heading,
+.producer-account-edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.producer-account-heading {
+    justify-content: space-between;
+}
+
+.producer-account-edit-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    margin-top: 12px;
 }

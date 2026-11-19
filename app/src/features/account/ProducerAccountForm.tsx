@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { AccountEditButton } from "./AccountEditButton";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
@@ -37,6 +38,8 @@ export function ProducerAccountForm({ userId }: Props) {
             formasPagamento: profile?.formasPagamento ?? [],
         };
     });
+    const [draft, setDraft] = useState<ProducerAccount | null>(null);
+    const editing = draft !== null;
     const [error, setError] = useState("");
     const [loadingAttempt, setLoadingAttempt] = useState(0);
     const [saving, setSaving] = useState(false);
@@ -60,6 +63,15 @@ export function ProducerAccountForm({ userId }: Props) {
         return () => controller.abort();
     }, [userId, loadingAttempt]);
 
+    const initiative = useRef<HTMLInputElement>(null);
+    const editButton = useRef<HTMLButtonElement>(null);
+    const wasEditing = useRef(false);
+    useEffect(() => {
+        if (editing) initiative.current?.focus();
+        else if (wasEditing.current) editButton.current?.focus();
+        wasEditing.current = editing;
+    }, [editing]);
+
     if (!details) {
         return error ? (
             <div className="account-profile-form">
@@ -80,17 +92,17 @@ export function ProducerAccountForm({ userId }: Props) {
     }
 
     const update = (changes: Partial<ProducerAccount>) => {
-        setDetails({ ...details, ...changes });
+        setDraft((current) => current && { ...current, ...changes });
         setSaved(false);
         setError("");
     };
 
     const save = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (saving) return;
+        if (!draft || saving) return;
         const data = {
-            ...details,
-            nomeIniciativa: details.nomeIniciativa.trim(),
+            ...draft,
+            nomeIniciativa: draft.nomeIniciativa.trim(),
         };
         if (!data.nomeIniciativa || !data.formasPagamento.length) {
             setError(
@@ -107,6 +119,7 @@ export function ProducerAccountForm({ userId }: Props) {
                     headers: accountHeaders(),
                 });
             setDetails(data);
+            setDraft(null);
             setSaved(true);
         } catch {
             setError(
@@ -117,78 +130,157 @@ export function ProducerAccountForm({ userId }: Props) {
         }
     };
 
+    const cancel = () => {
+        setDraft(null);
+        setError("");
+    };
     const paymentOptions = [
         ...new Set([...PAYMENT_METHOD_OPTIONS, ...details.formasPagamento]),
     ];
     return (
-        <form className="account-profile-form" onSubmit={save}>
-            <div className="account-field">
-                <label className="field-label" htmlFor="producer-initiative">
-                    Nome da iniciativa <span aria-hidden="true">*</span>
-                </label>
-                <input
-                    id="producer-initiative"
-                    className="text-input"
-                    value={details.nomeIniciativa}
-                    placeholder="Ex.: Sítio Raízes"
-                    maxLength={120}
-                    required
-                    disabled={saving}
-                    onChange={(event) =>
-                        update({ nomeIniciativa: event.target.value })
-                    }
-                />
+        <section
+            className="account-details-card producer-account-details"
+            aria-labelledby="producer-details-heading"
+        >
+            <div className="producer-account-heading">
+                <h2 id="producer-details-heading">Dados da iniciativa</h2>
+                {!draft && (
+                    <AccountEditButton
+                        action="edit"
+                        label="Editar dados da iniciativa"
+                        ref={editButton}
+                        onClick={() => {
+                            setSaved(false);
+                            setDraft(details);
+                        }}
+                    />
+                )}
             </div>
-            <div className="account-field">
-                <label className="field-label" htmlFor="producer-category">
-                    Categoria <span aria-hidden="true">*</span>
-                </label>
-                <select
-                    id="producer-category"
-                    className="text-input"
-                    value={details.categoriaOfertada}
-                    disabled={saving}
-                    onChange={(event) => {
-                        const category = categories.find(
-                            (value) => value === event.target.value,
-                        );
-                        if (category) update({ categoriaOfertada: category });
+            {draft ? (
+                <form
+                    className="account-profile-form"
+                    onSubmit={save}
+                    aria-busy={saving}
+                    onKeyDown={(event) => {
+                        if (event.key === "Escape" && !saving) cancel();
                     }}
                 >
-                    {categories.map((category) => (
-                        <option key={category}>{category}</option>
-                    ))}
-                </select>
-            </div>
-            <fieldset
-                className="account-payment-methods choice-group"
-                disabled={saving}
-            >
-                <legend className="field-label field-label-required">
-                    Formas de pagamento
-                </legend>
-                {paymentOptions.map((option) => (
-                    <label className="choice-option" key={option}>
+                    <div className="account-field">
+                        <label
+                            className="field-label"
+                            htmlFor="producer-initiative"
+                        >
+                            Nome da iniciativa <span aria-hidden="true">*</span>
+                        </label>
                         <input
-                            type="checkbox"
-                            checked={details.formasPagamento.includes(option)}
+                            ref={initiative}
+                            id="producer-initiative"
+                            className="text-input"
+                            value={draft.nomeIniciativa}
+                            placeholder="Ex.: Sítio Raízes"
+                            maxLength={120}
+                            required
+                            disabled={saving}
                             onChange={(event) =>
-                                update({
-                                    formasPagamento: event.target.checked
-                                        ? [...details.formasPagamento, option]
-                                        : details.formasPagamento.filter(
-                                              (value) => value !== option,
-                                          ),
-                                })
+                                update({ nomeIniciativa: event.target.value })
                             }
                         />
-                        {option}
-                    </label>
-                ))}
-            </fieldset>
-            <ActionButton variant="orange" type="submit" disabled={saving}>
-                {saving ? "Salvando…" : "Salvar"}
-            </ActionButton>
+                    </div>
+                    <div className="account-field">
+                        <label
+                            className="field-label"
+                            htmlFor="producer-category"
+                        >
+                            Categoria <span aria-hidden="true">*</span>
+                        </label>
+                        <select
+                            id="producer-category"
+                            className="text-input"
+                            value={draft.categoriaOfertada}
+                            disabled={saving}
+                            onChange={(event) => {
+                                const category = categories.find(
+                                    (value) => value === event.target.value,
+                                );
+                                if (category)
+                                    update({ categoriaOfertada: category });
+                            }}
+                        >
+                            {categories.map((category) => (
+                                <option key={category}>{category}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <fieldset
+                        className="account-payment-methods choice-group"
+                        disabled={saving}
+                    >
+                        <legend className="field-label field-label-required">
+                            Formas de pagamento
+                        </legend>
+                        {paymentOptions.map((option) => (
+                            <label className="choice-option" key={option}>
+                                <input
+                                    type="checkbox"
+                                    checked={draft.formasPagamento.includes(
+                                        option,
+                                    )}
+                                    onChange={(event) =>
+                                        update({
+                                            formasPagamento: event.target
+                                                .checked
+                                                ? [
+                                                      ...draft.formasPagamento,
+                                                      option,
+                                                  ]
+                                                : draft.formasPagamento.filter(
+                                                      (value) =>
+                                                          value !== option,
+                                                  ),
+                                        })
+                                    }
+                                />
+                                {option}
+                            </label>
+                        ))}
+                    </fieldset>
+                    <div className="producer-account-edit-actions">
+                        <AccountEditButton
+                            action="save"
+                            label={
+                                saving
+                                    ? "Salvando dados da iniciativa"
+                                    : "Salvar dados da iniciativa"
+                            }
+                            disabled={saving}
+                        />
+                        <AccountEditButton
+                            action="cancel"
+                            label="Cancelar edição"
+                            disabled={saving}
+                            onClick={cancel}
+                        />
+                    </div>
+                </form>
+            ) : (
+                <dl>
+                    <div>
+                        <dt>Nome da iniciativa</dt>
+                        <dd>{details.nomeIniciativa || "Não informado"}</dd>
+                    </div>
+                    <div>
+                        <dt>Categoria</dt>
+                        <dd>{details.categoriaOfertada}</dd>
+                    </div>
+                    <div>
+                        <dt>Formas de pagamento</dt>
+                        <dd>
+                            {details.formasPagamento.join(", ") ||
+                                "Não informadas"}
+                        </dd>
+                    </div>
+                </dl>
+            )}
             {error && (
                 <p className="form-alert" role="alert">
                     {error}
@@ -199,6 +291,6 @@ export function ProducerAccountForm({ userId }: Props) {
                     Alterações salvas.
                 </p>
             )}
-        </form>
+        </section>
     );
 }

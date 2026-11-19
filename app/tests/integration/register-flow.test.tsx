@@ -135,6 +135,9 @@ describe("HU02 — do cadastro à área do produtor", () => {
         );
 
         expect(window.location.hash).toBe("#/conta");
+        await user.click(
+            screen.getByRole("button", { name: "Editar dados da iniciativa" }),
+        );
         expect(
             screen.getByRole("textbox", { name: /nome da iniciativa/i }),
         ).toHaveProperty("value", "Seu João");
