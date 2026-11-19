@@ -30,3 +30,4 @@
 23:51:09 [vite] (client) hmr update /src/app/App.tsx
 23:51:35 [vite] (client) hmr update /src/features/register/RegisterPage.tsx
 23:51:35 [vite] (client) hmr update /src/app/App.tsx, /src/features/register/RegisterPage.tsx
+23:56:04 [vite] (client) hmr update /src/features/account/ProducerAccountForm.tsx

@@ -22,6 +22,11 @@ const categories: ProducerAccount["categoriaOfertada"][] = [
 
 const accountPath = "/users/producers/me";
 
+function accountHeaders() {
+    const token = localStorage.getItem("cafuringa-token");
+    return token ? { Authorization: `Bearer ${token}` } : undefined;
+}
+
 export function ProducerAccountForm({ userId }: Props) {
     const [details, setDetails] = useState<ProducerAccount | undefined>(() => {
         if (!isMockAuthEnabled) return undefined;
@@ -41,7 +46,10 @@ export function ProducerAccountForm({ userId }: Props) {
         if (isMockAuthEnabled) return;
         const controller = new AbortController();
         void getApiClient()
-            .get<ProducerAccount>(accountPath, { signal: controller.signal })
+            .get<ProducerAccount>(accountPath, {
+                headers: accountHeaders(),
+                signal: controller.signal,
+            })
             .then((profile) => {
                 if (!controller.signal.aborted) setDetails(profile);
             })
@@ -94,7 +102,10 @@ export function ProducerAccountForm({ userId }: Props) {
         setError("");
         try {
             if (isMockAuthEnabled) updateMockProducerAccount(userId, data);
-            else await getApiClient().put(accountPath, data);
+            else
+                await getApiClient().put(accountPath, data, {
+                    headers: accountHeaders(),
+                });
             setDetails(data);
             setSaved(true);
         } catch {

@@ -111,10 +111,17 @@ describe("configurações de contato da conta", () => {
             categoriaOfertada: "Experiências",
             formasPagamento: ["Dinheiro", "Cartão de débito"],
         };
-        const fetchMock = vi
-            .fn<typeof fetch>()
-            .mockResolvedValueOnce(Response.json(profile))
-            .mockResolvedValueOnce(new Response(null, { status: 204 }));
+        localStorage.setItem("cafuringa-token", "producer-token");
+        const fetchMock = vi.fn<typeof fetch>(async (_url, request) => {
+            if (
+                new Headers(request?.headers).get("Authorization") !==
+                "Bearer producer-token"
+            )
+                return new Response(null, { status: 401 });
+            return request?.method === "PUT"
+                ? new Response(null, { status: 204 })
+                : Response.json(profile);
+        });
         vi.stubGlobal("fetch", fetchMock);
         render(
             <AccountPage
