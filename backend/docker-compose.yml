@@ -3,7 +3,7 @@
 #   docker compose up -d --build    -> banco + API em container
 services:
   mongo:
-    image: mongo:8.0.34@sha256:4a4ab5d4834207389e0d7270fac988e21ffedccecba77991a552f755df229907
+    image: mongo:8.0.38@sha256:bdc216e9d5a6ec2cfdac789b5832fdab64cd32055f59885cae918a92de63c361
     restart: unless-stopped
     command: ['mongod', '--wiredTigerCacheSizeGB', '0.5']
     ports:
