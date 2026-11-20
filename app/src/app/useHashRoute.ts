@@ -33,8 +33,10 @@ const getInitialRoute = () => {
         "/conta-criada/producer",
         "/notificacoes",
         "/reservas",
+        "/pre-reserva-enviada",
     ].includes(requested.split("?")[0]) ||
         requested.startsWith("/oferta/") ||
+        /^\/pre-reserva\/[^/?]+$/.test(requested.split("?")[0]) ||
         /^\/produtor\/[^/?]+$/.test(requested.split("?")[0]) ||
         /^\/admin\/usuarios(?:\/[^/?]+)?$/.test(requested.split("?")[0])
         ? requested
