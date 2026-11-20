@@ -61,6 +61,8 @@ import {
     bookingAccess,
     bookingLoginRoute,
     bookingReturnRoute,
+    bookingRoute,
+    canRequestBooking,
     experienceDetailsRoute,
     parseBookingRoute,
 } from "@/features/bookings/bookingRoutes";
@@ -434,12 +436,18 @@ export function App() {
                         onStartContact={() =>
                             startContact(currentOffer.id, currentOffer.title)
                         }
+                        onRequestBooking={
+                            canRequestBooking(role)
+                                ? () => navigate(bookingRoute(currentOffer.id))
+                                : undefined
+                        }
                     />
                 )}
                 {productOfferId && (
                     <ProductOfferDetails
                         key={route}
                         consumer={role === "consumer"}
+                        bookingAvailable={canRequestBooking(role)}
                         resumeContact={query.get("falar") === "1"}
                         experience={query.get("tipo") === "experiencia"}
                         backPath={offerReturnRoute(

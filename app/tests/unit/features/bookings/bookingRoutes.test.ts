@@ -4,6 +4,7 @@ import {
     bookingLoginRoute,
     bookingReturnRoute,
     bookingRoute,
+    canRequestBooking,
     experienceDetailsRoute,
     parseBookingRoute,
 } from "@/features/bookings/bookingRoutes";
@@ -103,5 +104,21 @@ describe("experienceDetailsRoute", () => {
         expect(experienceDetailsRoute("a b")).toBe(
             "/oferta/a%20b?tipo=experiencia",
         );
+    });
+});
+
+/** Botão no detalhe (HU44 CA01): visitante (vai ao login) e consumidor. */
+export function canRequestBooking(role: string | null): boolean {
+    return role === null || role === "consumer";
+}
+
+describe("canRequestBooking (HU44 CA01)", () => {
+    it.each([
+        [null, true],
+        ["consumer", true],
+        ["producer", false],
+        ["admin", false],
+    ] as const)("perfil %s → %s", (role, expected) => {
+        expect(canRequestBooking(role)).toBe(expected);
     });
 });

@@ -62,3 +62,8 @@ export function bookingReturnRoute(
 export function experienceDetailsRoute(experienceId: string): string {
     return `/oferta/${encodeURIComponent(experienceId)}?tipo=experiencia`;
 }
+
+/** Botão no detalhe (HU44 CA01): visitante (vai ao login) e consumidor. */
+export function canRequestBooking(role: string | null): boolean {
+    return role === null || role === "consumer";
+}
