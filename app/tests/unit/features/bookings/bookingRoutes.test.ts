@@ -83,9 +83,9 @@ describe("bookingReturnRoute (HU44 CA02)", () => {
     });
 
     it("preserva o id com caracteres especiais", () => {
-        expect(
-            bookingReturnRoute(bookingLoginRoute("a b/c"), "consumer"),
-        ).toBe(bookingRoute("a b/c"));
+        expect(bookingReturnRoute(bookingLoginRoute("a b/c"), "consumer")).toBe(
+            bookingRoute("a b/c"),
+        );
     });
 
     it("não devolve ao formulário quem entrou como produtor", () => {
@@ -106,11 +106,6 @@ describe("experienceDetailsRoute", () => {
         );
     });
 });
-
-/** Botão no detalhe (HU44 CA01): visitante (vai ao login) e consumidor. */
-export function canRequestBooking(role: string | null): boolean {
-    return role === null || role === "consumer";
-}
 
 describe("canRequestBooking (HU44 CA01)", () => {
     it.each([

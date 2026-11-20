@@ -178,7 +178,7 @@ export function App() {
     useEffect(() => {
         if (adminBlocked) navigate("/admin/entrar");
     }, [adminBlocked, navigate]);
-        // HU44 CA02: só consumidor autenticado abre o formulário de pré-reserva.
+    // HU44 CA02: só consumidor autenticado abre o formulário de pré-reserva.
     const bookingExperienceId = parseBookingRoute(path);
     const bookingAccessState = bookingExperienceId
         ? bookingAccess({
@@ -465,7 +465,9 @@ export function App() {
                         key={bookingExperienceId}
                         experienceId={bookingExperienceId}
                         onBack={() =>
-                            navigate(experienceDetailsRoute(bookingExperienceId))
+                            navigate(
+                                experienceDetailsRoute(bookingExperienceId),
+                            )
                         }
                         onSent={() => navigate(BOOKING_SENT_ROUTE)}
                     />

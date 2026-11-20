@@ -40,7 +40,7 @@ const formHeading = () =>
 
 describe("BookingRoutePage (HU44 CA01 e CA07)", () => {
     it("mostra que está carregando e ainda não mostra o formulário", () => {
-        renderRoute(vi.fn(() => new Promise(() => {})));
+        renderRoute(vi.fn(() => new Promise<never>(() => {})));
         expect(screen.getByRole("status").textContent).toBe(
             "Carregando experiência…",
         );

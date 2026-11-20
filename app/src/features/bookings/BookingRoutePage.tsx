@@ -34,7 +34,6 @@ export function BookingRoutePage({
 
     useEffect(() => {
         const controller = new AbortController();
-        setState({ status: "loading" });
         loadExperience(experienceId, controller.signal).then(
             (experience) => {
                 if (controller.signal.aborted) return;
@@ -86,7 +85,10 @@ export function BookingRoutePage({
                     <ActionButton
                         variant="outline"
                         type="button"
-                        onClick={() => setAttempt((count) => count + 1)}
+                        onClick={() => {
+                            setState({ status: "loading" });
+                            setAttempt((count) => count + 1);
+                        }}
                     >
                         Tentar novamente
                     </ActionButton>
