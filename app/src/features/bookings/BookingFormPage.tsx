@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
 import type { Product } from "@/features/offers/productTypes";
@@ -12,7 +13,12 @@ import {
     PARTICIPANT_OPTIONS,
     PAYMENT_OPTIONS,
 } from "./bookingOptions";
-import type { BookingFormValues } from "./bookingTypes";
+import type {
+    BookingField,
+    BookingFormErrors,
+    BookingFormValues,
+} from "./bookingTypes";
+import { validateBookingForm } from "./bookingValidation";
 
 export type BookingExperience = Pick<
     Product,
@@ -32,11 +38,54 @@ const EMPTY_VALUES: BookingFormValues = {
     mensagem: "",
 };
 
+const FIELD_IDS: Record<BookingField, string> = {
+    data: "booking-date",
+    horario: "booking-time",
+    participantes: "booking-participants",
+    formaPagamento: "booking-payment",
+};
+
+/** Ordem da tela: o primeiro campo com erro recebe o foco. */
+const FOCUS_ORDER: BookingField[] = [
+    "data",
+    "horario",
+    "participantes",
+    "formaPagamento",
+];
+
 export function BookingFormPage({ experience, onBack }: BookingFormPageProps) {
     const [values, setValues] = useState<BookingFormValues>(EMPTY_VALUES);
+    const [errors, setErrors] = useState<BookingFormErrors>({});
+    const [focusRequest, setFocusRequest] = useState<{
+        id: string;
+        n: number;
+    } | null>(null);
+
+    // O foco só pode ir para o campo depois que o erro foi renderizado.
+    useEffect(() => {
+        if (focusRequest) document.getElementById(focusRequest.id)?.focus();
+    }, [focusRequest]);
+
+    const requestFocus = (id: string) =>
+        setFocusRequest((current) => ({ id, n: (current?.n ?? 0) + 1 }));
 
     const setField = (field: keyof BookingFormValues, value: string) =>
         setValues((current) => ({ ...current, [field]: value }));
+
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        const validationErrors = validateBookingForm(values);
+        setErrors(validationErrors);
+        const firstInvalid = FOCUS_ORDER.find(
+            (field) => validationErrors[field],
+        );
+        if (firstInvalid) {
+            requestFocus(FIELD_IDS[firstInvalid]);
+            return;
+        }
+        // Ciclo 9: enviar a pré-reserva.
+    };
 
     return (
         <section className="login-page booking-page">
@@ -52,37 +101,41 @@ export function BookingFormPage({ experience, onBack }: BookingFormPageProps) {
             <form
                 className="login-form booking-form"
                 noValidate
-                onSubmit={(event) => event.preventDefault()}
+                onSubmit={handleSubmit}
             >
                 <BookingDateField
-                    id="booking-date"
+                    id={FIELD_IDS.data}
                     label="Data desejada"
                     required
                     value={values.data}
+                    error={errors.data}
                     onChange={(value) => setField("data", value)}
                 />
                 <BookingSelectField
-                    id="booking-time"
+                    id={FIELD_IDS.horario}
                     label="Horário"
                     required
                     value={values.horario}
                     options={HOUR_OPTIONS}
+                    error={errors.horario}
                     onChange={(value) => setField("horario", value)}
                 />
                 <BookingSelectField
-                    id="booking-participants"
+                    id={FIELD_IDS.participantes}
                     label="Participantes"
                     required
                     value={values.participantes}
                     options={PARTICIPANT_OPTIONS}
+                    error={errors.participantes}
                     onChange={(value) => setField("participantes", value)}
                 />
                 <BookingSelectField
-                    id="booking-payment"
+                    id={FIELD_IDS.formaPagamento}
                     label="Forma de pagamento"
                     required
                     value={values.formaPagamento}
                     options={PAYMENT_OPTIONS}
+                    error={errors.formaPagamento}
                     onChange={(value) => setField("formaPagamento", value)}
                 />
                 <BookingTextAreaField
