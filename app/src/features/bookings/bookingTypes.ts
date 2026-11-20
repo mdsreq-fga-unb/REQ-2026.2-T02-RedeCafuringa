@@ -19,6 +19,13 @@ export const BOOKING_HOURS: readonly string[] = Array.from(
     (_, hour) => `${String(hour).padStart(2, "0")}:00`,
 );
 
+export const BOOKING_STATUSES: readonly BookingStatus[] = [
+    "pendente",
+    "aceita",
+    "recusada",
+    "cancelada",
+];
+
 export const PAYMENT_METHODS = [
     "pix",
     "dinheiro",
