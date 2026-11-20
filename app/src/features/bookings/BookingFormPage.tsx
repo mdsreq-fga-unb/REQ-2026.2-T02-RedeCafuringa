@@ -8,13 +8,13 @@ import {
     BookingSelectField,
     BookingTextAreaField,
 } from "./BookingFields";
+import { clearBookingDraft } from "./bookingDraft";
+import { describeBookingError } from "./bookingErrors";
 import {
     HOUR_OPTIONS,
     PARTICIPANT_OPTIONS,
     PAYMENT_OPTIONS,
 } from "./bookingOptions";
-import { validateBookingForm } from "./bookingValidation";
-import { clearBookingDraft } from "./bookingDraft";
 import { buildBookingPayload } from "./bookingPayload";
 import { createBooking } from "./bookingService";
 import type {
@@ -23,6 +23,7 @@ import type {
     BookingFormErrors,
     BookingFormValues,
 } from "./bookingTypes";
+import { validateBookingForm } from "./bookingValidation";
 
 export type BookingExperience = Pick<
     Product,
@@ -66,6 +67,7 @@ export function BookingFormPage({
     const [values, setValues] = useState<BookingFormValues>(EMPTY_VALUES);
     const [errors, setErrors] = useState<BookingFormErrors>({});
     const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const [focusRequest, setFocusRequest] = useState<{
         id: string;
         n: number;
@@ -85,6 +87,7 @@ export function BookingFormPage({
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (submitting) return;
+        setSubmitError(null);
 
         const validationErrors = validateBookingForm(values);
         setErrors(validationErrors);
@@ -97,15 +100,19 @@ export function BookingFormPage({
         }
 
         setSubmitting(true);
+        let booking: Booking;
         try {
-            const booking = await createBooking(
+            booking = await createBooking(
                 buildBookingPayload(experience.id, values),
             );
-            clearBookingDraft(experience.id);
-            onSent(booking);
+        } catch (error) {
+            setSubmitError(describeBookingError(error));
+            return;
         } finally {
             setSubmitting(false);
         }
+        clearBookingDraft(experience.id);
+        onSent(booking);
     };
 
     return (
@@ -165,6 +172,12 @@ export function BookingFormPage({
                     value={values.mensagem}
                     onChange={(value) => setField("mensagem", value)}
                 />
+
+                {submitError && (
+                    <p className="form-alert booking-form-alert" role="alert">
+                        {submitError}
+                    </p>
+                )}
 
                 <div className="login-actions">
                     <ActionButton

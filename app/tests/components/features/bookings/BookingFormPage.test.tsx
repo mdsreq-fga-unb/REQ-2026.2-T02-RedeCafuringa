@@ -481,3 +481,86 @@ describe("BookingFormPage: envio (HU44 CA05 e CA06)", () => {
         expect(onSent).toHaveBeenCalledWith(booking);
     });
 });
+
+const apiError = (status: number) =>
+    Object.assign(new Error(`HTTP ${status}`), { status });
+
+describe("BookingFormPage: falha no envio (HU44 CA08)", () => {
+    beforeEach(() => {
+        // 19/11/2026 10:00. Só o Date é falso, para não travar o userEvent.
+        vi.useFakeTimers({ toFake: ["Date"] });
+        vi.setSystemTime(new Date(2026, 10, 19, 10, 0));
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it("mostra a mensagem da falha e mantém tudo o que foi preenchido", async () => {
+        const user = userEvent.setup();
+        const onSent = vi.fn();
+        createBookingMock.mockRejectedValue(apiError(500));
+        renderPage(vi.fn(), onSent);
+        await fillForm(user, VALID_FILL);
+        await user.type(screen.getByLabelText("Mensagem ao produtor"), "Olá!");
+        await submit(user);
+
+        expect(screen.getByRole("alert").textContent).toBe(
+            "Não foi possível enviar a pré-reserva. Seus dados foram mantidos, tente novamente.",
+        );
+        const value = (label: string) =>
+            (screen.getByLabelText(label) as HTMLInputElement).value;
+        expect(value("Data desejada")).toBe("2026-12-20");
+        expect(value("Horário")).toBe("09:00");
+        expect(value("Participantes")).toBe("2");
+        expect(value("Forma de pagamento")).toBe("pix");
+        expect(value("Mensagem ao produtor")).toBe("Olá!");
+        expect(onSent).not.toHaveBeenCalled();
+    });
+
+    it("reabilita o botão e permite tentar de novo", async () => {
+        const user = userEvent.setup();
+        const onSent = vi.fn();
+        createBookingMock.mockRejectedValueOnce(apiError(500));
+        renderPage(vi.fn(), onSent);
+        await fillForm(user, VALID_FILL);
+        await submit(user);
+        expect(screen.getByRole("alert")).toBeTruthy();
+
+        const button = screen.getByRole("button", {
+            name: "Enviar pré-reserva",
+        }) as HTMLButtonElement;
+        expect(button.disabled).toBe(false);
+
+        await submit(user);
+        expect(createBookingMock).toHaveBeenCalledTimes(2);
+        expect(onSent).toHaveBeenCalledWith(booking);
+        expect(screen.queryByRole("alert")).toBeNull();
+    });
+
+    it.each([
+        [404, "Esta experiência não está mais disponível para pré-reserva."],
+        [
+            429,
+            "Muitas tentativas seguidas. Aguarde um instante e tente de novo.",
+        ],
+    ])("explica a falha %i", async (status, message) => {
+        const user = userEvent.setup();
+        createBookingMock.mockRejectedValue(apiError(status));
+        renderPage();
+        await fillForm(user, VALID_FILL);
+        await submit(user);
+        expect(screen.getByRole("alert").textContent).toBe(message);
+    });
+
+    it("trata a falta de conexão como falha de envio", async () => {
+        const user = userEvent.setup();
+        createBookingMock.mockRejectedValue(new TypeError("Failed to fetch"));
+        renderPage();
+        await fillForm(user, VALID_FILL);
+        await submit(user);
+        expect(screen.getByRole("alert").textContent).toContain(
+            "Não foi possível enviar a pré-reserva",
+        );
+    });
+});
