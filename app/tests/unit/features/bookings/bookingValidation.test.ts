@@ -59,3 +59,48 @@ describe("validateBookingForm: campos obrigatórios (HU44 CA04)", () => {
         ]);
     });
 });
+
+describe("validateBookingForm: valores permitidos (HU44 CA04)", () => {
+    it.each(["0", "51", "2.5", "-1", "abc"])(
+        "rejeita %s como número de participantes",
+        (participantes) => {
+            expect(validateBookingForm({ ...validForm, participantes })).toEqual(
+                { participantes: "Informe de 1 a 50 participantes." },
+            );
+        },
+    );
+
+    it.each(["1", "50"])("aceita %s participante(s)", (participantes) => {
+        expect(validateBookingForm({ ...validForm, participantes })).toEqual({});
+    });
+
+    it.each(["09:30", "24:00", "9:00"])(
+        "rejeita o horário %s",
+        (horario) => {
+            expect(validateBookingForm({ ...validForm, horario })).toEqual({
+                horario: "Escolha um horário da lista.",
+            });
+        },
+    );
+
+    it.each(["00:00", "23:00"])("aceita o horário %s", (horario) => {
+        expect(validateBookingForm({ ...validForm, horario })).toEqual({});
+    });
+
+    it("rejeita uma forma de pagamento fora da lista", () => {
+        expect(
+            validateBookingForm({ ...validForm, formaPagamento: "boleto" }),
+        ).toEqual({
+            formaPagamento: "Escolha uma forma de pagamento da lista.",
+        });
+    });
+
+    it.each(["pix", "dinheiro", "cartao_credito", "cartao_debito"])(
+        "aceita a forma de pagamento %s",
+        (formaPagamento) => {
+            expect(
+                validateBookingForm({ ...validForm, formaPagamento }),
+            ).toEqual({});
+        },
+    );
+});
