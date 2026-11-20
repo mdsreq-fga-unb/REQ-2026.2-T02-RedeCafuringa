@@ -1,5 +1,6 @@
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
+import "./bookings.css";
 
 type BookingSentPageProps = {
     onBack: () => void;

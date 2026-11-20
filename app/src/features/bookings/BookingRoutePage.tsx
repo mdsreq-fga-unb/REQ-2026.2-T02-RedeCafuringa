@@ -4,6 +4,7 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { getExperienceDetails } from "@/features/offers/catalogItems";
 import { BookingFormPage, type BookingExperience } from "./BookingFormPage";
 import type { Booking } from "./bookingTypes";
+import "./bookings.css";
 
 type BookingRoutePageProps = {
     experienceId: string;

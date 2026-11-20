@@ -24,6 +24,7 @@ import type {
     BookingFormValues,
 } from "./bookingTypes";
 import { validateBookingForm } from "./bookingValidation";
+import "./bookings.css";
 
 export type BookingExperience = Pick<
     Product,
