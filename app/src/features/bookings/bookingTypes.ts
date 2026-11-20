@@ -7,10 +7,7 @@ export type BookingFormValues = {
 };
 
 export type BookingField =
-    | "data"
-    | "horario"
-    | "participantes"
-    | "formaPagamento";
+    "data" | "horario" | "participantes" | "formaPagamento";
 
 export type BookingFormErrors = Partial<Record<BookingField, string>>;
 

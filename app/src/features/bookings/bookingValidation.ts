@@ -25,7 +25,9 @@ const VALUE_RULES: Partial<Record<BookingField, Rule>> = {
         isValid: (value) => {
             const count = Number(value);
             return (
-                Number.isInteger(count) && count >= 1 && count <= MAX_PARTICIPANTS
+                Number.isInteger(count) &&
+                count >= 1 &&
+                count <= MAX_PARTICIPANTS
             );
         },
         message: `Informe de 1 a ${MAX_PARTICIPANTS} participantes.`,
@@ -77,7 +79,12 @@ function validateSchedule(
 
     if (errors.horario) return; // horário ausente ou inválido já tem erro
     const hour = Number(values.horario.split(":")[0]);
-    const start = new Date(day.getFullYear(), day.getMonth(), day.getDate(), hour);
+    const start = new Date(
+        day.getFullYear(),
+        day.getMonth(),
+        day.getDate(),
+        hour,
+    );
     if (start.getTime() <= now.getTime()) {
         errors.horario = "Esse horário já passou.";
     }

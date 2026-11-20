@@ -34,15 +34,15 @@ describe("validateBookingForm: campos obrigatórios (HU44 CA04)", () => {
     });
 
     it("exige o número de participantes", () => {
-        expect(
-            validate({ ...validForm, participantes: "" }),
-        ).toEqual({ participantes: "Informe o número de participantes." });
+        expect(validate({ ...validForm, participantes: "" })).toEqual({
+            participantes: "Informe o número de participantes.",
+        });
     });
 
     it("exige a forma de pagamento", () => {
-        expect(
-            validate({ ...validForm, formaPagamento: "" }),
-        ).toEqual({ formaPagamento: "Escolha a forma de pagamento." });
+        expect(validate({ ...validForm, formaPagamento: "" })).toEqual({
+            formaPagamento: "Escolha a forma de pagamento.",
+        });
     });
 
     it("aceita a mensagem ao produtor vazia (campo opcional)", () => {
@@ -70,9 +70,9 @@ describe("validateBookingForm: valores permitidos (HU44 CA04)", () => {
     it.each(["0", "51", "2.5", "-1", "abc"])(
         "rejeita %s como número de participantes",
         (participantes) => {
-            expect(validate({ ...validForm, participantes })).toEqual(
-                { participantes: "Informe de 1 a 50 participantes." },
-            );
+            expect(validate({ ...validForm, participantes })).toEqual({
+                participantes: "Informe de 1 a 50 participantes.",
+            });
         },
     );
 
@@ -80,23 +80,18 @@ describe("validateBookingForm: valores permitidos (HU44 CA04)", () => {
         expect(validate({ ...validForm, participantes })).toEqual({});
     });
 
-    it.each(["09:30", "24:00", "9:00"])(
-        "rejeita o horário %s",
-        (horario) => {
-            expect(validate({ ...validForm, horario })).toEqual({
-                horario: "Escolha um horário da lista.",
-            });
-        },
-    );
+    it.each(["09:30", "24:00", "9:00"])("rejeita o horário %s", (horario) => {
+        expect(validate({ ...validForm, horario })).toEqual({
+            horario: "Escolha um horário da lista.",
+        });
+    });
 
     it.each(["00:00", "23:00"])("aceita o horário %s", (horario) => {
         expect(validate({ ...validForm, horario })).toEqual({});
     });
 
     it("rejeita uma forma de pagamento fora da lista", () => {
-        expect(
-            validate({ ...validForm, formaPagamento: "boleto" }),
-        ).toEqual({
+        expect(validate({ ...validForm, formaPagamento: "boleto" })).toEqual({
             formaPagamento: "Escolha uma forma de pagamento da lista.",
         });
     });
@@ -104,9 +99,7 @@ describe("validateBookingForm: valores permitidos (HU44 CA04)", () => {
     it.each(["pix", "dinheiro", "cartao_credito", "cartao_debito"])(
         "aceita a forma de pagamento %s",
         (formaPagamento) => {
-            expect(
-                validate({ ...validForm, formaPagamento }),
-            ).toEqual({});
+            expect(validate({ ...validForm, formaPagamento })).toEqual({});
         },
     );
 });
