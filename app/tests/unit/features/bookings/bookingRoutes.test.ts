@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
     bookingAccess,
+    bookingLoginRoute,
+    bookingReturnRoute,
     bookingRoute,
+    experienceDetailsRoute,
     parseBookingRoute,
 } from "@/features/bookings/bookingRoutes";
 
@@ -57,4 +60,48 @@ describe("bookingAccess (HU44 CA02, RNF08)", () => {
             expect(bookingAccess({ role, hasToken, mock })).toBe(expected);
         },
     );
+});
+
+describe("bookingLoginRoute (HU44 CA02)", () => {
+    it("leva ao login do consumidor lembrando a experiência", () => {
+        expect(bookingLoginRoute("e1")).toBe("/login/consumer?pre-reserva=e1");
+    });
+
+    it("codifica caracteres especiais do id", () => {
+        expect(bookingLoginRoute("a b/c")).toBe(
+            "/login/consumer?pre-reserva=a+b%2Fc",
+        );
+    });
+});
+
+describe("bookingReturnRoute (HU44 CA02)", () => {
+    it("devolve o consumidor ao formulário depois do login", () => {
+        expect(
+            bookingReturnRoute("/login/consumer?pre-reserva=e1", "consumer"),
+        ).toBe("/pre-reserva/e1");
+    });
+
+    it("preserva o id com caracteres especiais", () => {
+        expect(
+            bookingReturnRoute(bookingLoginRoute("a b/c"), "consumer"),
+        ).toBe(bookingRoute("a b/c"));
+    });
+
+    it("não devolve ao formulário quem entrou como produtor", () => {
+        expect(
+            bookingReturnRoute("/login/consumer?pre-reserva=e1", "producer"),
+        ).toBeNull();
+    });
+
+    it("não faz nada quando o login não veio da pré-reserva", () => {
+        expect(bookingReturnRoute("/login/consumer", "consumer")).toBeNull();
+    });
+});
+
+describe("experienceDetailsRoute", () => {
+    it("monta a rota do detalhe da experiência", () => {
+        expect(experienceDetailsRoute("a b")).toBe(
+            "/oferta/a%20b?tipo=experiencia",
+        );
+    });
 });

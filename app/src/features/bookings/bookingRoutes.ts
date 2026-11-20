@@ -40,3 +40,25 @@ export function bookingAccess({
     if (role !== "consumer") return "blocked";
     return mock || hasToken ? "allowed" : "login";
 }
+
+const RETURN_PARAM = "pre-reserva";
+
+/** Visitante vai ao login do consumidor e volta ao formulário (HU44 CA02). */
+export function bookingLoginRoute(experienceId: string): string {
+    return `/login/consumer?${new URLSearchParams({ [RETURN_PARAM]: experienceId })}`;
+}
+
+/** Depois do login: rota do formulário, se o login veio da pré-reserva. */
+export function bookingReturnRoute(
+    route: string,
+    role: string | null,
+): string | null {
+    if (role !== "consumer") return null;
+    const id = new URLSearchParams(route.split("?")[1] ?? "").get(RETURN_PARAM);
+    return id ? bookingRoute(id) : null;
+}
+
+/** Detalhe da experiência, no mesmo formato usado pelo OfferCards. */
+export function experienceDetailsRoute(experienceId: string): string {
+    return `/oferta/${encodeURIComponent(experienceId)}?tipo=experiencia`;
+}

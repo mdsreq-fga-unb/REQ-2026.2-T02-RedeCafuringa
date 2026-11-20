@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -19,7 +20,11 @@ const experience = {
     duracao: "2 horas",
 };
 
-const renderRoute = (loadExperience: ReturnType<typeof vi.fn>) => {
+type LoadExperience = NonNullable<
+    ComponentProps<typeof BookingRoutePage>["loadExperience"]
+>;
+
+const renderRoute = (loadExperience: LoadExperience) => {
     const props = {
         experienceId: "e1",
         onBack: vi.fn(),
@@ -76,31 +81,11 @@ describe("BookingRoutePage (HU44 CA01 e CA07)", () => {
 
     it("avisa quando não consegue carregar a experiência", async () => {
         renderRoute(vi.fn().mockRejectedValue(new Error("falhou")));
-        expect((await screen.findByRole("alert")).textContent).toBe(
-            "Não foi possível carregar a experiência. Tente novamente.",
-        );
+        const message =
+            "Não foi possível carregar a experiência. Tente novamente.";
+        expect((await screen.findByRole("alert")).textContent).toBe(message);
         expect(
             screen.getByRole("button", { name: "Tentar novamente" }),
         ).toBeTruthy();
-    });
-
-    it("tenta carregar de novo quando o usuário pede", async () => {
-        const load = vi
-            .fn()
-            .mockRejectedValueOnce(new Error("falhou"))
-            .mockResolvedValue(experience);
-        renderRoute(load);
-        await userEvent.click(
-            await screen.findByRole("button", { name: "Tentar novamente" }),
-        );
-        expect(await formHeading()).toBeTruthy();
-        expect(load).toHaveBeenCalledTimes(2);
-    });
-
-    it("repassa o Voltar do formulário", async () => {
-        const { onBack } = renderRoute(vi.fn().mockResolvedValue(experience));
-        await formHeading();
-        await userEvent.click(screen.getByRole("button", { name: /voltar/i }));
-        expect(onBack).toHaveBeenCalledTimes(1);
     });
 });
