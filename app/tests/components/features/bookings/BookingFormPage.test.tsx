@@ -1,4 +1,5 @@
 import {
+    act,
     cleanup,
     fireEvent,
     render,
@@ -8,10 +9,39 @@ import {
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BookingFormPage } from "@/features/bookings/BookingFormPage";
+import {
+    loadBookingDraft,
+    saveBookingDraft,
+} from "@/features/bookings/bookingDraft";
+import { createBooking } from "@/features/bookings/bookingService";
+import type { Booking } from "@/features/bookings/bookingTypes";
+
+vi.mock("@/features/bookings/bookingService", () => ({
+    createBooking: vi.fn(),
+}));
+const createBookingMock = vi.mocked(createBooking);
+
+const booking: Booking = {
+    id: "64b0c0ffee0000000000b001",
+    experienceId: "64b0c0ffee0000000000e001",
+    date: "2026-12-20",
+    time: "09:00",
+    participants: 2,
+    paymentMethod: "pix",
+    status: "pendente",
+    createdAt: "2026-11-19T13:00:00.000Z",
+};
 
 afterEach(() => {
     cleanup();
 });
+
+beforeEach(() => {
+    createBookingMock.mockReset();
+    createBookingMock.mockResolvedValue(booking);
+    localStorage.clear();
+});
+
 const experience = {
     id: "64b0c0ffee0000000000e001",
     name: "Trilha guiada da nascente",
@@ -20,8 +50,14 @@ const experience = {
     duracao: "2 horas",
 };
 
-const renderPage = (onBack = vi.fn()) =>
-    render(<BookingFormPage experience={experience} onBack={onBack} />);
+const renderPage = (onBack = vi.fn(), onSent = vi.fn()) =>
+    render(
+        <BookingFormPage
+            experience={experience}
+            onBack={onBack}
+            onSent={onSent}
+        />,
+    );
 
 const optionLabels = (select: HTMLElement) =>
     within(select)
@@ -50,6 +86,7 @@ describe("BookingFormPage: estrutura (HU44 CA02 e CA03)", () => {
         render(
             <BookingFormPage
                 experience={{ id: "e1", name: "Trilha", producerName: "Maria" }}
+                onSent={vi.fn()}
                 onBack={vi.fn()}
             />,
         );
@@ -347,5 +384,100 @@ describe("BookingFormPage: validação ao enviar (HU44 CA04)", () => {
         await fillForm(user, VALID_FILL);
         await submit(user);
         expect(fieldErrors()).toHaveLength(0);
+    });
+});
+
+describe("BookingFormPage: envio (HU44 CA05 e CA06)", () => {
+    beforeEach(() => {
+        // 19/11/2026 10:00. Só o Date é falso, para não travar o userEvent.
+        vi.useFakeTimers({ toFake: ["Date"] });
+        vi.setSystemTime(new Date(2026, 10, 19, 10, 0));
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it("não envia quando o formulário é inválido", async () => {
+        const user = userEvent.setup();
+        renderPage();
+        await submit(user);
+        expect(createBookingMock).not.toHaveBeenCalled();
+    });
+
+    it("envia o corpo da pré-reserva montado a partir do formulário", async () => {
+        const user = userEvent.setup();
+        renderPage();
+        await fillForm(user, VALID_FILL);
+        await user.type(
+            screen.getByLabelText("Mensagem ao produtor"),
+            "  Olá!  ",
+        );
+        await submit(user);
+
+        expect(createBookingMock).toHaveBeenCalledTimes(1);
+        expect(createBookingMock).toHaveBeenCalledWith({
+            experienciaId: "64b0c0ffee0000000000e001",
+            data: "2026-12-20",
+            horario: "09:00",
+            participantes: 2,
+            formaPagamento: "pix",
+            mensagem: "Olá!",
+        });
+    });
+
+    it("avisa que a solicitação foi enviada, com a pré-reserva registrada", async () => {
+        const user = userEvent.setup();
+        const onSent = vi.fn();
+        renderPage(vi.fn(), onSent);
+        await fillForm(user, VALID_FILL);
+        await submit(user);
+
+        expect(onSent).toHaveBeenCalledTimes(1);
+        expect(onSent).toHaveBeenCalledWith(booking);
+    });
+
+    it("limpa o rascunho depois de enviar", async () => {
+        const user = userEvent.setup();
+        localStorage.setItem("cafuringa-user-id", "user-1");
+        saveBookingDraft(experience.id, {
+            data: "2026-12-20",
+            horario: "09:00",
+            participantes: "2",
+            formaPagamento: "pix",
+            mensagem: "",
+        });
+        renderPage();
+        await fillForm(user, VALID_FILL);
+        await submit(user);
+
+        expect(loadBookingDraft(experience.id)).toBeNull();
+    });
+
+    it("desabilita o botão e não envia duas vezes enquanto aguarda a resposta", async () => {
+        const user = userEvent.setup();
+        const onSent = vi.fn();
+        let resolveBooking!: (value: Booking) => void;
+        createBookingMock.mockReturnValue(
+            new Promise<Booking>((resolve) => {
+                resolveBooking = resolve;
+            }),
+        );
+        renderPage(vi.fn(), onSent);
+        await fillForm(user, VALID_FILL);
+        await submit(user);
+
+        const button = screen.getByRole("button", {
+            name: "Enviando…",
+        }) as HTMLButtonElement;
+        expect(button.disabled).toBe(true);
+        await user.click(button);
+        expect(createBookingMock).toHaveBeenCalledTimes(1);
+        expect(onSent).not.toHaveBeenCalled();
+
+        await act(async () => {
+            resolveBooking(booking);
+        });
+        expect(onSent).toHaveBeenCalledWith(booking);
     });
 });

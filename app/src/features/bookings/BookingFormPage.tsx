@@ -13,12 +13,16 @@ import {
     PARTICIPANT_OPTIONS,
     PAYMENT_OPTIONS,
 } from "./bookingOptions";
+import { validateBookingForm } from "./bookingValidation";
+import { clearBookingDraft } from "./bookingDraft";
+import { buildBookingPayload } from "./bookingPayload";
+import { createBooking } from "./bookingService";
 import type {
+    Booking,
     BookingField,
     BookingFormErrors,
     BookingFormValues,
 } from "./bookingTypes";
-import { validateBookingForm } from "./bookingValidation";
 
 export type BookingExperience = Pick<
     Product,
@@ -28,6 +32,7 @@ export type BookingExperience = Pick<
 type BookingFormPageProps = {
     experience: BookingExperience;
     onBack: () => void;
+    onSent: (booking: Booking) => void;
 };
 
 const EMPTY_VALUES: BookingFormValues = {
@@ -53,9 +58,14 @@ const FOCUS_ORDER: BookingField[] = [
     "formaPagamento",
 ];
 
-export function BookingFormPage({ experience, onBack }: BookingFormPageProps) {
+export function BookingFormPage({
+    experience,
+    onBack,
+    onSent,
+}: BookingFormPageProps) {
     const [values, setValues] = useState<BookingFormValues>(EMPTY_VALUES);
     const [errors, setErrors] = useState<BookingFormErrors>({});
+    const [submitting, setSubmitting] = useState(false);
     const [focusRequest, setFocusRequest] = useState<{
         id: string;
         n: number;
@@ -72,8 +82,9 @@ export function BookingFormPage({ experience, onBack }: BookingFormPageProps) {
     const setField = (field: keyof BookingFormValues, value: string) =>
         setValues((current) => ({ ...current, [field]: value }));
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (submitting) return;
 
         const validationErrors = validateBookingForm(values);
         setErrors(validationErrors);
@@ -84,7 +95,17 @@ export function BookingFormPage({ experience, onBack }: BookingFormPageProps) {
             requestFocus(FIELD_IDS[firstInvalid]);
             return;
         }
-        // Ciclo 9: enviar a pré-reserva.
+
+        setSubmitting(true);
+        try {
+            const booking = await createBooking(
+                buildBookingPayload(experience.id, values),
+            );
+            clearBookingDraft(experience.id);
+            onSent(booking);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -146,8 +167,12 @@ export function BookingFormPage({ experience, onBack }: BookingFormPageProps) {
                 />
 
                 <div className="login-actions">
-                    <ActionButton variant="orange" type="submit">
-                        Enviar pré-reserva
+                    <ActionButton
+                        variant="orange"
+                        type="submit"
+                        disabled={submitting}
+                    >
+                        {submitting ? "Enviando…" : "Enviar pré-reserva"}
                     </ActionButton>
                 </div>
             </form>
