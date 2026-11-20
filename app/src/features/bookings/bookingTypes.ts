@@ -30,3 +30,41 @@ export const PAYMENT_METHODS = [
 ] as const;
 
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
+
+export type BookingStatus = "pendente" | "aceita" | "recusada" | "cancelada";
+
+/** Corpo do POST /bookings (contrato definido pelo front, a alinhar com o backend). */
+export type BookingPayload = {
+    experienciaId: string;
+    data: string;
+    horario: string;
+    participantes: number;
+    formaPagamento: PaymentMethod;
+    mensagem?: string;
+};
+
+/** Resposta 201 do POST /bookings. */
+export type BookingResponse = {
+    id: string;
+    experienciaId: string;
+    data: string;
+    horario: string;
+    participantes: number;
+    formaPagamento: PaymentMethod;
+    mensagem?: string;
+    status: BookingStatus;
+    criadoEm: string;
+};
+
+/** Pré-reserva como o front usa. */
+export type Booking = {
+    id: string;
+    experienceId: string;
+    date: string;
+    time: string;
+    participants: number;
+    paymentMethod: PaymentMethod;
+    message?: string;
+    status: BookingStatus;
+    createdAt: string;
+};
