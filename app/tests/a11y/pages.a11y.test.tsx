@@ -8,6 +8,8 @@ import { requestAccessRecovery } from "@/features/recovery/recoveryService";
 import { getProductDetails } from "@/features/offers/productDetailsService";
 import { listProducts } from "@/features/offers/productService";
 import type { Product } from "@/features/offers/productTypes";
+import { BookingFormPage } from "@/features/bookings/BookingFormPage";
+import { BookingRoutePage } from "@/features/bookings/BookingRoutePage";
 
 vi.mock("@/features/offers/productService");
 vi.mock("@/features/offers/productDetailsService");
@@ -31,6 +33,7 @@ const ROUTES = [
     "/recuperar-acesso",
     "/nova-senha?token=abc123",
     "/nova-senha",
+    "/pre-reserva-enviada",
 ];
 
 const catalogProducts: Product[] = [
@@ -236,6 +239,66 @@ describe("acessibilidade (axe, WCAG 2.1 A/AA)", () => {
         vi.mocked(listProducts).mockRejectedValue(new Error("falhou"));
         window.location.hash = "#/produtos";
         const { container } = render(<App />);
+
+        expect(await screen.findByRole("alert")).toBeTruthy();
+        expect(await violationsIn(container)).toEqual([]);
+    });
+});
+
+describe("acessibilidade da pré-reserva (HU44, RNF04)", () => {
+    const experience = {
+        id: "queijos",
+        name: "Visita e Degustação de Queijos",
+        producerName: "Jefferson Sooma",
+        local: "Cafuringa, DF",
+        duracao: "2 horas",
+    };
+
+    const renderForm = () =>
+        render(
+            <BookingFormPage
+                experience={experience}
+                onBack={vi.fn()}
+                onSent={vi.fn()}
+            />,
+        );
+
+    it("o formulário de pré-reserva tem rótulos e campos acessíveis", async () => {
+        const { container } = renderForm();
+
+        expect(screen.getByLabelText("Data desejada")).toBeTruthy();
+        expect(screen.getByLabelText("Horário")).toBeTruthy();
+        expect(screen.getByLabelText("Participantes")).toBeTruthy();
+        expect(screen.getByLabelText("Forma de pagamento")).toBeTruthy();
+        expect(screen.getByLabelText("Mensagem ao produtor")).toBeTruthy();
+        expect(await violationsIn(container)).toEqual([]);
+    });
+
+    it("o formulário de pré-reserva com erros por campo continua sem violações", async () => {
+        const { container } = renderForm();
+
+        await userEvent
+            .setup()
+            .click(screen.getByRole("button", { name: "Enviar pré-reserva" }));
+
+        expect(
+            await screen.findByText("Informe a data desejada."),
+        ).toBeTruthy();
+        expect(
+            screen.getByLabelText("Data desejada").getAttribute("aria-invalid"),
+        ).toBe("true");
+        expect(await violationsIn(container)).toEqual([]);
+    });
+
+    it("o aviso de experiência indisponível não tem violações", async () => {
+        const { container } = render(
+            <BookingRoutePage
+                experienceId="sumiu"
+                onBack={vi.fn()}
+                onSent={vi.fn()}
+                loadExperience={vi.fn().mockResolvedValue(null)}
+            />,
+        );
 
         expect(await screen.findByRole("alert")).toBeTruthy();
         expect(await violationsIn(container)).toEqual([]);
