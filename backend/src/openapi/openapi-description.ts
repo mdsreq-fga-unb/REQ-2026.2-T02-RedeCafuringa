@@ -73,6 +73,11 @@ export const OPENAPI_TAGS: ReadonlyArray<{
       'Catálogo e cadastro de experiências, atividades e atrativos de turismo rural, com galeria de fotos (HU21, RN09, RN11)',
   },
   {
+    name: 'search',
+    description:
+      'Busca pública de ofertas: produtores, produtos e experiências, agrupados por tipo (HU36, RN15)',
+  },
+  {
     name: 'health',
     description:
       'Saúde do serviço, para o Docker, o deploy e monitores externos',

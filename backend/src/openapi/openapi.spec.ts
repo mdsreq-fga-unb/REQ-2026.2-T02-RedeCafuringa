@@ -78,6 +78,7 @@ describe('contrato OpenAPI', () => {
       'GET /api/v1/products',
       'GET /api/v1/products/{id}',
       'GET /api/v1/products/{id}/photos/{photoId}',
+      'GET /api/v1/search',
       'GET /api/v1/users',
       'GET /api/v1/users/{id}',
       'POST /api/v1/auth/login',
