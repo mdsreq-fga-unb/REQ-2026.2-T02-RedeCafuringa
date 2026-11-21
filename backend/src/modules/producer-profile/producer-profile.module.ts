@@ -22,5 +22,6 @@ import {
   ],
   controllers: [ProducerProfileController],
   providers: [ProducerProfileService, ProducerPhotoService],
+  exports: [ProducerProfileService],
 })
 export class ProducerProfileModule {}

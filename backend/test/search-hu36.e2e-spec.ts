@@ -153,9 +153,10 @@ describe('HU36/RF36 — Buscar ofertas (e2e)', () => {
 
     it('trata o termo como texto literal', async () => {
       const p = await registerProducer(t);
-      await createProduct(t, p.auth, photo);
+      await createProduct(t, p.auth, photo, { nome: 'Cesta da estação' });
 
-      const res = await search(term('.*')).expect(200);
+      // Como regex, "c.*a" casaria com "Cesta"; como texto literal, não.
+      const res = await search(term('c.*a')).expect(200);
 
       expect(res.body.produtos.total).toBe(0);
     });
