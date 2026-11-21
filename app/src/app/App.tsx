@@ -24,6 +24,7 @@ import {
 import { ProfilePage } from "@/features/profile";
 import { demoPublicProfiles } from "@/features/profile/publicProfileDemo";
 import { ExplorePage } from "@/features/profile/ExplorePage";
+import { SearchResultsPage } from "@/features/search/SearchResultsPage";
 import type { AuthResult } from "@/shared/types";
 import {
     offerDetailsRoute,
@@ -277,6 +278,13 @@ export function App() {
                         initialSearch={exploreSearch}
                         onCategoryChange={setExploreCategory}
                         onSearchChange={setExploreSearch}
+                    />
+                )}
+                {path === "/buscar" && (
+                    <SearchResultsPage
+                        key={route}
+                        initialTerm={query.get("q") ?? ""}
+                        onNavigate={navigate}
                     />
                 )}
                 {usersRoute && !adminBlocked && (

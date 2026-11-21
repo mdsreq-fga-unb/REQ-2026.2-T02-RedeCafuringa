@@ -1,11 +1,12 @@
 import { OfferPreview } from "@/features/offers/OfferPreview";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState, type FormEvent } from "react";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { listPublicProducers } from "./publicProfileService";
 import { photoSrc } from "@/features/trajectory/trajectoryService";
 import type { PublicTrajectory } from "@/features/trajectory/trajectoryService";
 import "./publicProfile.css";
 import { RuralCarousel } from "./RuralCarousel";
+import { validateSearchTerm } from "@/features/search/searchTerm";
 
 export function ExplorePage({
     onNavigate,
@@ -27,6 +28,20 @@ export function ExplorePage({
     const [search, setSearch] = useState(initialSearch);
     const [category, setCategory] = useState(initialCategory);
     const [showAll, setShowAll] = useState(false);
+    const [searchProblem, setSearchProblem] = useState<string | null>(null);
+    const searchId = useId();
+    const searchErrorId = useId();
+    // HU36: Enter ou o botão levam à busca de ofertas, depois de validar o termo (CA08).
+    const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const checked = validateSearchTerm(search);
+        if (!checked.ok) {
+            setSearchProblem(checked.message);
+            return;
+        }
+        setSearchProblem(null);
+        onNavigate(`/buscar?q=${encodeURIComponent(checked.term)}`);
+    };
     useEffect(() => {
         const controller = new AbortController();
         void listPublicProducers(controller.signal)
@@ -58,22 +73,46 @@ export function ExplorePage({
     return (
         <section className="explore-page" aria-label="Explorar a Cafuringa">
             <RuralCarousel />
-            <label className="explore-search">
-                <span aria-hidden="true">⌕</span>
-                <span className="visually-hidden">
+            <form
+                role="search"
+                className="explore-search"
+                noValidate
+                onSubmit={submitSearch}
+            >
+                <button
+                    type="submit"
+                    className="explore-search-submit"
+                    aria-label="Buscar"
+                >
+                    <span aria-hidden="true">⌕</span>
+                </button>
+                <label htmlFor={searchId} className="visually-hidden">
                     Buscar produtoras e suas ofertas
-                </span>
+                </label>
                 <input
+                    id={searchId}
                     type="search"
                     placeholder="Buscar ofertas"
                     value={search}
+                    aria-invalid={searchProblem ? true : undefined}
+                    aria-describedby={searchProblem ? searchErrorId : undefined}
                     onChange={(event) => {
                         setSearch(event.target.value);
                         onSearchChange?.(event.target.value);
+                        setSearchProblem(null);
                         setShowAll(false);
                     }}
                 />
-            </label>
+            </form>
+            {searchProblem && (
+                <p
+                    id={searchErrorId}
+                    role="alert"
+                    className="field-error explore-search-error"
+                >
+                    {searchProblem}
+                </p>
+            )}
             <h2 className="explore-heading">O que você quer conhecer?</h2>
             <div className="explore-categories">
                 <button

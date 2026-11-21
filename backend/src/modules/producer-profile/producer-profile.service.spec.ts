@@ -2,6 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import type { Model } from 'mongoose';
 import { ProducerCategory } from '../users/domain/producer-category.js';
+import { buildProducerSearch } from './domain/producer-search.js';
 import { Role } from '../users/domain/role.js';
 import type { User } from '../users/schemas/user.schema.js';
 import { ProducerProfileService } from './producer-profile.service.js';
@@ -452,6 +453,46 @@ describe('ProducerProfileService', () => {
       const { service } = setup();
 
       await expect(service.listPublic()).resolves.toEqual([]);
+    });
+
+    it('HU36: com termo, filtra no banco por iniciativa, trajetória e atividades', async () => {
+      const { service, model } = setup();
+
+      await service.listPublic(' horta ');
+
+      expect(model.find).toHaveBeenCalledWith({
+        perfil: Role.PRODUTOR,
+        ativo: true,
+        trajetoria: { $exists: true, $ne: '' },
+        ...buildProducerSearch('horta'),
+      });
+    });
+
+    it('HU36: com termo, ainda só devolve os campos públicos e perfis publicados', async () => {
+      const { service, model } = setup();
+      const published = producerDoc({ trajetoria: 'Horta orgânica.' });
+      const whitespace = producerDoc({ trajetoria: '   ' });
+      model.find.mockReturnValue(query([published, whitespace]));
+
+      const result = await service.listPublic('horta');
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe(published.id);
+      for (const secret of PRIVATE_FIELDS) {
+        expect(JSON.stringify(result)).not.toContain(secret);
+      }
+    });
+
+    it('HU36: termo só com espaços não filtra', async () => {
+      const { service, model } = setup();
+
+      await service.listPublic('   ');
+
+      expect(model.find).toHaveBeenCalledWith({
+        perfil: Role.PRODUTOR,
+        ativo: true,
+        trajetoria: { $exists: true, $ne: '' },
+      });
     });
   });
 });

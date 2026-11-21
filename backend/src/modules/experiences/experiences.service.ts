@@ -16,6 +16,7 @@ import {
   IDEMPOTENCY_KEY_PATTERN,
   toCentavos,
 } from '../products/domain/product.js';
+import { buildProductSearch } from '../products/domain/product-search.js';
 import { DEFAULT_PRODUCTS_PAGE } from '../products/dto/list-products.query.js';
 import { Role } from '../users/domain/role.js';
 import { User } from '../users/schemas/user.schema.js';
@@ -129,12 +130,15 @@ export class ExperiencesService {
    * Catálogo público: só experiências disponíveis de produtor ativo, da mais
    * nova à mais antiga. O filtro de produtor ativo vem antes de paginar, para
    * o `total` e as páginas baterem (mesma estratégia de `GET /products`).
+   * A busca por texto (HU36) vem depois do `$lookup`, porque também procura
+   * no nome da iniciativa do produtor.
    */
   async list(query: ListExperiencesQuery): Promise<ExperienceListResponse> {
     const pagina = query.pagina ?? 1;
     const limite = query.limite ?? DEFAULT_PRODUCTS_PAGE;
     const match: Record<string, unknown> = { disponivel: true };
     if (query.produtor) match.produtor = new Types.ObjectId(query.produtor);
+    const search = buildProductSearch(query.busca);
 
     const [result] = await this.experiences
       .aggregate<{
@@ -158,6 +162,7 @@ export class ExperiencesService {
           },
         },
         { $unwind: '$responsavel' },
+        ...(search ? [{ $match: search }] : []),
         { $project: { chaveIdempotencia: 0 } },
         {
           $facet: {

@@ -2674,6 +2674,16 @@
             }
           },
           {
+            "name": "busca",
+            "required": false,
+            "in": "query",
+            "description": "Trecho do nome da experiência ou do nome da iniciativa do produtor, sem diferenciar acentos e maiúsculas (HU36, RN15)",
+            "schema": {
+              "example": "trilha",
+              "type": "string"
+            }
+          },
+          {
             "name": "pagina",
             "required": false,
             "in": "query",
@@ -2856,12 +2866,69 @@
           "experiences"
         ]
       }
+    },
+    "/api/v1/search": {
+      "get": {
+        "description": "HU36 (CA01-CA09), RN15: busca pública, sem login, por produtores, produtos e experiências da região. Procura o termo, sem diferenciar acentos e maiúsculas, no nome do produto ou da experiência, no nome da iniciativa e, nos produtores, também na trajetória e nas atividades. Só aparecem ofertas disponíveis de produtores ativos e perfis publicados. O resultado vem agrupado por tipo, cada grupo com `itens` (até `limite`) e `total`; grupo vazio significa que nada foi encontrado naquele tipo. Termo ausente, curto, longo ou só com símbolos devolve 400 com a orientação de correção. Eventos ficam fora do MVP.",
+        "operationId": "searchFind",
+        "parameters": [
+          {
+            "name": "busca",
+            "required": false,
+            "in": "query",
+            "description": "Termo da busca: de 2 a 100 caracteres, com ao menos uma letra ou número. Procura sem diferenciar acentos e maiúsculas. Obrigatório: sem ele a resposta é 400 com a orientação de correção.",
+            "schema": {
+              "example": "cafe",
+              "type": "string"
+            }
+          },
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Quantidade máxima de resultados em cada tipo de oferta",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "example": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resultados agrupados por tipo de oferta (podem estar vazios)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Termo de busca inválido ou limite fora do intervalo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Buscar ofertas",
+        "tags": [
+          "search"
+        ]
+      }
     }
   },
   "info": {
     "title": "Rede Cafuringa API",
     "description": "API REST da plataforma **Rede Cafuringa**: produtores rurais da Cafuringa divulgam a produção, e consumidores e visitantes descobrem ofertas da região.\n\n### Primeiros passos\n\n1. **Entre:** em **auth › POST /auth/login**, clique em *Try it out* e envie e-mail e senha. A resposta traz `accessToken`.\n2. **Autorize:** clique em **Authorize** (botão com cadeado, logo abaixo desta apresentação), cole o token e confirme. Ele fica salvo neste navegador até você clicar em *Logout*.\n3. **Teste:** abra qualquer rota, *Try it out* e *Execute*. Rotas com cadeado exigem login; as demais são públicas.\n\nUse o campo de busca (*Filter by tag*) para ir direto a um grupo.\n\n### Perfis de acesso (RN01, RNF08)\n\n| Perfil | O que pode fazer |\n|---|---|\n| Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |\n| `CONSUMIDOR` | O mesmo que o visitante, com sessão |\n| `PRODUTOR` | Registrar trajetória e foto de perfil; cadastrar produtos |\n| `ADMINISTRADOR` | Consultar usuários e cadastrar outros administradores |\n\nToda rota exige login, exceto as marcadas como públicas (negação por padrão). Perfil sem permissão recebe **403**; sem token ou com token inválido, **401**.\n\n### Convenções\n\n| Tema | Como funciona |\n|---|---|\n| **Erros** | Corpo `ErrorResponse` (`statusCode`, `message`, `error`). Em validação (400), `message` é uma lista de orientações em português, prontas para exibir |\n| **Paginação** | Listas devolvem `{ itens, total, pagina, limite }`; use `?pagina=` e `?limite=` |\n| **Fotos** | Envio em `multipart/form-data`. PNG, JPEG ou WebP; a API regrava em WebP **sem metadados** (EXIF/GPS). Os caminhos devolvidos são relativos à base da API e levam a versão: podem ficar em cache para sempre |\n| **Reenvio seguro** | `POST /products` e `POST /experiences` aceitam `Idempotency-Key`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |\n| **Limites de uso** | Login, cadastro e recuperação de acesso têm limite de tentativas por IP: **429** com `Retry-After` (segundos) |\n| **Rastreio** | Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`); ele volta na resposta e nos logs. Sem ele, a API gera um UUID |\n| **Dados pessoais** | Respostas nunca trazem hash de senha nem CPF completo (vem mascarado). Perfis públicos só mostram dados de divulgação (RN07, RNF11) |\n| **Versão** | SemVer em `info.version`; regras em *docs/shared/contratos.md*. Tipos do front gerados a partir deste contrato (`./scripts/dev.sh contract`) |",
-    "version": "0.10.0",
+    "version": "0.11.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -2888,6 +2955,10 @@
     {
       "name": "experiences",
       "description": "Catálogo e cadastro de experiências, atividades e atrativos de turismo rural, com galeria de fotos (HU21, RN09, RN11)"
+    },
+    {
+      "name": "search",
+      "description": "Busca pública de ofertas: produtores, produtos e experiências, agrupados por tipo (HU36, RN15)"
     },
     {
       "name": "health",
@@ -3965,6 +4036,94 @@
           "total",
           "pagina",
           "limite"
+        ]
+      },
+      "SearchProducersResult": {
+        "type": "object",
+        "properties": {
+          "itens": {
+            "description": "Produtores com perfil publicado que combinam com o termo (iniciativa, trajetória ou atividades), até o limite pedido",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicTrajectoryResponse"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 3,
+            "description": "Total de produtores que combinam, mesmo além do limite"
+          }
+        },
+        "required": [
+          "itens",
+          "total"
+        ]
+      },
+      "SearchProductsResult": {
+        "type": "object",
+        "properties": {
+          "itens": {
+            "description": "Produtos disponíveis que combinam com o termo (nome ou iniciativa), do mais novo ao mais antigo",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductResponse"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 8,
+            "description": "Total de produtos que combinam, mesmo além do limite"
+          }
+        },
+        "required": [
+          "itens",
+          "total"
+        ]
+      },
+      "SearchExperiencesResult": {
+        "type": "object",
+        "properties": {
+          "itens": {
+            "description": "Experiências disponíveis que combinam com o termo (nome ou iniciativa), da mais nova à mais antiga",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExperienceResponse"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 2,
+            "description": "Total de experiências que combinam, mesmo além do limite"
+          }
+        },
+        "required": [
+          "itens",
+          "total"
+        ]
+      },
+      "SearchResponse": {
+        "type": "object",
+        "properties": {
+          "termo": {
+            "type": "string",
+            "example": "cafe",
+            "description": "Termo pesquisado, sem espaços sobrando"
+          },
+          "produtores": {
+            "$ref": "#/components/schemas/SearchProducersResult"
+          },
+          "produtos": {
+            "$ref": "#/components/schemas/SearchProductsResult"
+          },
+          "experiencias": {
+            "$ref": "#/components/schemas/SearchExperiencesResult"
+          }
+        },
+        "required": [
+          "termo",
+          "produtores",
+          "produtos",
+          "experiencias"
         ]
       }
     }

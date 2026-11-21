@@ -1,0 +1,53 @@
+.search-page .search-form {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.search-page .search-form label {
+    font-weight: 700;
+}
+
+.search-page .search-row {
+    display: flex;
+    gap: 10px;
+}
+
+.search-page .search-row input {
+    flex: 1;
+    min-width: 0;
+    min-height: 56px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+}
+
+.search-page .search-row input[aria-invalid="true"] {
+    border-color: #a83232;
+}
+
+.search-page .search-row .button {
+    min-height: 56px;
+    padding-inline: 20px;
+}
+
+.search-page section {
+    margin-top: 24px;
+}
+
+.search-page .search-producers {
+    display: grid;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.search-page .search-partial,
+.search-page .search-empty p:last-child {
+    color: var(--muted);
+    font-size: 14px;
+}

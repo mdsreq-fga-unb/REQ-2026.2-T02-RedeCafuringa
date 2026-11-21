@@ -4,6 +4,7 @@ import { isObjectIdOrHexString, Model } from 'mongoose';
 import { Role } from '../users/domain/role.js';
 import { User } from '../users/schemas/user.schema.js';
 import { photoPath } from './domain/profile-photo.js';
+import { buildProducerSearch } from './domain/producer-search.js';
 import { publicPhone } from './domain/trajectory.js';
 import type { SaveTrajectoryDto } from './dto/save-trajectory.dto.js';
 import type {
@@ -96,13 +97,17 @@ export class ProducerProfileService {
     return this.toOwn(userId, user);
   }
 
-  /** CA01-CA05: lista perfis publicados e ativos, com os mesmos dados seguros do detalhe. */
-  async listPublic(): Promise<PublicTrajectoryResponse[]> {
+  /**
+   * CA01-CA05: lista perfis publicados e ativos, com os mesmos dados seguros do
+   * detalhe. Com `busca` (HU36), só os que combinam com o termo.
+   */
+  async listPublic(busca?: string): Promise<PublicTrajectoryResponse[]> {
     const users = await this.users
       .find({
         perfil: Role.PRODUTOR,
         ativo: true,
         trajetoria: { $exists: true, $ne: '' },
+        ...buildProducerSearch(busca),
       })
       .select(PUBLIC_FIELDS)
       .sort({ nomeIniciativa: 1, _id: 1 })
