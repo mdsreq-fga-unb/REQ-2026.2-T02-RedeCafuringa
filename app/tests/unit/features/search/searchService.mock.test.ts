@@ -16,7 +16,7 @@ describe("HU36 — searchOffers (demonstração)", () => {
         const result = await searchOffers("dona maria");
 
         expect(result.produtores.itens.map((item) => item.id)).toContain(
-            "demo-maria",
+            "demo-dona-maria",
         );
         expect(result.produtos.itens.map((item) => item.id)).toContain("mel");
     });

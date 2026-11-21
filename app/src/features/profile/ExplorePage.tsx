@@ -73,11 +73,22 @@ export function ExplorePage({
     return (
         <section className="explore-page" aria-label="Explorar a Cafuringa">
             <RuralCarousel />
-            <label className="explore-search">
-                <span aria-hidden="true">⌕</span>
-                <span className="visually-hidden">
+            <form
+                role="search"
+                className="explore-search"
+                noValidate
+                onSubmit={submitSearch}
+            >
+                <button
+                    type="submit"
+                    className="explore-search-submit"
+                    aria-label="Buscar"
+                >
+                    <span aria-hidden="true">⌕</span>
+                </button>
+                <label htmlFor={searchId} className="visually-hidden">
                     Buscar produtoras e suas ofertas
-                </span>
+                </label>
                 <input
                     id={searchId}
                     type="search"
