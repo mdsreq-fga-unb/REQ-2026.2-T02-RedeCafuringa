@@ -54,7 +54,7 @@ const mockUsers: MockUser[] = [
     {
         email: "admin@exemplo.com",
         password: "senha123",
-        user: { id: 3, name: "Administrador", role: "admin" },
+        user: { id: 3, name: "Administradora", role: "admin" },
     },
 ];
 
@@ -150,7 +150,7 @@ export async function registerMockConsumer(
 }
 
 export const demoHint =
-    "Demonstração: ana@exemplo.com (consumidor) ou produtor@exemplo.com (produtor), senha senha123.";
+    "Demonstração: ana@exemplo.com (consumidora) ou produtor@exemplo.com (produtora), senha senha123.";
 
 export async function loginMock(credentials: {
     email: string;
@@ -163,7 +163,7 @@ export async function loginMock(credentials: {
         password: item.password,
         user: {
             id: `admin-${index + 1}`,
-            name: "Administrador",
+            name: "Administradora",
             role: "admin" as const,
         },
     }));
@@ -207,8 +207,50 @@ export function registerMockUser(account: {
     return user;
 }
 
+export function updateMockConsumerName(id: string | null, name: string) {
+    const registered = readRegisteredUsers();
+    const account = registered.find((item) => item.user.id === id);
+    if (account) {
+        account.user.name = name;
+        localStorage.setItem(registeredUsersKey, JSON.stringify(registered));
+        return;
+    }
+
+    const example = mockUsers.find(
+        (item) => String(item.user.id) === id && item.user.role === "consumer",
+    );
+    if (!example) throw new Error("Conta não encontrada.");
+    example.user.name = name;
+}
+
+export function readMockProducerAccount(id: AuthResult["user"]["id"]) {
+    return mockUsers.find(
+        (item) =>
+            String(item.user.id) === String(id) &&
+            item.user.role === "producer",
+    )?.producerDetails;
+}
+
+export function updateMockProducerAccount(
+    id: AuthResult["user"]["id"],
+    details: Pick<
+        ProducerDetails,
+        "nomeIniciativa" | "categoriaOfertada" | "formasPagamento"
+    >,
+) {
+    const account = mockUsers.find(
+        (item) =>
+            String(item.user.id) === String(id) &&
+            item.user.role === "producer",
+    );
+    if (!account) throw new Error("Produtora não encontrada.");
+    account.producerDetails = { ...account.producerDetails, ...details };
+}
+
 export function isMockCpfRegistered(cpf: string): boolean {
-    return mockUsers.some((item) => item.cpf === cpf);
+    return [...mockUsers, ...readRegisteredUsers()].some(
+        (item) => item.cpf === cpf,
+    );
 }
 
 function normalizeEmail(email: string): string {
@@ -303,7 +345,7 @@ export function readMockUserDetails(): UserDetail[] {
             ...item,
             user: {
                 id: `admin-${index + 1}`,
-                name: "Administrador",
+                name: "Administradora",
                 role: "admin",
             },
         })),

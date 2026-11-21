@@ -5,7 +5,7 @@ import { renderAdminApp } from "../fixtures/renderAdminApp";
 vi.mock("@/features/auth/authService", () => ({
     login: async () => ({
         token: "session-token",
-        user: { id: "admin", name: "Administrador", role: "admin" },
+        user: { id: "admin", name: "Administradora", role: "admin" },
     }),
 }));
 import { registerAdmin } from "@/features/auth/registrationService";
@@ -33,11 +33,11 @@ afterEach(() => {
 async function openAdminRegistration(user: ReturnType<typeof userEvent.setup>) {
     await renderAdminApp("#/admin/acesso");
     await user.click(
-        await screen.findByRole("link", { name: "Cadastrar administrador" }),
+        await screen.findByRole("link", { name: "Cadastrar administradora" }),
     );
     expect(
         await screen.findByRole("heading", {
-            name: "Cadastro de administrador",
+            name: "Cadastro de administradora",
         }),
     ).toBeTruthy();
 }
@@ -63,7 +63,7 @@ describe("cadastro de administrador — HU03", () => {
         );
         expect(
             await screen.findByRole("heading", {
-                name: "Usuário admin cadastrado com sucesso!",
+                name: "Administradora cadastrada com sucesso!",
             }),
         ).toBeTruthy();
     });

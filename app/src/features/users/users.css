@@ -215,3 +215,117 @@
         height: 64px;
     }
 }
+
+/* Confirmação da exclusão e avisos. */
+.admin-users-notice {
+    margin: 0 0 16px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: #eaf0e5;
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.admin-user-delete-note {
+    margin-top: 50px;
+    color: var(--muted);
+    text-align: center;
+}
+
+.admin-dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgb(20 24 20 / 55%);
+}
+
+.admin-dialog {
+    width: min(100%, 480px);
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    padding: 24px;
+    border-radius: 18px;
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 0 18px 48px rgb(0 0 0 / 25%);
+}
+
+.admin-dialog h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.admin-dialog p {
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+
+.admin-dialog-account {
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.admin-dialog-reasons {
+    display: grid;
+    gap: 10px;
+    margin: 16px 0;
+    padding: 0;
+    border: 0;
+}
+
+.admin-dialog-reasons legend {
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.admin-dialog-reasons label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.admin-dialog-reasons input {
+    width: 20px;
+    height: 20px;
+    accent-color: #a83232;
+}
+
+.admin-dialog-failure {
+    padding: 12px;
+    border-radius: 12px;
+    background: #fbeaea;
+    color: #8a1f1f;
+}
+
+.admin-dialog-actions {
+    display: grid;
+    gap: 12px;
+}
+
+@media (min-width: 480px) {
+    .admin-dialog-actions {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.admin-dialog-reason {
+    display: grid;
+    gap: 4px;
+}
+
+.admin-dialog-reasons .admin-dialog-hint {
+    margin: 0 0 4px 12px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.4;
+}

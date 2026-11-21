@@ -1,3 +1,4 @@
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { ActionButton } from "../../components/ui/ActionButton";
@@ -23,20 +24,20 @@ export function AdminAccessPage({
                     label="Voltar"
                     onClick={() => onNavigate("/conta")}
                 />
-                <h1>Funções do administrador</h1>
+                <h1>Funções da administradora</h1>
                 <p className="body-copy">
-                    Gerencie os usuários e os acessos da plataforma.
+                    Gerencie as usuárias e os acessos da plataforma.
                 </p>
                 <nav aria-label="Funções administrativas">
                     <a className="admin-users-entry" href="#/admin/usuarios">
-                        Consultar usuários cadastrados{" "}
+                        Consultar usuárias cadastradas{" "}
                         <span aria-hidden="true">→</span>
                     </a>
                     <a
                         className="admin-users-entry"
                         href="#/cadastro/administrador"
                     >
-                        Cadastrar administrador{" "}
+                        Cadastrar administradora{" "}
                         <span aria-hidden="true">→</span>
                     </a>
                 </nav>
@@ -60,7 +61,7 @@ export function AdminAccessPage({
                     {
                         id: "signup",
                         title: "Cadastrar adm",
-                        copy: "Quero cadastrar novo usuário como admin.",
+                        copy: "Quero cadastrar nova usuária como admin.",
                     },
                 ].map((option) => (
                     <button
@@ -175,10 +176,10 @@ export function AdminSignupPage({
                 label="Voltar"
                 onClick={() => onNavigate("/admin/acesso")}
             />
-            <h1>Cadastro de administrador</h1>
+            <h1>Cadastro de administradora</h1>
             <p className="admin-warning">
-                Atenção! Ao cadastrar um novo usuário como administrador, ele
-                terá acesso a todas as funcionalidades de um admin.
+                Atenção! Ao cadastrar uma nova usuária como administradora, ela
+                terá acesso a todas as funcionalidades de uma administradora.
             </p>
             <form onSubmit={submit} noValidate aria-busy={loading}>
                 {message && (
@@ -192,55 +193,58 @@ export function AdminSignupPage({
                         ["senha", "Senha", "password"],
                         ["confirmarSenha", "Confirmar senha", "password"],
                     ] as const
-                ).map(([field, label, type]) => (
-                    <div className="signup-field" key={field}>
-                        <label
-                            className="field-label"
-                            htmlFor={`admin-${field}`}
-                        >
-                            {label} <span aria-hidden="true">*</span>
-                        </label>
-                        <input
-                            id={`admin-${field}`}
-                            aria-label={label}
-                            className="text-input signup-input"
-                            type={type}
-                            required
-                            autoComplete={
-                                field === "email" ? "email" : "new-password"
-                            }
-                            placeholder={
-                                field === "email"
-                                    ? "Ex.: nome@exemplo.com"
-                                    : field === "senha"
-                                      ? "8+ caracteres, com letras e números"
-                                      : "Repita a senha criada"
-                            }
-                            value={values[field]}
-                            readOnly={loading}
-                            aria-invalid={Boolean(errors[field])}
-                            aria-describedby={
-                                errors[field]
-                                    ? `admin-${field}-error`
-                                    : undefined
-                            }
-                            onChange={(event) =>
-                                setValues({
-                                    ...values,
-                                    [field]: event.target.value,
-                                })
-                            }
-                        />
-                        {errors[field] && (
-                            <p
-                                className="field-error"
-                                id={`admin-${field}-error`}
+                ).map(([field, label, type]) => {
+                    const Input = type === "password" ? PasswordInput : "input";
+                    return (
+                        <div className="signup-field" key={field}>
+                            <label
+                                className="field-label"
+                                htmlFor={`admin-${field}`}
                             >
-                                {errors[field]}
-                            </p>
-                        )}
-                    </div>
-                ))}
+                                {label} <span aria-hidden="true">*</span>
+                            </label>
+                            <Input
+                                id={`admin-${field}`}
+                                aria-label={label}
+                                className="text-input signup-input"
+                                type={type}
+                                required
+                                autoComplete={
+                                    field === "email" ? "email" : "new-password"
+                                }
+                                placeholder={
+                                    field === "email"
+                                        ? "Ex.: nome@exemplo.com"
+                                        : field === "senha"
+                                          ? "8+ caracteres, com letras e números"
+                                          : "Repita a senha criada"
+                                }
+                                value={values[field]}
+                                readOnly={loading}
+                                aria-invalid={Boolean(errors[field])}
+                                aria-describedby={
+                                    errors[field]
+                                        ? `admin-${field}-error`
+                                        : undefined
+                                }
+                                onChange={(event) =>
+                                    setValues({
+                                        ...values,
+                                        [field]: event.target.value,
+                                    })
+                                }
+                            />
+                            {errors[field] && (
+                                <p
+                                    className="field-error"
+                                    id={`admin-${field}-error`}
+                                >
+                                    {errors[field]}
+                                </p>
+                            )}
+                        </div>
+                    );
+                })}
                 <ActionButton
                     className="signup-submit"
                     variant="orange"
@@ -266,9 +270,9 @@ export function AdminSignupSuccessPage({ onNavigate }: NavigationProps) {
                     <path d="m5 12 4.5 4.5L19 7" />
                 </svg>
             </div>
-            <h1>Usuário admin cadastrado com sucesso!</h1>
+            <h1>Administradora cadastrada com sucesso!</h1>
             <p className="body-copy">
-                O novo usuário foi cadastrado como administrador e já poderá
+                A nova usuária foi cadastrada como administradora e já poderá
                 entrar com suas credenciais.
             </p>
             <ActionButton
@@ -338,7 +342,7 @@ export function AdminLoginPage({
         }
         setLoading(false);
         if (auth.user.role !== "admin") {
-            setFormError("Esta conta não é de administrador.");
+            setFormError("Esta conta não é de administradora.");
             return;
         }
         onSignIn(auth);
@@ -351,9 +355,9 @@ export function AdminLoginPage({
                 label="Voltar"
                 onClick={() => onNavigate("/admin/acesso")}
             />
-            <h1>Bem-vindo!</h1>
+            <h1>Bem-vinda!</h1>
             <p className="body-copy">
-                Entre para acompanhar os usuários cadastrados na plataforma.
+                Entre para acompanhar as usuárias cadastradas na plataforma.
             </p>
             <form noValidate onSubmit={(event) => void submit(event)}>
                 {formError && (
@@ -375,7 +379,7 @@ export function AdminLoginPage({
                     aria-label="E-mail"
                     type="email"
                     autoComplete="username"
-                    placeholder="E-mail de administrador cadastrado"
+                    placeholder="E-mail da administradora"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     aria-invalid={Boolean(errors.email)}
@@ -392,11 +396,10 @@ export function AdminLoginPage({
                 <label className="field-label" htmlFor="demo-admin-password">
                     Senha <span aria-hidden="true">*</span>
                 </label>
-                <input
+                <PasswordInput
                     className="text-input signup-input"
                     id="demo-admin-password"
                     aria-label="Senha"
-                    type="password"
                     placeholder="Digite sua senha"
                     autoComplete="current-password"
                     value={password}
@@ -425,7 +428,7 @@ export function AdminLoginPage({
                 </ActionButton>
                 {isMockAuthEnabled && (
                     <p className="demo-note">
-                        Conta de administrador para teste local:
+                        Conta de administradora para teste local:
                         <br />
                         E-mail: admin@exemplo.com
                         <br />

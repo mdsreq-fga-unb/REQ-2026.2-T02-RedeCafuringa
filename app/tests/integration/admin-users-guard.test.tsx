@@ -41,7 +41,7 @@ describe("HU04 — CA07/RN01/RN03/RNF08", () => {
                 render(<App />);
                 expect(
                     screen.queryByRole("heading", {
-                        name: /usuários cadastrados/i,
+                        name: /usuárias cadastradas/i,
                     }),
                 ).toBeNull();
                 await waitFor(() =>

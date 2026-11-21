@@ -44,7 +44,7 @@ describe("navegação da navbar", () => {
             render(<App />);
             expect(
                 await screen.findByRole("heading", {
-                    name: "Conheça nossos produtores",
+                    name: "Conheça nossas produtoras",
                 }),
             ).toBeTruthy();
             expect(
@@ -67,7 +67,7 @@ describe("navegação da navbar", () => {
             );
             expect(
                 await screen.findByRole("heading", {
-                    name: "Conheça nossos produtores",
+                    name: "Conheça nossas produtoras",
                 }),
             ).toBeTruthy();
             expect(window.location.hash).toBe("#/explorar");
@@ -97,7 +97,7 @@ describe("navegação da navbar", () => {
         );
         expect(
             await screen.findByRole("heading", {
-                name: "Conheça nossos produtores",
+                name: "Conheça nossas produtoras",
             }),
         ).toBeTruthy();
         expect(screen.queryByLabelText("Senha")).toBeNull();
@@ -111,7 +111,7 @@ describe("navegação da navbar", () => {
         await user.click(screen.getByRole("button", { name: "Explorar" }));
         expect(
             await screen.findByRole("heading", {
-                name: "Conheça nossos produtores",
+                name: "Conheça nossas produtoras",
             }),
         ).toBeTruthy();
         expect(

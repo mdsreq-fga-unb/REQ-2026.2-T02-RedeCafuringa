@@ -13,7 +13,7 @@ afterEach(() => {
 
 const adminAuth = {
     token: "t",
-    user: { id: "1", name: "Administrador", role: "admin" as const },
+    user: { id: "1", name: "Administradora", role: "admin" as const },
 };
 
 async function fill(user: ReturnType<typeof userEvent.setup>) {
@@ -76,7 +76,7 @@ describe("login administrativo — HU03", () => {
         await fill(user);
 
         expect((await screen.findByRole("alert")).textContent).toBe(
-            "Esta conta não é de administrador.",
+            "Esta conta não é de administradora.",
         );
         expect(onSignIn).not.toHaveBeenCalled();
     });

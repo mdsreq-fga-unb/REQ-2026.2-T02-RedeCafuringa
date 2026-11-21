@@ -909,7 +909,7 @@
       "cx": 3,
       "cp": 2,
       "justificativa": "Catálogo de experiências reutiliza cadastros e permite descoberta das ofertas.",
-      "evidencia": "docs/visao/historias/HU24.md; docs/visao/requisitos_software.md; Issue #18",
+      "evidencia": "docs/visao/historias/HU24.md; docs/visao/requisitos_software.md; Issue #18; PR #78",
       "revisor": "",
       "situacao": "proposta técnica; validação da equipe/cliente pendente"
     },

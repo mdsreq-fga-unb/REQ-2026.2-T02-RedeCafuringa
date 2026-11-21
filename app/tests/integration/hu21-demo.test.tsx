@@ -37,9 +37,9 @@ it("demonstra cadastro e visualização com fotos e responsável sem API", async
     expect(
         await screen.findByRole("heading", { name: experience.nome }),
     ).toBeTruthy();
-    expect(screen.getByText(experience.local)).toBeTruthy();
-    expect(screen.getByText(experience.duracao)).toBeTruthy();
-    expect(screen.getByText(/Produtor: Horta da Joana/)).toBeTruthy();
+    expect(screen.getByText(`Local: ${experience.local}`)).toBeTruthy();
+    expect(screen.getByText(`Duração: ${experience.duracao}`)).toBeTruthy();
+    expect(screen.getByText("Anfitriã: Horta da Joana")).toBeTruthy();
     expect(
         screen.getByRole("img", { name: experience.nome }).getAttribute("src"),
     ).toMatch(/^data:image\/png;base64,/);

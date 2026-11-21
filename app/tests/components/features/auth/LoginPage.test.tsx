@@ -61,6 +61,21 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         cleanup();
     });
 
+    it("mostra e oculta a senha sem enviar o formulário", async () => {
+        const { user } = renderLogin();
+        const input = screen.getByLabelText("Senha");
+        await user.type(input, "senha123");
+        expect(input).toHaveProperty("type", "password");
+
+        await user.click(screen.getByRole("button", { name: "Mostrar senha" }));
+        expect(input).toHaveProperty("type", "text");
+        expect(input).toHaveProperty("value", "senha123");
+
+        await user.click(screen.getByRole("button", { name: "Ocultar senha" }));
+        expect(input).toHaveProperty("type", "password");
+        expect(login).not.toHaveBeenCalled();
+    });
+
     // Critério 1
     it("entra com e-mail e senha corretos", async () => {
         vi.mocked(login).mockResolvedValue(producerAuth);
@@ -164,7 +179,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
 
         expect(
             screen.getByRole("heading", {
-                name: "Entre para falar com o responsável",
+                name: "Entre para falar com a responsável",
             }),
         ).toBeTruthy();
     });
@@ -261,7 +276,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         const { onNavigate, user } = renderLogin({ profile: "producer" });
 
         await user.click(
-            screen.getByRole("button", { name: "Sou consumidor" }),
+            screen.getByRole("button", { name: "Sou consumidora" }),
         );
 
         expect(onNavigate).toHaveBeenCalledWith("/login/consumer");
@@ -270,7 +285,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
     it("oferece a troca para o login de produtor a partir do login de consumidor", async () => {
         const { onNavigate, user } = renderLogin({ profile: "consumer" });
 
-        await user.click(screen.getByRole("button", { name: "Sou produtor" }));
+        await user.click(screen.getByRole("button", { name: "Sou produtora" }));
 
         expect(onNavigate).toHaveBeenCalledWith("/login/producer");
     });
@@ -296,7 +311,7 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
 
         expect(
             screen.getByRole("heading", {
-                name: "Entre para falar com o responsável",
+                name: "Entre para falar com a responsável",
             }).className,
         ).toContain("login-title-accent");
     });

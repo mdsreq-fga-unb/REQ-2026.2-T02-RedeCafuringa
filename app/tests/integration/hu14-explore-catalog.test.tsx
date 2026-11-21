@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -224,7 +224,7 @@ describe("HU14 — Explorar", () => {
         api({ directory: () => json([]) });
         render(<App />);
         expect(
-            await screen.findByText(/ainda não há produtores/i),
+            await screen.findByText(/ainda não há produtoras/i),
         ).toBeTruthy();
         expect(screen.queryByText("Dona Cida")).toBeNull();
     });
@@ -360,45 +360,26 @@ describe("HU14 — ofertas e contato vinculados ao produtor", () => {
         );
         api({ phone: "61988887777" });
         window.location.hash = publicRoute;
-        const open = vi.spyOn(window, "open").mockReturnValue(null);
-        const user = userEvent.setup();
         render(<App />);
-        await user.click(
-            await screen.findByRole("button", {
-                name: "Conversar pelo WhatsApp",
-            }),
-        );
-        expect(open).toHaveBeenCalledOnce();
-        const url = new URL(String(open.mock.calls[0][0]));
+        const link = await screen.findByRole("link", {
+            name: /Conversar pelo WhatsApp/,
+        });
+        const url = new URL(link.getAttribute("href") ?? "");
         expect(url.pathname).toBe("/5561988887777");
         expect(url.searchParams.get("text")).toContain("Horta da Maria");
-        expect(open.mock.calls[0].slice(1)).toEqual([
-            "_blank",
-            "noopener,noreferrer",
-        ]);
+        expect(link.getAttribute("target")).toBe("_blank");
+        expect(link.getAttribute("rel")).toBe("noopener noreferrer");
     });
 
-    it("visitante consulta o perfil livremente e entra apenas ao iniciar contato", async () => {
+    it("visitante consulta o perfil sem acessar o telefone autorizado", async () => {
         api({ phone: "61988887777" });
         window.location.hash = publicRoute;
-        const open = vi.spyOn(window, "open").mockReturnValue(null);
-        const user = userEvent.setup();
         render(<App />);
-        await user.click(
-            await screen.findByRole("button", {
-                name: "Conversar pelo WhatsApp",
-            }),
-        );
-        await waitFor(() =>
-            expect(window.location.hash).toBe(
-                `#/entrar?contato=${encodeURIComponent(`produtor/${producerId}`)}`,
-            ),
-        );
+        await screen.findByRole("heading", { name: "Horta da Maria" });
         expect(
-            await screen.findByRole("heading", {
-                name: "Entre para falar com o responsável",
-            }),
-        ).toBeTruthy();
-        expect(open).not.toHaveBeenCalled();
+            screen.queryByRole("link", { name: /Conversar pelo WhatsApp/ }),
+        ).toBeNull();
+        expect(screen.queryByText(/8888[-\s]*7777/)).toBeNull();
+        expect(window.location.hash).toBe(publicRoute);
     });
 });

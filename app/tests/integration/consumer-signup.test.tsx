@@ -28,7 +28,7 @@ describe("integração do cadastro de consumidor — HU01", () => {
             await screen.findByRole("heading", { name: "Entre em sua conta" }),
         ).toBeTruthy();
         await user.click(
-            screen.getByRole("button", { name: /Sou consumidor/ }),
+            screen.getByRole("button", { name: /Sou consumidora/ }),
         );
         await user.click(screen.getByRole("button", { name: "Continuar" }));
 
@@ -45,7 +45,7 @@ describe("integração do cadastro de consumidor — HU01", () => {
 
         expect(
             await screen.findByRole("heading", {
-                name: "Cadastro de consumidor",
+                name: "Cadastro de consumidora",
             }),
         ).toBeTruthy();
         await user.type(
@@ -79,7 +79,7 @@ describe("integração do cadastro de consumidor — HU01", () => {
         );
         expect(
             await screen.findByRole("heading", {
-                name: "Você já faz parte da rede",
+                name: "Bem-vinda à Rede Cafuringa!",
             }),
         ).toBeTruthy();
     });

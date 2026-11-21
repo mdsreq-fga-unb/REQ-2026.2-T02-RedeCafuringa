@@ -52,7 +52,7 @@ describe("HU02 — acesso ao cadastro de produtor no app", () => {
         render(<App />);
 
         expect(
-            screen.getByRole("heading", { name: "Cadastro de produtor" }),
+            screen.getByRole("heading", { name: "Cadastro de produtora" }),
         ).toBeTruthy();
     });
 
@@ -68,7 +68,7 @@ describe("HU02 — acesso ao cadastro de produtor no app", () => {
 
         expect(
             await screen.findByRole("heading", {
-                name: "Cadastro de produtor",
+                name: "Cadastro de produtora",
             }),
         ).toBeTruthy();
         expect(window.location.hash).toBe("#/cadastro");
@@ -125,7 +125,7 @@ describe("HU02 — do cadastro à área do produtor", () => {
 
         expect(
             await screen.findByRole("heading", {
-                name: "Você já faz parte da rede",
+                name: "Bem-vinda à Rede Cafuringa!",
             }),
         ).toBeTruthy();
         expect(window.location.hash).toBe("#/conta-criada/producer");
@@ -135,5 +135,18 @@ describe("HU02 — do cadastro à área do produtor", () => {
         );
 
         expect(window.location.hash).toBe("#/conta");
+        await user.click(
+            screen.getByRole("button", { name: "Editar dados da iniciativa" }),
+        );
+        expect(
+            screen.getByRole("textbox", { name: /nome da iniciativa/i }),
+        ).toHaveProperty("value", "Seu João");
+        expect(screen.getByRole("checkbox", { name: "Pix" })).toHaveProperty(
+            "checked",
+            true,
+        );
+        expect(
+            screen.getByRole("checkbox", { name: "Cartão de crédito" }),
+        ).toHaveProperty("checked", false);
     }, 15000);
 });

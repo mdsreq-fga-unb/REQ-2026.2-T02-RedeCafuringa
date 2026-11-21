@@ -16,19 +16,21 @@ import {
     useDemoSession,
 } from "@/features/auth";
 import {
-    canStartWhatsAppContact,
     createWhatsAppUrl,
-    getContactLoginRoute,
     isWhatsAppContactAvailable,
     useContactSettings,
+    whatsAppContactUrl,
 } from "@/features/contact";
 import { ProfilePage } from "@/features/profile";
+import { demoPublicProfiles } from "@/features/profile/publicProfileDemo";
 import { ExplorePage } from "@/features/profile/ExplorePage";
 import type { AuthResult } from "@/shared/types";
 import {
+    offerDetailsRoute,
     rememberOfferOrigin,
     offerReturnRoute,
 } from "@/features/offers/offerNavigation";
+import { contactReturnRoute, postLoginRoute } from "./postLoginRoute";
 import { useHashRoute } from "./useHashRoute";
 import { RegisterPage } from "@/features/register";
 import "../App.css";
@@ -81,12 +83,23 @@ export function App() {
         },
         [route, changeRoute],
     );
-    const { role, consumerName, email, cpf, userId, signIn, signOut } =
-        useDemoSession();
-    const signup = useProducerSignup((auth) => {
-        signIn(auth);
-        navigate("/conta-criada/producer");
-    });
+    const {
+        role,
+        consumerName,
+        email,
+        cpf,
+        userId,
+        signIn,
+        signOut,
+        saveConsumerName,
+    } = useDemoSession();
+    const signup = useProducerSignup(
+        (auth) => {
+            signIn(auth);
+            navigate("/conta-criada/producer");
+        },
+        () => navigate("/cadastro"),
+    );
     const endAdminSession = useCallback(() => {
         signOut();
         navigate("/admin/entrar");
@@ -108,7 +121,7 @@ export function App() {
                 : "",
             price: `${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format("valorPorPessoa" in product ? product.valorPorPessoa : product.precoPorUnidade)} / ${"valorPorPessoa" in product ? "pessoa" : "unidade"}`,
             details: [
-                `Produtor: ${product.produtor.nomeIniciativa}`,
+                `Produtora: ${product.produtor.nomeIniciativa}`,
                 // HU20 CA03 / HU21 CA08: propriedade divulgada pelo responsável.
                 ...("localidade" in product.produtor &&
                 product.produtor.localidade
@@ -158,7 +171,15 @@ export function App() {
             resetSignup();
     }, [path, signupDetails, resetSignup]);
     const query = new URLSearchParams(route.split("?")[1] || "");
-    const fromContact = query.has("contato");
+    const contactSubject =
+        path === "/entrar" || path.startsWith("/login/")
+            ? query.get("contato")
+            : null;
+    const fromContact = Boolean(contactSubject);
+    useEffect(() => {
+        if (role && contactSubject)
+            changeRoute(postLoginRoute(role, contactSubject));
+    }, [role, contactSubject, changeRoute]);
     const justRegistered = query.get("cadastro") === "ok";
     const justRecovered = query.get("recuperacao") === "ok";
     const recoveryToken = query.get("token");
@@ -199,7 +220,8 @@ export function App() {
     const screenPath = needsProfileSelection ? "/escolher-perfil" : path;
     const showProfileSelection = screenPath === "/escolher-perfil";
     const showLogin =
-        screenPath === "/entrar" || path.startsWith("/login/") || fromContact;
+        (screenPath === "/entrar" || path.startsWith("/login/")) &&
+        !(role && fromContact);
     const loginProfile =
         path === "/login/consumer" || fromContact ? "consumer" : "producer";
     const isAuthFlow =
@@ -219,41 +241,43 @@ export function App() {
     const offerId = path.startsWith("/oferta/")
         ? path.split("/").filter(Boolean)[1]
         : undefined;
-    const currentOffer = catalogOffers.find(
-        (offer) => offer.id === offerId && offer.category.startsWith("Experi"),
-    );
+    const currentOffer = isMockAuthEnabled
+        ? offers.find(
+              (offer) =>
+                  offer.id === offerId && offer.category.startsWith("Experi"),
+          )
+        : undefined;
     const productOfferId = offerId && !currentOffer ? offerId : undefined;
-    const contactAvailable = isWhatsAppContactAvailable(
-        settings.authorized,
-        settings.whatsappNumber,
+    const canViewContact = Boolean(
+        role && localStorage.getItem("cafuringa-token"),
     );
-
-    const startContact = (subjectId: string, subject: string) => {
-        if (role !== "consumer") {
-            navigate(getContactLoginRoute(subjectId));
-            return;
-        }
-        if (
-            !canStartWhatsAppContact(
-                role,
-                settings.authorized,
-                settings.whatsappNumber,
-            )
-        ) {
-            return;
-        }
-        window.open(
-            createWhatsAppUrl(settings.whatsappNumber, subject),
-            "_blank",
-            "noopener,noreferrer",
-        );
+    // HU39: o contato salvo no aparelho só existe na demonstração (sem API).
+    // Com a API real, o contato vem do perfil público do responsável (RN07).
+    // Enquanto o produtor de teste não informou um número na Conta, a
+    // demonstração usa o telefone autorizado do perfil público fictício do
+    // responsável, o mesmo das ofertas da demonstração.
+    const demoContactUrl = (
+        subject: string,
+        producerId: string,
+        context: NonNullable<Parameters<typeof whatsAppContactUrl>[2]>,
+    ) => {
+        if (!isMockAuthEnabled || !canViewContact) return undefined;
+        if (!settings.whatsappNumber)
+            return whatsAppContactUrl(
+                demoPublicProfiles.find((profile) => profile.id === producerId)
+                    ?.telefone,
+                subject,
+                context,
+            );
+        return isWhatsAppContactAvailable(
+            settings.authorized,
+            settings.whatsappNumber,
+        )
+            ? createWhatsAppUrl(settings.whatsappNumber, subject, context)
+            : undefined;
     };
 
     const handleSignIn = (auth: AuthResult) => {
-        const nextRole = auth.user.role;
-        const subjectId = new URLSearchParams(route.split("?")[1] || "").get(
-            "contato",
-        );
         signIn(auth);
         if (nextRole === "admin") {
             navigate("/admin/acesso");
@@ -366,11 +390,12 @@ export function App() {
                 )}
                 {path === "/perfil" && (
                     <ProfilePage
-                        contactAvailable={contactAvailable}
+                        contactUrl={demoContactUrl(
+                            "Perfil de Dona Maria",
+                            "demo-dona-maria",
+                            { kind: "profile", route: "/perfil" },
+                        )}
                         onNavigate={navigate}
-                        onStartContact={() =>
-                            startContact("perfil", "Perfil de Dona Maria")
-                        }
                     />
                 )}
                 {path === "/catalogo" && (
@@ -414,6 +439,7 @@ export function App() {
                 {path === "/oferta-publicada" && published && (
                     <ProductPublishedPage
                         id={published.id}
+                        experience={"valorPorPessoa" in published}
                         onNavigate={navigate}
                     />
                 )}
@@ -430,8 +456,23 @@ export function App() {
                 {currentOffer && (
                     <OfferDetailsPage
                         offer={currentOffer}
+                        contactLoginSubject={
+                            canViewContact
+                                ? undefined
+                                : `experiencia/${currentOffer.id}`
+                        }
+                        producerName="Jefferson Sooma"
+                        producerRoute="/produtor/demo-jefferson"
                         backRoute={offerReturnRoute(route, "/catalogo")}
-                        contactAvailable={contactAvailable}
+                        contactUrl={demoContactUrl(
+                            currentOffer.title,
+                            // Anfitrião das experiências de demonstração (listExperiences).
+                            "demo-jefferson",
+                            {
+                                kind: "experience",
+                                route: offerDetailsRoute(currentOffer.id, true),
+                            },
+                        )}
                         onNavigate={navigate}
                         onStartContact={() =>
                             startContact(currentOffer.id, currentOffer.title)
@@ -491,6 +532,7 @@ export function App() {
                     <LoginPage
                         recovered={justRecovered}
                         fromContact={fromContact}
+                        backPath={contactReturnRoute(contactSubject)}
                         profile={loginProfile}
                         registered={justRegistered}
                         onNavigate={navigate}
@@ -500,6 +542,7 @@ export function App() {
                 {path === "/cadastro" && !lockedSignup && (
                     <RegisterPage
                         initialValues={signup.details ?? undefined}
+                        initialFailure={signup.duplicate}
                         onNavigate={navigate}
                         onContinue={(values) => {
                             signup.start(values);
@@ -519,16 +562,20 @@ export function App() {
                     />
                 )}
                 {path === "/minha-trajetoria" && !trajectoryBlocked && (
-                    <TrajectoryPage onNavigate={navigate} userId={userId} />
+                    <TrajectoryPage
+                        onNavigate={navigate}
+                        userId={userId}
+                        focusContact={query.get("contato") === "1"}
+                    />
                 )}
                 {path.startsWith("/produtor/") && (
                     <PublicTrajectoryPage
                         key={path}
+                        canViewContact={canViewContact}
                         id={path.split("/")[2]}
                         onNavigate={navigate}
                         catalogView={query.get("catalogo") === "1"}
                         offerId={query.get("oferta") ?? undefined}
-                        consumer={role === "consumer"}
                     />
                 )}
 
@@ -564,8 +611,10 @@ export function App() {
                 )}
                 {screenPath === "/conta" && (
                     <AccountPage
+                        userId={userId}
                         role={role}
                         consumerName={consumerName}
+                        onSaveConsumerName={saveConsumerName}
                         consumerEmail={email}
                         consumerCpf={cpf}
                         settings={settings}

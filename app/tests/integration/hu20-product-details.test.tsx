@@ -15,7 +15,7 @@ const product = {
     nome: "Mel do Cerrado",
     categoria: "Produtos",
     descricao:
-        "Mel produzido no território da Cafuringa. Consulte disponibilidade e formas de retirada diretamente com o produtor.",
+        "Mel produzido no território da Cafuringa. Consulte disponibilidade e formas de retirada diretamente com a produtora.",
     precoPorUnidade: 32.5,
     gramasPorUnidade: 500,
     fotos: [
@@ -64,11 +64,11 @@ function api(
     vi.stubGlobal("fetch", fetch);
     return fetch;
 }
-const open = (consumer = false) =>
+const open = (canViewContact = false) =>
     render(
         <ProductOfferDetails
             id={product.id}
-            consumer={consumer}
+            canViewContact={canViewContact}
             backPath="/explorar"
             onNavigate={vi.fn()}
         />,
@@ -84,7 +84,7 @@ it("CA01–CA05/CA07: consulta individual pública com descrição, preço, peso
     expect(screen.getByText(product.descricao)).toBeTruthy();
     expect(screen.getByText("R$ 32,50 / unidade")).toBeTruthy();
     expect(screen.getByText("500 g por unidade")).toBeTruthy();
-    expect(screen.getByText("Produtor: Dona Maria")).toBeTruthy();
+    expect(screen.getByText("Produtora: Dona Maria")).toBeTruthy();
     expect(container.textContent).not.toMatch(
         /CPF-PRIVADO|privado@example.com/,
     );
@@ -105,7 +105,7 @@ it("CA03: identifica a propriedade responsável quando o produtor a divulga", as
         }),
     );
     open();
-    expect(await screen.findByText("Produtor: Dona Maria")).toBeTruthy();
+    expect(await screen.findByText("Produtora: Dona Maria")).toBeTruthy();
     expect(screen.getByText("Propriedade: Sítio Boa Vista")).toBeTruthy();
 });
 
@@ -176,27 +176,26 @@ it("privacidade: não usa o telefone salvo na conta local para o produto de outr
         "cafuringa-contact",
         JSON.stringify({ authorized: true, whatsappNumber: "5561999999999" }),
     );
-    open(true);
+    open();
     await screen.findByRole("heading", { name: product.nome });
     await waitFor(() =>
         expect(
-            screen.queryByRole("button", { name: "Conversar pelo WhatsApp" }),
+            screen.queryByRole("link", { name: /Conversar pelo WhatsApp/ }),
         ).toBeNull(),
     );
 });
 
 it("contato autorizado vem do perfil público do responsável", async () => {
     api(undefined, "61988887777");
-    const external = vi.spyOn(window, "open").mockReturnValue(null);
     open(true);
-    fireEvent.click(
-        await screen.findByRole("button", { name: "Conversar pelo WhatsApp" }),
+    const link = await screen.findByRole("link", {
+        name: /Conversar pelo WhatsApp/,
+    });
+    expect(link.getAttribute("href")).toMatch(
+        /^https:\/\/wa\.me\/5561988887777\?text=/,
     );
-    expect(external).toHaveBeenCalledWith(
-        expect.stringContaining("https://wa.me/5561988887777"),
-        "_blank",
-        "noopener,noreferrer",
-    );
+    expect(link.getAttribute("target")).toBe("_blank");
+    expect(link.getAttribute("rel")).toBe("noopener noreferrer");
 });
 
 it("RNF04: detalhes sem violações WCAG A/AA detectáveis pelo axe", async () => {

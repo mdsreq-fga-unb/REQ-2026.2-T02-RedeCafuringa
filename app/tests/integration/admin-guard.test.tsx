@@ -23,7 +23,7 @@ describe("área administrativa — RN03/RNF08/CA06", () => {
             );
             expect(
                 screen.queryByRole("heading", {
-                    name: "Cadastro de administrador",
+                    name: "Cadastro de administradora",
                 }),
             ).toBeNull();
         },
@@ -52,23 +52,23 @@ describe("área administrativa — RN03/RNF08/CA06", () => {
         );
         expect(
             await screen.findByRole("heading", {
-                name: "Funções do administrador",
+                name: "Funções da administradora",
             }),
         ).toBeTruthy();
         expect(
             screen.getByRole("link", {
-                name: /consultar usuários cadastrados/i,
+                name: /consultar usuárias cadastradas/i,
             }),
         ).toBeTruthy();
         expect(
             screen.queryByRole("button", { name: "Entrar como adm" }),
         ).toBeNull();
         await user.click(
-            screen.getByRole("link", { name: /cadastrar administrador/i }),
+            screen.getByRole("link", { name: /cadastrar administradora/i }),
         );
         expect(
             await screen.findByRole("heading", {
-                name: "Cadastro de administrador",
+                name: "Cadastro de administradora",
             }),
         ).toBeTruthy();
         await user.type(screen.getByLabelText("E-mail"), "novo@exemplo.com");
@@ -80,7 +80,7 @@ describe("área administrativa — RN03/RNF08/CA06", () => {
         await user.click(screen.getByRole("button", { name: "Entrar" }));
         expect(
             await screen.findByRole("heading", {
-                name: "Usuário admin cadastrado com sucesso!",
+                name: "Administradora cadastrada com sucesso!",
             }),
         ).toBeTruthy();
     });
@@ -92,12 +92,12 @@ describe("área administrativa — RN03/RNF08/CA06", () => {
         await user.click(screen.getByText("Modo local · Explorar telas"));
         await user.click(
             screen.getByRole("button", {
-                name: "Entrar como administrador de teste",
+                name: "Entrar como administradora de teste",
             }),
         );
         expect(
             await screen.findByRole("heading", {
-                name: "Funções do administrador",
+                name: "Funções da administradora",
             }),
         ).toBeTruthy();
         expect(window.location.hash).toBe("#/admin/acesso");

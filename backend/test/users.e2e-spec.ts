@@ -38,6 +38,41 @@ describe('HU01 — Cadastrar perfil de consumidor (e2e)', () => {
     });
   });
 
+  it('permite à consumidora alterar apenas o próprio nome', async () => {
+    const token = await loginAs(t, Role.CONSUMIDOR);
+    const producer = await loginAs(t, Role.PRODUTOR);
+    const path = REGISTER + '/me';
+    const setName = (name: string) =>
+      t
+        .request()
+        .put(path)
+        .set('Authorization', 'Bearer ' + token)
+        .send({ nome: name });
+
+    await t.request().put(path).send({ nome: 'Ana' }).expect(401);
+    await t
+      .request()
+      .put(path)
+      .set('Authorization', 'Bearer ' + producer)
+      .send({ nome: 'Ana' })
+      .expect(403);
+    await t
+      .request()
+      .put(path)
+      .set('Authorization', 'Bearer ' + token)
+      .send({ nome: 'Ana', email: 'outro@exemplo.com' })
+      .expect(400);
+    await setName('   ').expect(400);
+    await setName('  Ana Gabriela  ').expect(204);
+
+    const { body } = await t
+      .request()
+      .get('/api/v1/auth/me')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200);
+    expect(body.nome).toBe('Ana Gabriela');
+  });
+
   it('RF01: aceita cadastro sem telefone', async () => {
     const { nome, cpf, email, senha, dataNascimento } = makeConsumer();
 
@@ -202,6 +237,60 @@ describe('HU02 — Cadastrar perfil de produtor (e2e)', () => {
       perfil: 'PRODUTOR',
       cpf: expect.stringMatching(/^\*\*\*\.\d{3}\.\d{3}-\*\*$/),
     });
+  });
+
+  it('verifica o CPF na primeira etapa sem criar a conta', async () => {
+    const { cpf, email } = makeProducer();
+    const path = PRODUCER_REGISTER + '/check-identity';
+    await t.request().post(path).send({ cpf, email }).expect(204);
+    expect(await t.connection.collection('users').countDocuments()).toBe(0);
+
+    await t.request().post(REGISTER).send(makeConsumer({ cpf })).expect(201);
+    const response = await t
+      .request()
+      .post(path)
+      .send({ cpf, email })
+      .expect(409);
+    expect(response.body.message).toBe('CPF já cadastrado');
+  });
+
+  it('carrega e atualiza os dados da conta do produtor autenticado', async () => {
+    const dto = makeProducer();
+    const path = PRODUCER_REGISTER + '/me';
+    await t.request().post(PRODUCER_REGISTER).send(dto).expect(201);
+    const login = await t
+      .request()
+      .post('/api/v1/auth/login')
+      .send({ email: dto.email, senha: dto.senha })
+      .expect(200);
+    const authorization = 'Bearer ' + (login.body.accessToken as string);
+
+    await t.request().get(path).expect(401);
+    await t
+      .request()
+      .get(path)
+      .set('Authorization', authorization)
+      .expect(200, {
+        nomeIniciativa: dto.nomeIniciativa,
+        categoriaOfertada: dto.categoriaOfertada,
+        formasPagamento: dto.formasPagamento,
+      });
+    const update = {
+      nomeIniciativa: 'Horta da Serra',
+      categoriaOfertada: 'Experiências',
+      formasPagamento: ['Cartão de débito'],
+    };
+    await t
+      .request()
+      .put(path)
+      .set('Authorization', authorization)
+      .send(update)
+      .expect(204);
+    await t
+      .request()
+      .get(path)
+      .set('Authorization', authorization)
+      .expect(200, update);
   });
 
   it('CA02/CA03: aceita cadastro sem CNPJ', async () => {

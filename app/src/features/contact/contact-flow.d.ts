@@ -1,5 +1,3 @@
-import type { Role } from "../../shared/types";
-
 export function normalizeWhatsAppNumber(number: string): string;
 
 export function isWhatsAppContactAvailable(
@@ -7,12 +5,23 @@ export function isWhatsAppContactAvailable(
     number: string,
 ): boolean;
 
-export function canStartWhatsAppContact(
-    role: Role | null,
-    authorized: boolean,
+export function toWhatsAppNumber(
+    phone: string | null | undefined,
+): string | undefined;
+
+export type ContactContext = {
+    kind: "product" | "experience" | "profile";
+    route: string;
+};
+
+export function createWhatsAppUrl(
     number: string,
-): boolean;
+    subject: string,
+    context?: ContactContext,
+): string;
 
-export function createWhatsAppUrl(number: string, subject: string): string;
-
-export function getContactLoginRoute(subjectId: string): string;
+export function whatsAppContactUrl(
+    phone: string | null | undefined,
+    subject: string,
+    context?: ContactContext,
+): string | undefined;

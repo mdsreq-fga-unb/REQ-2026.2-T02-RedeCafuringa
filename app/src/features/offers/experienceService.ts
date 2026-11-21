@@ -2,6 +2,7 @@ import { ApiHttpError, getApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { saveDemoOffer, notifyOffersChanged } from "./publishedOffers";
 import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
+import type { ApiProduct } from "./productTypes";
 
 export type ExperienceDraft = {
     nome: string;
@@ -23,7 +24,7 @@ export type RegisteredExperience = {
     duracao: string;
     fotos: string[];
     /** Responsável pela oferta (CA03, CA08): só dados de divulgação. */
-    produtor: { id: string; nomeIniciativa: string; localidade?: string };
+    produtor: ApiProduct["produtor"];
     /** Presente nas respostas da API (RN10); as rotas públicas só trazem disponíveis. */
     disponivel?: boolean;
 };
@@ -43,7 +44,7 @@ export async function registerExperience(
         throw new ApiHttpError({
             status: 401,
             message:
-                "Entre com seu perfil de produtor para cadastrar experiências.",
+                "Entre com seu perfil de produtora para cadastrar experiências.",
         });
     }
     if (isMockAuthEnabled) {
@@ -78,7 +79,7 @@ export async function registerExperience(
                     "demo-producer",
                 nomeIniciativa:
                     localStorage.getItem("cafuringa-name") ??
-                    "Produtor de teste",
+                    "Produtora de teste",
             },
         } satisfies RegisteredExperience;
         saveDemoOffer(experience);

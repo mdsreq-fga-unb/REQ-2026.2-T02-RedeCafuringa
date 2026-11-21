@@ -64,10 +64,10 @@ it("CA08: detalhe vem de GET /experiences/{id} e identifica o responsável", asy
     expect(
         await screen.findByRole("heading", { name: experience.nome }),
     ).toBeTruthy();
-    expect(screen.getByText("Produtor: Sítio Boa Vista")).toBeTruthy();
-    expect(screen.getByText("Propriedade: Fazenda Boa Vista")).toBeTruthy();
-    expect(screen.getByText("Núcleo Rural Cafuringa")).toBeTruthy();
-    expect(screen.getByText("2 horas")).toBeTruthy();
+    // Protótipo: o responsável aparece como Anfitrião (CA08), com Duração e Local.
+    expect(screen.getByText("Anfitriã: Sítio Boa Vista")).toBeTruthy();
+    expect(screen.getByText("Local: Núcleo Rural Cafuringa")).toBeTruthy();
+    expect(screen.getByText("Duração: 2 horas")).toBeTruthy();
     expect(screen.getByText(/R\$\s?45,50/)).toBeTruthy();
     // Não percorre o catálogo inteiro para achar uma experiência.
     expect(

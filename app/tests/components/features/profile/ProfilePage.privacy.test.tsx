@@ -17,9 +17,12 @@ describe("ProfilePage — HU02, critério 11 (dados sigilosos)", () => {
         (contactAvailable) => {
             const { container } = render(
                 <ProfilePage
-                    contactAvailable={contactAvailable}
+                    contactUrl={
+                        contactAvailable
+                            ? "https://wa.me/5561999999999?text=Ol%C3%A1"
+                            : undefined
+                    }
                     onNavigate={vi.fn()}
-                    onStartContact={vi.fn()}
                 />,
             );
             const text = container.textContent ?? "";

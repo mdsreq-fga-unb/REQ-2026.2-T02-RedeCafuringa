@@ -10,7 +10,6 @@ Nesta etapa, foram trabalhadas funcionalidades que permitem aos usuários estabe
 
 As atividades foram organizadas em torno dos seguintes fluxos:
 
-- **Contato direto com produtores:** desenvolvimento do recurso que permite aos usuários entrar em contato diretamente com os produtores, facilitando a comunicação e reduzindo a dependência de intermediários na interação entre as partes.
 - **Solicitação de pré-reserva de experiências:** implementação do fluxo para que os usuários possam manifestar interesse em participar de uma experiência, enviando uma solicitação de pré-reserva ao responsável pela oferta.
 - **Consulta de pré-reservas:** desenvolvimento da funcionalidade de visualização das solicitações realizadas, permitindo acompanhar as pré-reservas registradas na plataforma.
 - **Cancelamento de pré-reservas:** implementação do fluxo de cancelamento de uma solicitação, possibilitando que o usuário desista de uma pré-reserva anteriormente realizada.
@@ -33,7 +32,6 @@ Dessa forma, a Iteração 9 contribui para aproximar consumidores e produtores, 
 
     | HU | Funcionalidade | Descrição |
     |---|---|---|
-    | [HU39](../historias/HU39.md) | Disponibilizar contato direto | Comunicação direta entre usuários e produtores da plataforma. |
     | [HU44](../historias/HU44.md) | Solicitar pré-reserva de experiência | Envio de solicitações de pré-reserva para experiências disponíveis. |
     | [HU45](../historias/HU45.md) | Consultar pré-reserva | Visualização das solicitações de pré-reserva realizadas. |
     | [HU46](../historias/HU46.md) | Cancelar pré-reserva | Cancelamento de solicitações de pré-reserva registradas. |

@@ -168,3 +168,23 @@ describe("registrationService.registerAdmin", () => {
         await expect(registerAdmin(admin)).rejects.toThrow("Falha na conexão");
     });
 });
+
+describe("e-mail de administrador banido", () => {
+    it("mostra a orientação do servidor em vez de 'não autorizado'", async () => {
+        const message =
+            "Não foi possível concluir o cadastro. Procure a administração da Rede Cafuringa.";
+        localStorage.setItem("cafuringa-token", "admin-token");
+        localStorage.setItem("cafuringa-role", "admin");
+        vi.stubGlobal(
+            "fetch",
+            vi
+                .fn<typeof fetch>()
+                .mockResolvedValue(
+                    jsonResponse({ message, statusCode: 403 }, 403),
+                ),
+        );
+        const { registerAdmin } = await load();
+
+        await expect(registerAdmin(admin)).rejects.toThrow(message);
+    });
+});

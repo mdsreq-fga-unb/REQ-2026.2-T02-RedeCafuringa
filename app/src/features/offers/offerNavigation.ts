@@ -1,4 +1,8 @@
 const KEY = "cafuringa-offer-origins";
+export function offerDetailsRoute(id: string, experience: boolean) {
+    return `/oferta/${encodeURIComponent(id)}${experience ? "?tipo=experiencia" : ""}`;
+}
+
 const isDetails = (route: string) =>
     route.startsWith("/oferta/") ||
     new URLSearchParams(route.split("?")[1]).has("oferta");

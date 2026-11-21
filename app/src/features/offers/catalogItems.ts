@@ -17,6 +17,9 @@ export function registeredToCatalogItem(offer: RegisteredOffer): Product {
         name: offer.nome,
         producerId: offer.produtor.id,
         producerName: offer.produtor.nomeIniciativa,
+        ...(offer.produtor.primeiroNome
+            ? { producerFirstName: offer.produtor.primeiroNome }
+            : {}),
         ...(localidade ? { producerLocation: localidade } : {}),
         description: offer.descricao,
         category: experience ? "Experiências" : "Produtos",

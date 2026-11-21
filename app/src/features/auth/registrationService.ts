@@ -6,7 +6,7 @@ import { registerMockAdmin, registerMockConsumer } from "./mockAuth";
 export type AdminSignupData = { email: string; senha: string };
 
 const notAuthorized =
-    "Entre com uma conta autorizada para cadastrar administradores.";
+    "Entre com uma conta autorizada para cadastrar administradoras.";
 
 /**
  * HU03: só um administrador autenticado cadastra outro (RN03). A autorização
@@ -30,6 +30,12 @@ export async function registerAdmin(data: AdminSignupData): Promise<void> {
         if (error instanceof ApiHttpError) {
             if (error.status === 409)
                 throw new Error("E-mail já cadastrado", { cause: error });
+            // E-mail de administrador banido (403 com orientação).
+            if (
+                error.status === 403 &&
+                error.message.startsWith("Não foi possível concluir o cadastro")
+            )
+                throw new Error(error.message, { cause: error });
             if (error.status === 401 || error.status === 403)
                 throw new Error(notAuthorized, { cause: error });
             if (error.status === 400) {

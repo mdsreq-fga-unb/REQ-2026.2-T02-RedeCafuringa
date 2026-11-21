@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { AccountEditButton } from "./AccountEditButton";
+import { useEffect, useRef, useState } from "react";
+import {
+    getOwnTrajectory,
+    photoSrc,
+} from "@/features/trajectory/trajectoryService";
 import type { FormEvent } from "react";
 import { ActionButton } from "../../components/ui/ActionButton";
 import { BackButton } from "../../components/navigation/BackButton";
 import { formatCpf } from "../auth/cpf";
-import { canStartWhatsAppContact } from "../contact/contact-flow.js";
+import { isMockAuthEnabled } from "../auth/authMode";
+import { isWhatsAppContactAvailable } from "../contact/contact-flow.js";
 import { producerName } from "../offers/offerData";
-import type { ContactSettings, Role } from "../../shared/types";
+import { ProducerAccountForm } from "./ProducerAccountForm";
+import type { AuthResult, ContactSettings, Role } from "../../shared/types";
 
 type AccountPageProps = {
     role: Role | null;
+    userId?: AuthResult["user"]["id"] | null;
     consumerName: string;
     consumerEmail?: string;
     consumerCpf?: string;
+    onSaveConsumerName?: (name: string) => Promise<void>;
     settings: ContactSettings;
     draft: ContactSettings;
     saved: boolean;
@@ -20,14 +29,171 @@ type AccountPageProps = {
     onSaveContact: (event: FormEvent<HTMLFormElement>) => void;
     onNavigate: (path: string) => void;
     onSignOut: () => void;
+    /**
+     * HU39/CA03: na demonstração (sem API) o contato fica no aparelho. Com a
+     * API real, a autorização é gravada em "Minha trajetória" (HU12), que é a
+     * fonte do contato público; a Conta só aponta para lá.
+     */
+    demoContact?: boolean;
 };
+
+function ProducerAvatar({ name }: { name: string }) {
+    const [source, setSource] = useState("");
+
+    useEffect(() => {
+        const controller = new AbortController();
+        void getOwnTrajectory(controller.signal)
+            .then(({ fotoUrl }) => {
+                if (!controller.signal.aborted) setSource(photoSrc(fotoUrl));
+            })
+            .catch(() => {
+                // Mantém a inicial quando a foto não está disponível.
+            });
+        return () => controller.abort();
+    }, []);
+
+    return source ? (
+        <img
+            className="account-avatar"
+            src={source}
+            alt="Sua foto de perfil"
+            onError={() => setSource("")}
+        />
+    ) : (
+        <span className="account-avatar" aria-hidden="true">
+            {name.charAt(0).toLocaleUpperCase("pt-BR")}
+        </span>
+    );
+}
+
+function ConsumerName({
+    name,
+    onSave,
+}: {
+    name: string;
+    onSave?: (name: string) => Promise<void>;
+}) {
+    const [draft, setDraft] = useState<string | null>(null);
+    const [saving, setSaving] = useState(false);
+    const [message, setMessage] = useState<{ text: string; error: boolean }>();
+    const editing = draft !== null;
+    const input = useRef<HTMLInputElement>(null);
+    const editButton = useRef<HTMLButtonElement>(null);
+    const wasEditing = useRef(false);
+
+    useEffect(() => {
+        if (editing) input.current?.focus();
+        else if (wasEditing.current) editButton.current?.focus();
+        wasEditing.current = editing;
+    }, [editing]);
+
+    const cancel = () => {
+        setMessage(undefined);
+        setDraft(null);
+    };
+
+    const submit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (saving || draft === null || !onSave) return;
+        const nextName = draft.trim();
+        if (!nextName) {
+            setMessage({ text: "Informe seu nome.", error: true });
+            return;
+        }
+
+        setSaving(true);
+        setMessage(undefined);
+        try {
+            await onSave(nextName);
+            setDraft(null);
+            setMessage({ text: "Nome atualizado.", error: false });
+        } catch {
+            setMessage({
+                text: "Não foi possível atualizar o nome. Tente novamente.",
+                error: true,
+            });
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <div>
+            <dt>Nome</dt>
+            <dd>
+                {draft === null ? (
+                    <div className="consumer-name-row">
+                        <span>{name || "Não informado"}</span>
+                        {onSave && (
+                            <AccountEditButton
+                                action="edit"
+                                label="Editar nome"
+                                ref={editButton}
+                                onClick={() => {
+                                    setMessage(undefined);
+                                    setDraft(name);
+                                }}
+                            />
+                        )}
+                    </div>
+                ) : (
+                    <form
+                        className="consumer-name-form"
+                        onSubmit={submit}
+                        aria-busy={saving}
+                        onKeyDown={(event) => {
+                            if (event.key === "Escape" && !saving) cancel();
+                        }}
+                        noValidate
+                    >
+                        <input
+                            ref={input}
+                            className="text-input"
+                            type="text"
+                            aria-label="Nome completo"
+                            autoComplete="name"
+                            required
+                            maxLength={120}
+                            value={draft}
+                            readOnly={saving}
+                            onChange={(event) => setDraft(event.target.value)}
+                        />
+                        <AccountEditButton
+                            action="save"
+                            label={saving ? "Salvando nome" : "Salvar nome"}
+                            disabled={saving}
+                        />
+                        <AccountEditButton
+                            action="cancel"
+                            label="Cancelar edição"
+                            disabled={saving}
+                            onClick={cancel}
+                        />
+                    </form>
+                )}
+                {message && (
+                    <p
+                        className={
+                            message.error ? "field-error" : "save-status"
+                        }
+                        role={message.error ? "alert" : "status"}
+                    >
+                        {message.text}
+                    </p>
+                )}
+            </dd>
+        </div>
+    );
+}
 
 export function AccountPage(props: AccountPageProps) {
     const {
         role,
+        userId,
         consumerName,
         consumerEmail = "",
         consumerCpf = "",
+        onSaveConsumerName,
         settings,
         draft,
         saved,
@@ -36,24 +202,12 @@ export function AccountPage(props: AccountPageProps) {
         onSaveContact,
         onNavigate,
         onSignOut,
+        demoContact = isMockAuthEnabled,
     } = props;
-    const contactReady = canStartWhatsAppContact(
-        "consumer",
+    const contactReady = isWhatsAppContactAvailable(
         settings.authorized,
         settings.whatsappNumber,
     );
-    const [initiative, setInitiative] = useState(
-        () => localStorage.getItem("cafuringa-producer-initiative") ?? "",
-    );
-    const [category, setCategory] = useState(
-        () => localStorage.getItem("cafuringa-producer-category") ?? "Produtos",
-    );
-    const [paymentMethods, setPaymentMethods] = useState(
-        () =>
-            localStorage.getItem("cafuringa-producer-payment-methods") ??
-            "Pix, Cartão de crédito",
-    );
-    const [profileSaved, setProfileSaved] = useState(false);
     const displayName =
         role === "producer"
             ? (consumerName || producerName)
@@ -61,222 +215,165 @@ export function AccountPage(props: AccountPageProps) {
                   .split(/\s+/)[0]
             : (consumerName || "Visitante").split(/\s+/)[0];
 
-    const saveProducerProfile = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        localStorage.setItem("cafuringa-producer-initiative", initiative);
-        localStorage.setItem("cafuringa-producer-category", category);
-        localStorage.setItem(
-            "cafuringa-producer-payment-methods",
-            paymentMethods,
-        );
-        setProfileSaved(true);
-    };
-
     return (
         <section className="account-page">
             <BackButton
                 label="Voltar"
                 onClick={() => onNavigate("/explorar")}
             />
-            <h1>Olá, {displayName}</h1>
-            <p className="eyebrow">
-                {role === "producer"
-                    ? "Produtora"
-                    : role === "admin"
-                      ? "Administrador"
-                      : "Consumidora"}
-            </p>
+            {role === "producer" && userId != null && (
+                <ProducerAvatar key={userId} name={displayName} />
+            )}
+            <div
+                className={
+                    role === "consumer" ? "consumer-account-header" : undefined
+                }
+            >
+                {role === "consumer" && (
+                    <span className="account-avatar" aria-hidden="true">
+                        {displayName.charAt(0).toLocaleUpperCase("pt-BR")}
+                    </span>
+                )}
+                <div>
+                    <h1>Olá, {displayName}</h1>
+                    <p className="eyebrow">
+                        {role === "producer"
+                            ? "Produtora"
+                            : role === "admin"
+                              ? "Administradora"
+                              : "Consumidora"}
+                    </p>
+                </div>
+            </div>
             {role === "producer" && (
                 <>
-                    <ActionButton
-                        variant="orange"
-                        onClick={() => onNavigate("/minha-trajetoria")}
+                    {userId != null && (
+                        <ProducerAccountForm key={userId} userId={userId} />
+                    )}
+                    <section
+                        className="public-contact-card account-contact-card"
+                        aria-labelledby="account-contact-heading"
                     >
-                        Minha trajetória
-                    </ActionButton>
-                    <form
-                        className="account-profile-form"
-                        onSubmit={saveProducerProfile}
-                    >
-                        <div className="account-field">
-                            <label
-                                className="field-label"
-                                htmlFor="producer-initiative"
-                            >
-                                Nome da iniciativa{" "}
-                                <span aria-hidden="true">*</span>
-                            </label>
-                            <input
-                                id="producer-initiative"
-                                className="text-input"
-                                value={initiative}
-                                aria-label="Nome da iniciativa"
-                                placeholder="Ex.: Sítio Raízes"
-                                onChange={(event) => {
-                                    setInitiative(event.target.value);
-                                    setProfileSaved(false);
-                                }}
-                            />
-                        </div>
-                        <div className="account-field">
-                            <label
-                                className="field-label"
-                                htmlFor="producer-category"
-                            >
-                                Categoria <span aria-hidden="true">*</span>
-                            </label>
-                            <select
-                                id="producer-category"
-                                className="text-input"
-                                value={category}
-                                onChange={(event) => {
-                                    setCategory(event.target.value);
-                                    setProfileSaved(false);
-                                }}
-                            >
-                                <option>Produtos</option>
-                                <option>Experiências</option>
-                                <option>Produtos e experiências</option>
-                            </select>
-                        </div>
-                        <div className="account-field">
-                            <label
-                                className="field-label"
-                                htmlFor="producer-payment-methods"
-                            >
-                                Formas de pagamento{" "}
-                                <span aria-hidden="true">*</span>
-                            </label>
-                            <select
-                                id="producer-payment-methods"
-                                className="text-input"
-                                value={paymentMethods}
-                                onChange={(event) => {
-                                    setPaymentMethods(event.target.value);
-                                    setProfileSaved(false);
-                                }}
-                            >
-                                <option>Pix</option>
-                                <option>Pix, Cartão de crédito</option>
-                                <option>Pix, Dinheiro</option>
-                                <option>
-                                    Pix, Cartão de crédito, Dinheiro
-                                </option>
-                            </select>
-                        </div>
-                        <ActionButton variant="orange" type="submit">
-                            Salvar
-                        </ActionButton>
-                        {profileSaved && (
-                            <p className="save-status" role="status">
-                                Alterações salvas.
+                        <div>
+                            <h2 id="account-contact-heading">
+                                Contato público
+                            </h2>
+                            <p>
+                                Receba perguntas sobre seus produtos e
+                                experiências pelo WhatsApp.
                             </p>
+                        </div>
+                        {!demoContact && (
+                            <div className="public-contact-actions">
+                                <p>
+                                    Cadastre o número e autorize a divulgação em
+                                    Minha trajetória.
+                                </p>
+                                <ActionButton
+                                    variant="outline"
+                                    onClick={() =>
+                                        onNavigate(
+                                            "/minha-trajetoria?contato=1",
+                                        )
+                                    }
+                                >
+                                    Configurar contato público{" "}
+                                    <span aria-hidden="true">→</span>
+                                </ActionButton>
+                            </div>
                         )}
-                    </form>
-                    <details className="account-contact-disclosure">
-                        <summary>Contato público</summary>
-                        <form
-                            className="contact-settings"
-                            onSubmit={onSaveContact}
-                        >
-                            <h2>Contato público</h2>
-                            <p className="body-copy">
-                                Informe o WhatsApp que poderá ser divulgado no
-                                seu perfil e nas ofertas.
-                            </p>
-                            <label
-                                className="field-label"
-                                htmlFor="whatsapp-number"
+                        {demoContact && (
+                            <form
+                                className="contact-settings"
+                                onSubmit={onSaveContact}
                             >
-                                WhatsApp com código do país
-                            </label>
-                            <input
-                                id="whatsapp-number"
-                                className="text-input"
-                                type="tel"
-                                inputMode="tel"
-                                autoComplete="tel"
-                                value={draft.whatsappNumber}
-                                onChange={(event) => {
-                                    onDraftChange({
-                                        ...draft,
-                                        whatsappNumber: event.target.value,
-                                    });
-                                    onSavedChange(false);
-                                }}
-                                placeholder="Ex.: 5561999999999"
-                            />
-                            <label className="consent-row">
+                                <p className="contact-name">
+                                    {contactReady
+                                        ? "WhatsApp disponível no perfil e nas ofertas"
+                                        : "WhatsApp oculto no perfil e nas ofertas"}
+                                </p>
+                                <label
+                                    className="field-label"
+                                    htmlFor="whatsapp-number"
+                                >
+                                    WhatsApp com código do país
+                                </label>
                                 <input
-                                    type="checkbox"
-                                    checked={draft.authorized}
+                                    id="whatsapp-number"
+                                    className="text-input"
+                                    type="tel"
+                                    inputMode="tel"
+                                    autoComplete="tel"
+                                    value={draft.whatsappNumber}
                                     onChange={(event) => {
                                         onDraftChange({
                                             ...draft,
-                                            authorized: event.target.checked,
+                                            whatsappNumber: event.target.value,
                                         });
                                         onSavedChange(false);
                                     }}
+                                    placeholder="Ex.: 5561999999999"
                                 />
-                                <span>
-                                    Autorizo a divulgação deste número para
-                                    contato pelo WhatsApp.
-                                </span>
-                            </label>
-                            <ActionButton variant="orange" type="submit">
-                                Salvar contato
-                            </ActionButton>
-                            {saved && (
-                                <p className="save-status" role="status">
-                                    {contactReady
-                                        ? "Contato autorizado e disponível no perfil e nas ofertas."
-                                        : "Contato salvo. O botão ficará oculto até que haja um número válido e autorização de divulgação."}
-                                </p>
-                            )}
-                        </form>
-                    </details>
+                                <label className="consent-row">
+                                    <input
+                                        type="checkbox"
+                                        checked={draft.authorized}
+                                        onChange={(event) => {
+                                            onDraftChange({
+                                                ...draft,
+                                                authorized:
+                                                    event.target.checked,
+                                            });
+                                            onSavedChange(false);
+                                        }}
+                                    />
+                                    <span>
+                                        Autorizo a divulgação deste número para
+                                        contato pelo WhatsApp.
+                                    </span>
+                                </label>
+                                <ActionButton variant="orange" type="submit">
+                                    Salvar contato
+                                </ActionButton>
+                                {saved && (
+                                    <p className="save-status" role="status">
+                                        {contactReady
+                                            ? "Contato autorizado e disponível no perfil e nas ofertas."
+                                            : "Contato salvo. O botão ficará oculto até que haja um número válido e autorização de divulgação."}
+                                    </p>
+                                )}
+                            </form>
+                        )}
+                    </section>
                 </>
             )}
             {role === "consumer" && (
-                <div className="account-profile-form account-consumer-fields">
-                    <div className="account-field">
-                        <label className="field-label" htmlFor="consumer-email">
-                            E-mail <span aria-hidden="true">*</span>
-                        </label>
-                        <input
-                            id="consumer-email"
-                            placeholder="E-mail não disponível"
-                            className="text-input"
-                            type="email"
-                            value={consumerEmail}
-                            aria-label="E-mail"
-                            readOnly
+                <section
+                    className="account-details-card"
+                    aria-labelledby="consumer-details-heading"
+                >
+                    <h2 id="consumer-details-heading">Dados da conta</h2>
+                    <dl>
+                        <ConsumerName
+                            key={userId}
+                            name={consumerName}
+                            onSave={onSaveConsumerName}
                         />
-                    </div>
-                    <div className="account-field">
-                        <label className="field-label" htmlFor="consumer-cpf">
-                            CPF <span aria-hidden="true">*</span>
-                        </label>
-                        <input
-                            id="consumer-cpf"
-                            placeholder="CPF não disponível"
-                            className="text-input"
-                            value={
-                                consumerCpf.includes("*")
+                        <div>
+                            <dt>E-mail</dt>
+                            <dd>{consumerEmail || "Não informado"}</dd>
+                        </div>
+                        <div>
+                            <dt>CPF</dt>
+                            <dd>
+                                {(consumerCpf.includes("*")
                                     ? consumerCpf
-                                    : formatCpf(consumerCpf)
-                            }
-                            aria-label="CPF"
-                            readOnly
-                        />
-                    </div>
-                    <ActionButton
-                        variant="orange"
-                        onClick={() => onNavigate("/login/producer")}
-                    >
-                        Acessar como produtor
-                    </ActionButton>
-                </div>
+                                    : formatCpf(consumerCpf)) ||
+                                    "Não informado"}
+                            </dd>
+                        </div>
+                    </dl>
+                </section>
             )}
             {role === "admin" && (
                 <div className="account-profile-form">
@@ -284,13 +381,13 @@ export function AccountPage(props: AccountPageProps) {
                         variant="orange"
                         onClick={() => onNavigate("/admin/usuarios")}
                     >
-                        Usuários cadastrados
+                        Usuárias cadastradas
                     </ActionButton>
                     <ActionButton
                         variant="outline"
                         onClick={() => onNavigate("/cadastro/administrador")}
                     >
-                        Cadastrar administrador
+                        Cadastrar administradora
                     </ActionButton>
                 </div>
             )}

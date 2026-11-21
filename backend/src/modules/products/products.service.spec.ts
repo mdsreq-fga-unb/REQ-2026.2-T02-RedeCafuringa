@@ -246,6 +246,7 @@ describe('ProductsService (HU15/RF15)', () => {
       expect(res.produtor).toEqual({
         id: producerId.toHexString(),
         nomeIniciativa: 'Apiário Cafuringa',
+        primeiroNome: 'João',
         localidade: 'Fazenda Cafuringa',
       });
     });
@@ -273,11 +274,12 @@ describe('ProductsService (HU15/RF15)', () => {
         products.aggregate.mock.calls[0][0];
       const lookup = pipeline.find((s) => s.$lookup)?.$lookup;
       expect(lookup?.pipeline).toContainEqual({
-        $project: { _id: 0, nomeIniciativa: 1, localidade: 1 },
+        $project: { _id: 0, nome: 1, nomeIniciativa: 1, localidade: 1 },
       });
       expect(res.itens[0].produtor).toEqual({
         id: producerId.toHexString(),
         nomeIniciativa: 'Apiário Cafuringa',
+        primeiroNome: 'João',
         localidade: 'Fazenda Cafuringa',
       });
     });

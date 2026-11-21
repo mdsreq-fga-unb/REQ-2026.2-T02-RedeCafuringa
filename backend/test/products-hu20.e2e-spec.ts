@@ -69,6 +69,7 @@ describe('HU20/RF20 — Consultar detalhes do produto (e2e)', () => {
       id: p.id,
       nomeIniciativa: 'Apiário Cafuringa',
       localidade: 'Fazenda Boa Vista',
+      primeiroNome: 'João',
     });
   });
 
@@ -88,6 +89,7 @@ describe('HU20/RF20 — Consultar detalhes do produto (e2e)', () => {
       'id',
       'localidade',
       'nomeIniciativa',
+      'primeiroNome',
     ]);
     const body = JSON.stringify(res.body);
     for (const privado of [
