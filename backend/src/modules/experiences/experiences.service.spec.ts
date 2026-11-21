@@ -3,6 +3,7 @@ import { Types } from 'mongoose';
 import type { Model } from 'mongoose';
 import { PhotoOwnerType } from '../../common/photos/photo-gallery.policy.js';
 import type { PhotoGalleryService } from '../../common/photos/photo-gallery.service.js';
+import { buildProductSearch } from '../products/domain/product-search.js';
 import { Role } from '../users/domain/role.js';
 import type { User } from '../users/schemas/user.schema.js';
 import { ExperienceCategory } from './domain/experience.js';
@@ -297,6 +298,29 @@ describe('ExperiencesService (HU21/RF21)', () => {
       const [pipeline] = experiences.aggregate.mock.calls[0];
       expect(String(pipeline[0].$match.produtor)).toBe(userId);
       expect(res).toEqual({ itens: [], total: 0, pagina: 1, limite: 20 });
+    });
+
+    it('HU36: busca no nome e no produtor depois do $lookup e antes de paginar', async () => {
+      const { service, experiences } = setup();
+      await service.list({ busca: ' trilha ' });
+
+      const pipeline: Array<Record<string, unknown>> =
+        experiences.aggregate.mock.calls[0][0];
+      const unwind = pipeline.findIndex((s) => s.$unwind);
+      const facet = pipeline.findIndex((s) => s.$facet);
+      expect(pipeline[unwind + 1]).toEqual({
+        $match: buildProductSearch('trilha'),
+      });
+      expect(unwind + 1).toBeLessThan(facet);
+    });
+
+    it('HU36: sem termo de busca, não acrescenta filtro de texto', async () => {
+      const { service, experiences } = setup();
+      await service.list({ busca: '   ' });
+
+      const pipeline: Array<Record<string, unknown>> =
+        experiences.aggregate.mock.calls[0][0];
+      expect(pipeline.filter((s) => s.$match)).toHaveLength(1);
     });
 
     it('resultado vazio do banco vira página vazia', async () => {
