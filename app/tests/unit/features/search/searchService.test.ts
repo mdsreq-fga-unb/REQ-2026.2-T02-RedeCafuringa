@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { ApiHttpError, createApiClient } from "@/shared/api";
+import { ApiHttpError, apiResourceUrl, createApiClient } from "@/shared/api";
 import { searchOffers } from "@/features/search/searchService";
 
 const maria = {
@@ -100,7 +100,7 @@ describe("HU36 — searchOffers (API real)", () => {
             producerLocation: "Núcleo",
             price: 32,
             unit: "unidade",
-            image: "http://api.test/products/cafe/photos/f1?v=a",
+            image: apiResourceUrl("/products/cafe/photos/f1?v=a"),
         });
         expect(result.experiencias.total).toBe(1);
         expect(result.experiencias.itens[0]).toMatchObject({
