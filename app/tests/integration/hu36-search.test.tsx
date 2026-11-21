@@ -42,7 +42,7 @@ const resposta = {
 const emptyPage = { itens: [], total: 0, pagina: 1, limite: 20 };
 
 function api() {
-    const fetchMock = vi.fn((input: RequestInfo | URL) => {
+    const fetchMock = vi.fn<typeof fetch>((input) => {
         const url = new URL(String(input), "http://localhost");
         if (url.pathname === "/api/v1/search")
             return Promise.resolve(
