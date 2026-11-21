@@ -73,8 +73,63 @@ afterEach(() => {
     window.location.hash = "";
 });
 
+it("edita apenas o nome da consumidora e atualiza sua sessão", async () => {
+    localStorage.setItem("cafuringa-token", "token-consumidora");
+    localStorage.setItem("cafuringa-role", "consumer");
+    localStorage.setItem("cafuringa-name", "Gabriela");
+    window.location.hash = "#/conta";
+    const fetchMock = vi.fn<typeof fetch>(async (_url, request) =>
+        request?.method === "PUT"
+            ? new Response(null, { status: 204 })
+            : Response.json({
+                  id: "consumidora-1",
+                  nome: "Gabriela",
+                  email: "gabriela@exemplo.com",
+                  cpf: "***.982.247-**",
+                  perfil: "CONSUMIDOR",
+              }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    try {
+        render(<App />);
+        const user = userEvent.setup();
+        await screen.findByText("gabriela@exemplo.com");
+        await user.click(screen.getByRole("button", { name: "Editar nome" }));
+        const input = screen.getByRole("textbox", { name: "Nome completo" });
+        expect(document.activeElement).toBe(input);
+        await user.keyboard("{Escape}");
+        expect(document.activeElement).toBe(
+            screen.getByRole("button", { name: "Editar nome" }),
+        );
+        await user.click(screen.getByRole("button", { name: "Editar nome" }));
+        const editableName = screen.getByRole("textbox", {
+            name: "Nome completo",
+        });
+        await user.clear(editableName);
+        await user.type(editableName, "  Ana Gabriela  ");
+        await user.click(screen.getByRole("button", { name: "Salvar nome" }));
+
+        await screen.findByRole("heading", { name: "Olá, Ana" });
+        expect(screen.getByText("Nome atualizado.")).toBeTruthy();
+        expect(screen.getByText("***.982.247-**")).toBeTruthy();
+        expect(localStorage.getItem("cafuringa-name")).toBe("Ana Gabriela");
+        const update = fetchMock.mock.calls.find(
+            ([, request]) => request?.method === "PUT",
+        );
+        expect(update?.[0]).toBe("/api/v1/users/consumers/me");
+        expect(new Headers(update?.[1]?.headers).get("Authorization")).toBe(
+            "Bearer token-consumidora",
+        );
+        expect(JSON.parse(String(update?.[1]?.body))).toEqual({
+            nome: "Ana Gabriela",
+        });
+    } finally {
+        vi.unstubAllGlobals();
+    }
+});
+
 describe("fluxo de contato da aplicação", () => {
-    it("leva visitante ao login ao tentar falar com a responsável", async () => {
+    it("CA04: com a API real, o perfil de demonstração não usa o contato salvo no aparelho", () => {
         localStorage.setItem(
             "cafuringa-contact",
             JSON.stringify({
@@ -83,51 +138,33 @@ describe("fluxo de contato da aplicação", () => {
             }),
         );
         render(<App />);
-
-        fireEvent.click(
-            screen.getByRole("button", { name: "Conversar pelo WhatsApp" }),
-        );
 
         expect(
-            await screen.findByRole("heading", {
-                name: "Entre para falar com o responsável",
-            }),
-        ).toBeTruthy();
-        expect(window.location.hash).toBe("#/entrar?contato=perfil");
+            screen.queryByRole("link", { name: /Conversar pelo WhatsApp/ }),
+        ).toBeNull();
+        expect(
+            screen.queryByRole("button", { name: /Conversar pelo WhatsApp/ }),
+        ).toBeNull();
     });
 
-    it("abre o WhatsApp depois do login e sem salvar conversa no app", async () => {
-        localStorage.setItem(
-            "cafuringa-contact",
-            JSON.stringify({
-                whatsappNumber: "5561999999999",
-                authorized: true,
-            }),
-        );
-        const openWhatsApp = vi
-            .spyOn(window, "open")
-            .mockImplementation(() => null);
-        render(<App />);
-
-        fireEvent.click(
-            screen.getByRole("button", { name: "Conversar pelo WhatsApp" }),
-        );
-        await signInAsConsumer();
-
-        await waitFor(() => expect(openWhatsApp).toHaveBeenCalledOnce());
-        expect(openWhatsApp).toHaveBeenCalledWith(
-            expect.stringContaining("https://wa.me/5561999999999"),
-            "_blank",
-            "noopener,noreferrer",
-        );
-        const contactUrl = new URL(String(openWhatsApp.mock.calls[0][0]));
-        expect(contactUrl.searchParams.get("text")).toContain(
-            "Perfil de Dona Maria",
-        );
-        expect(window.location.hash).toBe("#/perfil");
-        expect(screen.queryByRole("textbox", { name: /mensagem/i })).toBeNull();
-        expect(localStorage.getItem("cafuringa-conversations")).toBeNull();
-    });
+    it.each([
+        { route: "#/oferta/mel", subject: "produto/mel" },
+        {
+            route: "#/oferta/queijos?tipo=experiencia",
+            subject: "experiencia/queijos",
+        },
+    ])(
+        "RN17: visitante consulta a oferta $subject sem link de contato",
+        async ({ route }) => {
+            window.location.hash = route;
+            render(<App />);
+            await screen.findByRole("heading", { name: "Descrição" });
+            expect(
+                screen.queryByRole("link", { name: /Conversar pelo WhatsApp/ }),
+            ).toBeNull();
+            expect(window.location.hash).toBe(route);
+        },
+    );
 
     it.each([
         { route: "#/oferta/mel", title: "Mel do Cerrado" },
@@ -136,37 +173,67 @@ describe("fluxo de contato da aplicação", () => {
             title: "Visita e Degustação de Queijos",
         },
     ])(
-        "mantém a oferta $title ao abrir o WhatsApp",
+        "RN17: consumidor autenticado abre o WhatsApp da oferta $title, sem conversa no app",
         async ({ route, title }) => {
-            localStorage.setItem(
-                "cafuringa-contact",
-                JSON.stringify({
-                    whatsappNumber: "5561999999999",
-                    authorized: true,
-                }),
-            );
+            localStorage.setItem("cafuringa-token", "token-falso");
+            localStorage.setItem("cafuringa-role", "consumer");
             window.location.hash = route;
-            const openWhatsApp = vi
-                .spyOn(window, "open")
-                .mockImplementation(() => null);
             render(<App />);
 
-            fireEvent.click(
-                await screen.findByRole("button", {
-                    name: "Conversar pelo WhatsApp",
-                }),
+            const link = await screen.findByRole("link", {
+                name: /Conversar pelo WhatsApp/,
+            });
+            const contactUrl = new URL(link.getAttribute("href") ?? "");
+            expect(contactUrl.origin + contactUrl.pathname).toBe(
+                "https://wa.me/5561999999999",
             );
-            await signInAsConsumer();
-
-            await waitFor(() => expect(openWhatsApp).toHaveBeenCalledOnce());
-            const contactUrl = new URL(String(openWhatsApp.mock.calls[0][0]));
-            expect(contactUrl.pathname).toBe("/5561999999999");
             expect(contactUrl.searchParams.get("text")).toContain(title);
+            expect(link.getAttribute("target")).toBe("_blank");
+            expect(link.getAttribute("rel")).toBe("noopener noreferrer");
+
+            fireEvent.click(link);
+
             expect(window.location.hash).toBe(route);
             expect(screen.getByRole("heading", { name: title })).toBeTruthy();
             expect(localStorage.getItem("cafuringa-conversations")).toBeNull();
         },
     );
+
+    it.each([
+        ["produto/mel", "#/oferta/mel", "Mel do Cerrado"],
+        [
+            "experiencia/queijos",
+            "#/oferta/queijos?tipo=experiencia",
+            "Visita e Degustação de Queijos",
+        ],
+    ])(
+        "login vindo de um pedido de contato (%s) volta para a oferta",
+        async (subject, expectedHash, title) => {
+            window.location.hash =
+                "#/entrar?contato=" + encodeURIComponent(subject);
+            render(<App />);
+
+            await signInAsConsumer();
+
+            await waitFor(() =>
+                expect(window.location.hash).toBe(expectedHash),
+            );
+            expect(
+                await screen.findByRole("heading", { name: title }),
+            ).toBeTruthy();
+        },
+    );
+
+    it("login vindo do contato de um perfil volta para o perfil público", async () => {
+        window.location.hash = "#/entrar?contato=produtor%2Fdemo-maria";
+        render(<App />);
+
+        await signInAsConsumer();
+
+        await waitFor(() =>
+            expect(window.location.hash).toBe("#/produtor/demo-maria"),
+        );
+    });
 });
 
 describe("entrada e acesso público", () => {
@@ -177,7 +244,7 @@ describe("entrada e acesso público", () => {
 
         expect(
             await screen.findByRole("heading", {
-                name: "Conheça nossos produtores",
+                name: "Conheça nossas produtoras",
             }),
         ).toBeTruthy();
         expect(
@@ -192,7 +259,7 @@ describe("entrada e acesso público", () => {
         );
         expect(
             await screen.findByRole("heading", {
-                name: "Conheça nossos produtores",
+                name: "Conheça nossas produtoras",
             }),
         ).toBeTruthy();
         await user.click(

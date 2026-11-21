@@ -98,7 +98,7 @@ export function RuralCarousel() {
                     }}
                 />
             ))}
-            <h1>Servimos a terra.</h1>
+            <h1>Servimos à terra</h1>
             <button
                 type="button"
                 className="carousel-arrow carousel-previous"

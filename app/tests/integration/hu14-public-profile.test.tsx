@@ -98,7 +98,7 @@ describe("HU14 — consulta pública", () => {
     });
 
     it.each([null, "consumer"] as const)(
-        "CA03: %s vê o telefone autorizado e o controle do protótipo",
+        "CA03: telefone autorizado é exibido apenas com sessão (%s)",
         async (role) => {
             if (role) seedSession(role);
             mockTrajectoryApi({
@@ -106,12 +106,23 @@ describe("HU14 — consulta pública", () => {
             });
             render(<App />);
             await loaded();
+            if (!role) {
+                expect(
+                    screen.queryByRole("link", {
+                        name: /Conversar pelo WhatsApp/,
+                    }),
+                ).toBeNull();
+                expect(screen.queryByText(/8888[-\s]*7777/)).toBeNull();
+                return;
+            }
             expect(
                 screen.getByText(/\(?61\)?\s*9\s*8888[-\s]*7777/),
             ).toBeTruthy();
             expect(
-                screen.getByRole("button", { name: "Conversar pelo WhatsApp" }),
-            ).toBeTruthy();
+                screen
+                    .getByRole("link", { name: /Conversar pelo WhatsApp/ })
+                    .getAttribute("href"),
+            ).toContain("https://wa.me/5561988887777?");
         },
     );
 
@@ -379,7 +390,7 @@ describe("HU14 — protótipos e acessibilidade", () => {
             await user.click(screen.getByRole("button", { name: "Explorar" }));
             expect(
                 await screen.findByRole("heading", {
-                    name: "Conheça nossos produtores",
+                    name: "Conheça nossas produtoras",
                 }),
             ).toBeTruthy();
             await user.click(
@@ -400,7 +411,7 @@ describe("HU14 — protótipos e acessibilidade", () => {
         await user.click(screen.getByRole("button", { name: /Voltar/ }));
         expect(
             await screen.findByRole("heading", {
-                name: "Conheça nossos produtores",
+                name: "Conheça nossas produtoras",
             }),
         ).toBeTruthy();
     });

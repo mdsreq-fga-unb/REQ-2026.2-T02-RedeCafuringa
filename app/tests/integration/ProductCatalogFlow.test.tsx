@@ -124,7 +124,7 @@ describe("catálogo de produtos no app", () => {
         expect(window.location.hash).toBe("#/explorar");
         expect(
             await screen.findByRole("heading", {
-                name: "Conheça nossos produtores",
+                name: "Conheça nossas produtoras",
             }),
         ).toBeTruthy();
         expect(

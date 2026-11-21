@@ -25,7 +25,7 @@ describe("productToOffer", () => {
     it("informa o produtor e orienta o contato com ele", () => {
         const offer = productToOffer(cesta);
 
-        expect(offer.details).toContain("Produtor: Sítio Raízes");
+        expect(offer.details).toContain("Produtora: Sítio Raízes");
         expect(offer.description).toMatch(/produtor/i);
     });
 });

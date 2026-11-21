@@ -6,17 +6,17 @@ import { resetDemoData, type DemoResetAction } from "./demoTools";
 const screens = [
     ["Explorar", "/explorar"],
     ["Escolha de perfil", "/escolher-perfil"],
-    ["Login consumidor", "/login/consumer"],
-    ["Login produtor", "/login/producer"],
-    ["Cadastro consumidor", "/cadastro/consumidor"],
-    ["Cadastro produtor", "/cadastro"],
-    ["Acesso administrador", "/admin/acesso"],
-    ["Login administrador", "/admin/entrar"],
-    ["Usuários cadastrados", "/admin/usuarios"],
-    ["Cadastro administrador", "/cadastro/administrador"],
-    ["Sucesso administrador", "/conta-criada/admin"],
-    ["Sucesso consumidor", "/conta-criada/consumer"],
-    ["Sucesso produtor", "/conta-criada/producer"],
+    ["Login consumidora", "/login/consumer"],
+    ["Login produtora", "/login/producer"],
+    ["Cadastro consumidora", "/cadastro/consumidor"],
+    ["Cadastro produtora", "/cadastro"],
+    ["Acesso administradora", "/admin/acesso"],
+    ["Login administradora", "/admin/entrar"],
+    ["Usuárias cadastradas", "/admin/usuarios"],
+    ["Cadastro administradora", "/cadastro/administrador"],
+    ["Sucesso administradora", "/conta-criada/admin"],
+    ["Sucesso consumidora", "/conta-criada/consumer"],
+    ["Sucesso produtora", "/conta-criada/producer"],
     ["Perfil", "/perfil"],
     ["Catálogo", "/catalogo"],
 ] as const;
@@ -35,7 +35,7 @@ export function DemoNavigation({
             !window.confirm(
                 action === "all"
                     ? "Apagar os cadastros locais, a sessão e as configurações de teste?"
-                    : "Apagar os usuários cadastrados localmente e encerrar a sessão? As contas padrão de teste continuarão disponíveis.",
+                    : "Apagar as usuárias cadastradas localmente e encerrar a sessão? As contas padrão de teste continuarão disponíveis.",
             )
         )
             return;
@@ -72,19 +72,19 @@ export function DemoNavigation({
                         type="button"
                         onClick={() => void enter("ana@exemplo.com")}
                     >
-                        Entrar como consumidor de teste
+                        Entrar como consumidora de teste
                     </button>
                     <button
                         type="button"
                         onClick={() => void enter("admin@exemplo.com")}
                     >
-                        Entrar como administrador de teste
+                        Entrar como administradora de teste
                     </button>
                     <button
                         type="button"
                         onClick={() => void enter("produtor@exemplo.com")}
                     >
-                        Entrar como produtor de teste
+                        Entrar como produtora de teste
                     </button>
                 </nav>
                 <fieldset className="demo-tools">
@@ -95,7 +95,7 @@ export function DemoNavigation({
                     </p>
                     <nav aria-label="Ferramentas de desenvolvedor">
                         <button type="button" onClick={() => reset("users")}>
-                            Apagar usuários cadastrados
+                            Apagar usuárias cadastradas
                         </button>
                         <button type="button" onClick={() => reset("session")}>
                             Encerrar sessão de teste
@@ -105,7 +105,7 @@ export function DemoNavigation({
                         </button>
                     </nav>
                     <p>
-                        As contas padrão de consumidor e produtor permanecem
+                        As contas padrão de consumidora e produtora permanecem
                         disponíveis.
                     </p>
                 </fieldset>

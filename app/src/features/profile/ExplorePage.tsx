@@ -73,22 +73,11 @@ export function ExplorePage({
     return (
         <section className="explore-page" aria-label="Explorar a Cafuringa">
             <RuralCarousel />
-            <form
-                role="search"
-                className="explore-search"
-                noValidate
-                onSubmit={submitSearch}
-            >
-                <button
-                    type="submit"
-                    className="explore-search-submit"
-                    aria-label="Buscar"
-                >
-                    <span aria-hidden="true">⌕</span>
-                </button>
-                <label htmlFor={searchId} className="visually-hidden">
-                    Buscar produtores e suas ofertas
-                </label>
+            <label className="explore-search">
+                <span aria-hidden="true">⌕</span>
+                <span className="visually-hidden">
+                    Buscar produtoras e suas ofertas
+                </span>
                 <input
                     id={searchId}
                     type="search"
@@ -170,7 +159,7 @@ export function ExplorePage({
                 onNavigate={onNavigate}
             />
             <div className="explore-producers-heading">
-                <h2 className="explore-heading">Conheça nossos produtores</h2>
+                <h2 className="explore-heading">Conheça nossas produtoras</h2>
                 <button
                     className="text-action"
                     aria-expanded={showAll}
@@ -184,11 +173,11 @@ export function ExplorePage({
                     <span aria-hidden="true">→</span>
                 </button>
             </div>
-            {loading && <p role="status">Carregando produtores…</p>}
+            {loading && <p role="status">Carregando produtoras…</p>}
             {error && (
                 <div role="alert">
                     <p>
-                        Não foi possível carregar os produtores. Verifique a
+                        Não foi possível carregar as produtoras. Verifique a
                         conexão e tente novamente.
                     </p>
                     <ActionButton
@@ -206,8 +195,8 @@ export function ExplorePage({
             {!loading && !error && visible.length === 0 && (
                 <p role="status">
                     {search || producers.length > 0
-                        ? "Nenhum produtor encontrado para esta busca."
-                        : "Ainda não há produtores disponíveis para consulta."}
+                        ? "Nenhuma produtora encontrada para esta busca."
+                        : "Ainda não há produtoras disponíveis para consulta."}
                 </p>
             )}
             <div className="producer-list" id="public-producer-list">
@@ -242,7 +231,7 @@ export function ExplorePage({
                         </span>
                         <span className="producer-card-copy">
                             <strong>
-                                {producer.nomeIniciativa || "Produtor"}
+                                {producer.nomeIniciativa || "Produtora"}
                             </strong>
                             {producer.trajetoria && (
                                 <span>{producer.trajetoria}</span>

@@ -97,11 +97,11 @@ function failureMessage(error: unknown, experience: boolean): string {
         return "Não foi possível concluir o cadastro. Verifique sua conexão e tente novamente. Os dados e fotos foram preservados.";
     switch (error.status) {
         case 401:
-            return "Sua sessão expirou. Entre novamente como produtor. Os dados preenchidos foram preservados nesta tela.";
+            return "Sua sessão expirou. Entre novamente como produtora. Os dados preenchidos foram preservados nesta tela.";
         case 403:
             return `Seu perfil não tem permissão para cadastrar ${experience ? "experiências" : "produtos"}. ${kept}`;
         case 404:
-            return `Sua conta de produtor não está ativa. Fale com a administração da rede. ${kept}`;
+            return `Sua conta de produtora não está ativa. Fale com a administração da rede. ${kept}`;
         case 400:
         case 413:
         case 415: {

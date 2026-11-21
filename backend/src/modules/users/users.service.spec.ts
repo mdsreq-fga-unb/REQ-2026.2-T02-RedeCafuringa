@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
 import { makeConsumer, makeProducer } from '@test/factories';
@@ -22,12 +23,14 @@ function chainQuery<T>(value: T) {
     select: vi.fn<(fields: string) => unknown>(),
     sort: vi.fn<(order: Record<string, number>) => unknown>(),
     collation: vi.fn<(options: object) => unknown>(),
+    lean: vi.fn<() => unknown>(),
     skip: vi.fn<(count: number) => unknown>(),
     limit: vi.fn<(count: number) => unknown>(),
     exec: vi.fn().mockResolvedValue(value),
   };
   for (const step of [
     chain.select,
+    chain.lean,
     chain.sort,
     chain.collation,
     chain.skip,
@@ -49,6 +52,7 @@ function setup() {
     })),
     findOne: vi.fn().mockReturnValue(query(null)),
     findById: vi.fn().mockReturnValue(query(null)),
+    updateOne: vi.fn().mockReturnValue(query({ matchedCount: 1 })),
   };
   const cipher = {
     blindIndex: vi.fn((value: string) => `idx:${value}`),
@@ -58,16 +62,140 @@ function setup() {
   const hasher = {
     hash: vi.fn(async (value: string) => `hash:${value}`),
   };
+  const bans = { isBanned: vi.fn().mockResolvedValue(false) };
   const service = new UsersService(
     model as unknown as Model<User>,
     cipher as unknown as PiiCipher,
     hasher as unknown as PasswordHasher,
+    bans as never,
   );
 
-  return { service, model, cipher, hasher };
+  return { service, model, cipher, hasher, bans };
 }
 
 describe('UsersService', () => {
+  describe('dados da titular da conta', () => {
+    const id = new Types.ObjectId().toHexString();
+
+    it('consulta apenas os dados da iniciativa da produtora ativa', async () => {
+      const { service, model } = setup();
+      const account = {
+        nomeIniciativa: 'Horta da Maria',
+        categoriaOfertada: 'Experiências',
+        formasPagamento: ['Pix'],
+      };
+      model.findOne.mockReturnValue(chainQuery(account));
+
+      await expect(service.getProducerAccount(id)).resolves.toEqual(account);
+      expect(model.findOne).toHaveBeenCalledWith({
+        _id: id,
+        perfil: Role.PRODUTOR,
+        ativo: true,
+      });
+    });
+
+    it('carrega uma conta de produtora legada sem dados de iniciativa', async () => {
+      const { service, model } = setup();
+      model.findOne.mockReturnValue(chainQuery({}));
+
+      await expect(service.getProducerAccount(id)).resolves.toEqual({
+        nomeIniciativa: '',
+        categoriaOfertada: 'Produtos',
+        formasPagamento: [],
+      });
+
+      model.findOne.mockReturnValue(chainQuery(null));
+      await expect(service.getProducerAccount(id)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
+    });
+
+    it('atualiza só o nome da consumidora ativa', async () => {
+      const { service, model } = setup();
+      await service.updateConsumerName(id, 'Maria');
+      expect(model.updateOne).toHaveBeenCalledWith(
+        { _id: id, perfil: Role.CONSUMIDOR, ativo: true },
+        { $set: { nome: 'Maria' } },
+      );
+    });
+
+    it('atualiza os dados da iniciativa da produtora ativa', async () => {
+      const { service, model } = setup();
+      const dto = makeProducer();
+      const account = {
+        nomeIniciativa: dto.nomeIniciativa,
+        categoriaOfertada: dto.categoriaOfertada,
+        formasPagamento: dto.formasPagamento,
+      };
+      await service.updateProducerAccount(id, account);
+      expect(model.updateOne).toHaveBeenCalledWith(
+        { _id: id, perfil: Role.PRODUTOR, ativo: true },
+        { $set: account },
+      );
+    });
+
+    it('recusa salvar quando a conta ativa não existe', async () => {
+      const { service, model } = setup();
+      model.updateOne.mockReturnValue(query({ matchedCount: 0 }));
+      await expect(
+        service.updateConsumerName(id, 'Maria'),
+      ).rejects.toBeInstanceOf(NotFoundException);
+      const dto = makeProducer();
+      await expect(
+        service.updateProducerAccount(id, {
+          nomeIniciativa: dto.nomeIniciativa,
+          categoriaOfertada: dto.categoriaOfertada,
+          formasPagamento: dto.formasPagamento,
+        }),
+      ).rejects.toBeInstanceOf(NotFoundException);
+    });
+  });
+
+  describe('banimento impede novo cadastro', () => {
+    const BANNED =
+      'Não foi possível concluir o cadastro. Procure a administração da Rede Cafuringa.';
+
+    it('consumidor banido (CPF ou e-mail) não volta', async () => {
+      const { service, model, bans, cipher } = setup();
+      bans.isBanned.mockResolvedValue(true);
+      const dto = makeConsumer();
+
+      await expect(service.createConsumer(dto)).rejects.toThrow(
+        new ForbiddenException(BANNED),
+      );
+      expect(bans.isBanned).toHaveBeenCalledWith({
+        cpfHash: cipher.blindIndex(dto.cpf),
+        email: dto.email.toLowerCase(),
+      });
+      expect(model.create).not.toHaveBeenCalled();
+    });
+
+    it('produtor banido (CPF, CNPJ ou e-mail) não volta', async () => {
+      const { service, model, bans } = setup();
+      bans.isBanned.mockResolvedValue(true);
+      const dto = makeProducer();
+
+      await expect(service.createProducer(dto)).rejects.toBeInstanceOf(
+        ForbiddenException,
+      );
+      expect(bans.isBanned).toHaveBeenCalledWith(
+        expect.objectContaining({ cnpjHash: expect.any(String) }),
+      );
+      expect(model.create).not.toHaveBeenCalled();
+    });
+
+    it('administrador banido (e-mail) não é recriado', async () => {
+      const { service, model, bans } = setup();
+      bans.isBanned.mockResolvedValue(true);
+
+      await expect(
+        service.createAdmin({ email: 'Adm@Exemplo.com', senha: 'Senha1234' }),
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(bans.isBanned).toHaveBeenCalledWith({ email: 'adm@exemplo.com' });
+      expect(model.create).not.toHaveBeenCalled();
+    });
+  });
+
   describe('createConsumer (HU01)', () => {
     it('CA03: cria o perfil com papel CONSUMIDOR', async () => {
       const { service, model } = setup();

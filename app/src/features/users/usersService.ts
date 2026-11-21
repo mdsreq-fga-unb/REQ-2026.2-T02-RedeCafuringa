@@ -13,9 +13,9 @@ export type UserQuery = {
 };
 
 export const profileLabels: Record<UserDetail["perfil"], string> = {
-    CONSUMIDOR: "Consumidor",
-    PRODUTOR: "Produtor",
-    ADMINISTRADOR: "Administrador",
+    CONSUMIDOR: "Consumidora",
+    PRODUTOR: "Produtora",
+    ADMINISTRADOR: "Administradora",
 };
 
 function sessionHeaders() {
@@ -34,9 +34,11 @@ export async function listUsers(
 ): Promise<UserList> {
     if (isMockAuthEnabled) {
         const search = (query.busca ?? "").trim().toLocaleLowerCase("pt-BR");
+        const deletedIds = readDeletedDemoUsers();
         const users = readMockUserDetails()
             .filter(
                 (item) =>
+                    !deletedIds.includes(item.id) &&
                     (!query.perfil || item.perfil === query.perfil) &&
                     [item.nome, item.email, item.nomeIniciativa ?? ""].some(
                         (value) =>
@@ -72,11 +74,13 @@ export async function getUser(
     signal?: AbortSignal,
 ): Promise<UserDetail> {
     if (isMockAuthEnabled) {
-        const user = readMockUserDetails().find((item) => item.id === id);
+        const user = readMockUserDetails().find(
+            (item) => item.id === id && !readDeletedDemoUsers().includes(id),
+        );
         if (!user)
             throw new ApiHttpError({
                 status: 404,
-                message: "Usuário não encontrado",
+                message: "Usuária não encontrada",
             });
         return user;
     }
@@ -84,4 +88,64 @@ export async function getUser(
         headers: sessionHeaders(),
         signal,
     });
+}
+
+/** RN04: motivos aceitos para a exclusão administrativa. */
+export type DeletionReason = "INATIVIDADE" | "DESCUMPRIMENTO_REGRAS";
+
+/** Rótulo e consequência de cada motivo, na ordem do diálogo. */
+export const deletionReasons: Record<
+    DeletionReason,
+    { label: string; hint: string }
+> = {
+    INATIVIDADE: {
+        label: "Inatividade",
+        hint: "A pessoa poderá se cadastrar de novo com os mesmos dados.",
+    },
+    DESCUMPRIMENTO_REGRAS: {
+        label: "Banimento por descumprimento das regras",
+        hint: "A pessoa não poderá se cadastrar de novo com o mesmo CPF, CNPJ ou e-mail.",
+    },
+};
+
+const DELETED_DEMO_USERS = "cafuringa-demo-deleted-users";
+
+/** Contas excluídas na demonstração (sem API), só para a lista refletir a ação. */
+export function readDeletedDemoUsers(): string[] {
+    try {
+        const ids: unknown = JSON.parse(
+            localStorage.getItem(DELETED_DEMO_USERS) ?? "[]",
+        );
+        return Array.isArray(ids) ? ids.map(String) : [];
+    } catch {
+        return [];
+    }
+}
+
+/**
+ * Exclui definitivamente a conta (`DELETE /users/{id}`). O motivo é
+ * obrigatório (RN04) e vai como parâmetro; nenhum dado pessoal vai na URL.
+ */
+export async function deleteUser(
+    id: string,
+    motivo: DeletionReason,
+): Promise<void> {
+    if (isMockAuthEnabled) {
+        localStorage.setItem(
+            DELETED_DEMO_USERS,
+            JSON.stringify([...new Set([...readDeletedDemoUsers(), id])]),
+        );
+        return;
+    }
+    await getApiClient().delete<void>(`/users/${encodeURIComponent(id)}`, {
+        headers: sessionHeaders(),
+        query: { motivo },
+    });
+}
+
+/** Como a conta é nomeada na confirmação e no aviso de sucesso. */
+export function accountLabel(user: UserDetail): string {
+    return user.perfil === "PRODUTOR" && user.nomeIniciativa
+        ? `${user.nomeIniciativa} (${user.nome})`
+        : user.nome;
 }

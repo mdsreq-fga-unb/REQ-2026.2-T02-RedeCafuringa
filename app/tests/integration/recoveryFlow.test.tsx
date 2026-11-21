@@ -71,6 +71,7 @@ describe("HU10 — fluxo completo de recuperação de acesso", () => {
         await user.type(screen.getByLabelText("Senha"), "novaSenha1");
         await user.click(screen.getByRole("button", { name: "Entrar" }));
 
-        await waitFor(() => expect(window.location.hash).toBe("#/conta"));
+        // Depois do login, a página principal (HU39: não mais a Conta).
+        await waitFor(() => expect(window.location.hash).toBe("#/explorar"));
     });
 });

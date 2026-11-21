@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   Headers,
   HttpCode,
   HttpStatus,
@@ -60,6 +61,8 @@ import { ExperiencesService } from './experiences.service.js';
 
 /** Versão certa na URL: o conteúdo nunca muda, pode ficar em cache para sempre. */
 const IMMUTABLE = 'public, max-age=31536000, immutable';
+/** HU24 CA06: pode guardar, mas sempre revalida (ETag) antes de mostrar. */
+const CATALOG_CACHE = 'no-cache';
 const FOTOS = PHOTO_GALLERY_POLICIES[PhotoOwnerType.EXPERIENCIA];
 const MB = 1024 * 1024;
 
@@ -162,14 +165,38 @@ export class ExperiencesController {
 
   @Public()
   @Get()
+  // HU24 CA06: o catálogo muda a qualquer momento (cadastro, retirada da
+  // oferta, produtor desativado). `no-cache` obriga navegador e proxies a
+  // revalidar a cada acesso; o ETag do Express devolve 304 sem corpo quando
+  // nada mudou, o que poupa dados em conexões lentas (RNF06).
+  @Header('Cache-Control', CATALOG_CACHE)
   @ApiOperation({
     summary: 'Consultar o catálogo de experiências',
     description:
-      'Catálogo público: experiências disponíveis de produtores ativos, da mais nova à mais antiga, paginadas. `produtor` restringe ao catálogo de um perfil; `busca` procura no nome da experiência e no nome da iniciativa, sem diferenciar acentos. Cada item tem o mesmo formato de `GET /experiences/{id}`.',
+      'HU24/RF24 (CA01-CA04, CA06-CA08, RN10): catálogo público, sem login. Só experiências disponíveis de produtores ativos, da mais nova à mais antiga, paginadas; sem resultados, `itens` vem vazio. `produtor` restringe ao catálogo de um perfil. Cada item tem o mesmo formato de `GET /experiences/{id}`. A resposta traz `ETag` e `Cache-Control: no-cache`: reenvie o `ETag` em `If-None-Match` para receber 304 quando o catálogo não mudou.',
+  })
+  @ApiHeader({
+    name: 'If-None-Match',
+    required: false,
+    description:
+      'ETag de uma consulta anterior. Se o catálogo não mudou, a resposta é 304 sem corpo (CA06, RNF06).',
   })
   @ApiOkResponse({
     type: ExperienceListResponse,
     description: 'Página do catálogo',
+    headers: {
+      ETag: {
+        description: 'Versão desta página do catálogo',
+        schema: { type: 'string' },
+      },
+      'Cache-Control': {
+        description: 'Sempre `no-cache`: revalidar a cada acesso (CA06)',
+        schema: { type: 'string', example: CATALOG_CACHE },
+      },
+    },
+  })
+  @ApiNotModifiedResponse({
+    description: 'O catálogo não mudou desde o `ETag` enviado (CA06)',
   })
   @ApiBadRequestResponse({
     description: 'Filtro ou paginação inválidos',

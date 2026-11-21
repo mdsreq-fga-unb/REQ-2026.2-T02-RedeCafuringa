@@ -70,6 +70,16 @@ describe("apiCacheRule", () => {
         expect(re.test("https://api.exemplo.com/v1x/ofertas")).toBe(false);
     });
 
+    it("não usa cache offline para consultas com autorização de contato revogável", () => {
+        const re = pattern(API);
+
+        expect(re.test(`${API}/producers`)).toBe(false);
+        expect(re.test(`${API}/producers/?pagina=2`)).toBe(false);
+        expect(re.test(`${API}/producers/abc/trajectory`)).toBe(false);
+        expect(re.test(`${API}/producers/abc/trajectory?lang=pt`)).toBe(false);
+        expect(re.test(`${API}/producers/abc/photo?v=1`)).toBe(true);
+    });
+
     it("aceita API na raiz do domínio", () => {
         const re = pattern("https://api.exemplo.com");
 

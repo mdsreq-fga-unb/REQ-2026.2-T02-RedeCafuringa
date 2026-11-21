@@ -5,6 +5,7 @@ process.env.MAIL_RETRY_DELAYS_MS = '0';
 import { createHash } from 'node:crypto';
 import { makeProducer, VALID_PASSWORD } from '@test/factories';
 import { MailService } from '../src/common/mail/mail.service.js';
+import { PasswordResetService } from '../src/modules/auth/password-reset/password-reset.service.js';
 import { Role } from '../src/modules/users/domain/role.js';
 import { UsersService } from '../src/modules/users/users.service.js';
 import { forgeToken, seedUser } from './utils/auth.js';
@@ -27,6 +28,7 @@ interface SentMail {
 
 describe('HU10 — Recuperar acesso à conta (e2e)', () => {
   let t: TestApp;
+  let reset: PasswordResetService;
   const sent: SentMail[] = [];
   const fakeMail = {
     send: vi.fn(async (message: SentMail) => {
@@ -38,15 +40,19 @@ describe('HU10 — Recuperar acesso à conta (e2e)', () => {
     t = await createTestApp((builder) =>
       builder.overrideProvider(MailService).useValue(fakeMail),
     );
+    reset = t.app.get(PasswordResetService);
   });
 
   beforeEach(async () => {
+    // A resposta HTTP pode chegar antes de o envio do teste anterior terminar.
+    await reset.beforeApplicationShutdown();
     await t.clearDatabase();
     sent.length = 0;
     fakeMail.send.mockClear();
   });
 
   afterAll(async () => {
+    await reset?.beforeApplicationShutdown();
     await t?.close();
   });
 
@@ -178,7 +184,7 @@ describe('HU10 — Recuperar acesso à conta (e2e)', () => {
         .send({ email: 'fantasma@exemplo.com' })
         .expect(202);
 
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await reset.beforeApplicationShutdown();
       expect(fakeMail.send).not.toHaveBeenCalled();
       expect(
         await t.connection.collection('password_reset_tokens').countDocuments(),
@@ -193,7 +199,7 @@ describe('HU10 — Recuperar acesso à conta (e2e)', () => {
 
       await t.request().post(REQUEST).send({ email }).expect(202);
 
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await reset.beforeApplicationShutdown();
       expect(fakeMail.send).not.toHaveBeenCalled();
     });
 

@@ -84,6 +84,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/users/consumers/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Alterar nome da consumidora
+         * @description Atualiza apenas o nome da titular da sessão.
+         */
+        put: operations["usersUpdateConsumerName"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/producers/check-identity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validar CPF, CNPJ e e-mail antes de avançar no cadastro
+         * @description Verifica se os dados podem ser usados no cadastro sem criar a conta.
+         */
+        post: operations["usersCheckProducerIdentity"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/producers/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar conta da produtora
+         * @description Retorna os dados da iniciativa da titular da sessão.
+         */
+        get: operations["usersGetProducerAccount"];
+        /**
+         * Atualizar conta da produtora
+         * @description Salva iniciativa, categoria e formas de pagamento da titular.
+         */
+        put: operations["usersUpdateProducerAccount"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/users/producers": {
         parameters: {
             query?: never;
@@ -158,7 +222,11 @@ export interface paths {
         get: operations["usersFindOne"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Excluir usuário
+         * @description Exclui definitivamente a conta e o que depende dela (produtos, experiências e fotos, foto de perfil e pedidos de nova senha). As sessões abertas da conta deixam de valer na hora e o perfil e as ofertas saem do catálogo, da busca e do contato. Com o motivo INATIVIDADE, e-mail, CPF e CNPJ ficam livres para novo cadastro (RNF11); com DESCUMPRIMENTO_REGRAS, só o HMAC desses dados é guardado e um novo cadastro com eles é recusado com 403. Exige o motivo (RN04), registrado no log de auditoria sem dados pessoais. O administrador não exclui a própria conta nem a conta administrativa inicial.
+         */
+        delete: operations["usersRemove"];
         options?: never;
         head?: never;
         patch?: never;
@@ -445,7 +513,7 @@ export interface paths {
         };
         /**
          * Consultar o catálogo de experiências
-         * @description Catálogo público: experiências disponíveis de produtores ativos, da mais nova à mais antiga, paginadas. `produtor` restringe ao catálogo de um perfil; `busca` procura no nome da experiência e no nome da iniciativa, sem diferenciar acentos. Cada item tem o mesmo formato de `GET /experiences/{id}`.
+         * @description HU24/RF24 (CA01-CA04, CA06-CA08, RN10): catálogo público, sem login. Só experiências disponíveis de produtores ativos, da mais nova à mais antiga, paginadas; sem resultados, `itens` vem vazio. `produtor` restringe ao catálogo de um perfil. Cada item tem o mesmo formato de `GET /experiences/{id}`. A resposta traz `ETag` e `Cache-Control: no-cache`: reenvie o `ETag` em `If-None-Match` para receber 304 quando o catálogo não mudou.
          */
         get: operations["experiencesList"];
         put?: never;
@@ -595,6 +663,42 @@ export interface components {
              * @example Bad Request
              */
             error: string;
+        };
+        UpdateConsumerNameDto: {
+            /** @example Maria das Graças */
+            nome: string;
+        };
+        CheckProducerIdentityDto: {
+            /**
+             * @description Com ou sem máscara
+             * @example 529.982.247-25
+             */
+            cpf: string;
+            /**
+             * @description Com ou sem máscara; opcional quando não houver CNPJ
+             * @example 12.345.678/0001-95
+             */
+            cnpj?: string;
+            /** @example produtor@exemplo.com */
+            email: string;
+        };
+        ProducerAccountDto: {
+            /** @example Horta Comunitária Cafuringa */
+            nomeIniciativa: string;
+            /**
+             * @description Tipo de oferta do produtor
+             * @example Produtos e Experiências
+             * @enum {string}
+             */
+            categoriaOfertada: "Produtos" | "Experiências" | "Produtos e Experiências";
+            /**
+             * @description Formas de pagamento aceitas
+             * @example [
+             *       "PIX",
+             *       "Dinheiro"
+             *     ]
+             */
+            formasPagamento: string[];
         };
         CreateProducerDto: {
             /** @example Horta Comunitária Cafuringa */
@@ -1012,6 +1116,11 @@ export interface components {
             id: string;
             /** @example Horta da Joana */
             nomeIniciativa: string;
+            /**
+             * @description Primeiro nome de quem responde pela oferta.
+             * @example Joana
+             */
+            primeiroNome?: string;
             /**
              * @description Localidade ou propriedade informada pelo produtor para divulgação (HU20, RN11); ausente quando não informada
              * @example Fazenda Cafuringa
@@ -1678,6 +1787,184 @@ export interface operations {
             };
         };
     };
+    usersUpdateConsumerName: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateConsumerNameDto"];
+            };
+        };
+        responses: {
+            /** @description Nome atualizado */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: CONSUMIDOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersCheckProducerIdentity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckProducerIdentityDto"];
+            };
+        };
+        responses: {
+            /** @description Dados disponíveis para cadastro */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            429: {
+                headers: {
+                    /** @description Segundos até a próxima tentativa ser aceita */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersGetProducerAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProducerAccountDto"];
+                };
+            };
+            /** @description Exclusivo para: PRODUTOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersUpdateProducerAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProducerAccountDto"];
+            };
+        };
+        responses: {
+            /** @description Dados da conta salvos */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: PRODUTOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     usersCreateProducer: {
         parameters: {
             query?: never;
@@ -1887,6 +2174,78 @@ export interface operations {
             };
             /** @description Usuário não encontrado */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    usersRemove: {
+        parameters: {
+            query: {
+                /** @description Por que a conta está sendo excluída (RN04). INATIVIDADE permite um novo cadastro com os mesmos dados; DESCUMPRIMENTO_REGRAS (banimento) bloqueia novos cadastros com o mesmo CPF, CNPJ ou e-mail. Fica no log de auditoria, sem dados pessoais. */
+                motivo: "INATIVIDADE" | "DESCUMPRIMENTO_REGRAS";
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Conta excluída */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Motivo ausente ou inválido */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de administrador
+             *
+             *     Exclusivo para: ADMINISTRADOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conta inexistente ou já excluída */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description A própria conta ou a conta administrativa inicial, que não podem ser excluídas */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2682,7 +3041,10 @@ export interface operations {
                 /** @description Quantidade de experiências por página */
                 limite?: number;
             };
-            header?: never;
+            header?: {
+                /** @description ETag de uma consulta anterior. Se o catálogo não mudou, a resposta é 304 sem corpo (CA06, RNF06). */
+                "If-None-Match"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -2691,11 +3053,22 @@ export interface operations {
             /** @description Página do catálogo */
             200: {
                 headers: {
+                    /** @description Versão desta página do catálogo */
+                    ETag?: string;
+                    /** @description Sempre `no-cache`: revalidar a cada acesso (CA06) */
+                    "Cache-Control"?: string;
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["ExperienceListResponse"];
                 };
+            };
+            /** @description O catálogo não mudou desde o `ETag` enviado (CA06) */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Filtro ou paginação inválidos */
             400: {

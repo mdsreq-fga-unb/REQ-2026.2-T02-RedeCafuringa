@@ -63,6 +63,7 @@ import { UsersModule } from './modules/users/users.module.js';
               'req.body.novaSenha',
               'req.body.token',
               'req.body.cpf',
+              'req.body.cnpj',
               'req.body.email',
               'req.query.cpf',
               'req.query.email',

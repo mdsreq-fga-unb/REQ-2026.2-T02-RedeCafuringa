@@ -1,27 +1,27 @@
+import { whatsAppContactUrl } from "@/features/contact";
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
-import { getPublicTrajectory } from "@/features/trajectory/trajectoryService";
 import {
-    createWhatsAppUrl,
-    isWhatsAppContactAvailable,
-} from "@/features/contact";
+    getPublicTrajectory,
+    type PublicTrajectory,
+} from "@/features/trajectory/trajectoryService";
 import { getExperienceDetails } from "./catalogItems";
 import { getProductDetails } from "./productDetailsService";
 import { OfferDetailsPage } from "./OfferDetailsPage";
 import { productToOffer } from "./productOffer";
+import { offerDetailsRoute } from "./offerNavigation";
 import type { Product } from "./productTypes";
 
 type State = {
     status: "loading" | "ready" | "missing" | "error";
     product?: Product;
-    phone?: string;
+    profile?: PublicTrajectory;
 };
 type Props = {
     id: string;
     experience?: boolean;
-    consumer?: boolean;
-    resumeContact?: boolean;
+    canViewContact?: boolean;
     backPath?: string;
     onNavigate: (path: string) => void;
 };
@@ -29,8 +29,7 @@ type Props = {
 export function ProductOfferDetails({
     id,
     experience = false,
-    consumer = false,
-    resumeContact = false,
+    canViewContact = false,
     backPath = "/produtos",
     onNavigate,
 }: Props) {
@@ -49,45 +48,20 @@ export function ProductOfferDetails({
                     return;
                 }
                 setState({ status: "ready", product });
+                // HU39: o contato vem do perfil público do responsável, que só
+                // traz o telefone autorizado apenas para sessões autenticadas.
                 if (product.producerId) {
                     void getPublicTrajectory(
                         product.producerId,
                         controller.signal,
                     )
                         .then((profile) => {
-                            if (
-                                !controller.signal.aborted &&
-                                profile.telefone &&
-                                isWhatsAppContactAvailable(
-                                    true,
-                                    profile.telefone,
-                                )
-                            ) {
+                            if (!controller.signal.aborted)
                                 setState({
                                     status: "ready",
                                     product,
-                                    phone: profile.telefone,
+                                    profile,
                                 });
-                                if (resumeContact && consumer) {
-                                    const digits = profile.telefone.replace(
-                                        /\D/g,
-                                        "",
-                                    );
-                                    window.open(
-                                        createWhatsAppUrl(
-                                            digits.length <= 11
-                                                ? `55${digits}`
-                                                : digits,
-                                            product.name,
-                                        ),
-                                        "_blank",
-                                        "noopener,noreferrer",
-                                    );
-                                    onNavigate(
-                                        `/oferta/${encodeURIComponent(id)}${experience ? "?tipo=experiencia" : ""}`,
-                                    );
-                                }
-                            }
                         })
                         .catch(() => {
                             /* O contato opcional não impede a leitura do produto. */
@@ -98,34 +72,35 @@ export function ProductOfferDetails({
                 if (!controller.signal.aborted) setState({ status: "error" });
             });
         return () => controller.abort();
-    }, [id, experience, attempt, resumeContact, consumer, onNavigate]);
+    }, [id, experience, attempt, canViewContact]);
 
-    const startContact = () => {
-        if (!state.phone || !state.product) return;
-        if (!consumer) {
-            onNavigate(
-                `/entrar?contato=${encodeURIComponent(`${experience ? "experiencia" : "produto"}/${id}`)}`,
-            );
-            return;
-        }
-        const digits = state.phone.replace(/\D/g, "");
-        const number = digits.length <= 11 ? `55${digits}` : digits;
-        window.open(
-            createWhatsAppUrl(number, state.product.name),
-            "_blank",
-            "noopener,noreferrer",
-        );
-    };
-    if (state.status === "ready" && state.product)
+    if (state.status === "ready" && state.product) {
+        const { product, profile } = state;
         return (
             <OfferDetailsPage
-                offer={productToOffer(state.product)}
-                contactAvailable={!!state.phone}
+                offer={productToOffer(product)}
+                contactLoginSubject={
+                    canViewContact
+                        ? undefined
+                        : `${experience ? "experiencia" : "produto"}/${id}`
+                }
+                producerName={product.producerName}
+                producerRoute={
+                    profile && `/produtor/${encodeURIComponent(profile.id)}`
+                }
+                contactUrl={whatsAppContactUrl(
+                    canViewContact ? profile?.telefone : undefined,
+                    product.name,
+                    {
+                        kind: experience ? "experience" : "product",
+                        route: offerDetailsRoute(id, experience),
+                    },
+                )}
                 backPath={backPath}
                 onNavigate={onNavigate}
-                onStartContact={startContact}
             />
         );
+    }
     return (
         <>
             <BackButton label="Voltar" onClick={() => onNavigate(backPath)} />
@@ -138,16 +113,25 @@ export function ProductOfferDetails({
                 )}
                 {state.status === "missing" && (
                     <>
-                        <h1>Produto indisponível</h1>
+                        <h1>
+                            {experience
+                                ? "Experiência indisponível"
+                                : "Produto indisponível"}
+                        </h1>
                         <p role="alert">
-                            Produto não encontrado ou indisponível para
-                            consulta.
+                            {experience
+                                ? "Experiência não encontrada ou indisponível para consulta."
+                                : "Produto não encontrado ou indisponível para consulta."}
                         </p>
                     </>
                 )}
                 {state.status === "error" && (
                     <>
-                        <h1>Detalhes do produto</h1>
+                        <h1>
+                            {experience
+                                ? "Detalhes da experiência"
+                                : "Detalhes do produto"}
+                        </h1>
                         <p role="alert">
                             Não foi possível carregar a oferta. Verifique sua
                             conexão e tente novamente.

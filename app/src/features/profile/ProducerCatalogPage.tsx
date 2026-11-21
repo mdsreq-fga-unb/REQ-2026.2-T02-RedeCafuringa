@@ -1,6 +1,10 @@
+import { whatsAppContactUrl } from "@/features/contact";
 import { ProductOfferDetails } from "@/features/offers/ProductOfferDetails";
 import { OfferCards } from "@/features/offers/OfferCards";
-import { offerReturnRoute } from "@/features/offers/offerNavigation";
+import {
+    offerDetailsRoute,
+    offerReturnRoute,
+} from "@/features/offers/offerNavigation";
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -13,16 +17,15 @@ export function ProducerCatalogPage({
     profile,
     offerId,
     onNavigate,
-    onStartContact,
-    contactAvailable,
-    consumer = false,
+    contactPhone,
+    canViewContact = false,
 }: {
     profile: PublicTrajectory;
     offerId?: string;
     onNavigate: (path: string) => void;
-    onStartContact: () => void;
-    contactAvailable: boolean;
-    consumer?: boolean;
+    /** HU39: telefone público (autorizado) do perfil, reaproveitado nas ofertas dele. */
+    contactPhone?: string;
+    canViewContact?: boolean;
 }) {
     const [offers, setOffers] = useState<ProducerOffer[]>([]);
     const [loading, setLoading] = useState(true);
@@ -49,7 +52,7 @@ export function ProducerCatalogPage({
         return (
             <ProductOfferDetails
                 id={selected.id}
-                consumer={consumer}
+                canViewContact={canViewContact}
                 backPath={offerReturnRoute(
                     window.location.hash.slice(1),
                     catalogRoute,
@@ -61,8 +64,12 @@ export function ProducerCatalogPage({
         return (
             <OfferDetailsPage
                 offer={selected}
-                contactAvailable={contactAvailable}
-                onStartContact={onStartContact}
+                producerName={profile.nomeIniciativa}
+                producerRoute={profileRoute}
+                contactUrl={whatsAppContactUrl(contactPhone, selected.title, {
+                    kind: "experience",
+                    route: offerDetailsRoute(selected.id, true),
+                })}
                 onNavigate={onNavigate}
                 backRoute={offerReturnRoute(
                     window.location.hash.slice(1),
@@ -79,7 +86,7 @@ export function ProducerCatalogPage({
             />
             <section className="catalog-page producer-catalog product-catalog profile-catalog">
                 <p className="eyebrow">
-                    {profile.nomeIniciativa || "Produtor"}
+                    {profile.nomeIniciativa || "Produtora"}
                 </p>
                 <h1>Catálogo do perfil</h1>
                 <p className="catalog-intro">
@@ -97,7 +104,8 @@ export function ProducerCatalogPage({
                 {error && (
                     <div role="alert">
                         <p>
-                            Não foi possível carregar as ofertas deste produtor.
+                            Não foi possível carregar as ofertas desta
+                            produtora.
                         </p>
                         <ActionButton
                             variant="outline"
@@ -118,7 +126,7 @@ export function ProducerCatalogPage({
                 )}
                 {!loading && !error && offers.length === 0 && (
                     <p role="status">
-                        Este produtor ainda não tem ofertas disponíveis.
+                        Esta produtora ainda não tem ofertas disponíveis.
                     </p>
                 )}
                 <OfferCards

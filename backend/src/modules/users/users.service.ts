@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,7 +11,12 @@ import { PasswordHasher } from '../../common/crypto/password-hasher.js';
 import { PiiCipher } from '../../common/crypto/pii-cipher.js';
 import { maskCnpj, maskCpf } from '../../common/validators/documento.js';
 import type { SessionState } from '../auth/domain/session.js';
+import {
+  BannedIdentitiesService,
+  type Identity,
+} from './banned-identities.service.js';
 import { isAdult } from './domain/age.js';
+import { ProducerCategory } from './domain/producer-category.js';
 import { Role } from './domain/role.js';
 import { buildUserFilter } from './domain/user-filter.js';
 import { DEFAULT_PAGE_SIZE, ListUsersQuery } from './dto/list-users.query.js';
@@ -20,7 +26,11 @@ import { UserSummaryResponse } from './dto/user-summary.response.js';
 import { AdminResponse } from './dto/admin.response.js';
 import { CreateAdminDto } from './dto/create-admin.dto.js';
 import { CreateConsumerDto } from './dto/create-consumer.dto.js';
-import { CreateProducerDto } from './dto/create-producer.dto.js';
+import {
+  CheckProducerIdentityDto,
+  CreateProducerDto,
+  ProducerAccountDto,
+} from './dto/create-producer.dto.js';
 import { UserResponse } from './dto/user.response.js';
 import { ProducerResponse } from './dto/producer.response.js';
 import { User, UserDocument } from './schemas/user.schema.js';
@@ -31,6 +41,12 @@ const DETAIL_EXCLUDED_FIELDS = '-senhaHash -cpfHash -cnpjHash';
 const SUMMARY_EXCLUDED_FIELDS = `${DETAIL_EXCLUDED_FIELDS} -cpfCifrado -cnpjCifrado`;
 /** Conta administrativa só tem e-mail e senha (HU03); o nome é fixo. */
 const ADMIN_DISPLAY_NAME = 'Administrador';
+/**
+ * Conta excluída por banimento não volta. A mensagem não confirma o
+ * banimento para quem tenta (não expõe dados de terceiros), só orienta.
+ */
+const BANNED =
+  'Não foi possível concluir o cadastro. Procure a administração da Rede Cafuringa.';
 
 @Injectable()
 export class UsersService {
@@ -38,7 +54,14 @@ export class UsersService {
     @InjectModel(User.name) private readonly users: Model<User>,
     private readonly cipher: PiiCipher,
     private readonly hasher: PasswordHasher,
+    private readonly bans: BannedIdentitiesService,
   ) {}
+
+  /** Recusa o cadastro de quem foi banido (CPF, CNPJ ou e-mail). */
+  private async assertNotBanned(identity: Identity): Promise<void> {
+    if (await this.bans.isBanned(identity))
+      throw new ForbiddenException(BANNED);
+  }
 
   /** HU01: o cadastro público sempre cria um consumidor (RN01). */
   createConsumer(dto: CreateConsumerDto): Promise<UserDocument> {
@@ -48,6 +71,7 @@ export class UsersService {
   /** HU03: cria uma conta ADMINISTRADOR só com e-mail e senha (RF03). */
   async createAdmin(dto: CreateAdminDto): Promise<UserDocument> {
     const email = dto.email.toLowerCase();
+    await this.assertNotBanned({ email });
     if (await this.users.exists({ email }).exec()) {
       throw new ConflictException('E-mail já cadastrado');
     }
@@ -73,10 +97,11 @@ export class UsersService {
     }
   }
 
-  /** HU02: cria uma conta pública com perfil PRODUTOR. */
-  async createProducer(dto: CreateProducerDto): Promise<UserDocument> {
+  async checkProducerIdentity(dto: CheckProducerIdentityDto) {
     const email = dto.email.toLowerCase();
     const cpfHash = this.cipher.blindIndex(dto.cpf);
+    const cnpjHash = dto.cnpj ? this.cipher.blindIndex(dto.cnpj) : undefined;
+    await this.assertNotBanned({ cpfHash, cnpjHash, email });
 
     if (await this.users.exists({ cpfHash }).exec()) {
       throw new ConflictException('CPF já cadastrado');
@@ -85,10 +110,52 @@ export class UsersService {
       throw new ConflictException('E-mail já cadastrado');
     }
 
-    const cnpjHash = dto.cnpj ? this.cipher.blindIndex(dto.cnpj) : undefined;
     if (cnpjHash && (await this.users.exists({ cnpjHash }).exec())) {
       throw new ConflictException('CNPJ já cadastrado');
     }
+
+    return { email, cpfHash, cnpjHash };
+  }
+
+  async updateConsumerName(id: string, nome: string): Promise<void> {
+    const result = await this.users
+      .updateOne(
+        { _id: id, perfil: Role.CONSUMIDOR, ativo: true },
+        { $set: { nome } },
+      )
+      .exec();
+    if (!result.matchedCount)
+      throw new NotFoundException('Conta não encontrada');
+  }
+
+  async getProducerAccount(id: string): Promise<ProducerAccountDto> {
+    const user = await this.users
+      .findOne({ _id: id, perfil: Role.PRODUTOR, ativo: true })
+      .select('nomeIniciativa categoriaOfertada formasPagamento -_id')
+      .lean()
+      .exec();
+    if (!user) throw new NotFoundException('Produtor não encontrado');
+    return {
+      nomeIniciativa: user.nomeIniciativa ?? '',
+      categoriaOfertada: user.categoriaOfertada ?? ProducerCategory.PRODUTOS,
+      formasPagamento: user.formasPagamento ?? [],
+    };
+  }
+
+  async updateProducerAccount(
+    id: string,
+    dto: ProducerAccountDto,
+  ): Promise<void> {
+    const result = await this.users
+      .updateOne({ _id: id, perfil: Role.PRODUTOR, ativo: true }, { $set: dto })
+      .exec();
+    if (!result.matchedCount)
+      throw new NotFoundException('Produtor não encontrado');
+  }
+
+  /** HU02: cria uma conta pública com perfil PRODUTOR. */
+  async createProducer(dto: CreateProducerDto): Promise<UserDocument> {
+    const { email, cpfHash, cnpjHash } = await this.checkProducerIdentity(dto);
 
     const producerData = {
       nome: dto.nomeResponsavel,
@@ -134,10 +201,11 @@ export class UsersService {
     }
 
     const cpfHash = this.cipher.blindIndex(dto.cpf);
+    const email = dto.email.toLowerCase();
+    await this.assertNotBanned({ cpfHash, email });
     if (await this.users.exists({ cpfHash }).exec()) {
       throw new ConflictException('CPF já cadastrado');
     }
-    const email = dto.email.toLowerCase();
     if (await this.users.exists({ email }).exec()) {
       throw new ConflictException('E-mail já cadastrado');
     }

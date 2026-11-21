@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   IsDateString,
@@ -69,4 +69,13 @@ export class CreateConsumerDto {
   @Matches(/[A-Za-z]/, { message: 'Senha deve conter pelo menos uma letra' })
   @Matches(/\d/, { message: 'Senha deve conter pelo menos um número' })
   senha: string;
+}
+
+export class UpdateConsumerNameDto extends PickType(CreateConsumerDto, [
+  'nome',
+] as const) {
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.trim() : value,
+  )
+  declare nome: string;
 }

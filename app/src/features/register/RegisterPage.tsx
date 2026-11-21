@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { PasswordInput } from "@/components/ui/PasswordInput";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent, InputHTMLAttributes } from "react";
 import { formatCpf } from "@/features/auth/cpf";
 import { BirthDateField } from "@/features/auth/registration";
@@ -9,7 +10,7 @@ import {
     PAYMENT_METHOD_OPTIONS,
     validateRegisterForm,
 } from "./registerForm";
-import { registerProducer } from "./registerService";
+import { checkProducerIdentity, registerProducer } from "./registerService";
 import type { RegisterResult } from "./registerService";
 import type {
     DocumentType,
@@ -21,6 +22,7 @@ import { formatCnpj, formatPhone } from "./validators";
 type RegisterPageProps = {
     onNavigate: (path: string) => void;
     initialValues?: RegisterFormValues;
+    initialFailure?: RegisterFailure;
     onContinue?: (values: RegisterFormValues) => void;
 };
 
@@ -61,6 +63,7 @@ function TextField({
     onChange,
     ...inputProps
 }: TextFieldProps) {
+    const Input = inputProps.type === "password" ? PasswordInput : "input";
     return (
         <div className="register-field" data-field={id}>
             <label
@@ -69,7 +72,7 @@ function TextField({
             >
                 {label}
             </label>
-            <input
+            <Input
                 {...inputProps}
                 id={id}
                 className="text-input"
@@ -271,6 +274,12 @@ function FailureAlert({
                     {rateLimitMessage(failure.retryAfterSeconds)}
                 </p>
             );
+        case "blocked":
+            return (
+                <p className="form-alert" role="alert">
+                    {failure.message}
+                </p>
+            );
         case "error":
             return (
                 <p className="form-alert" role="alert">
@@ -284,19 +293,35 @@ function FailureAlert({
 export function RegisterPage({
     onNavigate,
     initialValues,
+    initialFailure,
     onContinue,
 }: RegisterPageProps) {
     const [values, setValues] = useState<RegisterFormValues>(
         initialValues ?? INITIAL_VALUES,
     );
-    const [errors, setErrors] = useState<RegisterFormErrors>({});
+    const duplicateField =
+        initialFailure?.reason === "duplicate"
+            ? initialFailure.field
+            : undefined;
+    const [errors, setErrors] = useState<RegisterFormErrors>(
+        duplicateField
+            ? { [duplicateField]: DUPLICATE_MESSAGES[duplicateField] }
+            : {},
+    );
     const [loading, setLoading] = useState(false);
-    const [failure, setFailure] = useState<RegisterFailure | null>(null);
+    const [failure, setFailure] = useState<RegisterFailure | null>(
+        initialFailure ?? null,
+    );
 
     const [focusRequest, setFocusRequest] = useState<{
         id: string;
         n: number;
-    } | null>(null);
+    } | null>(() => {
+        const id = FOCUS_ORDER.find(([field]) => field === duplicateField)?.[1];
+        return id ? { id, n: 0 } : null;
+    });
+    const pending = useRef<AbortController | null>(null);
+    useEffect(() => () => pending.current?.abort(), []);
 
     // O foco só pode ir para o campo depois que o erro foi renderizado.
     useEffect(() => {
@@ -311,9 +336,16 @@ export function RegisterPage({
     const setField = <K extends keyof RegisterFormValues>(
         field: K,
         value: RegisterFormValues[K],
-    ) => setValues((current) => ({ ...current, [field]: value }));
+    ) => {
+        if (pending.current) return;
+        setValues((current) => ({ ...current, [field]: value }));
+        setErrors((current) => ({ ...current, [field]: undefined }));
+        if (failure?.reason === "duplicate" && failure.field === field)
+            setFailure(null);
+    };
 
     const changeDocumentType = (type: DocumentType) => {
+        if (pending.current) return;
         setValues((current) => ({
             ...current,
             documentType: type,
@@ -325,6 +357,7 @@ export function RegisterPage({
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (pending.current) return;
         setFailure(null);
 
         const validationErrors = validateRegisterForm(values);
@@ -337,21 +370,25 @@ export function RegisterPage({
             return;
         }
 
-        if (onContinue) {
-            onContinue(values);
-            return;
-        }
-
+        const request = new AbortController();
+        pending.current = request;
         setLoading(true);
         let result: RegisterResult;
         try {
-            result = await registerProducer(buildRegisterPayload(values));
+            const payload = buildRegisterPayload(values);
+            result = await (onContinue
+                ? checkProducerIdentity(payload, request.signal)
+                : registerProducer(payload));
         } catch {
             result = { ok: false, reason: "error" };
         }
 
+        if (request.signal.aborted) return;
+        pending.current = null;
+        setLoading(false);
         if (result.ok) {
-            onNavigate("/conta-criada/producer");
+            if (onContinue) onContinue(values);
+            else onNavigate("/conta-criada/producer");
             return;
         }
 
@@ -366,17 +403,17 @@ export function RegisterPage({
             );
         }
         setFailure(result);
-        setLoading(false);
     };
 
     return (
         <section className="login-page register-page">
             <BackButton label="Voltar" onClick={() => onNavigate("/entrar")} />
-            <h1>Cadastro de produtor</h1>
+            <h1>Cadastro de produtora</h1>
 
             <form
                 className="login-form register-form"
                 onSubmit={handleSubmit}
+                aria-busy={loading}
                 noValidate
             >
                 {failure && (
@@ -406,7 +443,7 @@ export function RegisterPage({
                     required
                     type="text"
                     autoComplete="name"
-                    placeholder="Nome completo do responsável"
+                    placeholder="Nome completo da responsável"
                     value={values.responsible}
                     error={errors.responsible}
                     onChange={(value) => setField("responsible", value)}

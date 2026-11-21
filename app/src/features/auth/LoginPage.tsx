@@ -1,3 +1,4 @@
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { ActionButton } from "../../components/ui/ActionButton";
@@ -37,6 +38,7 @@ function loginErrorMessage(error: unknown): string {
 
 type LoginPageProps = {
     fromContact?: boolean;
+    backPath?: string;
     profile?: "consumer" | "producer";
     registered?: boolean;
     recovered?: boolean;
@@ -46,6 +48,7 @@ type LoginPageProps = {
 
 export function LoginPage({
     fromContact = false,
+    backPath,
     profile = "producer",
     registered = false,
     recovered = false,
@@ -90,13 +93,11 @@ export function LoginPage({
         <section className="login-page">
             <BackButton
                 label="Voltar"
-                onClick={() =>
-                    onNavigate(fromContact ? "/perfil" : "/escolher-perfil")
-                }
+                onClick={() => onNavigate(backPath ?? "/escolher-perfil")}
             />
             <h1 className="login-title-accent">
                 {fromContact
-                    ? "Entre para falar com o responsável"
+                    ? "Entre para falar com a responsável"
                     : "Que bom ter você aqui"}
             </h1>
             <p className="body-copy">{subtitle}</p>
@@ -146,11 +147,10 @@ export function LoginPage({
                 <label className="field-label" htmlFor="login-password">
                     Senha
                 </label>
-                <input
+                <PasswordInput
                     id="login-password"
                     placeholder="Digite sua senha"
                     className="text-input"
-                    type="password"
                     autoComplete="current-password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
@@ -202,7 +202,9 @@ export function LoginPage({
                         )
                     }
                 >
-                    {profile === "consumer" ? "Sou produtor" : "Sou consumidor"}{" "}
+                    {profile === "consumer"
+                        ? "Sou produtora"
+                        : "Sou consumidora"}{" "}
                     <span aria-hidden="true">→</span>
                 </button>
             )}

@@ -69,7 +69,7 @@ Regras rápidas:
 - [ ] **Entrada:** toda entrada é validada no servidor; sem concatenar consulta com dado do usuário
 - [ ] **Dados pessoais (LGPD, RNF11):** nenhuma resposta nem log traz senha, hash, CPF completo, token ou e-mail de terceiro
 - [ ] **Segredos:** nada de chave, senha ou `.env` real no repositório; variáveis novas estão no `.env.example`
-- [ ] **Dependências:** `npm audit` sem vulnerabilidade alta ou crítica
+- [ ] **Dependências:** `npm audit --omit=dev` sem vulnerabilidade alta ou crítica
 
 ## Acessibilidade e responsividade
 

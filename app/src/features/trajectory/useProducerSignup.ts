@@ -3,6 +3,7 @@ import type { AuthResult } from "@/shared/types";
 import { login } from "@/features/auth/authService";
 import { buildRegisterPayload } from "@/features/register/registerForm";
 import type { RegisterFormValues } from "@/features/register/registerForm";
+import type { RegisterResult } from "@/features/register/registerService";
 import { registerProducer } from "@/features/register/registerService";
 import { emptyTrajectory, trajectoryBody } from "./trajectoryModel";
 import type { TrajectoryDraft } from "./trajectoryModel";
@@ -14,10 +15,16 @@ import {
 } from "./trajectoryService";
 import { ApiHttpError } from "@/shared/api";
 
-export function useProducerSignup(onSuccess: (auth: AuthResult) => void) {
+type Duplicate = Extract<RegisterResult, { ok: false; reason: "duplicate" }>;
+
+export function useProducerSignup(
+    onSuccess: (auth: AuthResult) => void,
+    onDuplicate: () => void,
+) {
     const [details, setDetails] = useState<RegisterFormValues | null>(null);
     const [draft, setDraft] = useState<TrajectoryDraft>(emptyTrajectory);
     const [error, setError] = useState("");
+    const [duplicate, setDuplicate] = useState<Duplicate>();
     const [created, setCreated] = useState(false);
     const auth = useRef<AuthResult | null>(null);
     const busy = useRef(false);
@@ -37,6 +44,7 @@ export function useProducerSignup(onSuccess: (auth: AuthResult) => void) {
         setDraft(emptyTrajectory);
         setError("");
         setCreated(false);
+        setDuplicate(undefined);
         auth.current = null;
     }, []);
     const start = (values: RegisterFormValues) => {
@@ -45,6 +53,7 @@ export function useProducerSignup(onSuccess: (auth: AuthResult) => void) {
         generation.current += 1;
         active.current = true;
         setDetails(values);
+        setDuplicate(undefined);
         setError("");
     };
     const submit = async () => {
@@ -62,16 +71,15 @@ export function useProducerSignup(onSuccess: (auth: AuthResult) => void) {
                 );
                 if (!isCurrent()) return;
                 if (!result.ok) {
-                    if (result.reason === "duplicate")
-                        throw new Error(
-                            result.field === "email"
-                                ? "E-mail já cadastrado. Entre na sua conta ou corrija os dados anteriores."
-                                : result.field === "cnpj"
-                                  ? "CNPJ já cadastrado. Confira os dados anteriores."
-                                  : "CPF/CNPJ ou e-mail já cadastrado. Confira os dados anteriores ou entre na sua conta.",
-                        );
+                    if (result.reason === "duplicate") {
+                        setDuplicate(result);
+                        onDuplicate();
+                        return;
+                    }
                     if (result.reason === "invalid")
                         throw new Error(result.messages.join(" "));
+                    if (result.reason === "blocked")
+                        throw new Error(result.message);
                     if (result.reason === "rate_limit")
                         throw new Error(
                             result.retryAfterSeconds
@@ -128,6 +136,7 @@ export function useProducerSignup(onSuccess: (auth: AuthResult) => void) {
     };
     return {
         details,
+        duplicate,
         draft,
         setDraft,
         start,

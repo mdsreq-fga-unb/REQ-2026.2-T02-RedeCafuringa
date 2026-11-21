@@ -100,8 +100,51 @@
 .trajectory-count {
     text-align: right;
 }
-.trajectory-field .consent-row {
-    margin: 4px 0 0;
+.trajectory-contact-permission {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 12px;
+    margin-top: 4px;
+    padding: 16px;
+    border: 1px solid #829988;
+    border-radius: 14px;
+    background: #f1f8f2;
+    color: #233a29;
+    cursor: pointer;
+}
+.trajectory-contact-permission:hover,
+.trajectory-contact-permission:has(input:checked) {
+    border-color: #39764a;
+    background: #e5f3e8;
+}
+.trajectory-contact-permission:focus-within {
+    outline: 2px solid #39764a;
+    outline-offset: 2px;
+}
+.trajectory-contact-permission input {
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    accent-color: #23763d;
+    cursor: pointer;
+}
+.trajectory-contact-copy {
+    display: grid;
+    justify-items: start;
+    gap: 6px;
+    font-size: 14px;
+    line-height: 1.45;
+}
+.trajectory-contact-copy strong {
+    font-size: 16px;
+}
+.trajectory-contact-state {
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 12px;
+    font-weight: 700;
 }
 .trajectory-photo-picker {
     position: relative;
@@ -234,4 +277,37 @@
     .trajectory-success-dialog {
         padding: 24px 16px;
     }
+}
+
+.trajectory-photo-selection {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.trajectory-photo-selection .trajectory-photo-preview {
+    min-width: 0;
+}
+
+.trajectory-photo-remove {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    background: transparent;
+    color: #8e3029;
+    cursor: pointer;
+}
+
+.trajectory-photo-remove svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
