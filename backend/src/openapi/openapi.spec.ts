@@ -84,6 +84,7 @@ describe('contrato OpenAPI', () => {
       'POST /api/v1/auth/password-reset/confirm',
       'POST /api/v1/auth/password-reset/request',
       'POST /api/v1/auth/password-reset/validate',
+      'POST /api/v1/bookings',
       'POST /api/v1/experiences',
       'POST /api/v1/products',
       'POST /api/v1/users/admins',
@@ -113,7 +114,7 @@ describe('contrato OpenAPI', () => {
     }
   });
 
-  it('só /auth/me, as rotas administrativas, a trajetória e a foto próprias e os cadastros de produto e experiência exigem Bearer; o resto é público', () => {
+  it('só /auth/me, as rotas administrativas, a trajetória e a foto próprias e os cadastros de produto e experiência e a pré-reserva exigem Bearer; o resto é público', () => {
     const protectedOps = operations
       .filter((o) => o.op.security?.some((s) => 'bearer' in s))
       .map((o) => `${o.method} ${o.path}`);
@@ -123,6 +124,7 @@ describe('contrato OpenAPI', () => {
       'get /api/v1/producers/me/trajectory',
       'get /api/v1/users',
       'get /api/v1/users/{id}',
+      'post /api/v1/bookings',
       'post /api/v1/experiences',
       'post /api/v1/products',
       'post /api/v1/users/admins',
