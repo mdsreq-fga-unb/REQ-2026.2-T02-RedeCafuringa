@@ -165,7 +165,7 @@ export class ExperiencesController {
   @ApiOperation({
     summary: 'Consultar o catálogo de experiências',
     description:
-      'Catálogo público: experiências disponíveis de produtores ativos, da mais nova à mais antiga, paginadas. `produtor` restringe ao catálogo de um perfil. Cada item tem o mesmo formato de `GET /experiences/{id}`.',
+      'Catálogo público: experiências disponíveis de produtores ativos, da mais nova à mais antiga, paginadas. `produtor` restringe ao catálogo de um perfil; `busca` procura no nome da experiência e no nome da iniciativa, sem diferenciar acentos. Cada item tem o mesmo formato de `GET /experiences/{id}`.',
   })
   @ApiOkResponse({
     type: ExperienceListResponse,

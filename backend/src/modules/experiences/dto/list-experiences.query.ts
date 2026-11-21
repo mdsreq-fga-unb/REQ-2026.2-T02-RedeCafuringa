@@ -1,6 +1,14 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsMongoId, IsOptional, Max, Min } from 'class-validator';
+import {
+  IsInt,
+  IsMongoId,
+  IsOptional,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+} from 'class-validator';
 import {
   DEFAULT_PRODUCTS_PAGE,
   MAX_PRODUCTS_PAGE,
@@ -15,6 +23,16 @@ export class ListExperiencesQuery {
   @IsOptional()
   @IsMongoId({ message: 'Produtor inválido' })
   produtor?: string;
+
+  @ApiPropertyOptional({
+    example: 'trilha',
+    description:
+      'Trecho do nome da experiência ou do nome da iniciativa do produtor, sem diferenciar acentos e maiúsculas (HU36, RN15)',
+  })
+  @IsOptional()
+  @IsString({ message: 'Busca deve ser um texto' })
+  @MaxLength(100, { message: 'Busca deve ter no máximo 100 caracteres' })
+  busca?: string;
 
   @ApiPropertyOptional({
     example: 1,
