@@ -80,6 +80,14 @@ describe("HU36 — tela de resultados da busca", () => {
             expect(search).not.toHaveBeenCalled();
         });
 
+        it("usa o termo produtoras, como o restante do app, no texto de ajuda", () => {
+            renderPage();
+
+            expect(field().getAttribute("placeholder")).toBe(
+                "Produtos, experiências ou produtoras",
+            );
+        });
+
         it("com termo inicial, preenche o campo e busca sozinha", async () => {
             const { search } = renderPage({ initialTerm: "cafe" });
 
@@ -113,7 +121,7 @@ describe("HU36 — tela de resultados da busca", () => {
                 name: "Resultados para “cafe”",
             });
             expect(
-                screen.getByRole("heading", { name: "Produtores (1)" }),
+                screen.getByRole("heading", { name: "Produtoras (1)" }),
             ).toBeTruthy();
             expect(
                 screen.getByRole("heading", { name: "Produtos (1)" }),
@@ -144,7 +152,7 @@ describe("HU36 — tela de resultados da busca", () => {
 
             await screen.findByRole("heading", { name: "Produtos (1)" });
             expect(
-                screen.queryByRole("heading", { name: /Produtores/ }),
+                screen.queryByRole("heading", { name: /Produtoras/ }),
             ).toBeNull();
             expect(
                 screen.queryByRole("heading", { name: /Experiências/ }),
