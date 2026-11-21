@@ -154,7 +154,7 @@ export function SearchResultsPage({
                             id={inputId}
                             type="search"
                             value={value}
-                            placeholder="Produtos, experiências ou produtores"
+                            placeholder="Produtos, experiências ou produtoras"
                             autoComplete="off"
                             aria-invalid={problem ? true : undefined}
                             aria-describedby={problem ? errorId : undefined}
@@ -201,7 +201,7 @@ export function SearchResultsPage({
                         <h2>{`Resultados para “${results.termo}”`}</h2>
                         {results.produtores.total > 0 && (
                             <section aria-labelledby="search-producers">
-                                <h2 id="search-producers">{`Produtores (${results.produtores.total})`}</h2>
+                                <h2 id="search-producers">{`Produtoras (${results.produtores.total})`}</h2>
                                 <ul className="search-producers">
                                     {results.produtores.itens.map(
                                         (producer: PublicTrajectory) => (
