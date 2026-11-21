@@ -12,7 +12,6 @@ type OfferDetailsPageProps = {
     producerName?: string;
     producerRoute?: string;
     onNavigate: (path: string) => void;
-    onStartContact: () => void;
     /** HU44: presente quando a experiência aceita solicitações de quem está vendo. */
     onRequestBooking?: () => void;
     backPath?: string;
@@ -27,7 +26,6 @@ export function OfferDetailsPage({
     producerName,
     producerRoute,
     onNavigate,
-    onStartContact,
     onRequestBooking,
     backPath,
     backRoute,

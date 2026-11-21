@@ -22,9 +22,7 @@ const renderPage = (id: string, onRequestBooking?: () => void) =>
     render(
         <OfferDetailsPage
             offer={offer(id)}
-            contactAvailable={false}
             onNavigate={vi.fn()}
-            onStartContact={vi.fn()}
             onRequestBooking={onRequestBooking}
         />,
     );

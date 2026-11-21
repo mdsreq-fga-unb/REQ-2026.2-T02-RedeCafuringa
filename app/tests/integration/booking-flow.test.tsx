@@ -108,7 +108,7 @@ describe("HU44 — solicitar pré-reserva de experiência", () => {
 
         await user.click(
             await screen.findByRole("button", {
-                name: "Entrar como produtor de teste",
+                name: "Entrar como produtora de teste",
             }),
         );
         // O login de teste termina depois do clique: espera a sessão existir.

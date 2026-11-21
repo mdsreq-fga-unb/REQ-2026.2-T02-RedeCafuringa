@@ -22,10 +22,9 @@ type State = {
 type Props = {
     id: string;
     experience?: boolean;
-    consumer?: boolean;
+    canViewContact?: boolean;
     /** HU44: quem está vendo pode solicitar pré-reserva (visitante ou consumidor). */
     bookingAvailable?: boolean;
-    resumeContact?: boolean;
     backPath?: string;
     onNavigate: (path: string) => void;
 };
@@ -33,9 +32,8 @@ type Props = {
 export function ProductOfferDetails({
     id,
     experience = false,
-    consumer = false,
+    canViewContact = false,
     bookingAvailable = false,
-    resumeContact = false,
     backPath = "/produtos",
     onNavigate,
 }: Props) {
@@ -104,7 +102,6 @@ export function ProductOfferDetails({
                 )}
                 backPath={backPath}
                 onNavigate={onNavigate}
-                onStartContact={startContact}
                 onRequestBooking={
                     experience && bookingAvailable
                         ? () => onNavigate(bookingRoute(id))

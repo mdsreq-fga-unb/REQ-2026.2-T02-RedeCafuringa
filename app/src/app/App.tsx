@@ -279,62 +279,12 @@ export function App() {
 
     const handleSignIn = (auth: AuthResult) => {
         signIn(auth);
-        if (nextRole === "admin") {
-            navigate("/admin/acesso");
-            return;
-        }
-
-        const bookingReturn = bookingReturnRoute(route, nextRole);
+        const bookingReturn = bookingReturnRoute(route, auth.user.role);
         if (bookingReturn) {
-            navigate(bookingReturn);
+            changeRoute(bookingReturn);
             return;
         }
-
-        if (subjectId?.startsWith("produto/")) {
-            navigate(
-                `/oferta/${encodeURIComponent(subjectId.slice("produto/".length))}?falar=1`,
-            );
-            return;
-        }
-
-        // Experiência (HU21) volta para a rota de experiência, não a de produto.
-        if (subjectId?.startsWith("experiencia/")) {
-            navigate(
-                `/oferta/${encodeURIComponent(subjectId.slice("experiencia/".length))}?tipo=experiencia&falar=1`,
-            );
-            return;
-        }
-
-        // O contato público sempre é revalidado no perfil, nunca nas configurações locais.
-        if (subjectId?.startsWith("produtor/")) {
-            navigate(`/${subjectId}`);
-            return;
-        }
-
-        if (
-            nextRole === "consumer" &&
-            subjectId &&
-            canStartWhatsAppContact(
-                nextRole,
-                settings.authorized,
-                settings.whatsappNumber,
-            )
-        ) {
-            const subject =
-                offers.find((offer) => offer.id === subjectId)?.title ||
-                "Perfil de Dona Maria";
-            window.open(
-                createWhatsAppUrl(settings.whatsappNumber, subject),
-                "_blank",
-                "noopener,noreferrer",
-            );
-            navigate(
-                subjectId === "perfil" ? "/perfil" : `/oferta/${subjectId}`,
-            );
-            return;
-        }
-
-        navigate("/conta");
+        changeRoute(postLoginRoute(auth.user.role, contactSubject));
     };
 
     return (
@@ -474,9 +424,6 @@ export function App() {
                             },
                         )}
                         onNavigate={navigate}
-                        onStartContact={() =>
-                            startContact(currentOffer.id, currentOffer.title)
-                        }
                         onRequestBooking={
                             canRequestBooking(role)
                                 ? () => navigate(bookingRoute(currentOffer.id))
@@ -487,9 +434,8 @@ export function App() {
                 {productOfferId && (
                     <ProductOfferDetails
                         key={route}
-                        consumer={role === "consumer"}
+                        canViewContact={canViewContact}
                         bookingAvailable={canRequestBooking(role)}
-                        resumeContact={query.get("falar") === "1"}
                         experience={query.get("tipo") === "experiencia"}
                         backPath={offerReturnRoute(
                             route,
