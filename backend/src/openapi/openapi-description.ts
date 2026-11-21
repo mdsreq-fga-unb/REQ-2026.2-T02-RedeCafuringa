@@ -23,7 +23,7 @@ Use o campo de busca (*Filter by tag*) para ir direto a um grupo.
 | Perfil | O que pode fazer |
 |---|---|
 | Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |
-| \`CONSUMIDOR\` | O mesmo que o visitante, com sessão |
+| \`CONSUMIDOR\` | O mesmo que o visitante, com sessão; solicitar pré-reserva de experiências |
 | \`PRODUTOR\` | Registrar trajetória e foto de perfil; cadastrar produtos |
 | \`ADMINISTRADOR\` | Consultar usuários e cadastrar outros administradores |
 
@@ -71,6 +71,11 @@ export const OPENAPI_TAGS: ReadonlyArray<{
     name: 'experiences',
     description:
       'Catálogo e cadastro de experiências, atividades e atrativos de turismo rural, com galeria de fotos (HU21, RN09, RN11)',
+  },
+  {
+    name: 'bookings',
+    description:
+      'Pré-reserva de experiências pelo consumidor, sujeita à resposta do produtor (HU44, RN19)',
   },
   {
     name: 'health',
