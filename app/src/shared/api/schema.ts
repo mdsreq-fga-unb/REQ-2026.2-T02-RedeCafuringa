@@ -568,6 +568,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Solicitar pré-reserva de experiência
+         * @description HU44/RF44 (CA04-CA07): registra a solicitação do consumidor autenticado para uma experiência disponível. A solicitação nasce pendente e não confirma a experiência: aguarda a resposta do produtor (RN19). O solicitante vem do token, nunca do corpo. Data e horário seguem o horário de Brasília e não podem estar no passado. Exclusivo do perfil CONSUMIDOR (RNF08).
+         */
+        post: operations["bookingsCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/search": {
         parameters: {
             query?: never;
@@ -1243,6 +1263,80 @@ export interface components {
              * @example 20
              */
             limite: number;
+        };
+        CreateBookingDto: {
+            /**
+             * @description Identificador da experiência desejada (RN19)
+             * @example 64b0c0ffee0000000000e001
+             */
+            experienciaId: string;
+            /**
+             * Format: date
+             * @description Dia desejado (AAAA-MM-DD), no horário de Brasília. Não pode estar no passado.
+             * @example 2026-12-10
+             */
+            data: string;
+            /**
+             * @description Horário de início, de hora em hora (00:00 a 23:00). Não pode ter começado.
+             * @example 09:00
+             * @enum {string}
+             */
+            horario: "00:00" | "01:00" | "02:00" | "03:00" | "04:00" | "05:00" | "06:00" | "07:00" | "08:00" | "09:00" | "10:00" | "11:00" | "12:00" | "13:00" | "14:00" | "15:00" | "16:00" | "17:00" | "18:00" | "19:00" | "20:00" | "21:00" | "22:00" | "23:00";
+            /**
+             * @description Quantidade de pessoas, número inteiro
+             * @example 4
+             */
+            participantes: number;
+            /**
+             * @description Forma de pagamento a combinar com o produtor; a plataforma não cobra (OE3)
+             * @example pix
+             * @enum {string}
+             */
+            formaPagamento: "pix" | "dinheiro" | "cartao_credito" | "cartao_debito";
+            /**
+             * @description Recado ao produtor. Texto simples, até 500 caracteres
+             * @example Vamos com duas crianças.
+             */
+            mensagem?: string;
+        };
+        BookingResponse: {
+            /** @example 64b0c0ffee0000000000b001 */
+            id: string;
+            /**
+             * @description Experiência solicitada
+             * @example 64b0c0ffee0000000000e001
+             */
+            experienciaId: string;
+            /**
+             * Format: date
+             * @example 2026-12-10
+             */
+            data: string;
+            /** @example 09:00 */
+            horario: string;
+            /** @example 4 */
+            participantes: number;
+            /**
+             * @example pix
+             * @enum {string}
+             */
+            formaPagamento: "pix" | "dinheiro" | "cartao_credito" | "cartao_debito";
+            /**
+             * @description Ausente quando o solicitante não deixou recado
+             * @example Vamos com duas crianças.
+             */
+            mensagem?: string;
+            /**
+             * @description Situação da solicitação. Nasce pendente, aguardando a resposta do produtor (RN19, CA06).
+             * @example pendente
+             * @enum {string}
+             */
+            status: "pendente" | "aceita" | "recusada" | "cancelada";
+            /**
+             * @description Data do envio
+             * @example 2026-11-21T12:00:00.000Z
+             */
+            criadoEm: string;
         };
         SearchProducersResult: {
             /** @description Produtores com perfil publicado que combinam com o termo (iniciativa, trajetória ou atividades), até o limite pedido */
@@ -3250,6 +3344,70 @@ export interface operations {
                 };
                 content: {
                     "image/webp": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsCreate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBookingDto"];
+            };
+        };
+        responses: {
+            /** @description Solicitação registrada, aguardando o produtor (CA06) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingResponse"];
+                };
+            };
+            /** @description Campos ausentes ou inválidos, ou data e horário no passado (mensagens em `message`) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de consumidor (produtor ou administrador)
+             *
+             *     Exclusivo para: CONSUMIDOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Experiência inexistente, indisponível ou de produtor desativado (CA07) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

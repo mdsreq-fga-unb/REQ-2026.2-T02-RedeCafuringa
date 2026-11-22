@@ -12,6 +12,8 @@ type OfferDetailsPageProps = {
     producerName?: string;
     producerRoute?: string;
     onNavigate: (path: string) => void;
+    /** HU44: presente quando a experiência aceita solicitações de quem está vendo. */
+    onRequestBooking?: () => void;
     backPath?: string;
     backRoute?: string;
     catalogRoute?: string;
@@ -24,6 +26,7 @@ export function OfferDetailsPage({
     producerName,
     producerRoute,
     onNavigate,
+    onRequestBooking,
     backPath,
     backRoute,
 }: OfferDetailsPageProps) {
@@ -89,10 +92,10 @@ export function OfferDetailsPage({
                 <h2 className="description-heading">Descrição</h2>
                 <p className="body-copy">{offer.description}</p>
                 <div className="offer-actions">
-                    {offer.id === "queijos" && (
+                    {onRequestBooking && (
                         <ActionButton
                             variant="orange"
-                            onClick={() => onNavigate("/entrar")}
+                            onClick={onRequestBooking}
                         >
                             Solicitar pré-reserva
                         </ActionButton>

@@ -12,6 +12,7 @@ import { OfferDetailsPage } from "./OfferDetailsPage";
 import { productToOffer } from "./productOffer";
 import { offerDetailsRoute } from "./offerNavigation";
 import type { Product } from "./productTypes";
+import { bookingRoute } from "@/features/bookings/bookingRoutes";
 
 type State = {
     status: "loading" | "ready" | "missing" | "error";
@@ -22,6 +23,8 @@ type Props = {
     id: string;
     experience?: boolean;
     canViewContact?: boolean;
+    /** HU44: quem está vendo pode solicitar pré-reserva (visitante ou consumidor). */
+    bookingAvailable?: boolean;
     backPath?: string;
     onNavigate: (path: string) => void;
 };
@@ -30,6 +33,7 @@ export function ProductOfferDetails({
     id,
     experience = false,
     canViewContact = false,
+    bookingAvailable = false,
     backPath = "/produtos",
     onNavigate,
 }: Props) {
@@ -98,6 +102,11 @@ export function ProductOfferDetails({
                 )}
                 backPath={backPath}
                 onNavigate={onNavigate}
+                onRequestBooking={
+                    experience && bookingAvailable
+                        ? () => onNavigate(bookingRoute(id))
+                        : undefined
+                }
             />
         );
     }

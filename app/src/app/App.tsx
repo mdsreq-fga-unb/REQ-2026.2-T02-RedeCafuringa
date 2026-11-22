@@ -56,6 +56,19 @@ import { ProductPublishedPage } from "@/features/offers/ProductPublishedPage";
 import type { RegisteredExperience } from "@/features/offers/experienceService";
 import type { RegisteredProduct } from "@/features/offers/productService";
 import { apiResourceUrl } from "@/shared/api";
+import { BookingRoutePage } from "@/features/bookings/BookingRoutePage";
+import { BookingSentPage } from "@/features/bookings/BookingSentPage";
+import {
+    BOOKING_SENT_ROUTE,
+    BOOKINGS_LIST_ROUTE,
+    bookingAccess,
+    bookingLoginRoute,
+    bookingReturnRoute,
+    bookingRoute,
+    canRequestBooking,
+    experienceDetailsRoute,
+    parseBookingRoute,
+} from "@/features/bookings/bookingRoutes";
 
 export function App() {
     const [exploreCategory, setExploreCategory] = useState("Produtos");
@@ -187,6 +200,21 @@ export function App() {
     useEffect(() => {
         if (adminBlocked) navigate("/admin/entrar");
     }, [adminBlocked, navigate]);
+    // HU44 CA02: só consumidor autenticado abre o formulário de pré-reserva.
+    const bookingExperienceId = parseBookingRoute(path);
+    const bookingAccessState = bookingExperienceId
+        ? bookingAccess({
+              role,
+              hasToken: !!localStorage.getItem("cafuringa-token"),
+              mock: isMockAuthEnabled,
+          })
+        : null;
+    useEffect(() => {
+        if (!bookingExperienceId) return;
+        if (bookingAccessState === "login")
+            navigate(bookingLoginRoute(bookingExperienceId));
+        if (bookingAccessState === "blocked") navigate("/conta");
+    }, [bookingExperienceId, bookingAccessState, navigate]);
     const needsProfileSelection =
         role === null &&
         ["/conta", "/notificacoes", "/reservas"].includes(path);
@@ -252,6 +280,11 @@ export function App() {
 
     const handleSignIn = (auth: AuthResult) => {
         signIn(auth);
+        const bookingReturn = bookingReturnRoute(route, auth.user.role);
+        if (bookingReturn) {
+            changeRoute(bookingReturn);
+            return;
+        }
         changeRoute(postLoginRoute(auth.user.role, contactSubject));
     };
 
@@ -399,12 +432,18 @@ export function App() {
                             },
                         )}
                         onNavigate={navigate}
+                        onRequestBooking={
+                            canRequestBooking(role)
+                                ? () => navigate(bookingRoute(currentOffer.id))
+                                : undefined
+                        }
                     />
                 )}
                 {productOfferId && (
                     <ProductOfferDetails
                         key={route}
                         canViewContact={canViewContact}
+                        bookingAvailable={canRequestBooking(role)}
                         experience={query.get("tipo") === "experiencia"}
                         backPath={offerReturnRoute(
                             route,
@@ -414,6 +453,25 @@ export function App() {
                         )}
                         id={productOfferId}
                         onNavigate={navigate}
+                    />
+                )}
+                {bookingExperienceId && bookingAccessState === "allowed" && (
+                    <BookingRoutePage
+                        key={bookingExperienceId}
+                        experienceId={bookingExperienceId}
+                        onBack={() =>
+                            navigate(
+                                experienceDetailsRoute(bookingExperienceId),
+                            )
+                        }
+                        onSent={() => navigate(BOOKING_SENT_ROUTE)}
+                    />
+                )}
+                {path === BOOKING_SENT_ROUTE && (
+                    <BookingSentPage
+                        onBack={() => navigate("/experiencias")}
+                        onTrack={() => navigate(BOOKINGS_LIST_ROUTE)}
+                        onContinue={() => navigate("/explorar")}
                     />
                 )}
                 {showProfileSelection && (

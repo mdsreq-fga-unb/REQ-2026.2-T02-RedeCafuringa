@@ -2867,6 +2867,84 @@
         ]
       }
     },
+    "/api/v1/bookings": {
+      "post": {
+        "description": "HU44/RF44 (CA04-CA07): registra a solicitação do consumidor autenticado para uma experiência disponível. A solicitação nasce pendente e não confirma a experiência: aguarda a resposta do produtor (RN19). O solicitante vem do token, nunca do corpo. Data e horário seguem o horário de Brasília e não podem estar no passado. Exclusivo do perfil CONSUMIDOR (RNF08).",
+        "operationId": "bookingsCreate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookingDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Solicitação registrada, aguardando o produtor (CA06)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Campos ausentes ou inválidos, ou data e horário no passado (mensagens em `message`)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de consumidor (produtor ou administrador)\n\nExclusivo para: CONSUMIDOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Experiência inexistente, indisponível ou de produtor desativado (CA07)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Solicitar pré-reserva de experiência",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
     "/api/v1/search": {
       "get": {
         "description": "HU36 (CA01-CA09), RN15: busca pública, sem login, por produtores, produtos e experiências da região. Procura o termo, sem diferenciar acentos e maiúsculas, no nome do produto ou da experiência, no nome da iniciativa e, nos produtores, também na trajetória e nas atividades. Só aparecem ofertas disponíveis de produtores ativos e perfis publicados. O resultado vem agrupado por tipo, cada grupo com `itens` (até `limite`) e `total`; grupo vazio significa que nada foi encontrado naquele tipo. Termo ausente, curto, longo ou só com símbolos devolve 400 com a orientação de correção. Eventos ficam fora do MVP.",
@@ -2927,8 +3005,8 @@
   },
   "info": {
     "title": "Rede Cafuringa API",
-    "description": "API REST da plataforma **Rede Cafuringa**: produtores rurais da Cafuringa divulgam a produção, e consumidores e visitantes descobrem ofertas da região.\n\n### Primeiros passos\n\n1. **Entre:** em **auth › POST /auth/login**, clique em *Try it out* e envie e-mail e senha. A resposta traz `accessToken`.\n2. **Autorize:** clique em **Authorize** (botão com cadeado, logo abaixo desta apresentação), cole o token e confirme. Ele fica salvo neste navegador até você clicar em *Logout*.\n3. **Teste:** abra qualquer rota, *Try it out* e *Execute*. Rotas com cadeado exigem login; as demais são públicas.\n\nUse o campo de busca (*Filter by tag*) para ir direto a um grupo.\n\n### Perfis de acesso (RN01, RNF08)\n\n| Perfil | O que pode fazer |\n|---|---|\n| Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |\n| `CONSUMIDOR` | O mesmo que o visitante, com sessão |\n| `PRODUTOR` | Registrar trajetória e foto de perfil; cadastrar produtos |\n| `ADMINISTRADOR` | Consultar usuários e cadastrar outros administradores |\n\nToda rota exige login, exceto as marcadas como públicas (negação por padrão). Perfil sem permissão recebe **403**; sem token ou com token inválido, **401**.\n\n### Convenções\n\n| Tema | Como funciona |\n|---|---|\n| **Erros** | Corpo `ErrorResponse` (`statusCode`, `message`, `error`). Em validação (400), `message` é uma lista de orientações em português, prontas para exibir |\n| **Paginação** | Listas devolvem `{ itens, total, pagina, limite }`; use `?pagina=` e `?limite=` |\n| **Fotos** | Envio em `multipart/form-data`. PNG, JPEG ou WebP; a API regrava em WebP **sem metadados** (EXIF/GPS). Os caminhos devolvidos são relativos à base da API e levam a versão: podem ficar em cache para sempre |\n| **Reenvio seguro** | `POST /products` e `POST /experiences` aceitam `Idempotency-Key`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |\n| **Limites de uso** | Login, cadastro e recuperação de acesso têm limite de tentativas por IP: **429** com `Retry-After` (segundos) |\n| **Rastreio** | Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`); ele volta na resposta e nos logs. Sem ele, a API gera um UUID |\n| **Dados pessoais** | Respostas nunca trazem hash de senha nem CPF completo (vem mascarado). Perfis públicos só mostram dados de divulgação (RN07, RNF11) |\n| **Versão** | SemVer em `info.version`; regras em *docs/shared/contratos.md*. Tipos do front gerados a partir deste contrato (`./scripts/dev.sh contract`) |",
-    "version": "0.11.0",
+    "description": "API REST da plataforma **Rede Cafuringa**: produtores rurais da Cafuringa divulgam a produção, e consumidores e visitantes descobrem ofertas da região.\n\n### Primeiros passos\n\n1. **Entre:** em **auth › POST /auth/login**, clique em *Try it out* e envie e-mail e senha. A resposta traz `accessToken`.\n2. **Autorize:** clique em **Authorize** (botão com cadeado, logo abaixo desta apresentação), cole o token e confirme. Ele fica salvo neste navegador até você clicar em *Logout*.\n3. **Teste:** abra qualquer rota, *Try it out* e *Execute*. Rotas com cadeado exigem login; as demais são públicas.\n\nUse o campo de busca (*Filter by tag*) para ir direto a um grupo.\n\n### Perfis de acesso (RN01, RNF08)\n\n| Perfil | O que pode fazer |\n|---|---|\n| Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |\n| `CONSUMIDOR` | O mesmo que o visitante, com sessão; solicitar pré-reserva de experiências |\n| `PRODUTOR` | Registrar trajetória e foto de perfil; cadastrar produtos |\n| `ADMINISTRADOR` | Consultar usuários e cadastrar outros administradores |\n\nToda rota exige login, exceto as marcadas como públicas (negação por padrão). Perfil sem permissão recebe **403**; sem token ou com token inválido, **401**.\n\n### Convenções\n\n| Tema | Como funciona |\n|---|---|\n| **Erros** | Corpo `ErrorResponse` (`statusCode`, `message`, `error`). Em validação (400), `message` é uma lista de orientações em português, prontas para exibir |\n| **Paginação** | Listas devolvem `{ itens, total, pagina, limite }`; use `?pagina=` e `?limite=` |\n| **Fotos** | Envio em `multipart/form-data`. PNG, JPEG ou WebP; a API regrava em WebP **sem metadados** (EXIF/GPS). Os caminhos devolvidos são relativos à base da API e levam a versão: podem ficar em cache para sempre |\n| **Reenvio seguro** | `POST /products` e `POST /experiences` aceitam `Idempotency-Key`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |\n| **Limites de uso** | Login, cadastro e recuperação de acesso têm limite de tentativas por IP: **429** com `Retry-After` (segundos) |\n| **Rastreio** | Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`); ele volta na resposta e nos logs. Sem ele, a API gera um UUID |\n| **Dados pessoais** | Respostas nunca trazem hash de senha nem CPF completo (vem mascarado). Perfis públicos só mostram dados de divulgação (RN07, RNF11) |\n| **Versão** | SemVer em `info.version`; regras em *docs/shared/contratos.md*. Tipos do front gerados a partir deste contrato (`./scripts/dev.sh contract`) |",
+    "version": "0.12.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -2955,6 +3033,10 @@
     {
       "name": "experiences",
       "description": "Catálogo e cadastro de experiências, atividades e atrativos de turismo rural, com galeria de fotos (HU21, RN09, RN11)"
+    },
+    {
+      "name": "bookings",
+      "description": "Pré-reserva de experiências pelo consumidor, sujeita à resposta do produtor (HU44, RN19)"
     },
     {
       "name": "search",
@@ -4036,6 +4118,152 @@
           "total",
           "pagina",
           "limite"
+        ]
+      },
+      "CreateBookingDto": {
+        "type": "object",
+        "properties": {
+          "experienciaId": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000e001",
+            "description": "Identificador da experiência desejada (RN19)"
+          },
+          "data": {
+            "type": "string",
+            "example": "2026-12-10",
+            "format": "date",
+            "description": "Dia desejado (AAAA-MM-DD), no horário de Brasília. Não pode estar no passado."
+          },
+          "horario": {
+            "type": "string",
+            "example": "09:00",
+            "enum": [
+              "00:00",
+              "01:00",
+              "02:00",
+              "03:00",
+              "04:00",
+              "05:00",
+              "06:00",
+              "07:00",
+              "08:00",
+              "09:00",
+              "10:00",
+              "11:00",
+              "12:00",
+              "13:00",
+              "14:00",
+              "15:00",
+              "16:00",
+              "17:00",
+              "18:00",
+              "19:00",
+              "20:00",
+              "21:00",
+              "22:00",
+              "23:00"
+            ],
+            "description": "Horário de início, de hora em hora (00:00 a 23:00). Não pode ter começado."
+          },
+          "participantes": {
+            "type": "number",
+            "example": 4,
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Quantidade de pessoas, número inteiro"
+          },
+          "formaPagamento": {
+            "type": "string",
+            "enum": [
+              "pix",
+              "dinheiro",
+              "cartao_credito",
+              "cartao_debito"
+            ],
+            "example": "pix",
+            "description": "Forma de pagamento a combinar com o produtor; a plataforma não cobra (OE3)"
+          },
+          "mensagem": {
+            "type": "string",
+            "example": "Vamos com duas crianças.",
+            "maxLength": 500,
+            "description": "Recado ao produtor. Texto simples, até 500 caracteres"
+          }
+        },
+        "required": [
+          "experienciaId",
+          "data",
+          "horario",
+          "participantes",
+          "formaPagamento"
+        ]
+      },
+      "BookingResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000b001"
+          },
+          "experienciaId": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000e001",
+            "description": "Experiência solicitada"
+          },
+          "data": {
+            "type": "string",
+            "example": "2026-12-10",
+            "format": "date"
+          },
+          "horario": {
+            "type": "string",
+            "example": "09:00"
+          },
+          "participantes": {
+            "type": "number",
+            "example": 4
+          },
+          "formaPagamento": {
+            "type": "string",
+            "enum": [
+              "pix",
+              "dinheiro",
+              "cartao_credito",
+              "cartao_debito"
+            ],
+            "example": "pix"
+          },
+          "mensagem": {
+            "type": "string",
+            "example": "Vamos com duas crianças.",
+            "description": "Ausente quando o solicitante não deixou recado"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pendente",
+              "aceita",
+              "recusada",
+              "cancelada"
+            ],
+            "example": "pendente",
+            "description": "Situação da solicitação. Nasce pendente, aguardando a resposta do produtor (RN19, CA06)."
+          },
+          "criadoEm": {
+            "type": "string",
+            "example": "2026-11-21T12:00:00.000Z",
+            "description": "Data do envio"
+          }
+        },
+        "required": [
+          "id",
+          "experienciaId",
+          "data",
+          "horario",
+          "participantes",
+          "formaPagamento",
+          "status",
+          "criadoEm"
         ]
       },
       "SearchProducersResult": {

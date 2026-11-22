@@ -17,6 +17,7 @@ import {
 } from './modules/auth/decorators/auth-throttle.decorator.js';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from './modules/auth/guards/roles.guard.js';
+import { BookingsModule } from './modules/bookings/bookings.module.js';
 import { ExperiencesModule } from './modules/experiences/experiences.module.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { MetricsModule } from './modules/metrics/metrics.module.js';
@@ -150,6 +151,7 @@ import { UsersModule } from './modules/users/users.module.js';
     ProducerProfileModule,
     ProductsModule,
     ExperiencesModule,
+    BookingsModule,
     SearchModule,
   ],
   // A ordem importa: rate limit antes da autenticação (força bruta de token

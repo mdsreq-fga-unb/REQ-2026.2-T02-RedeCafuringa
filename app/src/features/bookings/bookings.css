@@ -1,0 +1,98 @@
+/* HU44: formulário de pré-reserva e confirmação (protótipo "Planeje seu encontro"). */
+
+.booking-page {
+    width: 100%;
+    min-width: 0;
+    padding-bottom: 40px;
+}
+
+.booking-page h1 {
+    color: var(--orange-text);
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+/* Anfitrião, duração e local */
+.booking-summary {
+    margin: 0 0 20px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.booking-summary p {
+    margin: 0;
+}
+
+.booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.booking-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.booking-form textarea.text-input {
+    min-height: 88px;
+    resize: vertical;
+    font: inherit;
+}
+
+/* O espaço entre os itens já vem do gap do formulário. */
+.booking-form .booking-form-alert,
+.booking-form .field-error {
+    margin-top: 0;
+}
+
+.booking-form .login-actions {
+    margin-top: 4px;
+}
+
+/* Tela "Solicitação enviada" */
+.booking-sent h1 {
+    color: var(--ink);
+}
+
+.booking-sent > p:not(.booking-notice) {
+    margin: 0 0 16px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.booking-sent-icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin: 8px 0 16px;
+    border-radius: 14px;
+    background: #fff1e3;
+    color: var(--orange-text);
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.booking-notice {
+    margin: 0 0 20px;
+    padding: 12px 14px;
+    border: 1px solid #f0d77a;
+    border-radius: 8px;
+    background: #fff4c2;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.booking-sent .login-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.booking-sent .login-actions .button {
+    width: 100%;
+}
