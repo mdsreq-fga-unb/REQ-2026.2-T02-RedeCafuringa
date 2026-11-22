@@ -102,11 +102,165 @@
     white-space: pre-wrap;
 }
 
+.received-bookings.received-detail {
+    max-width: 720px;
+}
+
+.received-overview,
+.received-response,
+.received-conversation {
+    border: 1px solid #d8ded4;
+    border-radius: 18px;
+    background: #fff;
+}
+
+.received-overview {
+    overflow: hidden;
+}
+
+.received-detail-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px clamp(16px, 4vw, 24px);
+    border-bottom: 1px solid #eadfb5;
+    background: #fcf3d7;
+    color: #685000;
+}
+
+.received-detail-header[data-status="aceita"] {
+    background: #ebf5e9;
+    border-color: #d5e6d1;
+    color: #226139;
+}
+
+.received-detail-header:is(
+    [data-status="recusada"],
+    [data-status="cancelada"]
+) {
+    background: #fbefec;
+    border-color: #efd8d2;
+    color: #8c2d26;
+}
+
+.received-detail-state {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.received-detail .received-detail-state h1 {
+    margin: 0;
+    color: inherit;
+    font-size: 1.125rem;
+}
+
+.received-state-icon {
+    display: grid;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.received-reference {
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: rgb(255 255 255 / 65%);
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.received-overview-body,
+.received-response,
+.received-conversation {
+    padding: clamp(16px, 4vw, 24px);
+}
+
+.received-overview-body h2,
+.received-conversation h2,
+.received-response h2:first-child,
+.received-response .received-reply-label {
+    margin-top: 0;
+}
+
+.received-overview-body h2 {
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+    line-height: 1.25;
+}
+
+.received-offer-link {
+    display: inline-grid;
+    justify-items: start;
+    gap: 6px;
+    min-height: 44px;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.received-offer-link:hover > span:last-child,
+.received-offer-link:focus-visible > span:last-child {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.received-offer-type {
+    padding: 4px 9px;
+    border-radius: 8px;
+    background: #ffecd9;
+    color: var(--orange-text-strong);
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.received-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 16px;
+    margin: 16px 0 0;
+    padding: 16px;
+    border-radius: 12px;
+    background: #f3f5ef;
+}
+
+.received-summary dt {
+    margin-bottom: 3px;
+    font-size: 0.8125rem;
+    color: #526459;
+}
+
+.received-summary dd {
+    margin: 0;
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.received-conversation,
+.received-response {
+    margin-top: 16px;
+}
+
+.received-conversation {
+    border-left: 4px solid #879d80;
+}
+
+.received-response .received-reply-hint {
+    margin-bottom: 10px;
+    font-size: 0.875rem;
+}
+
 .received-detail textarea {
     width: 100%;
     min-height: 58px;
     resize: vertical;
     font: inherit;
+    background: #fafbf8;
 }
 
 .received-actions {
@@ -132,6 +286,20 @@
 .received-actions .received-danger {
     background: #a32929;
     color: white;
+}
+
+.received-response .received-actions {
+    margin-bottom: 0;
+}
+
+@media (min-width: 600px) {
+    .received-summary {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .received-response .received-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 .received-bookings :is(button, a, textarea):focus-visible {

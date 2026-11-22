@@ -1,4 +1,5 @@
 import { isMockAuthEnabled } from "./authMode";
+import { DEMO_BOOKING_RESPONSES_KEY } from "@/features/bookings/receivedBookingsDemo";
 
 export type DemoResetAction = "users" | "session" | "all";
 
@@ -12,6 +13,7 @@ const sessionKeys = [
 ];
 const userKeys = ["cafuringa-mock-users", "cafuringa-mock-admin-emails"];
 const settingsKeys = [
+    DEMO_BOOKING_RESPONSES_KEY,
     "cafuringa-demo-offers",
     "cafuringa-contact",
     "cafuringa-conversations",

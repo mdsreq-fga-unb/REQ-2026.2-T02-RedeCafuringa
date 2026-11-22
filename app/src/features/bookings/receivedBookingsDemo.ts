@@ -4,13 +4,15 @@ import type {
     ReceivedBooking,
 } from "./receivedBookingsService";
 
-// Dados fictícios da conta produtora de demonstração. Respostas duram até recarregar.
+export const DEMO_BOOKING_RESPONSES_KEY = "cafuringa-demo-booking-responses";
+
+// Dados fictícios da conta produtora de demonstração.
 const sample: ReceivedBooking = {
     id: "demo-reserva-124",
-    experienciaId: "caminhos-cerrado",
+    experienciaId: "queijos",
     codigo: "CAF-0124",
-    experienciaNome: "Sabores e caminhos do Cerrado",
-    propriedade: "Sítio Raízes",
+    experienciaNome: "Visita e Degustação de Queijos",
+    propriedade: "Cafuringa, DF",
     consumidorNome: "Ana Oliveira",
     data: "2026-10-17",
     horario: "09:00",
@@ -54,11 +56,47 @@ function canViewDemoBookings() {
     );
 }
 
+type DemoResponse = {
+    status: BookingDecision;
+    mensagemResposta: string;
+};
+
+function readResponses(): Record<string, DemoResponse> {
+    try {
+        const stored: unknown = JSON.parse(
+            localStorage.getItem(DEMO_BOOKING_RESPONSES_KEY) ?? "{}",
+        );
+        if (!stored || typeof stored !== "object" || Array.isArray(stored)) {
+            return {};
+        }
+        return Object.fromEntries(
+            Object.entries(stored).filter(
+                ([, response]) =>
+                    response &&
+                    (response.status === "aceita" ||
+                        response.status === "recusada") &&
+                    typeof response.mensagemResposta === "string",
+            ),
+        );
+    } catch {
+        return {};
+    }
+}
+
+function list(): ReceivedBooking[] {
+    if (!canViewDemoBookings()) return [];
+    const responses = readResponses();
+    return bookings.map((booking) => ({
+        ...booking,
+        ...responses[booking.id],
+    }));
+}
+
 function get(id: string): ReceivedBooking {
     if (!canViewDemoBookings()) {
         throw new ApiHttpError({ status: 403, message: "Acesso negado." });
     }
-    const booking = bookings.find((item) => item.id === id);
+    const booking = list().find((item) => item.id === id);
     if (!booking) {
         throw new ApiHttpError({
             status: 404,
@@ -69,7 +107,7 @@ function get(id: string): ReceivedBooking {
 }
 
 export const demoReceivedBookings = {
-    list: (): ReceivedBooking[] => (canViewDemoBookings() ? [...bookings] : []),
+    list,
     get,
     respond(
         id: string,
@@ -83,8 +121,11 @@ export const demoReceivedBookings = {
                 message: "Solicitação já respondida.",
             });
         }
-        const updated = { ...booking, status, mensagemResposta };
-        bookings[bookings.findIndex((item) => item.id === id)] = updated;
-        return updated;
+        const response = { status, mensagemResposta };
+        localStorage.setItem(
+            DEMO_BOOKING_RESPONSES_KEY,
+            JSON.stringify({ ...readResponses(), [id]: response }),
+        );
+        return { ...booking, ...response };
     },
 };

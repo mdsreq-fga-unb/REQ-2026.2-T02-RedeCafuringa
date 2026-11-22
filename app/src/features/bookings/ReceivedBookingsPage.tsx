@@ -11,7 +11,11 @@ import {
     type ReceivedBooking,
 } from "./receivedBookingsService";
 import type { BookingStatus, PaymentMethod } from "./bookingTypes";
-import { RECEIVED_BOOKINGS_ROUTE, receivedBookingRoute } from "./bookingRoutes";
+import {
+    RECEIVED_BOOKINGS_ROUTE,
+    experienceDetailsRoute,
+    receivedBookingRoute,
+} from "./bookingRoutes";
 import "./bookings.css";
 import "./receivedBookings.css";
 
@@ -197,6 +201,9 @@ export function ReceivedBookingPage({
     const submission = useRef<AbortController | null>(null);
     const heading = useRef<HTMLHeadingElement>(null);
     const loaded = booking !== null;
+    const offerPath = booking
+        ? experienceDetailsRoute(booking.experienciaId)
+        : "";
 
     useEffect(() => {
         const controller = new AbortController();
@@ -335,61 +342,121 @@ export function ReceivedBookingPage({
                 </>
             ) : booking ? (
                 <>
-                    <div
-                        className="booking-sent-icon received-status"
-                        data-status={
-                            confirmingRefusal ? "recusada" : booking.status
-                        }
-                        aria-hidden="true"
-                    >
-                        {
-                            statusIcons[
+                    <div className="received-overview">
+                        <header
+                            className="received-detail-header"
+                            data-status={
                                 confirmingRefusal ? "recusada" : booking.status
-                            ]
-                        }
-                    </div>
-                    <h1
-                        ref={heading}
-                        tabIndex={-1}
-                        className="received-status"
-                        data-status={
-                            confirmingRefusal ? "recusada" : booking.status
-                        }
-                    >
-                        {confirmingRefusal
-                            ? "Cancelar a solicitação?"
-                            : statusLabels[booking.status]}
-                    </h1>
-                    <p># Nº {booking.codigo}</p>
-                    <h2>
-                        {confirmingRefusal
-                            ? booking.experienciaNome
-                            : booking.consumidorNome}
-                    </h2>
-                    <div className="received-summary">
-                        {booking.propriedade && confirmingRefusal && (
-                            <p>{booking.propriedade}</p>
-                        )}
-                        <p>{booking.data.split("-").reverse().join("/")}</p>
-                        <p>{formatTime(booking.horario)}</p>
-                        <p>
-                            {booking.participantes}{" "}
-                            {booking.participantes === 1
-                                ? "participante"
-                                : "participantes"}
-                        </p>
-                        <p>{currency.format(booking.valorTotal)}</p>
-                        {!confirmingRefusal && (
-                            <p>{paymentLabels[booking.formaPagamento]}</p>
-                        )}
+                            }
+                        >
+                            <div className="received-detail-state">
+                                <span
+                                    className="received-state-icon"
+                                    aria-hidden="true"
+                                >
+                                    {
+                                        statusIcons[
+                                            confirmingRefusal
+                                                ? "recusada"
+                                                : booking.status
+                                        ]
+                                    }
+                                </span>
+                                <h1 ref={heading} tabIndex={-1}>
+                                    {confirmingRefusal
+                                        ? "Cancelar a solicitação?"
+                                        : statusLabels[booking.status]}
+                                </h1>
+                            </div>
+                            <span className="received-reference">
+                                {booking.codigo}
+                            </span>
+                        </header>
+                        <div className="received-overview-body">
+                            <h2>
+                                <a
+                                    className="received-offer-link"
+                                    href={`#${offerPath}`}
+                                    aria-label={`Ver experiência: ${booking.experienciaNome}`}
+                                    onClick={(event) => {
+                                        if (
+                                            event.ctrlKey ||
+                                            event.metaKey ||
+                                            event.shiftKey ||
+                                            event.altKey
+                                        )
+                                            return;
+                                        event.preventDefault();
+                                        onNavigate(offerPath);
+                                    }}
+                                >
+                                    <span className="received-offer-type">
+                                        Experiência
+                                    </span>
+                                    <span>
+                                        {booking.experienciaNome}{" "}
+                                        <span aria-hidden="true">→</span>
+                                    </span>
+                                </a>
+                            </h2>
+                            {booking.propriedade && (
+                                <p>{booking.propriedade}</p>
+                            )}
+                            <dl className="received-summary">
+                                <div>
+                                    <dt>Solicitante</dt>
+                                    <dd>{booking.consumidorNome}</dd>
+                                </div>
+                                <div>
+                                    <dt>Participantes</dt>
+                                    <dd>
+                                        {booking.participantes}{" "}
+                                        {booking.participantes === 1
+                                            ? "participante"
+                                            : "participantes"}
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt>Data</dt>
+                                    <dd>
+                                        <time dateTime={booking.data}>
+                                            {booking.data
+                                                .split("-")
+                                                .reverse()
+                                                .join("/")}
+                                        </time>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt>Horário</dt>
+                                    <dd>
+                                        <time dateTime={booking.horario}>
+                                            {formatTime(booking.horario)}
+                                        </time>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt>Valor total</dt>
+                                    <dd>
+                                        {currency.format(booking.valorTotal)}
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt>Forma de pagamento</dt>
+                                    <dd>
+                                        {paymentLabels[booking.formaPagamento]}
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
                     </div>
                     {!confirmingRefusal && booking.mensagem && (
-                        <>
+                        <div className="received-conversation">
                             <h2>Mensagem de {booking.consumidorNome}</h2>
                             <p className="received-message">
                                 {booking.mensagem}
                             </p>
-                        </>
+                        </div>
                     )}
                     {error && (
                         <p className="received-error" role="alert">
@@ -397,7 +464,7 @@ export function ReceivedBookingPage({
                         </p>
                     )}
                     {confirmingRefusal ? (
-                        <>
+                        <div className="received-response">
                             {message.trim() && (
                                 <>
                                     <h2>
@@ -424,7 +491,7 @@ export function ReceivedBookingPage({
                                     Sim, cancelar solicitação
                                 </ActionButton>
                                 <ActionButton
-                                    variant="orange"
+                                    variant="outline"
                                     type="button"
                                     disabled={saving}
                                     onClick={backFromRefusal}
@@ -432,19 +499,27 @@ export function ReceivedBookingPage({
                                     Voltar
                                 </ActionButton>
                             </div>
-                        </>
+                        </div>
                     ) : booking.status === "pendente" && !blocked ? (
-                        <>
+                        <div className="received-response">
                             <label
                                 className="received-reply-label"
                                 htmlFor="booking-reply"
                             >
                                 Mensagem para {booking.consumidorNome}
                             </label>
+                            <p
+                                className="received-reply-hint"
+                                id="booking-reply-hint"
+                            >
+                                Opcional. Use este campo para combinar detalhes
+                                ou explicar a recusa.
+                            </p>
                             <textarea
                                 id="booking-reply"
                                 className="text-input"
                                 rows={2}
+                                aria-describedby="booking-reply-hint"
                                 value={message}
                                 disabled={saving}
                                 onChange={(event) =>
@@ -474,14 +549,14 @@ export function ReceivedBookingPage({
                                     Recusar solicitação
                                 </ActionButton>
                             </div>
-                        </>
+                        </div>
                     ) : booking.mensagemResposta ? (
-                        <>
+                        <div className="received-conversation">
                             <h2>Mensagem para {booking.consumidorNome}</h2>
-                            <p className="received-reply received-message">
+                            <p className="received-message">
                                 {booking.mensagemResposta}
                             </p>
-                        </>
+                        </div>
                     ) : null}
                     {saving && <p role="status">Registrando resposta…</p>}
                 </>
