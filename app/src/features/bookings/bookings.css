@@ -220,3 +220,12 @@
     margin: 0;
     overflow-wrap: anywhere;
 }
+
+/* HU46: ação de cancelar, em vermelho como no protótipo. */
+.booking-cancel-button {
+    width: 100%;
+    margin-top: 20px;
+    border-color: #a83232;
+    background: #a83232;
+    color: #fff;
+}

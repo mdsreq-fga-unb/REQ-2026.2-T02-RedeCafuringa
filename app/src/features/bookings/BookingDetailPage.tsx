@@ -209,6 +209,21 @@ export function BookingDetailPage({
                             <p>{state.booking.message}</p>
                         </section>
                     )}
+                    {/* HU46 CA02: só a solicitante cancela, e só se pendente (RN20). */}
+                    {role === "consumer" &&
+                        state.booking.status === "pendente" && (
+                            <button
+                                type="button"
+                                className="button booking-cancel-button"
+                                onClick={() =>
+                                    onNavigate(
+                                        `/reservas/${encodeURIComponent(state.booking.id)}/cancelar`,
+                                    )
+                                }
+                            >
+                                Cancelar solicitação
+                            </button>
+                        )}
                 </>
             )}
         </section>
