@@ -190,9 +190,15 @@ export function BookingsPage({ role, onNavigate, load }: BookingsPageProps) {
                         ))}
                     </ul>
                     {state.page.total > state.page.items.length && (
-                        <p className="booking-list-count">
-                            {`Mostrando ${state.page.items.length} de ${state.page.total}`}
-                        </p>
+                        <>
+                            <p className="booking-list-count">
+                                A lista mostra apenas as 50 pré-reservas mais
+                                recentes.
+                            </p>
+                            <p className="booking-list-count">
+                                {`Mostrando ${state.page.items.length} de ${state.page.total}`}
+                            </p>
+                        </>
                     )}
                 </>
             )}

@@ -206,10 +206,22 @@ describe("HU45 — lista de pré-reservas", () => {
 
     it("informa quando há mais solicitações do que as mostradas", async () => {
         renderPage({
-            load: vi.fn().mockResolvedValue(page([booking()], 60)),
+            load: vi.fn().mockResolvedValue(
+                page(
+                    Array.from({ length: 50 }, (_, index) =>
+                        booking({ id: `b${index + 1}` }),
+                    ),
+                    60,
+                ),
+            ),
         });
 
-        expect(await screen.findByText("Mostrando 1 de 60")).toBeTruthy();
+        expect(
+            await screen.findByText(
+                "A lista mostra apenas as 50 pré-reservas mais recentes.",
+            ),
+        ).toBeTruthy();
+        expect(await screen.findByText("Mostrando 50 de 60")).toBeTruthy();
     });
 
     describe("falhas", () => {
