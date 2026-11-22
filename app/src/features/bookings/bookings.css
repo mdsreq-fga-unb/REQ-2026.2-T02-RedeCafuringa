@@ -229,3 +229,42 @@
     background: #a83232;
     color: #fff;
 }
+
+/* HU46: confirmação do cancelamento (protótipo "Cancelar solicitação?"). */
+.booking-cancel-page h1 {
+    color: var(--ink);
+}
+
+.booking-cancel-icon {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    margin: 8px 0 12px;
+    place-items: center;
+    border: 2px solid #a83232;
+    border-radius: 8px;
+    color: #a83232;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.booking-cancel-page h2 {
+    margin: 12px 0 8px;
+    color: var(--ink);
+    font-size: 18px;
+}
+
+.booking-cancel-warning {
+    margin: 16px 0 0;
+    color: #a83232;
+    font-weight: 600;
+}
+
+.booking-cancel-page .login-actions .booking-cancel-button {
+    margin-top: 0;
+}
+
+.booking-cancel-page button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
