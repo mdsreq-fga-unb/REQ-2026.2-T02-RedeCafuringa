@@ -60,6 +60,7 @@ import { BookingRoutePage } from "@/features/bookings/BookingRoutePage";
 import { BookingSentPage } from "@/features/bookings/BookingSentPage";
 import { BookingsPage } from "@/features/bookings/BookingsPage";
 import { BookingDetailPage } from "@/features/bookings/BookingDetailPage";
+import { BookingCancelPage } from "@/features/bookings/BookingCancelPage";
 import {
     BOOKING_SENT_ROUTE,
     BOOKINGS_LIST_ROUTE,
@@ -222,6 +223,14 @@ export function App() {
     const bookingDetailId = path.startsWith("/reservas/")
         ? decodeRouteSegment(path.split("/")[2])
         : undefined;
+    // HU46: confirmação do cancelamento, exclusiva da consumidora.
+    const bookingCancelRoute = /^\/reservas\/[^/]+\/cancelar$/.test(path);
+    const bookingDetailPath = `/reservas/${path.split("/")[2] ?? ""}`;
+    const cancelBlocked =
+        bookingCancelRoute && role !== null && role !== "consumer";
+    useEffect(() => {
+        if (cancelBlocked) navigate(bookingDetailPath);
+    }, [cancelBlocked, bookingDetailPath, navigate]);
     const needsProfileSelection =
         role === null &&
         (["/conta", "/notificacoes"].includes(path) || bookingsRoute);
@@ -532,7 +541,15 @@ export function App() {
                 {bookingsRoute &&
                     !needsProfileSelection &&
                     (role === "consumer" || role === "producer" ? (
-                        bookingDetailId ? (
+                        bookingCancelRoute && bookingDetailId ? (
+                            role === "consumer" && (
+                                <BookingCancelPage
+                                    key={path}
+                                    id={bookingDetailId}
+                                    onNavigate={navigate}
+                                />
+                            )
+                        ) : bookingDetailId ? (
                             <BookingDetailPage
                                 key={path}
                                 id={bookingDetailId}
