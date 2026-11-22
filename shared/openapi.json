@@ -2945,6 +2945,116 @@
         ]
       }
     },
+    "/api/v1/bookings/{id}/cancel": {
+      "patch": {
+        "description": "HU46/RF46 (CA02-CA07): o consumidor cancela a própria solicitação de pré-reserva. Sem corpo: a confirmação (\"Sim, cancelar solicitação\" / \"Manter solicitação\", CA02 e CA04) é da interface, que só chama este endpoint quando o usuário confirma. Só solicitações pendentes podem ser canceladas pelo solicitante (RN20); a situação passa a `cancelada` e nunca volta a `pendente` (RN21). A troca é atômica: cancelar de novo, ou cancelar depois de o produtor responder, devolve 409 e não altera nada. Solicitação de outro usuário responde 404, como se não existisse (CA05, RNF11). Exclusivo do perfil CONSUMIDOR (RNF08).",
+        "operationId": "bookingsCancel",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Id da pré-reserva a cancelar",
+            "schema": {
+              "example": "64b0c0ffee0000000000b001",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Solicitação cancelada, já com a situação atualizada (CA06)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingResponse"
+                },
+                "example": {
+                  "id": "64b0c0ffee0000000000b001",
+                  "experienciaId": "64b0c0ffee0000000000e001",
+                  "data": "2026-12-10",
+                  "horario": "09:00",
+                  "participantes": 4,
+                  "formaPagamento": "pix",
+                  "mensagem": "Vamos com duas crianças.",
+                  "status": "cancelada",
+                  "criadoEm": "2026-11-21T12:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "statusCode": 401,
+                  "message": "Autenticação necessária",
+                  "error": "Unauthorized"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil diferente de consumidor (produtor ou administrador)\n\nExclusivo para: CONSUMIDOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "statusCode": 403,
+                  "message": "Seu perfil não tem permissão para acessar este recurso",
+                  "error": "Forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pré-reserva inexistente, com id inválido ou pertencente a outro usuário (CA05)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "statusCode": 404,
+                  "message": "Pré-reserva não encontrada",
+                  "error": "Not Found"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A solicitação não está pendente: já aceita (só o produtor cancela), recusada ou já cancelada. Nada é alterado (RN20, RN21). A mensagem diz o motivo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "statusCode": 409,
+                  "message": "Esta pré-reserva já foi cancelada",
+                  "error": "Conflict"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancelar pré-reserva",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
     "/api/v1/search": {
       "get": {
         "description": "HU36 (CA01-CA09), RN15: busca pública, sem login, por produtores, produtos e experiências da região. Procura o termo, sem diferenciar acentos e maiúsculas, no nome do produto ou da experiência, no nome da iniciativa e, nos produtores, também na trajetória e nas atividades. Só aparecem ofertas disponíveis de produtores ativos e perfis publicados. O resultado vem agrupado por tipo, cada grupo com `itens` (até `limite`) e `total`; grupo vazio significa que nada foi encontrado naquele tipo. Termo ausente, curto, longo ou só com símbolos devolve 400 com a orientação de correção. Eventos ficam fora do MVP.",
@@ -3006,7 +3116,7 @@
   "info": {
     "title": "Rede Cafuringa API",
     "description": "API REST da plataforma **Rede Cafuringa**: produtores rurais da Cafuringa divulgam a produção, e consumidores e visitantes descobrem ofertas da região.\n\n### Primeiros passos\n\n1. **Entre:** em **auth › POST /auth/login**, clique em *Try it out* e envie e-mail e senha. A resposta traz `accessToken`.\n2. **Autorize:** clique em **Authorize** (botão com cadeado, logo abaixo desta apresentação), cole o token e confirme. Ele fica salvo neste navegador até você clicar em *Logout*.\n3. **Teste:** abra qualquer rota, *Try it out* e *Execute*. Rotas com cadeado exigem login; as demais são públicas.\n\nUse o campo de busca (*Filter by tag*) para ir direto a um grupo.\n\n### Perfis de acesso (RN01, RNF08)\n\n| Perfil | O que pode fazer |\n|---|---|\n| Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |\n| `CONSUMIDOR` | O mesmo que o visitante, com sessão; solicitar pré-reserva de experiências |\n| `PRODUTOR` | Registrar trajetória e foto de perfil; cadastrar produtos |\n| `ADMINISTRADOR` | Consultar usuários e cadastrar outros administradores |\n\nToda rota exige login, exceto as marcadas como públicas (negação por padrão). Perfil sem permissão recebe **403**; sem token ou com token inválido, **401**.\n\n### Convenções\n\n| Tema | Como funciona |\n|---|---|\n| **Erros** | Corpo `ErrorResponse` (`statusCode`, `message`, `error`). Em validação (400), `message` é uma lista de orientações em português, prontas para exibir |\n| **Paginação** | Listas devolvem `{ itens, total, pagina, limite }`; use `?pagina=` e `?limite=` |\n| **Fotos** | Envio em `multipart/form-data`. PNG, JPEG ou WebP; a API regrava em WebP **sem metadados** (EXIF/GPS). Os caminhos devolvidos são relativos à base da API e levam a versão: podem ficar em cache para sempre |\n| **Reenvio seguro** | `POST /products` e `POST /experiences` aceitam `Idempotency-Key`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |\n| **Limites de uso** | Login, cadastro e recuperação de acesso têm limite de tentativas por IP: **429** com `Retry-After` (segundos) |\n| **Rastreio** | Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`); ele volta na resposta e nos logs. Sem ele, a API gera um UUID |\n| **Dados pessoais** | Respostas nunca trazem hash de senha nem CPF completo (vem mascarado). Perfis públicos só mostram dados de divulgação (RN07, RNF11) |\n| **Versão** | SemVer em `info.version`; regras em *docs/shared/contratos.md*. Tipos do front gerados a partir deste contrato (`./scripts/dev.sh contract`) |",
-    "version": "0.12.0",
+    "version": "0.14.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
