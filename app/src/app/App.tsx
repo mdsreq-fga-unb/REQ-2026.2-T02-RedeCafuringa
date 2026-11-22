@@ -59,8 +59,14 @@ import { apiResourceUrl } from "@/shared/api";
 import { BookingRoutePage } from "@/features/bookings/BookingRoutePage";
 import { BookingSentPage } from "@/features/bookings/BookingSentPage";
 import {
+    ReceivedBookingPage,
+    ReceivedBookingsPage,
+} from "@/features/bookings/ReceivedBookingsPage";
+import {
     BOOKING_SENT_ROUTE,
     BOOKINGS_LIST_ROUTE,
+    RECEIVED_BOOKINGS_ROUTE,
+    parseReceivedBookingRoute,
     bookingAccess,
     bookingLoginRoute,
     bookingReturnRoute,
@@ -215,6 +221,29 @@ export function App() {
             navigate(bookingLoginRoute(bookingExperienceId));
         if (bookingAccessState === "blocked") navigate("/conta");
     }, [bookingExperienceId, bookingAccessState, navigate]);
+    const receivedBookingId = parseReceivedBookingRoute(path);
+    const receivedDetailPath = path.startsWith(`${RECEIVED_BOOKINGS_ROUTE}/`);
+    const producerBookingsPath =
+        role === "producer" &&
+        [RECEIVED_BOOKINGS_ROUTE, BOOKINGS_LIST_ROUTE].includes(path);
+    const receivedBookingsBlocked =
+        (receivedDetailPath || producerBookingsPath) &&
+        (role !== "producer" || !localStorage.getItem("cafuringa-token"));
+    useEffect(() => {
+        if (receivedBookingsBlocked) {
+            navigate(
+                role && role !== "producer" ? "/conta" : "/login/producer",
+            );
+        } else if (receivedDetailPath && !receivedBookingId) {
+            navigate(RECEIVED_BOOKINGS_ROUTE);
+        }
+    }, [
+        receivedBookingsBlocked,
+        receivedDetailPath,
+        receivedBookingId,
+        role,
+        navigate,
+    ]);
     const needsProfileSelection =
         role === null &&
         ["/conta", "/notificacoes", "/reservas"].includes(path);
@@ -474,6 +503,16 @@ export function App() {
                         onContinue={() => navigate("/explorar")}
                     />
                 )}
+                {producerBookingsPath && !receivedBookingsBlocked && (
+                    <ReceivedBookingsPage key={userId} onNavigate={navigate} />
+                )}
+                {receivedBookingId && !receivedBookingsBlocked && (
+                    <ReceivedBookingPage
+                        key={`${userId}:${receivedBookingId}`}
+                        id={receivedBookingId}
+                        onNavigate={navigate}
+                    />
+                )}
                 {showProfileSelection && (
                     <ConsumerProfileSelectionPage
                         onNavigate={(nextPath) => {
@@ -585,7 +624,7 @@ export function App() {
                     />
                 )}
             </main>
-            {!isAuthFlow && (
+            {!isAuthFlow && !receivedDetailPath && (
                 <BottomNavigation
                     path={path}
                     role={role}
