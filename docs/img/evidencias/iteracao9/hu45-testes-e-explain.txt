@@ -1,0 +1,92 @@
+HU45 — Consultar pré-reserva (back-end): saídas reais de verificação
+Data: 21/11/2026 · branch feat/hu45 · Node v24.15.0 · MongoDB 8.2.6 (mongodb-memory-server)
+
+== Suíte completa (rodada isolada, com o código final desta branch) ==
+cd backend && npm test                         -> 51 arquivos, 741 testes passando
+cd backend && npx vitest run --config ./vitest.config.e2e.ts -> 26 arquivos, 423 testes passando
+cd backend && npm run lint                     -> 0 erros (2 avisos antigos em test/users-delete.e2e-spec.ts)
+cd backend && npm run typecheck                -> sem erros
+cd backend && npm run format:check             -> All matched files use Prettier code style!
+cd app && npm run typecheck (tsc -b)           -> sem erros, com o schema.ts regenerado
+npm run openapi:export                         -> OpenAPI 0.13.0 (shared/openapi.json)
+
+== Testes unitários da HU45 (2 arquivos, 31 testes) ==
+✓ HU45 — filtros da consulta de pré-reservas > aceita a consulta sem nenhum filtro
+✓ HU45 — filtros da consulta de pré-reservas > aceita filtrar pela situação pendente
+✓ HU45 — filtros da consulta de pré-reservas > aceita filtrar pela situação aceita
+✓ HU45 — filtros da consulta de pré-reservas > aceita filtrar pela situação recusada
+✓ HU45 — filtros da consulta de pré-reservas > aceita filtrar pela situação cancelada
+✓ HU45 — filtros da consulta de pré-reservas > recusa situação fora do ciclo de vida (RN21)
+✓ HU45 — filtros da consulta de pré-reservas > converte pagina e limite que chegam como texto na query string
+✓ HU45 — filtros da consulta de pré-reservas > recusa página zero
+✓ HU45 — filtros da consulta de pré-reservas > recusa página decimal
+✓ HU45 — filtros da consulta de pré-reservas > recusa limite zero
+✓ HU45 — filtros da consulta de pré-reservas > recusa limite acima do máximo
+✓ HU45 — filtros da consulta de pré-reservas > recusa filtros que não existem (o dono vem do token, nunca da query)
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > filtra pelo consumidor do token, com ObjectId, e ordena da mais nova à mais antiga
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > pagina com os valores padrão (página 1, 20 por página)
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > calcula o salto da página pedida
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > filtra pela situação e conta com o mesmo filtro
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > CA06: sem solicitações devolve lista vazia, não erro
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > CA04: apresenta os dados da solicitação, a experiência e o produtor
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > CA07: devolve a situação que está gravada
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > sem mensagem: o campo não aparece
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > produtor sem nome de iniciativa: usa o nome da conta
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > experiência fora da oferta: segue consultável, sem foto pública
+✓ BookingsQueryService (HU45/RF45) > listMine — consumidor (CA02) > RNF11: não devolve e-mail, telefone, documentos nem os ids crus
+✓ BookingsQueryService (HU45/RF45) > listReceived — produtor (CA03) > filtra pelo produtor do token e mostra o consumidor como contraparte
+✓ BookingsQueryService (HU45/RF45) > listReceived — produtor (CA03) > filtra pela situação
+✓ BookingsQueryService (HU45/RF45) > listReceived — produtor (CA03) > CA06: sem solicitações recebidas devolve lista vazia
+✓ BookingsQueryService (HU45/RF45) > findOne — detalhe (CA04, CA05) > consumidor vê a própria solicitação: filtra por id e consumidor
+✓ BookingsQueryService (HU45/RF45) > findOne — detalhe (CA04, CA05) > produtor vê só a solicitação recebida: filtra por id e produtor
+✓ BookingsQueryService (HU45/RF45) > findOne — detalhe (CA04, CA05) > CA05: registro de terceiros dá 404, igual ao que não existe
+✓ BookingsQueryService (HU45/RF45) > findOne — detalhe (CA04, CA05) > id que não é ObjectId dá 404 sem consultar o banco
+✓ BookingsQueryService (HU45/RF45) > findOne — detalhe (CA04, CA05) > perfil sem consulta própria (administrador) dá 404 sem consultar o banco
+
+== Testes e2e da HU45 com Mongo real (1 arquivo, 35 testes) ==
+✓ CA01, RNF08: só consumidor e produtor autenticados consultam > 401 sem token em GET /mine
+✓ CA01, RNF08: só consumidor e produtor autenticados consultam > 401 sem token em GET /received
+✓ CA01, RNF08: só consumidor e produtor autenticados consultam > 401 sem token em GET /6b025a915190aaa0fbad2a88
+✓ CA01, RNF08: só consumidor e produtor autenticados consultam > 401 com token inválido
+✓ CA01, RNF08: só consumidor e produtor autenticados consultam > 403 para o administrador em GET /mine
+✓ CA01, RNF08: só consumidor e produtor autenticados consultam > 403 para o administrador em GET /received
+✓ CA01, RNF08: só consumidor e produtor autenticados consultam > 403 para o administrador em GET /6b025a915190aaa0fbad2a89
+✓ CA01, RNF08: só consumidor e produtor autenticados consultam > 403: produtor não usa a lista do consumidor e vice-versa
+✓ CA02: consumidor consulta as solicitações da própria conta > 200 com as suas solicitações, da mais nova à mais antiga, e nenhuma de outro consumidor
+✓ CA02: consumidor consulta as solicitações da própria conta > traz a experiência e o produtor, sem dados pessoais (RNF11)
+✓ CA02: consumidor consulta as solicitações da própria conta > pagina os resultados
+✓ CA03: produtor consulta as solicitações das suas experiências > 200 só com as recebidas por ele, com o consumidor como contraparte
+✓ CA03: produtor consulta as solicitações das suas experiências > a lista de consumidor nunca mostra o que ele recebeu como produtor
+✓ CA04: detalhe da solicitação > consumidor e produtor da solicitação veem o mesmo registro, cada um com o seu outro lado
+✓ CA04: detalhe da solicitação > experiência retirada da oferta: continua consultável, sem foto pública
+✓ CA05, RN20: acesso restrito por perfil e vínculo > 404 para consumidor que não fez a solicitação
+✓ CA05, RN20: acesso restrito por perfil e vínculo > 404 para produtor sem vínculo com a experiência
+✓ CA05, RN20: acesso restrito por perfil e vínculo > a resposta para terceiros é idêntica à de um id que não existe (não vaza existência)
+✓ CA05, RN20: acesso restrito por perfil e vínculo > 404 para id inválido (abc)
+✓ CA05, RN20: acesso restrito por perfil e vínculo > 404 para id inválido (123)
+✓ CA05, RN20: acesso restrito por perfil e vínculo > 404 para id inválido (%20)
+✓ CA05, RN20: acesso restrito por perfil e vínculo > o dono não vem da query: filtro `consumidor` é recusado
+✓ CA06: ausência de solicitações > consumidor sem solicitações: 200 com lista vazia
+✓ CA06: ausência de solicitações > produtor sem solicitações recebidas: 200 com lista vazia
+✓ CA07, RN21: situação atualmente registrada > lista e detalhe mostram a mudança de situação assim que ela é gravada
+✓ CA07, RN21: situação atualmente registrada > filtra pela situação
+✓ CA07, RN21: situação atualmente registrada > 400 para situação fora do ciclo de vida
+✓ CA07, RN21: situação atualmente registrada > 400 para paginação inválida (pagina=0)
+✓ CA07, RN21: situação atualmente registrada > 400 para paginação inválida (pagina=abc)
+✓ CA07, RN21: situação atualmente registrada > 400 para paginação inválida (limite=0)
+✓ CA07, RN21: situação atualmente registrada > 400 para paginação inválida (limite=51)
+✓ Desempenho: as consultas usam os índices de `bookings` > consumidor: varre índice e não ordena em memória
+✓ Desempenho: as consultas usam os índices de `bookings` > consumidor + status: varre índice e não ordena em memória
+✓ Desempenho: as consultas usam os índices de `bookings` > produtor: varre índice e não ordena em memória
+✓ Desempenho: as consultas usam os índices de `bookings` > produtor + status: varre índice e não ordena em memória
+
+== Plano de consulta (explain executionStats do aggregate [$match, $sort, $skip, $limit]) ==
+Antes do índice novo, lista do produtor sem filtro de situação (falha real do teste de plano):
+  winningPlan: FETCH -> SORT {criadoEm:-1,_id:-1, limitAmount:20} -> IXSCAN produtor_1_status_1_criadoEm_-1__id_-1
+  (o índice tem status no meio, então ordenava em memória)
+Depois do índice {produtor:1, criadoEm:-1, _id:-1}:
+  winningPlan: LIMIT(20) -> FETCH -> IXSCAN produtor_1_criadoEm_-1__id_-1   (SORT só aparece em rejectedPlans)
+Consumidor, consumidor+status, produtor e produtor+status: IXSCAN, sem COLLSCAN e sem SORT no plano vencedor.
+
+== Respostas HTTP reais ==
+Ver hu45-api-respostas-reais.json (16 chamadas capturadas contra a API em execução, incluindo 401, 403, 404, 400 e listas vazias).
