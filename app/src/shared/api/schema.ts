@@ -568,6 +568,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/bookings/received/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar detalhes de pré-reserva recebida
+         * @description HU47/CA02 e CA05: apresenta os dados necessários à análise somente ao produtor responsável.
+         */
+        get: operations["bookingsGetReceived"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/received/{id}/response": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Responder pré-reserva recebida
+         * @description HU47/CA03-CA07: registra aceite ou recusa somente para uma solicitação pendente pertencente ao produtor autenticado.
+         */
+        patch: operations["bookingsRespond"];
+        trace?: never;
+    };
     "/api/v1/bookings": {
         parameters: {
             query?: never;
@@ -586,6 +626,106 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar as minhas pré-reservas (consumidor)
+         * @description HU45/RF45 (CA01, CA02, CA06, CA07): solicitações feitas pela conta autenticada, da mais nova à mais antiga, com a situação gravada agora (RN21). Filtro opcional por `status` e paginação por `pagina`/`limite` (padrão 1 e 20, máximo 50). Sem solicitações devolve 200 com `itens` vazio. O dono vem do token, nunca da query (RNF08). Exclusivo do perfil CONSUMIDOR.
+         */
+        get: operations["bookingsListMine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/received": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar as pré-reservas recebidas (produtor)
+         * @description HU45/RF45 (CA01, CA03, CA06, CA07): solicitações recebidas para as experiências do produtor autenticado, da mais nova à mais antiga, com a situação gravada agora (RN21). `contraparte` é o consumidor (só id e nome, RNF11). Filtro opcional por `status` e paginação como em `GET /bookings/mine`. Sem solicitações devolve 200 com `itens` vazio. Exclusivo do perfil PRODUTOR.
+         */
+        get: operations["bookingsListReceived"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar alterações das próprias pré-reservas
+         * @description HU48/RF48: lista aceites, recusas e cancelamentos registrados nas solicitações vinculadas à conta autenticada, da alteração mais recente à mais antiga.
+         */
+        get: operations["bookingsListNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar uma pré-reserva
+         * @description HU45/RF45 (CA04, CA05, CA07): detalhe de uma solicitação com a experiência e o outro lado. O consumidor só vê as suas e o produtor só as recebidas; qualquer outra, inexistente ou com id inválido responde 404, sem revelar se existe (RNF08, RNF11). Mostra a situação atualmente gravada.
+         */
+        get: operations["bookingsFindOne"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Cancelar pré-reserva
+         * @description HU46/RF46 (CA02-CA07): o consumidor cancela a própria solicitação de pré-reserva. Sem corpo: a confirmação ("Sim, cancelar solicitação" / "Manter solicitação", CA02 e CA04) é da interface, que só chama este endpoint quando o usuário confirma. Só solicitações pendentes podem ser canceladas pelo solicitante (RN20); a situação passa a `cancelada` e nunca volta a `pendente` (RN21). A troca é atômica: cancelar de novo, ou cancelar depois de o produtor responder, devolve 409 e não altera nada. Solicitação de outro usuário responde 404, como se não existisse (CA05, RNF11). Exclusivo do perfil CONSUMIDOR (RNF08).
+         */
+        patch: operations["bookingsCancel"];
         trace?: never;
     };
     "/api/v1/search": {
@@ -1264,6 +1404,76 @@ export interface components {
              */
             limite: number;
         };
+        ReceivedBookingResponse: {
+            /** @example 64b0c0ffee0000000000b001 */
+            id: string;
+            /**
+             * @description Experiência solicitada
+             * @example 64b0c0ffee0000000000e001
+             */
+            experienciaId: string;
+            /**
+             * Format: date
+             * @example 2026-12-10
+             */
+            data: string;
+            /** @example 09:00 */
+            horario: string;
+            /** @example 4 */
+            participantes: number;
+            /**
+             * @example pix
+             * @enum {string}
+             */
+            formaPagamento: "pix" | "dinheiro" | "cartao_credito" | "cartao_debito";
+            /**
+             * @description Ausente quando o solicitante não deixou recado
+             * @example Vamos com duas crianças.
+             */
+            mensagem?: string;
+            /**
+             * @description Situação da solicitação. Nasce pendente, aguardando a resposta do produtor (RN19, CA06).
+             * @example pendente
+             * @enum {string}
+             */
+            status: "pendente" | "aceita" | "recusada" | "cancelada";
+            /**
+             * @description Data do envio
+             * @example 2026-11-21T12:00:00.000Z
+             */
+            criadoEm: string;
+            /**
+             * @description Código curto para identificar a solicitação
+             * @example CAF-4A12BC
+             */
+            codigo: string;
+            /** @example Visita e Degustação de Queijos */
+            experienciaNome: string;
+            /** @example Ana Oliveira */
+            consumidorNome: string;
+            /**
+             * @description Valor total em reais, calculado a partir da oferta e pessoas
+             * @example 182
+             */
+            valorTotal: number;
+            /**
+             * @description Mensagem enviada pelo produtor ao responder
+             * @example Podemos receber vocês às 9h.
+             */
+            mensagemResposta?: string;
+        };
+        RespondBookingDto: {
+            /**
+             * @description Decisão do produtor sobre a pré-reserva
+             * @enum {string}
+             */
+            status: "aceita" | "recusada";
+            /**
+             * @description Mensagem do produtor ao responder a solicitação
+             * @example Podemos receber vocês às 9h.
+             */
+            mensagemResposta?: string;
+        };
         CreateBookingDto: {
             /**
              * @description Identificador da experiência desejada (RN19)
@@ -1337,6 +1547,124 @@ export interface components {
              * @example 2026-11-21T12:00:00.000Z
              */
             criadoEm: string;
+        };
+        BookingExperienceResponse: {
+            /** @example Trilha guiada da nascente */
+            nome: string;
+            /** @example Sítio Boa Vista, Núcleo Rural Cafuringa */
+            local: string;
+            /**
+             * @description Reais por pessoa, até 2 casas
+             * @example 45
+             */
+            valorPorPessoa: number;
+            /**
+             * @description Se a experiência ainda está na oferta pública (RN10). A solicitação continua consultável mesmo depois que ela sai.
+             * @example true
+             */
+            disponivel: boolean;
+            /**
+             * @description Caminho da primeira foto, relativo à URL base da API. Ausente quando a experiência não está mais disponível, porque a foto pública deixa de existir.
+             * @example /experiences/64b0c0ffee0000000000e001/photos/64b0c0ffee0000000000f001?v=Q2FmdXJpbmdhRm90
+             */
+            foto?: string;
+        };
+        BookingCounterpartResponse: {
+            /** @example 64b0c0ffee0000000000a001 */
+            id: string;
+            /**
+             * @description Para o consumidor: nome da iniciativa do produtor (ou o nome dele, se não houver). Para o produtor: nome do consumidor. Nunca e-mail, telefone ou documentos (RNF11).
+             * @example Sítio Raízes
+             */
+            nome: string;
+        };
+        BookingDetailResponse: {
+            /** @example 64b0c0ffee0000000000b001 */
+            id: string;
+            /**
+             * @description Experiência solicitada
+             * @example 64b0c0ffee0000000000e001
+             */
+            experienciaId: string;
+            /**
+             * Format: date
+             * @example 2026-12-10
+             */
+            data: string;
+            /** @example 09:00 */
+            horario: string;
+            /** @example 4 */
+            participantes: number;
+            /**
+             * @example pix
+             * @enum {string}
+             */
+            formaPagamento: "pix" | "dinheiro" | "cartao_credito" | "cartao_debito";
+            /**
+             * @description Ausente quando o solicitante não deixou recado
+             * @example Vamos com duas crianças.
+             */
+            mensagem?: string;
+            /**
+             * @description Situação da solicitação. Nasce pendente, aguardando a resposta do produtor (RN19, CA06).
+             * @example pendente
+             * @enum {string}
+             */
+            status: "pendente" | "aceita" | "recusada" | "cancelada";
+            /**
+             * @description Data do envio
+             * @example 2026-11-21T12:00:00.000Z
+             */
+            criadoEm: string;
+            /** @description Resposta do produtor à solicitação */
+            mensagemResposta?: string;
+            experiencia: components["schemas"]["BookingExperienceResponse"];
+            contraparte: components["schemas"]["BookingCounterpartResponse"];
+            /**
+             * @description Última alteração (mudança de situação, por exemplo)
+             * @example 2026-11-21T12:30:00.000Z
+             */
+            atualizadoEm: string;
+        };
+        BookingListResponse: {
+            /** @description Solicitações da página; vazio quando não há nenhuma (CA06), nunca erro. */
+            itens: components["schemas"]["BookingDetailResponse"][];
+            /**
+             * @description Total que atende aos filtros
+             * @example 12
+             */
+            total: number;
+            /**
+             * @description Página devolvida
+             * @example 1
+             */
+            pagina: number;
+            /**
+             * @description Tamanho da página
+             * @example 20
+             */
+            limite: number;
+        };
+        BookingNotificationResponse: {
+            /** @description Identificador da alteração */
+            id: string;
+            /** @description Id da pré-reserva para abrir a consulta */
+            reservaId: string;
+            /** @description Código exibido na consulta */
+            codigo: string;
+            /** @description Nome da experiência solicitada */
+            experienciaNome: string;
+            /** @description Data da pré-reserva (AAAA-MM-DD) */
+            data: string;
+            /** @description Horário da pré-reserva (HH:MM) */
+            horario: string;
+            /** @description Quantidade de participantes */
+            participantes: number;
+            /**
+             * @description Situação registrada
+             * @enum {string}
+             */
+            status: "aceita" | "recusada" | "cancelada";
         };
         SearchProducersResult: {
             /** @description Produtores com perfil publicado que combinam com o termo (iniciativa, trajetória ou atividades), até o limite pedido */
@@ -3348,6 +3676,132 @@ export interface operations {
             };
         };
     };
+    bookingsGetReceived: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReceivedBookingResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description A solicitação pertence a outro produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsRespond: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RespondBookingDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReceivedBookingResponse"];
+                };
+            };
+            /** @description A resposta enviada é inválida */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description A solicitação pertence a outro produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description A solicitação não está mais pendente */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     bookingsCreate: {
         parameters: {
             query?: never;
@@ -3407,6 +3861,303 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsListMine: {
+        parameters: {
+            query?: {
+                /** @description Só as solicitações nesta situação (RN21) */
+                status?: "pendente" | "aceita" | "recusada" | "cancelada";
+                /** @description Página desejada, a partir de 1 */
+                pagina?: number;
+                /** @description Quantidade de solicitações por página */
+                limite?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Página de solicitações (pode vir vazia, CA06) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingListResponse"];
+                };
+            };
+            /** @description `status` fora do ciclo de vida, `pagina`/`limite` inválidos ou filtro desconhecido (mensagens em `message`) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: CONSUMIDOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsListReceived: {
+        parameters: {
+            query?: {
+                /** @description Só as solicitações nesta situação (RN21) */
+                status?: "pendente" | "aceita" | "recusada" | "cancelada";
+                /** @description Página desejada, a partir de 1 */
+                pagina?: number;
+                /** @description Quantidade de solicitações por página */
+                limite?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Página de solicitações recebidas (pode vir vazia, CA06) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingListResponse"];
+                };
+            };
+            /** @description `status` fora do ciclo de vida, `pagina`/`limite` inválidos ou filtro desconhecido (mensagens em `message`) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: PRODUTOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsListNotifications: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingNotificationResponse"][];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: CONSUMIDOR, PRODUTOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsFindOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Id da pré-reserva */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingDetailResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: CONSUMIDOR, PRODUTOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Solicitação inexistente, de outra conta ou de experiência de outro produtor, ou id inválido (CA05) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsCancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Id da pré-reserva a cancelar */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Solicitação cancelada, já com a situação atualizada (CA06) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "id": "64b0c0ffee0000000000b001",
+                     *       "experienciaId": "64b0c0ffee0000000000e001",
+                     *       "data": "2026-12-10",
+                     *       "horario": "09:00",
+                     *       "participantes": 4,
+                     *       "formaPagamento": "pix",
+                     *       "mensagem": "Vamos com duas crianças.",
+                     *       "status": "cancelada",
+                     *       "criadoEm": "2026-11-21T12:00:00.000Z"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["BookingResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 401,
+                     *       "message": "Autenticação necessária",
+                     *       "error": "Unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil diferente de consumidor (produtor ou administrador)
+             *
+             *     Exclusivo para: CONSUMIDOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 403,
+                     *       "message": "Seu perfil não tem permissão para acessar este recurso",
+                     *       "error": "Forbidden"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva inexistente, com id inválido ou pertencente a outro usuário (CA05) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 404,
+                     *       "message": "Pré-reserva não encontrada",
+                     *       "error": "Not Found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description A solicitação não está pendente: já aceita (só o produtor cancela), recusada ou já cancelada. Nada é alterado (RN20, RN21). A mensagem diz o motivo. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "statusCode": 409,
+                     *       "message": "Esta pré-reserva já foi cancelada",
+                     *       "error": "Conflict"
+                     *     }
+                     */
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };

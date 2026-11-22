@@ -3,6 +3,8 @@ import type { OpenAPIObject } from '@nestjs/swagger';
 import { getMetadataStorage } from 'class-validator';
 import { OPENAPI_VERSION } from '../app.setup.js';
 import { ErrorResponse } from '../common/dto/error.response.js';
+import { ReceivedBookingResponse } from '../modules/bookings/dto/received-booking.response.js';
+import { RespondBookingDto } from '../modules/bookings/dto/respond-booking.dto.js';
 import { LoginDto } from '../modules/auth/dto/login.dto.js';
 import { LoginResponse } from '../modules/auth/dto/login.response.js';
 import { CreateConsumerDto } from '../modules/users/dto/create-consumer.dto.js';
@@ -66,6 +68,11 @@ describe('contrato OpenAPI', () => {
       'DELETE /api/v1/producers/me/photo',
       'DELETE /api/v1/users/{id}',
       'GET /api/v1/auth/me',
+      'GET /api/v1/bookings/mine',
+      'GET /api/v1/bookings/notifications',
+      'GET /api/v1/bookings/received',
+      'GET /api/v1/bookings/received/{id}',
+      'GET /api/v1/bookings/{id}',
       'GET /api/v1/experiences',
       'GET /api/v1/experiences/{id}',
       'GET /api/v1/experiences/{id}/photos/{photoId}',
@@ -83,6 +90,8 @@ describe('contrato OpenAPI', () => {
       'GET /api/v1/users',
       'GET /api/v1/users/producers/me',
       'GET /api/v1/users/{id}',
+      'PATCH /api/v1/bookings/received/{id}/response',
+      'PATCH /api/v1/bookings/{id}/cancel',
       'POST /api/v1/auth/login',
       'POST /api/v1/auth/password-reset/confirm',
       'POST /api/v1/auth/password-reset/request',
@@ -120,7 +129,7 @@ describe('contrato OpenAPI', () => {
     }
   });
 
-  it('só /auth/me, as rotas administrativas, a trajetória e a foto próprias e os cadastros de produto e experiência e a pré-reserva exigem Bearer; o resto é público', () => {
+  it('só /auth/me, rotas administrativas, trajetória e foto próprias, cadastros de oferta e rotas de pré-reserva exigem Bearer; o resto é público', () => {
     const protectedOps = operations
       .filter((o) => o.op.security?.some((s) => 'bearer' in s))
       .map((o) => `${o.method} ${o.path}`);
@@ -128,14 +137,22 @@ describe('contrato OpenAPI', () => {
       'delete /api/v1/producers/me/photo',
       'delete /api/v1/users/{id}',
       'get /api/v1/auth/me',
+      'get /api/v1/bookings/mine',
+      'get /api/v1/bookings/notifications',
+      'get /api/v1/bookings/received',
+      'get /api/v1/bookings/received/{id}',
+      'get /api/v1/bookings/{id}',
       'get /api/v1/producers/me/trajectory',
       'get /api/v1/users',
       'get /api/v1/users/producers/me',
       'get /api/v1/users/{id}',
+      'patch /api/v1/bookings/received/{id}/response',
+      'patch /api/v1/bookings/{id}/cancel',
       'post /api/v1/bookings',
       'post /api/v1/experiences',
       'post /api/v1/products',
       'post /api/v1/users/admins',
+
       'put /api/v1/producers/me/photo',
       'put /api/v1/producers/me/trajectory',
       'put /api/v1/users/consumers/me',
@@ -228,7 +245,7 @@ describe('contrato OpenAPI', () => {
       { required?: string[] }
     >;
     const storage = getMetadataStorage();
-    for (const dto of [LoginDto, CreateConsumerDto]) {
+    for (const dto of [LoginDto, CreateConsumerDto, RespondBookingDto]) {
       const optional = storage
         .getTargetValidationMetadatas(dto, '', false, false)
         .filter((m) => m.type === 'conditionalValidation')
@@ -253,6 +270,8 @@ describe('contrato OpenAPI', () => {
       UserListResponse,
       UserSummaryResponse,
       UserDetailResponse,
+      ReceivedBookingResponse,
+      RespondBookingDto,
     ]) {
       expect(names).toContain(dto.name);
     }

@@ -63,7 +63,9 @@ it("produto criado aparece no perfil, na prévia e no catálogo e persiste após
     expect(
         await screen.findByRole("button", { name: /Produto recém-publicado/ }),
     ).toBeTruthy();
-    expect(screen.getAllByRole("listitem")).toHaveLength(3);
+    expect(
+        within(screen.getByRole("main")).getAllByRole("listitem"),
+    ).toHaveLength(3);
     cleanup();
     render(<App />);
     expect(
@@ -97,7 +99,9 @@ it("limita experiências na página inicial e mostra todas em Ver mais", async (
     expect(
         await screen.findByRole("button", { name: /Passeio 3/ }),
     ).toBeTruthy();
-    expect(screen.getAllByRole("listitem")).toHaveLength(4);
+    expect(
+        within(screen.getByRole("main")).getAllByRole("listitem"),
+    ).toHaveLength(4);
 });
 
 it("experiência aparece na categoria correta e Voltar restaura a tela de origem", async () => {

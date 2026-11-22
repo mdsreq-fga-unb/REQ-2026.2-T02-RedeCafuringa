@@ -1,83 +1,22 @@
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
-import { WhatsAppContactLink, whatsAppContactUrl } from "@/features/contact";
 import { ApiHttpError } from "@/shared/api";
+import { bookingConsultationRoute } from "./bookingRoutes";
+import { formatBookingDate, formatBookingTime } from "./bookingDetails";
 import {
-    BOOKING_NOTIFICATIONS_ROUTE,
-    bookingConsultationRoute,
-    bookingRoute,
-} from "./bookingRoutes";
-import {
-    getConsultedBooking,
     listBookingUpdates,
+    markBookingUpdateRead,
     type BookingUpdate,
-    type ConsultedBooking,
 } from "./bookingNotificationsService";
-import type { BookingStatus, PaymentMethod } from "./bookingTypes";
 import "./bookings.css";
 import "./bookingNotifications.css";
-
-const statusLabel: Record<BookingStatus, string> = {
-    pendente: "Aguardando resposta",
-    aceita: "Pré-reserva aceita",
-    recusada: "Pré-reserva recusada",
-    cancelada: "Pré-reserva cancelada",
-};
 
 const updateLabel: Record<BookingUpdate["status"], string> = {
     aceita: "Aceito",
     recusada: "Recusado",
     cancelada: "Cancelado",
 };
-
-const paymentLabel: Record<PaymentMethod, string> = {
-    pix: "Pix",
-    dinheiro: "Dinheiro",
-    cartao_credito: "Cartão de crédito",
-    cartao_debito: "Cartão de débito",
-};
-
-const currency = new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-});
-const formatDate = (date: string) => date.split("-").reverse().join("/");
-const formatTime = (time: string) => time.replace(":", "h");
-
-type Content = BookingUpdate[] | ConsultedBooking;
-type LoadState =
-    { content: Content } | { error: string; retry: boolean } | null;
-
-function loadError(
-    error: unknown,
-    detail: boolean,
-): NonNullable<Extract<LoadState, { error: string }>> {
-    switch (error instanceof ApiHttpError ? error.status : undefined) {
-        case 401:
-            return {
-                error: "Sua sessão expirou. Entre novamente para consultar as pré-reservas.",
-                retry: false,
-            };
-        case 403:
-            return {
-                error: "Você não tem permissão para consultar estas informações.",
-                retry: false,
-            };
-        case 404:
-            if (detail)
-                return {
-                    error: "Pré-reserva indisponível ou não encontrada.",
-                    retry: false,
-                };
-    }
-    return {
-        error: detail
-            ? "Não foi possível carregar a pré-reserva."
-            : "Não foi possível carregar as notificações.",
-        retry: true,
-    };
-}
 
 function UpdateList({
     updates,
@@ -110,8 +49,8 @@ function UpdateList({
                             </div>
                             <h2>{item.experienciaNome}</h2>
                             <p>
-                                {formatDate(item.data)} •{" "}
-                                {formatTime(item.horario)} •{" "}
+                                {formatBookingDate(item.data)} •{" "}
+                                {formatBookingTime(item.horario)} •{" "}
                                 {item.participantes}{" "}
                                 {item.participantes === 1
                                     ? "pessoa"
@@ -135,6 +74,7 @@ function UpdateList({
                                     )
                                         return;
                                     event.preventDefault();
+                                    markBookingUpdateRead(item.id);
                                     onNavigate(route);
                                 }}
                             >
@@ -148,183 +88,78 @@ function UpdateList({
     );
 }
 
-function BookingDetail({
-    booking,
-    consumer,
-    onNavigate,
-}: {
-    booking: ConsultedBooking;
-    consumer: boolean;
-    onNavigate: (path: string) => void;
-}) {
-    const { status } = booking;
-    const contact =
-        consumer && status === "aceita"
-            ? whatsAppContactUrl(
-                  booking.telefonePublico,
-                  booking.experienciaNome,
-              )
-            : undefined;
-    const icon = status === "pendente" ? "◷" : status === "aceita" ? "✓" : "×";
-    return (
-        <>
-            <div className="booking-detail-card">
-                <header className="booking-detail-status" data-status={status}>
-                    <span aria-hidden="true">{icon}</span>
-                    <h1>{statusLabel[status]}</h1>
-                    <span className="booking-detail-code">
-                        {booking.codigo}
-                    </span>
-                </header>
-                <div className="booking-detail-body">
-                    <h2>{booking.experienciaNome}</h2>
-                    {booking.propriedade && <p>{booking.propriedade}</p>}
-                    <dl className="booking-detail-facts">
-                        <div>
-                            <dt>Data</dt>
-                            <dd>
-                                <time dateTime={booking.data}>
-                                    {formatDate(booking.data)}
-                                </time>
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>Horário</dt>
-                            <dd>
-                                <time dateTime={booking.horario}>
-                                    {formatTime(booking.horario)}
-                                </time>
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>Grupo</dt>
-                            <dd>
-                                {booking.participantes}{" "}
-                                {booking.participantes === 1
-                                    ? "participante"
-                                    : "participantes"}
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>Valor total</dt>
-                            <dd>{currency.format(booking.valorTotal)}</dd>
-                        </div>
-                        <div>
-                            <dt>Forma de pagamento</dt>
-                            <dd>{paymentLabel[booking.formaPagamento]}</dd>
-                        </div>
-                    </dl>
-                </div>
-            </div>
-            {booking.mensagem && (status === "pendente" || !consumer) && (
-                <section className="booking-detail-message">
-                    <h2>
-                        {consumer ? "Sua mensagem" : "Mensagem do consumidor"}
-                    </h2>
-                    <p>{booking.mensagem}</p>
-                </section>
-            )}
-            {booking.mensagemResposta && (
-                <section className="booking-detail-message">
-                    <h2>
-                        {consumer ? "Mensagem do produtor" : "Sua resposta"}
-                    </h2>
-                    <p>{booking.mensagemResposta}</p>
-                </section>
-            )}
-            {contact && (
-                <div className="booking-detail-actions">
-                    <WhatsAppContactLink url={contact} />
-                </div>
-            )}
-            {consumer && status === "recusada" && (
-                <div className="booking-detail-actions">
-                    <ActionButton
-                        variant="orange"
-                        type="button"
-                        onClick={() =>
-                            onNavigate(bookingRoute(booking.experienciaId))
-                        }
-                    >
-                        Fazer nova pré-reserva
-                    </ActionButton>
-                </div>
-            )}
-        </>
-    );
-}
-
 export function BookingNotificationsPage({
-    id,
-    consumer,
+    embedded = false,
     onNavigate,
 }: {
-    id: string | null;
-    consumer: boolean;
+    embedded?: boolean;
     onNavigate: (path: string) => void;
 }) {
-    const [state, setState] = useState<LoadState>(null);
+    const [state, setState] = useState<
+        BookingUpdate[] | "error" | "session" | null
+    >(null);
     const [attempt, setAttempt] = useState(0);
 
     useEffect(() => {
         const controller = new AbortController();
-        const request = id
-            ? getConsultedBooking(id, controller.signal)
-            : listBookingUpdates(controller.signal);
-        void request.then(
-            (content) => {
-                if (!controller.signal.aborted) setState({ content });
+        void listBookingUpdates(controller.signal).then(
+            (updates) => {
+                if (!controller.signal.aborted) setState(updates);
             },
             (error: unknown) => {
                 if (!controller.signal.aborted)
-                    setState(loadError(error, Boolean(id)));
+                    setState(
+                        error instanceof ApiHttpError && error.status === 401
+                            ? "session"
+                            : "error",
+                    );
             },
         );
         return () => controller.abort();
-    }, [id, attempt]);
+    }, [attempt]);
 
     return (
-        <section className="login-page booking-page booking-notifications">
-            <BackButton
-                label="Voltar"
-                onClick={() =>
-                    onNavigate(id ? BOOKING_NOTIFICATIONS_ROUTE : "/explorar")
-                }
-            />
-            {!id && <h1>Notificações</h1>}
-            {state === null ? (
-                <p role="status">
-                    {id
-                        ? "Carregando pré-reserva…"
-                        : "Carregando notificações…"}
-                </p>
-            ) : "error" in state ? (
-                <>
-                    {id && <h1>Detalhe da pré-reserva</h1>}
-                    <p className="booking-notification-error" role="alert">
-                        {state.error}
-                    </p>
-                    {state.retry && (
-                        <ActionButton
-                            type="button"
-                            variant="outline"
-                            onClick={() => {
-                                setState(null);
-                                setAttempt((value) => value + 1);
-                            }}
-                        >
-                            Tentar novamente
-                        </ActionButton>
-                    )}
-                </>
-            ) : Array.isArray(state.content) ? (
-                <UpdateList updates={state.content} onNavigate={onNavigate} />
+        <section
+            className="login-page booking-page booking-notifications"
+            aria-busy={state === null}
+            aria-label={embedded ? "Alterações nas pré-reservas" : undefined}
+        >
+            {embedded ? (
+                <h2>Alterações nas pré-reservas</h2>
             ) : (
-                <BookingDetail
-                    booking={state.content}
-                    consumer={consumer}
-                    onNavigate={onNavigate}
-                />
+                <>
+                    <BackButton
+                        label="Voltar"
+                        onClick={() => onNavigate("/explorar")}
+                    />
+                    <h1>Notificações</h1>
+                </>
+            )}
+            {state === null ? (
+                <p role="status">Carregando notificações…</p>
+            ) : state === "error" ? (
+                <>
+                    <p className="booking-notification-error" role="alert">
+                        Não foi possível carregar as notificações.
+                    </p>
+                    <ActionButton
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                            setState(null);
+                            setAttempt((value) => value + 1);
+                        }}
+                    >
+                        Tentar novamente
+                    </ActionButton>
+                </>
+            ) : state === "session" ? (
+                <p role="alert">
+                    Sua sessão expirou. Entre novamente para consultar as
+                    notificações.
+                </p>
+            ) : (
+                <UpdateList updates={state} onNavigate={onNavigate} />
             )}
         </section>
     );

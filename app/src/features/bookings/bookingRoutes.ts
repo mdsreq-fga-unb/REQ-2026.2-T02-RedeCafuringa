@@ -4,12 +4,12 @@
  */
 export const BOOKING_SENT_ROUTE = "/pre-reserva-enviada";
 
-/** Lista de pré-reservas: placeholder até a HU45 (rota do item "Pré-reservas"). */
+/** Rota do item "Pré-reservas". */
 export const BOOKINGS_LIST_ROUTE = "/reservas";
-export const BOOKING_NOTIFICATIONS_ROUTE = "/notificacoes";
+export const RECEIVED_BOOKINGS_ROUTE = "/notificacoes";
 
 export function bookingConsultationRoute(id: string) {
-    return `${BOOKINGS_LIST_ROUTE}/${encodeURIComponent(id)}`;
+    return `${BOOKINGS_LIST_ROUTE}/${encodeURIComponent(id)}?origem=notificacoes`;
 }
 
 export function parseBookingConsultationRoute(path: string) {
@@ -31,8 +31,23 @@ export function bookingConsultationReturnRoute(
     role: string | null,
 ) {
     if (role !== "consumer" && role !== "producer") return null;
-    const id = new URLSearchParams(route.split("?")[1] ?? "").get("reserva");
+    const query = new URLSearchParams(route.split("?")[1] ?? "");
+    const id = query.get("reserva");
     return id ? bookingConsultationRoute(id) : null;
+}
+
+export function receivedBookingRoute(id: string): string {
+    return `${RECEIVED_BOOKINGS_ROUTE}/${encodeURIComponent(id)}`;
+}
+
+export function parseReceivedBookingRoute(path: string): string | null {
+    const match = /^\/notificacoes\/([^/?]+)$/.exec(path);
+    if (!match) return null;
+    try {
+        return decodeURIComponent(match[1]);
+    } catch {
+        return null;
+    }
 }
 
 export function bookingRoute(experienceId: string): string {

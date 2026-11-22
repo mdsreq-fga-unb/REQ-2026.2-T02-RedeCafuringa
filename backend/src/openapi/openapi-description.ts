@@ -24,7 +24,7 @@ Use o campo de busca (*Filter by tag*) para ir direto a um grupo.
 |---|---|
 | Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |
 | \`CONSUMIDOR\` | O mesmo que o visitante, com sessão; solicitar pré-reserva de experiências |
-| \`PRODUTOR\` | Registrar trajetória e foto de perfil; cadastrar produtos |
+| \`PRODUTOR\` | Registrar trajetória e foto de perfil; cadastrar produtos; consultar e responder pré-reservas recebidas |
 | \`ADMINISTRADOR\` | Consultar usuários e cadastrar outros administradores |
 
 Toda rota exige login, exceto as marcadas como públicas (negação por padrão). Perfil sem permissão recebe **403**; sem token ou com token inválido, **401**.
@@ -75,7 +75,7 @@ export const OPENAPI_TAGS: ReadonlyArray<{
   {
     name: 'bookings',
     description:
-      'Pré-reserva de experiências pelo consumidor, sujeita à resposta do produtor (HU44, RN19)',
+      'Pré-reserva de experiências pelo consumidor e resposta do produtor responsável (HU44, HU47, RN19, RN22)',
   },
   {
     name: 'search',

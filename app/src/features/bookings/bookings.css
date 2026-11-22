@@ -96,3 +96,175 @@
 .booking-sent .login-actions .button {
     width: 100%;
 }
+
+/* HU45: lista de pré-reservas (protótipo "Minhas pré-reservas"). */
+.booking-list {
+    display: grid;
+    gap: 14px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.booking-card {
+    display: grid;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+}
+
+.booking-card h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 17px;
+}
+
+.booking-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.booking-card .booking-card-kind {
+    color: var(--orange-text);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.booking-card .booking-status {
+    font-weight: 700;
+}
+
+.booking-card .booking-status--pendente {
+    color: var(--orange-text-strong);
+}
+
+.booking-card .booking-status--aceita {
+    color: #1f6b2a;
+}
+
+.booking-card .booking-status--recusada,
+.booking-card .booking-status--cancelada {
+    color: #a83232;
+}
+
+.booking-card .text-action {
+    justify-self: start;
+    margin-top: 4px;
+}
+
+.booking-list-empty,
+.booking-list-alert {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.booking-list-count {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* HU45: detalhe da pré-reserva (protótipos "Aguardando resposta", "Pré-reserva aceita"…). */
+.booking-detail-page h1.booking-status--pendente {
+    color: var(--orange-text-strong);
+}
+
+.booking-detail-page h1.booking-status--aceita {
+    color: #1f6b2a;
+}
+
+.booking-detail-page h1.booking-status--recusada,
+.booking-detail-page h1.booking-status--cancelada {
+    color: #a83232;
+}
+
+.booking-detail-page h2 {
+    margin: 16px 0 8px;
+    color: var(--ink);
+    font-size: 18px;
+}
+
+.booking-updated {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.booking-detail-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.booking-detail-list li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+}
+
+.booking-detail-list span {
+    color: var(--muted);
+}
+
+.booking-message p {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+/* HU46: ação de cancelar, em vermelho como no protótipo. */
+.booking-cancel-button {
+    width: 100%;
+    margin-top: 20px;
+    border-color: #a83232;
+    background: #a83232;
+    color: #fff;
+}
+
+/* HU46: confirmação do cancelamento (protótipo "Cancelar solicitação?"). */
+.booking-cancel-page h1 {
+    color: var(--ink);
+}
+
+.booking-cancel-icon {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    margin: 8px 0 12px;
+    place-items: center;
+    border: 2px solid #a83232;
+    border-radius: 8px;
+    color: #a83232;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.booking-cancel-page h2 {
+    margin: 12px 0 8px;
+    color: var(--ink);
+    font-size: 18px;
+}
+
+.booking-cancel-warning {
+    margin: 16px 0 0;
+    color: #a83232;
+    font-weight: 600;
+}
+
+.booking-cancel-page .login-actions .booking-cancel-button {
+    margin-top: 0;
+}
+
+.booking-cancel-page button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}

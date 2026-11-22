@@ -24,7 +24,7 @@ export const PARTICIPANT_OPTIONS: SelectOption[] = Array.from(
     },
 );
 
-const PAYMENT_LABELS: Record<PaymentMethod, string> = {
+export const PAYMENT_LABELS: Record<PaymentMethod, string> = {
     pix: "Pix",
     dinheiro: "Dinheiro",
     cartao_credito: "Cartão de crédito",

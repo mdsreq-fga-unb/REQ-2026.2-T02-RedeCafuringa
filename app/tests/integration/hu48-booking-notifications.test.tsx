@@ -16,7 +16,7 @@ const origin = "https://api.cafuringa.test";
 const token = "sessao-hu48";
 const listPath = "/api/v1/bookings/notifications";
 const listRoute = "#/notificacoes";
-const detailRoute = "#/reservas/reserva-124";
+const detailRoute = "#/reservas/reserva-124?origem=notificacoes";
 const detailPath = "/api/v1/bookings/reserva-124";
 const title = "Sabores e caminhos do Cerrado";
 const producerMessage = "Podemos receber vocês às 9h. Até lá!";
@@ -26,7 +26,7 @@ const privatePhone = "61998765432";
 
 const pending = {
     id: "reserva-124",
-    codigo: "CAF-0124",
+    codigo: "CAF-VA-124",
     experienciaId: "experiencia-cerrado",
     experienciaNome: title,
     propriedade: "Sítio Raízes",
@@ -38,6 +38,14 @@ const pending = {
     mensagem: consumerMessage,
     status: "pendente",
     criadoEm: "2026-10-01T12:00:00Z",
+    atualizadoEm: "2026-10-02T12:00:00Z",
+    experiencia: {
+        nome: title,
+        local: "Sítio Raízes",
+        valorPorPessoa: 45,
+        disponivel: true,
+    },
+    contraparte: { id: "produtor", nome: "Sítio Raízes" },
 } satisfies BookingResponse & Record<string, unknown>;
 
 const update = {
@@ -59,7 +67,7 @@ const json = (body: unknown, status = 200) =>
         headers: { "Content-Type": "application/json" },
     });
 
-// Contrato simulado para o frontend. Alinhar endpoints e campos com a API da HU48.
+// Respostas da API usadas para verificar o fluxo de navegação.
 function mockApi() {
     const list = vi.fn(() => json([update]));
     const detail = vi.fn(() =>
@@ -80,6 +88,8 @@ function mockApi() {
                 email: privateEmail,
             });
         }
+        if (url.pathname === "/api/v1/bookings/received")
+            return json({ itens: [], total: 0 });
         if (url.pathname === listPath) return list();
         if (url.pathname === detailPath) return detail();
         return json({ message: "Rota inexistente" }, 404);
@@ -143,6 +153,10 @@ describe("HU48 — notificações de alteração de pré-reserva", () => {
         expect(screen.getByText(pending.codigo)).toBeTruthy();
         expect(screen.getByText(producerMessage)).toBeTruthy();
         expectProtectedRead(fetchMock, detailPath);
+
+        await user.click(screen.getByRole("button", { name: "Voltar" }));
+        await screen.findByRole("listitem");
+        expect(screen.queryByText("Nova atualização")).toBeNull();
     });
 
     it("CA02–CA04 e RN22: produtor consulta o cancelamento da solicitação vinculada", async () => {

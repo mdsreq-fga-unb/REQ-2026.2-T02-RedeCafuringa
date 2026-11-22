@@ -22,7 +22,7 @@ export class BookingSessionError extends Error {
     }
 }
 
-function isBookingResponse(data: unknown): data is BookingResponse {
+export function isBookingResponse(data: unknown): data is BookingResponse {
     if (typeof data !== "object" || data === null) return false;
     const item = data as Partial<BookingResponse>;
     return (

@@ -815,6 +815,8 @@ h2 {
 
 /* Navegação do produtor conforme o protótipo HU15. */
 .bottom-nav-producer {
+    /* HU45: a produtora tem também o item Pré-reservas. */
+    grid-template-columns: repeat(5, 1fr);
     height: calc(73px + env(safe-area-inset-bottom));
     background: #fff;
 }
@@ -1050,39 +1052,6 @@ h2 {
 
 .auth-shell {
     padding-bottom: 0;
-}
-
-.demo-navigation {
-    padding: 12px 24px;
-    border-bottom: 1px solid var(--line);
-    background: #eaf0e8;
-    font-size: 14px;
-}
-.demo-navigation summary {
-    cursor: pointer;
-    font-weight: 700;
-}
-
-.demo-tools {
-    margin-top: 16px;
-    padding: 12px;
-    border: 1px solid var(--muted);
-    border-radius: 8px;
-}
-.demo-navigation p {
-    margin: 12px 0;
-}
-.demo-navigation nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-.demo-navigation button {
-    padding: 8px 12px;
-    border: 1px solid var(--muted);
-    border-radius: 8px;
-    background: white;
-    cursor: pointer;
 }
 
 .admin-access-link {
