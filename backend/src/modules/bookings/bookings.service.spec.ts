@@ -1,4 +1,9 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
 import { Types } from 'mongoose';
 import type { Model } from 'mongoose';
@@ -38,8 +43,20 @@ const dto = {
   mensagem: 'Vamos com duas crianças.',
 } satisfies CreateBookingDto;
 
+const receivedBooking = {
+  ...dto,
+  _id: new Types.ObjectId(),
+  consumidor: new Types.ObjectId(consumerId),
+  produtor: producerId,
+  experiencia: experienceId,
+  status: BookingStatus.PENDENTE,
+  criadoEm: CREATED_AT,
+};
+
 function setup() {
   const bookings = {
+    findById: vi.fn().mockReturnValue(query(receivedBooking)),
+    findOneAndUpdate: vi.fn(),
     create: vi.fn(async (doc: Record<string, unknown>) => ({
       toObject: () => ({
         _id: new Types.ObjectId(),
@@ -50,15 +67,29 @@ function setup() {
     })),
   };
   const experiences = {
+    find: vi
+      .fn()
+      .mockReturnValue(
+        query([{ _id: experienceId, nome: 'Trilha', valorCentavos: 4550 }]),
+      ),
+    findById: vi.fn().mockReturnValue(query({ nome: 'Trilha' })),
     findOne: vi
       .fn()
       .mockReturnValue(query({ _id: experienceId, produtor: producerId })),
   };
   const users = {
+    find: vi.fn().mockReturnValue(query([{ _id: consumerId, nome: 'Maria' }])),
+    findById: vi.fn((id: Types.ObjectId) =>
+      query({
+        email: id.equals(producerId)
+          ? 'produtor@example.test'
+          : 'consumidor@example.test',
+      }),
+    ),
     findOne: vi.fn().mockReturnValue(query({ _id: producerId })),
   };
   const mail = { send: vi.fn().mockResolvedValue(undefined) };
-  const config = { get: vi.fn().mockReturnValue('') };
+  const config = { get: vi.fn().mockReturnValue('0') };
   const metrics = { recordMailFailure: vi.fn() };
   const service = new BookingsService(
     bookings as unknown as Model<Booking>,
@@ -214,5 +245,192 @@ describe('BookingsService (HU44/RF44)', () => {
 
       expect(bookings.create).toHaveBeenCalledTimes(1);
     });
+  });
+});
+
+describe('BookingsService (HU47/RF47)', () => {
+  const id = receivedBooking._id.toHexString();
+  const owner = producerId.toHexString();
+  const outsider = new Types.ObjectId().toHexString();
+  const acceptance = { status: BookingStatus.ACEITA } as const;
+  const refusal = { status: BookingStatus.RECUSADA } as const;
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('apresenta o detalhe da pré-reserva com os dados necessários à análise', async () => {
+    const { service } = setup();
+
+    await expect(service.getReceived(owner, id)).resolves.toMatchObject({
+      id,
+      experienciaNome: 'Trilha',
+      consumidorNome: 'Maria',
+      valorTotal: 182,
+      status: BookingStatus.PENDENTE,
+    });
+  });
+
+  it('impede que outro produtor consulte o detalhe', async () => {
+    const { service } = setup();
+
+    await expect(service.getReceived(outsider, id)).rejects.toThrow(
+      ForbiddenException,
+    );
+  });
+
+  it('informa quando faltam dados da experiência para montar o detalhe', async () => {
+    const { service, experiences } = setup();
+    experiences.find.mockReturnValue(query([]));
+
+    await expect(service.getReceived(owner, id)).rejects.toThrow(
+      NotFoundException,
+    );
+  });
+
+  it('retorna 404 para um ID inválido sem consultar o banco', async () => {
+    const { service, bookings } = setup();
+
+    await expect(service.getReceived(owner, 'invalido')).rejects.toThrow(
+      NotFoundException,
+    );
+    await expect(service.respond(owner, 'invalido', refusal)).rejects.toThrow(
+      NotFoundException,
+    );
+    expect(bookings.findById).not.toHaveBeenCalled();
+    expect(bookings.findOneAndUpdate).not.toHaveBeenCalled();
+  });
+
+  it('retorna 404 para uma pré-reserva inexistente', async () => {
+    const { service, bookings } = setup();
+    bookings.findById.mockReturnValue(query(null));
+
+    await expect(service.getReceived(owner, id)).rejects.toThrow(
+      NotFoundException,
+    );
+    await expect(service.respond(owner, id, acceptance)).rejects.toThrow(
+      NotFoundException,
+    );
+    expect(bookings.findOneAndUpdate).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [outsider, {}, ForbiddenException],
+    [owner, { status: BookingStatus.CANCELADA }, ConflictException],
+    [owner, { data: '2026-11-20' }, BadRequestException],
+  ])(
+    'rejeita aceite indevido antes de gravar (%#)',
+    async (producer, fields, error) => {
+      const { service, bookings } = setup();
+      bookings.findById.mockReturnValue(
+        query({ ...receivedBooking, ...fields }),
+      );
+
+      await expect(service.respond(producer, id, acceptance)).rejects.toThrow(
+        error,
+      );
+      expect(bookings.findOneAndUpdate).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([
+    [owner, null, NotFoundException],
+    [outsider, receivedBooking, ForbiddenException],
+    [
+      owner,
+      { ...receivedBooking, status: BookingStatus.CANCELADA },
+      ConflictException,
+    ],
+  ])(
+    'informa a causa quando a escrita condicional não encontra a pré-reserva (%#)',
+    async (producer, current, error) => {
+      const { service, bookings, mail } = setup();
+      bookings.findOneAndUpdate.mockReturnValue(query(null));
+      bookings.findById.mockReturnValue(query(current));
+
+      await expect(service.respond(producer, id, refusal)).rejects.toThrow(
+        error,
+      );
+      expect(mail.send).not.toHaveBeenCalled();
+    },
+  );
+
+  it('grava o aceite com mensagem e notifica as duas partes', async () => {
+    const { service, bookings, mail, metrics } = setup();
+    const mensagemResposta = 'Esperamos vocês!';
+    const answer = { ...acceptance, mensagemResposta };
+    bookings.findOneAndUpdate.mockReturnValue(
+      query({ ...receivedBooking, ...answer }),
+    );
+
+    await expect(service.respond(owner, id, answer)).resolves.toMatchObject(
+      answer,
+    );
+    await service.beforeApplicationShutdown();
+
+    expect(bookings.findOneAndUpdate).toHaveBeenCalledWith(
+      {
+        _id: id,
+        produtor: { $in: [producerId, owner] },
+        status: BookingStatus.PENDENTE,
+      },
+      { $set: answer },
+      { returnDocument: 'after', runValidators: true },
+    );
+    expect(mail.send).toHaveBeenCalledTimes(2);
+    expect(mail.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'consumidor@example.test',
+        text: expect.stringContaining(mensagemResposta),
+      }),
+    );
+    expect(mail.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'produtor@example.test',
+        text: expect.stringContaining('aceita'),
+      }),
+    );
+    expect(metrics.recordMailFailure).not.toHaveBeenCalled();
+  });
+
+  it('confirma a recusa sem mensagem mesmo quando o envio falha', async () => {
+    const { service, bookings, mail, metrics } = setup();
+    bookings.findOneAndUpdate.mockReturnValue(
+      query({ ...receivedBooking, ...refusal }),
+    );
+    mail.send.mockRejectedValue(new Error('SMTP indisponível'));
+
+    const result = await service.respond(owner, id, refusal);
+    await service.beforeApplicationShutdown();
+
+    expect(result.status).toBe(BookingStatus.RECUSADA);
+    expect(result).not.toHaveProperty('mensagemResposta');
+    expect(bookings.findOneAndUpdate).toHaveBeenCalledWith(
+      expect.anything(),
+      { $set: refusal, $unset: { mensagemResposta: 1 } },
+      expect.anything(),
+    );
+    expect(metrics.recordMailFailure).toHaveBeenCalledTimes(2);
+    expect(metrics.recordMailFailure).toHaveBeenCalledWith('booking_response');
+  });
+
+  it('preserva a resposta gravada quando faltam dados para preparar as notificações', async () => {
+    const { service, bookings, users, mail } = setup();
+    bookings.findOneAndUpdate.mockReturnValue(
+      query({ ...receivedBooking, ...refusal }),
+    );
+    users.findById.mockReturnValue(query(null));
+
+    await expect(service.respond(owner, id, refusal)).resolves.toMatchObject(
+      refusal,
+    );
+    await service.beforeApplicationShutdown();
+
+    expect(mail.send).not.toHaveBeenCalled();
   });
 });
