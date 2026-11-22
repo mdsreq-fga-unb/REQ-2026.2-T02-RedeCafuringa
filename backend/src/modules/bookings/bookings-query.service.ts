@@ -14,6 +14,7 @@ import type {
   BookingListResponse,
 } from './dto/booking-detail.response.js';
 import type { ListBookingsQuery } from './dto/list-bookings.query.js';
+import { bookingProducerFilter } from './domain/booking.js';
 import { Booking } from './schemas/booking.schema.js';
 
 const NOT_FOUND = 'Pré-reserva não encontrada';
@@ -87,7 +88,7 @@ export class BookingsQueryService {
         {
           $match: {
             _id: new Types.ObjectId(id),
-            [side]: new Types.ObjectId(user.id),
+            [side]: ownerFilter(side, user.id),
           },
         },
         ...this.joins(side),
@@ -105,7 +106,7 @@ export class BookingsQueryService {
     const pagina = query.pagina ?? 1;
     const limite = query.limite ?? DEFAULT_PRODUCTS_PAGE;
     const filter: Record<string, unknown> = {
-      [side]: new Types.ObjectId(userId),
+      [side]: ownerFilter(side, userId),
       ...(query.status ? { status: query.status } : {}),
     };
 
@@ -133,8 +134,11 @@ export class BookingsQueryService {
 
   /** Experiência (só o que o cartão mostra) e o outro lado (só nome). */
   private joins(side: Side): PipelineStage[] {
-    const other: Side = side === 'consumidor' ? 'produtor' : 'consumidor';
+    const other = side === 'consumidor' ? 'produtorObjectId' : 'consumidor';
     return [
+      ...(side === 'consumidor'
+        ? [{ $set: { produtorObjectId: { $toObjectId: '$produtor' } } }]
+        : []),
       {
         $lookup: {
           from: this.experiences.collection.name,
@@ -220,6 +224,12 @@ export class BookingsQueryService {
       },
     };
   }
+}
+
+function ownerFilter(side: Side, userId: string) {
+  return side === 'produtor'
+    ? bookingProducerFilter(userId)
+    : new Types.ObjectId(userId);
 }
 
 function sideOf(perfil: Role): Side | null {

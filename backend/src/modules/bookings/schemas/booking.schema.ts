@@ -45,6 +45,10 @@ export class Booking {
   @Prop()
   mensagem?: string;
 
+  /** Resposta opcional do produtor (HU47). */
+  @Prop({ trim: true })
+  mensagemResposta?: string;
+
   /** HU46/RN20: quando o consumidor cancelou. Ausente nas demais solicitações. */
   @Prop()
   canceladaEm?: Date;

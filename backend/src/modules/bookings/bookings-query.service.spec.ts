@@ -234,7 +234,7 @@ describe('BookingsQueryService (HU45/RF45)', () => {
       );
 
       expect(pipelineOf(bookings)[0]).toEqual({
-        $match: { produtor: producerId },
+        $match: { produtor: { $in: [producerId, producerId.toHexString()] } },
       });
       expect(itens[0].contraparte).toEqual({
         id: consumerId.toHexString(),
@@ -250,7 +250,10 @@ describe('BookingsQueryService (HU45/RF45)', () => {
       });
 
       expect(pipelineOf(bookings)[0]).toEqual({
-        $match: { produtor: producerId, status: BookingStatus.PENDENTE },
+        $match: {
+          produtor: { $in: [producerId, producerId.toHexString()] },
+          status: BookingStatus.PENDENTE,
+        },
       });
     });
 
@@ -291,7 +294,10 @@ describe('BookingsQueryService (HU45/RF45)', () => {
       );
 
       expect(pipelineOf(bookings)[0]).toEqual({
-        $match: { _id: booking._id, produtor: producerId },
+        $match: {
+          _id: booking._id,
+          produtor: { $in: [producerId, producerId.toHexString()] },
+        },
       });
     });
 

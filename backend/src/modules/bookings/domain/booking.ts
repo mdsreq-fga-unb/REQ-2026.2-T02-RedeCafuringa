@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 /**
  * Regras da pré-reserva de experiência (HU44/RF44, RN19).
  *
@@ -81,4 +82,9 @@ export function isBookingInPast(
   now: Date = new Date(),
 ): boolean {
   return `${data}T${horario}` <= localDateTime(now);
+}
+
+/** Algumas pré-reservas antigas guardam o id do produtor como texto. */
+export function bookingProducerFilter(id: string) {
+  return { $in: [new Types.ObjectId(id), id] };
 }

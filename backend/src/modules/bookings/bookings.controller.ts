@@ -36,6 +36,8 @@ import {
 import { BookingResponse } from './dto/booking.response.js';
 import { CreateBookingDto } from './dto/create-booking.dto.js';
 import { ListBookingsQuery } from './dto/list-bookings.query.js';
+import { ReceivedBookingResponse } from './dto/received-booking.response.js';
+import { RespondBookingDto } from './dto/respond-booking.dto.js';
 
 @ApiTags('bookings')
 @Controller('bookings')
@@ -44,6 +46,72 @@ export class BookingsController {
     private readonly bookings: BookingsService,
     private readonly queries: BookingsQueryService,
   ) {}
+
+  @Roles(Role.PRODUTOR)
+  @Get('received/:id')
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Consultar detalhes de pré-reserva recebida',
+    description:
+      'HU47/CA02 e CA05: apresenta os dados necessários à análise somente ao produtor responsável.',
+  })
+  @ApiOkResponse({ type: ReceivedBookingResponse })
+  @ApiForbiddenResponse({
+    description: 'A solicitação pertence a outro produtor',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Pré-reserva não encontrada',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  getReceived(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<ReceivedBookingResponse> {
+    return this.bookings.getReceived(user.id, id);
+  }
+
+  @Roles(Role.PRODUTOR)
+  @Patch('received/:id/response')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Responder pré-reserva recebida',
+    description:
+      'HU47/CA03-CA07: registra aceite ou recusa somente para uma solicitação pendente pertencente ao produtor autenticado.',
+  })
+  @ApiOkResponse({ type: ReceivedBookingResponse })
+  @ApiBadRequestResponse({
+    description: 'A resposta enviada é inválida',
+    type: ErrorResponse,
+  })
+  @ApiConflictResponse({
+    description: 'A solicitação não está mais pendente',
+    type: ErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'A solicitação pertence a outro produtor',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Pré-reserva não encontrada',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  respond(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+    @Body() dto: RespondBookingDto,
+  ): Promise<ReceivedBookingResponse> {
+    return this.bookings.respond(user.id, id, dto);
+  }
 
   @Roles(Role.CONSUMIDOR)
   @Post()

@@ -7,6 +7,22 @@ export const BOOKING_SENT_ROUTE = "/pre-reserva-enviada";
 /** Lista de pré-reservas: placeholder até a HU45 (rota do item "Pré-reservas"). */
 export const BOOKINGS_LIST_ROUTE = "/reservas";
 
+export const RECEIVED_BOOKINGS_ROUTE = "/notificacoes";
+
+export function receivedBookingRoute(id: string): string {
+    return `${RECEIVED_BOOKINGS_ROUTE}/${encodeURIComponent(id)}`;
+}
+
+export function parseReceivedBookingRoute(path: string): string | null {
+    const match = /^\/notificacoes\/([^/?]+)$/.exec(path);
+    if (!match) return null;
+    try {
+        return decodeURIComponent(match[1]);
+    } catch {
+        return null;
+    }
+}
+
 export function bookingRoute(experienceId: string): string {
     return `/pre-reserva/${encodeURIComponent(experienceId)}`;
 }

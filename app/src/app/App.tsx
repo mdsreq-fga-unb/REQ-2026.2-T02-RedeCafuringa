@@ -62,8 +62,14 @@ import { BookingsPage } from "@/features/bookings/BookingsPage";
 import { BookingDetailPage } from "@/features/bookings/BookingDetailPage";
 import { BookingCancelPage } from "@/features/bookings/BookingCancelPage";
 import {
+    ReceivedBookingPage,
+    ReceivedBookingsPage,
+} from "@/features/bookings/ReceivedBookingsPage";
+import {
     BOOKING_SENT_ROUTE,
     BOOKINGS_LIST_ROUTE,
+    RECEIVED_BOOKINGS_ROUTE,
+    parseReceivedBookingRoute,
     bookingAccess,
     bookingLoginRoute,
     bookingReturnRoute,
@@ -218,6 +224,28 @@ export function App() {
             navigate(bookingLoginRoute(bookingExperienceId));
         if (bookingAccessState === "blocked") navigate("/conta");
     }, [bookingExperienceId, bookingAccessState, navigate]);
+    const receivedBookingId = parseReceivedBookingRoute(path);
+    const receivedDetailPath = path.startsWith(`${RECEIVED_BOOKINGS_ROUTE}/`);
+    const producerBookingsPath =
+        role === "producer" && path === RECEIVED_BOOKINGS_ROUTE;
+    const receivedBookingsBlocked =
+        (receivedDetailPath || producerBookingsPath) &&
+        (role !== "producer" || !localStorage.getItem("cafuringa-token"));
+    useEffect(() => {
+        if (receivedBookingsBlocked) {
+            navigate(
+                role && role !== "producer" ? "/conta" : "/login/producer",
+            );
+        } else if (receivedDetailPath && !receivedBookingId) {
+            navigate(RECEIVED_BOOKINGS_ROUTE);
+        }
+    }, [
+        receivedBookingsBlocked,
+        receivedDetailPath,
+        receivedBookingId,
+        role,
+        navigate,
+    ]);
     // HU45: lista (/reservas) e detalhe (/reservas/<id>) das pré-reservas.
     const bookingsRoute = path === "/reservas" || path.startsWith("/reservas/");
     const bookingDetailId = path.startsWith("/reservas/")
@@ -317,7 +345,12 @@ export function App() {
                 }
             />
             {isMockAuthEnabled && (
-                <DemoNavigation onNavigate={navigate} onSignIn={signIn} />
+                <DemoNavigation
+                    role={role}
+                    onNavigate={navigate}
+                    onSignIn={signIn}
+                    onSignOut={signOut}
+                />
             )}
             <main className="main-content">
                 {path === "/explorar" && (
@@ -490,6 +523,16 @@ export function App() {
                         onContinue={() => navigate("/explorar")}
                     />
                 )}
+                {producerBookingsPath && !receivedBookingsBlocked && (
+                    <ReceivedBookingsPage key={userId} onNavigate={navigate} />
+                )}
+                {receivedBookingId && !receivedBookingsBlocked && (
+                    <ReceivedBookingPage
+                        key={`${userId}:${receivedBookingId}`}
+                        id={receivedBookingId}
+                        onNavigate={navigate}
+                    />
+                )}
                 {showProfileSelection && (
                     <ConsumerProfileSelectionPage
                         onNavigate={(nextPath) => {
@@ -634,7 +677,7 @@ export function App() {
                     />
                 )}
             </main>
-            {!isAuthFlow && (
+            {!isAuthFlow && !receivedDetailPath && (
                 <BottomNavigation
                     path={path}
                     role={role}

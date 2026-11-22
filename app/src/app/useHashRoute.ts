@@ -37,6 +37,7 @@ const getInitialRoute = () => {
         "/pre-reserva-enviada",
     ].includes(requested.split("?")[0]) ||
         requested.startsWith("/oferta/") ||
+        /^\/notificacoes\/[^/?]+$/.test(requested.split("?")[0]) ||
         /^\/pre-reserva\/[^/?]+$/.test(requested.split("?")[0]) ||
         /^\/reservas\/[^/?]+(?:\/cancelar)?$/.test(requested.split("?")[0]) ||
         /^\/produtor\/[^/?]+$/.test(requested.split("?")[0]) ||

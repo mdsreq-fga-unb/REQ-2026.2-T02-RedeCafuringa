@@ -1,3 +1,6 @@
+import type { ConfigService } from '@nestjs/config';
+import type { MailService } from '../../common/mail/mail.service.js';
+import type { MetricsRegistry } from '../metrics/metrics.registry.js';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import type { Model } from 'mongoose';
@@ -50,6 +53,9 @@ function setup() {
     bookings as unknown as Model<Booking>,
     {} as Model<Experience>,
     {} as Model<User>,
+    {} as MailService,
+    {} as ConfigService,
+    {} as MetricsRegistry,
   );
   return { service, bookings };
 }
