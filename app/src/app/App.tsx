@@ -58,9 +58,14 @@ import type { RegisteredProduct } from "@/features/offers/productService";
 import { apiResourceUrl } from "@/shared/api";
 import { BookingRoutePage } from "@/features/bookings/BookingRoutePage";
 import { BookingSentPage } from "@/features/bookings/BookingSentPage";
+import { BookingNotificationsPage } from "@/features/bookings/BookingNotificationsPage";
 import {
     BOOKING_SENT_ROUTE,
     BOOKINGS_LIST_ROUTE,
+    BOOKING_NOTIFICATIONS_ROUTE,
+    bookingConsultationLoginRoute,
+    bookingConsultationReturnRoute,
+    parseBookingConsultationRoute,
     bookingAccess,
     bookingLoginRoute,
     bookingReturnRoute,
@@ -218,6 +223,29 @@ export function App() {
     const needsProfileSelection =
         role === null &&
         ["/conta", "/notificacoes", "/reservas"].includes(path);
+    const consultationId = parseBookingConsultationRoute(path);
+    const consultationRole = role === "consumer" || role === "producer";
+    const consultationToken = localStorage.getItem("cafuringa-token");
+    const producerConsultation =
+        role === "producer" || query.get("perfil") === "producer";
+    useEffect(() => {
+        if (!consultationId || (consultationRole && consultationToken)) return;
+        if (role === "admin") navigate("/admin/acesso");
+        else
+            navigate(
+                bookingConsultationLoginRoute(
+                    consultationId,
+                    producerConsultation,
+                ),
+            );
+    }, [
+        consultationId,
+        consultationRole,
+        consultationToken,
+        producerConsultation,
+        role,
+        navigate,
+    ]);
     const screenPath = needsProfileSelection ? "/escolher-perfil" : path;
     const showProfileSelection = screenPath === "/escolher-perfil";
     const showLogin =
@@ -280,6 +308,14 @@ export function App() {
 
     const handleSignIn = (auth: AuthResult) => {
         signIn(auth);
+        const consultationReturn = bookingConsultationReturnRoute(
+            route,
+            auth.user.role,
+        );
+        if (consultationReturn) {
+            changeRoute(consultationReturn);
+            return;
+        }
         const bookingReturn = bookingReturnRoute(route, auth.user.role);
         if (bookingReturn) {
             changeRoute(bookingReturn);
@@ -474,6 +510,16 @@ export function App() {
                         onContinue={() => navigate("/explorar")}
                     />
                 )}
+                {consultationRole &&
+                    (path === BOOKING_NOTIFICATIONS_ROUTE ||
+                        (consultationId && consultationToken)) && (
+                        <BookingNotificationsPage
+                            key={`${role}:${userId}:${path}`}
+                            id={consultationId}
+                            consumer={role === "consumer"}
+                            onNavigate={navigate}
+                        />
+                    )}
                 {showProfileSelection && (
                     <ConsumerProfileSelectionPage
                         onNavigate={(nextPath) => {
