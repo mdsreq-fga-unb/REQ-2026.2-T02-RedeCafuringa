@@ -5,6 +5,7 @@ import {
     getApiClient,
 } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
+import type { ApiBookingList } from "./bookingDetails";
 import { BookingSessionError } from "./bookingService";
 import {
     BOOKING_STATUSES,
@@ -24,7 +25,6 @@ export type ReceivedBooking = BookingResponse & {
 
 export type BookingDecision = "aceita" | "recusada";
 
-// Contrato do frontend, a alinhar com a API da HU47.
 const receivedPath = "/bookings/received";
 
 function parseBooking(value: unknown): ReceivedBooking {
@@ -79,13 +79,40 @@ export async function listReceivedBookings(
     signal: AbortSignal,
 ): Promise<ReceivedBooking[]> {
     if (isMockAuthEnabled) return demoReceivedBookings.list();
-    const data = await getApiClient().get<unknown>(
-        receivedPath,
-        requestOptions(signal),
-    );
-    if (!Array.isArray(data))
-        throw new Error("Lista de pré-reservas inválida.");
-    return data.map(parseBooking);
+    const client = getApiClient();
+    const options = requestOptions(signal);
+    const bookings: ReceivedBooking[] = [];
+    let page = 1;
+
+    while (true) {
+        const path =
+            page === 1 ? receivedPath : `${receivedPath}?pagina=${page}`;
+        const data = await client.get<ApiBookingList>(path, options);
+        if (
+            !data ||
+            !Array.isArray(data.itens) ||
+            !Number.isSafeInteger(data.total) ||
+            data.total < 0
+        ) {
+            throw new Error("Lista de pré-reservas inválida.");
+        }
+        for (const item of data.itens) {
+            bookings.push(
+                parseBooking({
+                    ...item,
+                    codigo: `CAF-${item.id.slice(-6).toUpperCase()}`,
+                    experienciaNome: item.experiencia.nome,
+                    consumidorNome: item.contraparte.nome,
+                    valorTotal:
+                        item.experiencia.valorPorPessoa * item.participantes,
+                }),
+            );
+        }
+        if (data.itens.length === 0 || bookings.length >= data.total) {
+            return bookings;
+        }
+        page += 1;
+    }
 }
 
 export async function getReceivedBooking(

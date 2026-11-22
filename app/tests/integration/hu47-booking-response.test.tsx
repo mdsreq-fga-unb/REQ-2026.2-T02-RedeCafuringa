@@ -81,7 +81,19 @@ function mockApi() {
             });
         }
         if (url.pathname === bookingsPath && method === "GET") {
-            return json([current, accepted]);
+            return json({
+                itens: [current, accepted].map((item) => ({
+                    ...item,
+                    experiencia: {
+                        nome: item.experienciaNome,
+                        valorPorPessoa: item.valorTotal / item.participantes,
+                    },
+                    contraparte: { nome: item.consumidorNome },
+                })),
+                total: 2,
+                pagina: 1,
+                limite: 20,
+            });
         }
         if (url.pathname === bookingPath && method === "GET") return read();
         if (

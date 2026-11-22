@@ -58,6 +58,9 @@ import type { RegisteredProduct } from "@/features/offers/productService";
 import { apiResourceUrl } from "@/shared/api";
 import { BookingRoutePage } from "@/features/bookings/BookingRoutePage";
 import { BookingSentPage } from "@/features/bookings/BookingSentPage";
+import { BookingsPage } from "@/features/bookings/BookingsPage";
+import { BookingDetailPage } from "@/features/bookings/BookingDetailPage";
+import { BookingCancelPage } from "@/features/bookings/BookingCancelPage";
 import {
     ReceivedBookingPage,
     ReceivedBookingsPage,
@@ -224,8 +227,7 @@ export function App() {
     const receivedBookingId = parseReceivedBookingRoute(path);
     const receivedDetailPath = path.startsWith(`${RECEIVED_BOOKINGS_ROUTE}/`);
     const producerBookingsPath =
-        role === "producer" &&
-        [RECEIVED_BOOKINGS_ROUTE, BOOKINGS_LIST_ROUTE].includes(path);
+        role === "producer" && path === RECEIVED_BOOKINGS_ROUTE;
     const receivedBookingsBlocked =
         (receivedDetailPath || producerBookingsPath) &&
         (role !== "producer" || !localStorage.getItem("cafuringa-token"));
@@ -244,9 +246,22 @@ export function App() {
         role,
         navigate,
     ]);
+    // HU45: lista (/reservas) e detalhe (/reservas/<id>) das pré-reservas.
+    const bookingsRoute = path === "/reservas" || path.startsWith("/reservas/");
+    const bookingDetailId = path.startsWith("/reservas/")
+        ? decodeRouteSegment(path.split("/")[2])
+        : undefined;
+    // HU46: confirmação do cancelamento, exclusiva da consumidora.
+    const bookingCancelRoute = /^\/reservas\/[^/]+\/cancelar$/.test(path);
+    const bookingDetailPath = `/reservas/${path.split("/")[2] ?? ""}`;
+    const cancelBlocked =
+        bookingCancelRoute && role !== null && role !== "consumer";
+    useEffect(() => {
+        if (cancelBlocked) navigate(bookingDetailPath);
+    }, [cancelBlocked, bookingDetailPath, navigate]);
     const needsProfileSelection =
         role === null &&
-        ["/conta", "/notificacoes", "/reservas"].includes(path);
+        (["/conta", "/notificacoes"].includes(path) || bookingsRoute);
     const screenPath = needsProfileSelection ? "/escolher-perfil" : path;
     const showProfileSelection = screenPath === "/escolher-perfil";
     const showLogin =
@@ -566,6 +581,39 @@ export function App() {
                         focusContact={query.get("contato") === "1"}
                     />
                 )}
+                {bookingsRoute &&
+                    !needsProfileSelection &&
+                    (role === "consumer" || role === "producer" ? (
+                        bookingCancelRoute && bookingDetailId ? (
+                            role === "consumer" && (
+                                <BookingCancelPage
+                                    key={path}
+                                    id={bookingDetailId}
+                                    onNavigate={navigate}
+                                />
+                            )
+                        ) : bookingDetailId ? (
+                            <BookingDetailPage
+                                key={path}
+                                id={bookingDetailId}
+                                role={role}
+                                onNavigate={navigate}
+                            />
+                        ) : (
+                            <BookingsPage
+                                key={role}
+                                role={role}
+                                onNavigate={navigate}
+                            />
+                        )
+                    ) : (
+                        <section className="booking-page">
+                            <h1>Pré-reservas</h1>
+                            <p>
+                                O perfil de administradora não tem pré-reservas.
+                            </p>
+                        </section>
+                    ))}
                 {path.startsWith("/produtor/") && (
                     <PublicTrajectoryPage
                         key={path}
@@ -641,3 +689,12 @@ export function App() {
 }
 
 export default App;
+
+/** Segmento da rota sem escape; um "%" solto não derruba a tela. */
+function decodeRouteSegment(segment: string): string {
+    try {
+        return decodeURIComponent(segment);
+    } catch {
+        return segment;
+    }
+}

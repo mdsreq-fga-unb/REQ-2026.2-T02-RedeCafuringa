@@ -49,6 +49,10 @@ export class Booking {
   @Prop({ trim: true })
   mensagemResposta?: string;
 
+  /** HU46/RN20: quando o consumidor cancelou. Ausente nas demais solicitações. */
+  @Prop()
+  canceladaEm?: Date;
+
   /** RN19: nasce pendente; só a resposta do produtor confirma. */
   @Prop({
     required: true,
@@ -68,3 +72,6 @@ export const BookingSchema = SchemaFactory.createForClass(Booking);
 BookingSchema.index({ consumidor: 1, criadoEm: -1, _id: -1 });
 // Solicitações recebidas pelo produtor, por situação (HU45, HU47).
 BookingSchema.index({ produtor: 1, status: 1, criadoEm: -1, _id: -1 });
+// Recebidas sem filtro de situação (`GET /bookings/received`): o índice acima
+// tem `status` no meio e obrigaria a ordenar em memória.
+BookingSchema.index({ produtor: 1, criadoEm: -1, _id: -1 });

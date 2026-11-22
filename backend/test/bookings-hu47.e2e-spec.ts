@@ -137,18 +137,26 @@ describe('HU47/RF47 — Responder pré-reserva de experiência (e2e)', () => {
         .exec();
       expect(storedBooking?.produtor.toString()).toBe(owner.id);
 
+      // A consulta também deve encontrar solicitações antigas com o id em texto.
+      await bookings().collection.updateOne({ _id: storedBooking!._id }, [
+        { $set: { produtor: owner.id } },
+      ]);
+
       const list = await getReceived(owner.auth).expect(200);
 
-      expect(list.body).toHaveLength(1);
-      expect(list.body[0]).toMatchObject({
+      expect(list.body).toMatchObject({ total: 1, pagina: 1 });
+      expect(list.body.itens).toHaveLength(1);
+      expect(list.body.itens[0]).toMatchObject({
         id: ownBooking.id,
         experienciaId: ownExperience,
-        experienciaNome: 'Visita e Degustação de Queijos',
-        consumidorNome: 'Ana Oliveira',
+        experiencia: {
+          nome: 'Visita e Degustação de Queijos',
+          valorPorPessoa: 45.5,
+        },
+        contraparte: { nome: 'Ana Oliveira' },
         data: expect.any(String),
         horario: '09:00',
         participantes: 4,
-        valorTotal: 182,
         formaPagamento: 'pix',
         mensagem: 'Vamos com duas crianças.',
         status: BookingStatus.PENDENTE,
@@ -177,7 +185,7 @@ describe('HU47/RF47 — Responder pré-reserva de experiência (e2e)', () => {
 
       const response = await getReceived(producer.auth).expect(200);
 
-      expect(response.body).toEqual([]);
+      expect(response.body).toMatchObject({ itens: [], total: 0 });
     });
   });
 

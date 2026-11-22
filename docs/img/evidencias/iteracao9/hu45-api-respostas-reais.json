@@ -1,0 +1,345 @@
+[
+  {
+    "label": "CA02 consumidor lista as suas",
+    "request": "GET /api/v1/bookings/mine",
+    "status": 200,
+    "body": {
+      "itens": [
+        {
+          "id": "6b025a505153c8ceb9b70ad6",
+          "experienciaId": "6b025a505153c8ceb9b70ad4",
+          "data": "2026-12-27",
+          "horario": "14:00",
+          "participantes": 2,
+          "formaPagamento": "dinheiro",
+          "status": "aceita",
+          "criadoEm": "2026-11-22T02:58:24.877Z",
+          "atualizadoEm": "2026-11-22T02:58:24.881Z",
+          "experiencia": {
+            "nome": "Trilha guiada da nascente",
+            "local": "Sítio Boa Vista",
+            "valorPorPessoa": 45.5,
+            "disponivel": true,
+            "foto": "/experiences/6b025a505153c8ceb9b70ad4/photos/6b025a505153c8ceb9b70ad3?v=v1"
+          },
+          "contraparte": {
+            "id": "6b025a505153c8ceb9b70ad0",
+            "nome": "Horta Comunitária Cafuringa"
+          }
+        },
+        {
+          "id": "6b025a505153c8ceb9b70ad5",
+          "experienciaId": "6b025a505153c8ceb9b70ad4",
+          "data": "2026-12-20",
+          "horario": "09:00",
+          "participantes": 3,
+          "formaPagamento": "pix",
+          "mensagem": "Gostaria de conhecer a nascente.",
+          "status": "pendente",
+          "criadoEm": "2026-11-22T02:58:24.863Z",
+          "atualizadoEm": "2026-11-22T02:58:24.863Z",
+          "experiencia": {
+            "nome": "Trilha guiada da nascente",
+            "local": "Sítio Boa Vista",
+            "valorPorPessoa": 45.5,
+            "disponivel": true,
+            "foto": "/experiences/6b025a505153c8ceb9b70ad4/photos/6b025a505153c8ceb9b70ad3?v=v1"
+          },
+          "contraparte": {
+            "id": "6b025a505153c8ceb9b70ad0",
+            "nome": "Horta Comunitária Cafuringa"
+          }
+        }
+      ],
+      "total": 2,
+      "pagina": 1,
+      "limite": 20
+    }
+  },
+  {
+    "label": "CA07/filtro consumidor filtra por situação",
+    "request": "GET /api/v1/bookings/mine?status=aceita",
+    "status": 200,
+    "body": {
+      "itens": [
+        {
+          "id": "6b025a505153c8ceb9b70ad6",
+          "experienciaId": "6b025a505153c8ceb9b70ad4",
+          "data": "2026-12-27",
+          "horario": "14:00",
+          "participantes": 2,
+          "formaPagamento": "dinheiro",
+          "status": "aceita",
+          "criadoEm": "2026-11-22T02:58:24.877Z",
+          "atualizadoEm": "2026-11-22T02:58:24.881Z",
+          "experiencia": {
+            "nome": "Trilha guiada da nascente",
+            "local": "Sítio Boa Vista",
+            "valorPorPessoa": 45.5,
+            "disponivel": true,
+            "foto": "/experiences/6b025a505153c8ceb9b70ad4/photos/6b025a505153c8ceb9b70ad3?v=v1"
+          },
+          "contraparte": {
+            "id": "6b025a505153c8ceb9b70ad0",
+            "nome": "Horta Comunitária Cafuringa"
+          }
+        }
+      ],
+      "total": 1,
+      "pagina": 1,
+      "limite": 20
+    }
+  },
+  {
+    "label": "CA03 produtor lista as recebidas",
+    "request": "GET /api/v1/bookings/received",
+    "status": 200,
+    "body": {
+      "itens": [
+        {
+          "id": "6b025a505153c8ceb9b70ad6",
+          "experienciaId": "6b025a505153c8ceb9b70ad4",
+          "data": "2026-12-27",
+          "horario": "14:00",
+          "participantes": 2,
+          "formaPagamento": "dinheiro",
+          "status": "aceita",
+          "criadoEm": "2026-11-22T02:58:24.877Z",
+          "atualizadoEm": "2026-11-22T02:58:24.881Z",
+          "experiencia": {
+            "nome": "Trilha guiada da nascente",
+            "local": "Sítio Boa Vista",
+            "valorPorPessoa": 45.5,
+            "disponivel": true,
+            "foto": "/experiences/6b025a505153c8ceb9b70ad4/photos/6b025a505153c8ceb9b70ad3?v=v1"
+          },
+          "contraparte": {
+            "id": "6b025a4f5153c8ceb9b70ace",
+            "nome": "Maria das Graças"
+          }
+        },
+        {
+          "id": "6b025a505153c8ceb9b70ad5",
+          "experienciaId": "6b025a505153c8ceb9b70ad4",
+          "data": "2026-12-20",
+          "horario": "09:00",
+          "participantes": 3,
+          "formaPagamento": "pix",
+          "mensagem": "Gostaria de conhecer a nascente.",
+          "status": "pendente",
+          "criadoEm": "2026-11-22T02:58:24.863Z",
+          "atualizadoEm": "2026-11-22T02:58:24.863Z",
+          "experiencia": {
+            "nome": "Trilha guiada da nascente",
+            "local": "Sítio Boa Vista",
+            "valorPorPessoa": 45.5,
+            "disponivel": true,
+            "foto": "/experiences/6b025a505153c8ceb9b70ad4/photos/6b025a505153c8ceb9b70ad3?v=v1"
+          },
+          "contraparte": {
+            "id": "6b025a4f5153c8ceb9b70ace",
+            "nome": "Maria das Graças"
+          }
+        }
+      ],
+      "total": 2,
+      "pagina": 1,
+      "limite": 20
+    }
+  },
+  {
+    "label": "CA04 detalhe (consumidor)",
+    "request": "GET /api/v1/bookings/6b025a505153c8ceb9b70ad5",
+    "status": 200,
+    "body": {
+      "id": "6b025a505153c8ceb9b70ad5",
+      "experienciaId": "6b025a505153c8ceb9b70ad4",
+      "data": "2026-12-20",
+      "horario": "09:00",
+      "participantes": 3,
+      "formaPagamento": "pix",
+      "mensagem": "Gostaria de conhecer a nascente.",
+      "status": "pendente",
+      "criadoEm": "2026-11-22T02:58:24.863Z",
+      "atualizadoEm": "2026-11-22T02:58:24.863Z",
+      "experiencia": {
+        "nome": "Trilha guiada da nascente",
+        "local": "Sítio Boa Vista",
+        "valorPorPessoa": 45.5,
+        "disponivel": true,
+        "foto": "/experiences/6b025a505153c8ceb9b70ad4/photos/6b025a505153c8ceb9b70ad3?v=v1"
+      },
+      "contraparte": {
+        "id": "6b025a505153c8ceb9b70ad0",
+        "nome": "Horta Comunitária Cafuringa"
+      }
+    }
+  },
+  {
+    "label": "CA04 detalhe (produtor)",
+    "request": "GET /api/v1/bookings/6b025a505153c8ceb9b70ad5",
+    "status": 200,
+    "body": {
+      "id": "6b025a505153c8ceb9b70ad5",
+      "experienciaId": "6b025a505153c8ceb9b70ad4",
+      "data": "2026-12-20",
+      "horario": "09:00",
+      "participantes": 3,
+      "formaPagamento": "pix",
+      "mensagem": "Gostaria de conhecer a nascente.",
+      "status": "pendente",
+      "criadoEm": "2026-11-22T02:58:24.863Z",
+      "atualizadoEm": "2026-11-22T02:58:24.863Z",
+      "experiencia": {
+        "nome": "Trilha guiada da nascente",
+        "local": "Sítio Boa Vista",
+        "valorPorPessoa": 45.5,
+        "disponivel": true,
+        "foto": "/experiences/6b025a505153c8ceb9b70ad4/photos/6b025a505153c8ceb9b70ad3?v=v1"
+      },
+      "contraparte": {
+        "id": "6b025a4f5153c8ceb9b70ace",
+        "nome": "Maria das Graças"
+      }
+    }
+  },
+  {
+    "label": "CA05 consumidor de terceiros",
+    "request": "GET /api/v1/bookings/6b025a505153c8ceb9b70ad5",
+    "status": 404,
+    "body": {
+      "message": "Pré-reserva não encontrada",
+      "error": "Not Found",
+      "statusCode": 404
+    }
+  },
+  {
+    "label": "CA05 produtor sem vínculo",
+    "request": "GET /api/v1/bookings/6b025a505153c8ceb9b70ad5",
+    "status": 404,
+    "body": {
+      "message": "Pré-reserva não encontrada",
+      "error": "Not Found",
+      "statusCode": 404
+    }
+  },
+  {
+    "label": "CA05 id inexistente (mesma resposta)",
+    "request": "GET /api/v1/bookings/6b025a505153c8ceb9b70ad7",
+    "status": 404,
+    "body": {
+      "message": "Pré-reserva não encontrada",
+      "error": "Not Found",
+      "statusCode": 404
+    }
+  },
+  {
+    "label": "CA05 id inválido",
+    "request": "GET /api/v1/bookings/abc",
+    "status": 404,
+    "body": {
+      "message": "Pré-reserva não encontrada",
+      "error": "Not Found",
+      "statusCode": 404
+    }
+  },
+  {
+    "label": "CA06 consumidor sem solicitações",
+    "request": "GET /api/v1/bookings/mine",
+    "status": 200,
+    "body": {
+      "itens": [],
+      "total": 0,
+      "pagina": 1,
+      "limite": 20
+    }
+  },
+  {
+    "label": "CA06 produtor sem solicitações",
+    "request": "GET /api/v1/bookings/received",
+    "status": 200,
+    "body": {
+      "itens": [],
+      "total": 0,
+      "pagina": 1,
+      "limite": 20
+    }
+  },
+  {
+    "label": "RNF08 administrador",
+    "request": "GET /api/v1/bookings/mine",
+    "status": 403,
+    "body": {
+      "message": "Seu perfil não tem permissão para acessar este recurso",
+      "error": "Forbidden",
+      "statusCode": 403
+    }
+  },
+  {
+    "label": "RNF08 produtor na lista do consumidor",
+    "request": "GET /api/v1/bookings/mine",
+    "status": 403,
+    "body": {
+      "message": "Seu perfil não tem permissão para acessar este recurso",
+      "error": "Forbidden",
+      "statusCode": 403
+    }
+  },
+  {
+    "label": "RNF08 sem token",
+    "request": "GET /api/v1/bookings/mine",
+    "status": 401,
+    "body": {
+      "message": "Autenticação necessária",
+      "error": "Unauthorized",
+      "statusCode": 401
+    }
+  },
+  {
+    "label": "400 situação inválida",
+    "request": "GET /api/v1/bookings/mine?status=concluida",
+    "status": 400,
+    "body": {
+      "message": [
+        "Situação inválida. Use: pendente, aceita, recusada, cancelada"
+      ],
+      "error": "Bad Request",
+      "statusCode": 400
+    }
+  },
+  {
+    "label": "paginação",
+    "request": "GET /api/v1/bookings/mine?pagina=2&limite=1",
+    "status": 200,
+    "body": {
+      "itens": [
+        {
+          "id": "6b025a505153c8ceb9b70ad5",
+          "experienciaId": "6b025a505153c8ceb9b70ad4",
+          "data": "2026-12-20",
+          "horario": "09:00",
+          "participantes": 3,
+          "formaPagamento": "pix",
+          "mensagem": "Gostaria de conhecer a nascente.",
+          "status": "pendente",
+          "criadoEm": "2026-11-22T02:58:24.863Z",
+          "atualizadoEm": "2026-11-22T02:58:24.863Z",
+          "experiencia": {
+            "nome": "Trilha guiada da nascente",
+            "local": "Sítio Boa Vista",
+            "valorPorPessoa": 45.5,
+            "disponivel": true,
+            "foto": "/experiences/6b025a505153c8ceb9b70ad4/photos/6b025a505153c8ceb9b70ad3?v=v1"
+          },
+          "contraparte": {
+            "id": "6b025a505153c8ceb9b70ad0",
+            "nome": "Horta Comunitária Cafuringa"
+          }
+        }
+      ],
+      "total": 2,
+      "pagina": 2,
+      "limite": 1
+    }
+  }
+]

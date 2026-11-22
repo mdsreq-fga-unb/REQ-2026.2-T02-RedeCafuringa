@@ -4,19 +4,21 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Patch,
   Param,
+  Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiCreatedResponse,
   ApiConflictResponse,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -25,35 +27,25 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { Role } from '../users/domain/role.js';
+import { BookingsQueryService } from './bookings-query.service.js';
 import { BookingsService } from './bookings.service.js';
+import {
+  BookingDetailResponse,
+  BookingListResponse,
+} from './dto/booking-detail.response.js';
 import { BookingResponse } from './dto/booking.response.js';
 import { CreateBookingDto } from './dto/create-booking.dto.js';
+import { ListBookingsQuery } from './dto/list-bookings.query.js';
 import { ReceivedBookingResponse } from './dto/received-booking.response.js';
 import { RespondBookingDto } from './dto/respond-booking.dto.js';
 
 @ApiTags('bookings')
 @Controller('bookings')
 export class BookingsController {
-  constructor(private readonly bookings: BookingsService) {}
-
-  @Roles(Role.PRODUTOR)
-  @Get('received')
-  @ApiBearerAuth('bearer')
-  @ApiOperation({
-    summary: 'Consultar pré-reservas recebidas',
-    description:
-      'HU47/CA01: lista as solicitações vinculadas às experiências do produtor autenticado, sem expor dados privados dos envolvidos.',
-  })
-  @ApiOkResponse({ type: ReceivedBookingResponse, isArray: true })
-  @ApiUnauthorizedResponse({
-    description: 'Sem token ou token inválido',
-    type: ErrorResponse,
-  })
-  listReceived(
-    @CurrentUser() user: AuthenticatedUser,
-  ): Promise<ReceivedBookingResponse[]> {
-    return this.bookings.listReceived(user.id);
-  }
+  constructor(
+    private readonly bookings: BookingsService,
+    private readonly queries: BookingsQueryService,
+  ) {}
 
   @Roles(Role.PRODUTOR)
   @Get('received/:id')
@@ -157,5 +149,166 @@ export class BookingsController {
     @Body() dto: CreateBookingDto,
   ): Promise<BookingResponse> {
     return this.bookings.create(user.id, dto);
+  }
+
+  // `mine` e `received` vêm antes de `:id`, senão o Nest os trataria como id.
+  @Roles(Role.CONSUMIDOR)
+  @Get('mine')
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Consultar as minhas pré-reservas (consumidor)',
+    description:
+      'HU45/RF45 (CA01, CA02, CA06, CA07): solicitações feitas pela conta autenticada, da mais nova à mais antiga, com a situação gravada agora (RN21). Filtro opcional por `status` e paginação por `pagina`/`limite` (padrão 1 e 20, máximo 50). Sem solicitações devolve 200 com `itens` vazio. O dono vem do token, nunca da query (RNF08). Exclusivo do perfil CONSUMIDOR.',
+  })
+  @ApiOkResponse({
+    type: BookingListResponse,
+    description: 'Página de solicitações (pode vir vazia, CA06)',
+  })
+  @ApiBadRequestResponse({
+    description:
+      '`status` fora do ciclo de vida, `pagina`/`limite` inválidos ou filtro desconhecido (mensagens em `message`)',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  listMine(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() query: ListBookingsQuery,
+  ): Promise<BookingListResponse> {
+    return this.queries.listMine(user.id, query);
+  }
+
+  @Roles(Role.PRODUTOR)
+  @Get('received')
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Consultar as pré-reservas recebidas (produtor)',
+    description:
+      'HU45/RF45 (CA01, CA03, CA06, CA07): solicitações recebidas para as experiências do produtor autenticado, da mais nova à mais antiga, com a situação gravada agora (RN21). `contraparte` é o consumidor (só id e nome, RNF11). Filtro opcional por `status` e paginação como em `GET /bookings/mine`. Sem solicitações devolve 200 com `itens` vazio. Exclusivo do perfil PRODUTOR.',
+  })
+  @ApiOkResponse({
+    type: BookingListResponse,
+    description: 'Página de solicitações recebidas (pode vir vazia, CA06)',
+  })
+  @ApiBadRequestResponse({
+    description:
+      '`status` fora do ciclo de vida, `pagina`/`limite` inválidos ou filtro desconhecido (mensagens em `message`)',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  listReceived(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() query: ListBookingsQuery,
+  ): Promise<BookingListResponse> {
+    return this.queries.listReceived(user.id, query);
+  }
+
+  @Roles(Role.CONSUMIDOR, Role.PRODUTOR)
+  @Get(':id')
+  @ApiBearerAuth('bearer')
+  @ApiParam({
+    name: 'id',
+    example: '64b0c0ffee0000000000b001',
+    description: 'Id da pré-reserva',
+  })
+  @ApiOperation({
+    summary: 'Consultar uma pré-reserva',
+    description:
+      'HU45/RF45 (CA04, CA05, CA07): detalhe de uma solicitação com a experiência e o outro lado. O consumidor só vê as suas e o produtor só as recebidas; qualquer outra, inexistente ou com id inválido responde 404, sem revelar se existe (RNF08, RNF11). Mostra a situação atualmente gravada.',
+  })
+  @ApiOkResponse({ type: BookingDetailResponse })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description:
+      'Solicitação inexistente, de outra conta ou de experiência de outro produtor, ou id inválido (CA05)',
+    type: ErrorResponse,
+  })
+  findOne(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<BookingDetailResponse> {
+    return this.queries.findOne(user, id);
+  }
+
+  @Roles(Role.CONSUMIDOR)
+  @Patch(':id/cancel')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('bearer')
+  @ApiParam({
+    name: 'id',
+    description: 'Id da pré-reserva a cancelar',
+    example: '64b0c0ffee0000000000b001',
+  })
+  @ApiOperation({
+    summary: 'Cancelar pré-reserva',
+    description:
+      'HU46/RF46 (CA02-CA07): o consumidor cancela a própria solicitação de pré-reserva. Sem corpo: a confirmação ("Sim, cancelar solicitação" / "Manter solicitação", CA02 e CA04) é da interface, que só chama este endpoint quando o usuário confirma. Só solicitações pendentes podem ser canceladas pelo solicitante (RN20); a situação passa a `cancelada` e nunca volta a `pendente` (RN21). A troca é atômica: cancelar de novo, ou cancelar depois de o produtor responder, devolve 409 e não altera nada. Solicitação de outro usuário responde 404, como se não existisse (CA05, RNF11). Exclusivo do perfil CONSUMIDOR (RNF08).',
+  })
+  @ApiOkResponse({
+    type: BookingResponse,
+    description: 'Solicitação cancelada, já com a situação atualizada (CA06)',
+    example: {
+      id: '64b0c0ffee0000000000b001',
+      experienciaId: '64b0c0ffee0000000000e001',
+      data: '2026-12-10',
+      horario: '09:00',
+      participantes: 4,
+      formaPagamento: 'pix',
+      mensagem: 'Vamos com duas crianças.',
+      status: 'cancelada',
+      criadoEm: '2026-11-21T12:00:00.000Z',
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+    example: {
+      statusCode: 401,
+      message: 'Autenticação necessária',
+      error: 'Unauthorized',
+    },
+  })
+  @ApiForbiddenResponse({
+    description: 'Perfil diferente de consumidor (produtor ou administrador)',
+    type: ErrorResponse,
+    example: {
+      statusCode: 403,
+      message: 'Seu perfil não tem permissão para acessar este recurso',
+      error: 'Forbidden',
+    },
+  })
+  @ApiNotFoundResponse({
+    description:
+      'Pré-reserva inexistente, com id inválido ou pertencente a outro usuário (CA05)',
+    type: ErrorResponse,
+    example: {
+      statusCode: 404,
+      message: 'Pré-reserva não encontrada',
+      error: 'Not Found',
+    },
+  })
+  @ApiConflictResponse({
+    description:
+      'A solicitação não está pendente: já aceita (só o produtor cancela), recusada ou já cancelada. Nada é alterado (RN20, RN21). A mensagem diz o motivo.',
+    type: ErrorResponse,
+    example: {
+      statusCode: 409,
+      message: 'Esta pré-reserva já foi cancelada',
+      error: 'Conflict',
+    },
+  })
+  cancel(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<BookingResponse> {
+    return this.bookings.cancel(user.id, id);
   }
 }
