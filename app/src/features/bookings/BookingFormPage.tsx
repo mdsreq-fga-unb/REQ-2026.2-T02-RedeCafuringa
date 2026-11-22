@@ -8,7 +8,11 @@ import {
     BookingSelectField,
     BookingTextAreaField,
 } from "./BookingFields";
-import { clearBookingDraft } from "./bookingDraft";
+import {
+    clearBookingDraft,
+    loadBookingDraft,
+    saveBookingDraft,
+} from "./bookingDraft";
 import { describeBookingError } from "./bookingErrors";
 import {
     HOUR_OPTIONS,
@@ -65,7 +69,11 @@ export function BookingFormPage({
     onBack,
     onSent,
 }: BookingFormPageProps) {
-    const [values, setValues] = useState<BookingFormValues>(EMPTY_VALUES);
+    // O rascunho só existe depois de uma falha no envio (CA08): quem volta ao
+    // formulário, ou entra de novo após a sessão expirar, retoma de onde parou.
+    const [values, setValues] = useState<BookingFormValues>(
+        () => loadBookingDraft(experience.id) ?? EMPTY_VALUES,
+    );
     const [errors, setErrors] = useState<BookingFormErrors>({});
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
@@ -107,6 +115,7 @@ export function BookingFormPage({
                 buildBookingPayload(experience.id, values),
             );
         } catch (error) {
+            saveBookingDraft(experience.id, values);
             setSubmitError(describeBookingError(error));
             return;
         } finally {

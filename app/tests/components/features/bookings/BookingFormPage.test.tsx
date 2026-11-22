@@ -563,4 +563,83 @@ describe("BookingFormPage: falha no envio (HU44 CA08)", () => {
             "Não foi possível enviar a pré-reserva",
         );
     });
+
+    describe("rascunho local", () => {
+        const value = (label: string) =>
+            (screen.getByLabelText(label) as HTMLInputElement).value;
+
+        beforeEach(() => {
+            localStorage.setItem("cafuringa-user-id", "user-1");
+        });
+
+        it("guarda o que foi preenchido quando o envio falha", async () => {
+            const user = userEvent.setup();
+            createBookingMock.mockRejectedValue(apiError(500));
+            renderPage();
+            await fillForm(user, VALID_FILL);
+            await user.type(
+                screen.getByLabelText("Mensagem ao produtor"),
+                "Olá!",
+            );
+            await submit(user);
+
+            expect(loadBookingDraft(experience.id)).toEqual({
+                data: "2026-12-20",
+                horario: "09:00",
+                participantes: "2",
+                formaPagamento: "pix",
+                mensagem: "Olá!",
+            });
+        });
+
+        it("restaura o rascunho quando o usuário volta ao formulário", async () => {
+            const user = userEvent.setup();
+            createBookingMock.mockRejectedValue(apiError(401));
+            renderPage();
+            await fillForm(user, VALID_FILL);
+            await user.type(
+                screen.getByLabelText("Mensagem ao produtor"),
+                "Olá!",
+            );
+            await submit(user);
+            cleanup();
+
+            renderPage();
+            expect(value("Data desejada")).toBe("2026-12-20");
+            expect(value("Horário")).toBe("09:00");
+            expect(value("Participantes")).toBe("2");
+            expect(value("Forma de pagamento")).toBe("pix");
+            expect(value("Mensagem ao produtor")).toBe("Olá!");
+        });
+
+        it("não restaura o rascunho de outra experiência", async () => {
+            saveBookingDraft("64b0c0ffee0000000000e999", {
+                data: "2026-12-20",
+                horario: "09:00",
+                participantes: "2",
+                formaPagamento: "pix",
+                mensagem: "outra",
+            });
+            renderPage();
+            expect(value("Data desejada")).toBe("");
+            expect(value("Mensagem ao produtor")).toBe("");
+        });
+
+        it("não guarda rascunho quando a validação barra o envio", async () => {
+            const user = userEvent.setup();
+            renderPage();
+            await submit(user);
+            expect(loadBookingDraft(experience.id)).toBeNull();
+        });
+
+        it("não guarda nada sem usuário logado", async () => {
+            localStorage.removeItem("cafuringa-user-id");
+            const user = userEvent.setup();
+            createBookingMock.mockRejectedValue(apiError(500));
+            renderPage();
+            await fillForm(user, VALID_FILL);
+            await submit(user);
+            expect(localStorage.length).toBe(0);
+        });
+    });
 });
