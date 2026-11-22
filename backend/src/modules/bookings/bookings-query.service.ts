@@ -38,7 +38,7 @@ type BookingRow = Booking & {
 };
 
 /**
- * HU45/RF45: consulta de pré-reservas (RN20, RNF08).
+ * HU45/RF45: consulta de pré-reservas (RNF08, RNF11).
  *
  * Consumidor vê as solicitações da própria conta; produtor vê as recebidas
  * pelas suas experiências. O dono é sempre o do token e entra no filtro do

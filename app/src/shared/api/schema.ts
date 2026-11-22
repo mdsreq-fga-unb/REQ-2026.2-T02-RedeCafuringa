@@ -637,7 +637,7 @@ export interface paths {
         };
         /**
          * Consultar uma pré-reserva
-         * @description HU45/RF45 (CA04, CA05, CA07): detalhe de uma solicitação com a experiência e o outro lado. O consumidor só vê as suas e o produtor só as recebidas; qualquer outra, inexistente ou com id inválido responde 404, sem revelar se existe (RN20, RNF08, RNF11). Mostra a situação atualmente gravada.
+         * @description HU45/RF45 (CA04, CA05, CA07): detalhe de uma solicitação com a experiência e o outro lado. O consumidor só vê as suas e o produtor só as recebidas; qualquer outra, inexistente ou com id inválido responde 404, sem revelar se existe (RNF08, RNF11). Mostra a situação atualmente gravada.
          */
         get: operations["bookingsFindOne"];
         put?: never;

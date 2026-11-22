@@ -308,7 +308,7 @@ describe('HU45/RF45 — Consultar pré-reserva (e2e)', () => {
     });
   });
 
-  describe('CA05, RN20: acesso restrito por perfil e vínculo', () => {
+  describe('CA05, RNF08: acesso restrito por perfil e vínculo', () => {
     it('404 para consumidor que não fez a solicitação', async () => {
       const { booking } = await scenario();
       const stranger = await consumer('Intrusa');
