@@ -274,10 +274,6 @@
     white-space: normal;
 }
 
-.received-actions .button-orange {
-    color: var(--ink);
-}
-
 .received-actions .received-accept {
     background: #147125;
     color: white;

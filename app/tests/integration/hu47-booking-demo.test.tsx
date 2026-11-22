@@ -76,3 +76,24 @@ it.each([
         expect(resetDemoData("all")).toBe(true);
     },
 );
+
+it("abre a HU47 pelo grupo Produtora e troca para o perfil Visitante", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByText("Modo local · Explorar telas"));
+    await user.click(
+        screen.getByRole("button", { name: "Responder pré-reserva · HU47" }),
+    );
+    await screen.findByRole("heading", { name: "Pendente" });
+    expect(screen.getByText("Sessão: Produtora")).toBeTruthy();
+
+    await user.click(screen.getByText("Modo local · Explorar telas"));
+    await user.click(
+        screen.getByRole("button", { name: "Detalhe de experiência" }),
+    );
+    await screen.findByRole("heading", {
+        name: "Visita e Degustação de Queijos",
+    });
+    expect(screen.getByText("Sessão: Visitante")).toBeTruthy();
+    expect(localStorage.getItem("cafuringa-token")).toBeNull();
+});

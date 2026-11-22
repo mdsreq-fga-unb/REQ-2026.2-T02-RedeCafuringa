@@ -330,7 +330,12 @@ export function App() {
                 }
             />
             {isMockAuthEnabled && (
-                <DemoNavigation onNavigate={navigate} onSignIn={signIn} />
+                <DemoNavigation
+                    role={role}
+                    onNavigate={navigate}
+                    onSignIn={signIn}
+                    onSignOut={signOut}
+                />
             )}
             <main className="main-content">
                 {path === "/explorar" && (
