@@ -1,3 +1,4 @@
+import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { ApiHttpError, getApiClient, type ApiClient } from "@/shared/api";
 import {
     adaptBookingDetail,
@@ -5,6 +6,11 @@ import {
     type BookingDetail,
 } from "./bookingDetails";
 import { BookingSessionError } from "./bookingService";
+import {
+    getMockBookingDetail,
+    listMockBookingDetails,
+    type MockViewer,
+} from "./mockBookingQueries";
 import { BOOKING_STATUSES, PAYMENT_METHODS } from "./bookingTypes";
 
 const ACCESS_TOKEN_KEY = "cafuringa-token";
@@ -49,6 +55,17 @@ function authorization(): Record<string, string> {
     return { Authorization: `Bearer ${token}` };
 }
 
+/** Demonstração: quem está vendo vem da sessão local. */
+function mockViewer(): MockViewer {
+    authorization();
+    const userId = localStorage.getItem("cafuringa-user-id");
+    if (!userId) throw new BookingSessionError();
+    return { role: localStorage.getItem("cafuringa-role"), userId };
+}
+
+/** Fotos da demonstração já são endereços completos. */
+const keepPhoto = (path: string) => path;
+
 /** 401 vira sessão ausente, para a tela levar ao login. */
 function sessionAware(error: unknown): never {
     if (error instanceof ApiHttpError && error.status === 401)
@@ -60,6 +77,17 @@ async function listBookings(
     scope: "mine" | "received",
     { client = getApiClient(), signal }: QueryOptions,
 ): Promise<BookingPage> {
+    if (isMockAuthEnabled) {
+        const viewer = mockViewer();
+        const items = await listMockBookingDetails({
+            ...viewer,
+            role: scope === "received" ? "producer" : "consumer",
+        });
+        return {
+            items: items.map((item) => adaptBookingDetail(item, keepPhoto)),
+            total: items.length,
+        };
+    }
     const headers = authorization();
     const data = await client
         .get<unknown>(`/bookings/${scope}?limite=${PAGE_LIMIT}`, {
@@ -104,6 +132,10 @@ export async function getBooking(
     id: string,
     { client = getApiClient(), signal }: QueryOptions = {},
 ): Promise<BookingDetail | null> {
+    if (isMockAuthEnabled) {
+        const found = await getMockBookingDetail(id, mockViewer());
+        return found && adaptBookingDetail(found, keepPhoto);
+    }
     const headers = authorization();
     let data: unknown;
     try {
