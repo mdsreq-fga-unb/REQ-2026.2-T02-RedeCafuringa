@@ -229,6 +229,32 @@ describe('HU47/RF47 — Responder pré-reserva de experiência (e2e)', () => {
     });
   });
 
+  describe('RN21: impedir aceite de solicitação com horário passado', () => {
+    it('mantém a solicitação pendente e ainda permite recusá-la', async () => {
+      const producer = await producerAccount('Sítio Boa Vista');
+      const experienceId = await seedExperience(producer.id);
+      const consumer = await consumerAccount();
+      const booking = await requestBooking(consumer.auth, experienceId);
+      await bookings()
+        .updateOne({ _id: booking.id }, { $set: { data: '2000-01-01' } })
+        .exec();
+
+      const response = await respond(producer.auth, booking.id, {
+        status: BookingStatus.ACEITA,
+      }).expect(400);
+
+      expect(response.body.message).toMatch(/passado|aceitar/i);
+      expect(
+        (await bookings().findById(booking.id).lean().exec())?.status,
+      ).toBe(BookingStatus.PENDENTE);
+
+      const refusal = await respond(producer.auth, booking.id, {
+        status: BookingStatus.RECUSADA,
+      }).expect(200);
+      expect(refusal.body.status).toBe(BookingStatus.RECUSADA);
+    });
+  });
+
   describe('CA05 e RNF08: restringir a operação ao produtor responsável', () => {
     it('impede outro produtor de consultar ou responder e mantém a solicitação pendente', async () => {
       const owner = await producerAccount('Sítio Boa Vista');

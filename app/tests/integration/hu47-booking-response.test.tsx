@@ -345,6 +345,35 @@ describe("HU47 — responder pré-reserva de experiência", () => {
         ).toBeNull();
     });
 
+    it("RN21: informa que não pode aceitar uma solicitação com horário passado", async () => {
+        const { answer } = mockApi();
+        answer.mockReturnValue(
+            json(
+                {
+                    message:
+                        "Não é possível aceitar uma pré-reserva com data e horário passados.",
+                },
+                400,
+            ),
+        );
+        const { user } = start();
+        await openPending(user);
+        await user.click(
+            screen.getByRole("button", { name: "Aceitar pré-reserva" }),
+        );
+
+        expect((await screen.findByRole("alert")).textContent).toMatch(
+            /não é possível aceitar.*passados/i,
+        );
+        expect(screen.getByRole("heading", { name: "Pendente" })).toBeTruthy();
+        expect(
+            screen.getByRole("button", { name: "Recusar solicitação" }),
+        ).toBeTruthy();
+        expect(
+            screen.queryByRole("heading", { name: "Resposta enviada" }),
+        ).toBeNull();
+    });
+
     it("CA08 e RNF03: falha de registro preserva a pendência e permite tentar novamente", async () => {
         const { answer } = mockApi();
         answer.mockReturnValueOnce(json({ message: "Falha interna" }, 500));
