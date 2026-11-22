@@ -1,0 +1,135 @@
+# HU46 — Cancelar pré-reserva: transcrição contra a API real
+Gerada em 2026-11-22T03:07:23.162Z · API 0.14.0 (node dist/main.js) · MongoDB 8.2.6 real (mongod) · ambiente local descartável
+Pré-reservas criadas pelo POST /bookings da HU44 (API real). As situações aceita e recusada foram gravadas direto no banco, porque a resposta do produtor (HU47) ainda não existe.
+
+### CA02/CA03/CA06 — consumidor confirma o cancelamento da própria solicitação pendente
+$ PATCH /api/v1/bookings/6b025c6ba320cae861762959/cancel   (Authorization: Bearer <token>)
+HTTP 200
+{
+  "id": "6b025c6ba320cae861762959",
+  "experienciaId": "6b025c6b72989ec7db119cf7",
+  "data": "2026-12-22",
+  "horario": "09:00",
+  "participantes": 4,
+  "formaPagamento": "pix",
+  "mensagem": "Vamos com duas crianças.",
+  "status": "cancelada",
+  "criadoEm": "2026-11-22T03:07:23.123Z"
+}
+-> status cancelada na própria resposta
+
+Banco depois: {"status":"cancelada","canceladaEm":"2026-11-22T03:07:23.167Z"}
+
+### RN21 — cancelar de novo a mesma solicitação
+$ PATCH /api/v1/bookings/6b025c6ba320cae861762959/cancel   (Authorization: Bearer <token>)
+HTTP 409
+{
+  "message": "Esta pré-reserva já foi cancelada",
+  "error": "Conflict",
+  "statusCode": 409
+}
+-> nada muda: 409 e o instante do primeiro cancelamento é preservado
+
+Banco depois: {"status":"cancelada","canceladaEm":"2026-11-22T03:07:23.167Z"}
+
+### RN20 — solicitação já aceita pelo produtor
+$ PATCH /api/v1/bookings/6b025c6ba320cae86176295a/cancel   (Authorization: Bearer <token>)
+HTTP 409
+{
+  "message": "Esta pré-reserva já foi aceita: apenas o produtor responsável pode cancelá-la",
+  "error": "Conflict",
+  "statusCode": 409
+}
+-> só o produtor cancela uma aceita
+
+Banco depois: {"status":"aceita","canceladaEm":null}
+
+### RN21 — solicitação recusada
+$ PATCH /api/v1/bookings/6b025c6ba320cae86176295b/cancel   (Authorization: Bearer <token>)
+HTTP 409
+{
+  "message": "Esta pré-reserva foi recusada pelo produtor e não pode ser cancelada",
+  "error": "Conflict",
+  "statusCode": 409
+}
+
+Banco depois: {"status":"recusada","canceladaEm":null}
+
+### CA05 — outro consumidor tenta cancelar a solicitação alheia
+$ PATCH /api/v1/bookings/6b025c6ba320cae86176295c/cancel   (Authorization: Bearer <token>)
+HTTP 404
+{
+  "message": "Pré-reserva não encontrada",
+  "error": "Not Found",
+  "statusCode": 404
+}
+-> responde como se não existisse
+
+### CA05 — o mesmo consumidor tenta um id que não existe (mesma resposta: não vaza existência)
+$ PATCH /api/v1/bookings/6b025c6b72989ec7db119cf8/cancel   (Authorization: Bearer <token>)
+HTTP 404
+{
+  "message": "Pré-reserva não encontrada",
+  "error": "Not Found",
+  "statusCode": 404
+}
+
+### CA05 — id que não é um ObjectId
+$ PATCH /api/v1/bookings/abc/cancel   (Authorization: Bearer <token>)
+HTTP 404
+{
+  "message": "Pré-reserva não encontrada",
+  "error": "Not Found",
+  "statusCode": 404
+}
+
+### CA05 — outro consumidor tenta cancelar uma solicitação aceita (não descobre a situação)
+$ PATCH /api/v1/bookings/6b025c6ba320cae86176295a/cancel   (Authorization: Bearer <token>)
+HTTP 404
+{
+  "message": "Pré-reserva não encontrada",
+  "error": "Not Found",
+  "statusCode": 404
+}
+
+Banco depois (b4 intacta): {"status":"pendente","canceladaEm":null}
+
+### RNF08 — produtor tenta cancelar
+$ PATCH /api/v1/bookings/6b025c6ba320cae86176295c/cancel   (Authorization: Bearer <token>)
+HTTP 403
+{
+  "message": "Seu perfil não tem permissão para acessar este recurso",
+  "error": "Forbidden",
+  "statusCode": 403
+}
+
+### RNF08 — sem token
+$ PATCH /api/v1/bookings/6b025c6ba320cae86176295c/cancel   (sem token)
+HTTP 401
+{
+  "message": "Autenticação necessária",
+  "error": "Unauthorized",
+  "statusCode": 401
+}
+
+### RNF08 — token inválido
+$ PATCH /api/v1/bookings/6b025c6ba320cae86176295c/cancel   (Authorization: Bearer <token>)
+HTTP 401
+{
+  "message": "Token inválido ou expirado",
+  "error": "Unauthorized",
+  "statusCode": 401
+}
+
+Banco depois (b4 intacta): {"status":"pendente","canceladaEm":null}
+
+### Atomicidade — 5 cancelamentos simultâneos da mesma solicitação
+HTTP: 200, 409, 409, 409, 409
+Banco depois: {"status":"cancelada","canceladaEm":"2026-11-22T03:07:23.263Z"}
+-> 1 resposta(s) 200 e 4 resposta(s) 409 de 5 requisições simultâneas
+
+### Estado final das quatro solicitações no banco
+b1 6b025c6ba320cae861762959 {"status":"cancelada","canceladaEm":"2026-11-22T03:07:23.167Z"}
+b2 6b025c6ba320cae86176295a {"status":"aceita","canceladaEm":null}
+b3 6b025c6ba320cae86176295b {"status":"recusada","canceladaEm":null}
+b4 6b025c6ba320cae86176295c {"status":"cancelada","canceladaEm":"2026-11-22T03:07:23.263Z"}

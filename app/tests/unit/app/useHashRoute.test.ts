@@ -73,3 +73,16 @@ describe("useHashRoute: consulta de pré-reservas (HU45)", () => {
         expect(routeFor("/reservas/b1/extra")).toBe("/explorar");
     });
 });
+
+describe("useHashRoute: cancelamento de pré-reserva (HU46)", () => {
+    it("aceita a rota /reservas/b1/cancelar", () => {
+        expect(routeFor("/reservas/b1/cancelar")).toBe("/reservas/b1/cancelar");
+    });
+
+    it.each(["/reservas/b1/outra", "/reservas/b1/cancelar/extra"])(
+        "volta para /explorar na rota inválida %s",
+        (route) => {
+            expect(routeFor(route)).toBe("/explorar");
+        },
+    );
+});

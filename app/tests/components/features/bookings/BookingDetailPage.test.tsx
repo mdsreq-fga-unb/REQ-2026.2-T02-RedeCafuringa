@@ -302,3 +302,49 @@ describe("HU45 — detalhe da pré-reserva", () => {
         });
     });
 });
+
+describe("HU46 — opção de cancelar no detalhe (CA01, CA02)", () => {
+    const cancelButton = () =>
+        screen.queryByRole("button", { name: "Cancelar solicitação" });
+
+    it("consumidora com pré-reserva pendente vê o botão, que leva à confirmação", async () => {
+        const user = userEvent.setup();
+        const { onNavigate } = renderPage({
+            id: "b 1",
+            load: vi.fn().mockResolvedValue(booking({ id: "b 1" })),
+        });
+
+        await screen.findByRole("heading", { name: "Aguardando resposta" });
+        await user.click(cancelButton() as HTMLElement);
+
+        expect(onNavigate).toHaveBeenCalledWith("/reservas/b%201/cancelar");
+    });
+
+    it.each<BookingStatus>(["aceita", "recusada", "cancelada"])(
+        "RN20: pré-reserva %s não oferece cancelamento à consumidora",
+        async (status) => {
+            renderPage({
+                load: vi.fn().mockResolvedValue(booking({ status })),
+            });
+
+            await screen.findByRole("heading", { level: 1 });
+            expect(cancelButton()).toBeNull();
+        },
+    );
+
+    it("a produtora nunca vê o botão, nem na pendente", async () => {
+        renderPage({ role: "producer" });
+
+        await screen.findByRole("heading", { name: "Aguardando resposta" });
+        expect(cancelButton()).toBeNull();
+    });
+
+    it("pré-reserva não encontrada não oferece cancelamento", async () => {
+        renderPage({ load: vi.fn().mockResolvedValue(null) });
+
+        await screen.findByRole("heading", {
+            name: "Pré-reserva não encontrada",
+        });
+        expect(cancelButton()).toBeNull();
+    });
+});
