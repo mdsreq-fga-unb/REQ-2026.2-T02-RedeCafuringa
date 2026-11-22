@@ -122,17 +122,8 @@ describe('HU46/RF46 — Cancelar pré-reserva (e2e)', () => {
     });
   });
 
-  describe('CA04: desistir antes de confirmar mantém a solicitação', () => {
-    it('sem chamar o cancelamento, a solicitação segue pendente', async () => {
-      const { id: consumerId } = await consumerSession();
-      const id = await seedBooking(consumerId);
-
-      // A confirmação é da interface: "Manter solicitação" não chama a API.
-      const after = await stored(id);
-      expect(after?.status).toBe(BookingStatus.PENDENTE);
-      expect(after?.canceladaEm).toBeUndefined();
-    });
-  });
+  // CA02 e CA04 (confirmar ou desistir) são da interface: "Manter solicitação"
+  // simplesmente não chama este endpoint, então não há o que testar na API.
 
   describe('RN20, RN21: só pendente cancela; o resto responde 409 e nada muda', () => {
     it.each([
