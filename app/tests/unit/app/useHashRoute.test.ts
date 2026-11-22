@@ -59,3 +59,17 @@ describe("useHashRoute — busca de ofertas (HU36)", () => {
         expect(result.current.route).toBe("/buscar?q=caf%C3%A9");
     });
 });
+
+describe("useHashRoute: consulta de pré-reservas (HU45)", () => {
+    it.each([
+        "/reservas",
+        "/reservas/b1",
+        "/reservas/64b0c0ffee0000000000b001",
+    ])("aceita a rota %s", (route) => {
+        expect(routeFor(route)).toBe(route);
+    });
+
+    it("volta para /explorar na rota inválida /reservas/b1/extra", () => {
+        expect(routeFor("/reservas/b1/extra")).toBe("/explorar");
+    });
+});
