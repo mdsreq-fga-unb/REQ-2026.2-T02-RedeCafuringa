@@ -815,6 +815,8 @@ h2 {
 
 /* Navegação do produtor conforme o protótipo HU15. */
 .bottom-nav-producer {
+    /* HU45: a produtora tem também o item Pré-reservas. */
+    grid-template-columns: repeat(5, 1fr);
     height: calc(73px + env(safe-area-inset-bottom));
     background: #fff;
 }

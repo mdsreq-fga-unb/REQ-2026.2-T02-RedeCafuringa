@@ -58,6 +58,8 @@ import type { RegisteredProduct } from "@/features/offers/productService";
 import { apiResourceUrl } from "@/shared/api";
 import { BookingRoutePage } from "@/features/bookings/BookingRoutePage";
 import { BookingSentPage } from "@/features/bookings/BookingSentPage";
+import { BookingsPage } from "@/features/bookings/BookingsPage";
+import { BookingDetailPage } from "@/features/bookings/BookingDetailPage";
 import {
     BOOKING_SENT_ROUTE,
     BOOKINGS_LIST_ROUTE,
@@ -215,9 +217,14 @@ export function App() {
             navigate(bookingLoginRoute(bookingExperienceId));
         if (bookingAccessState === "blocked") navigate("/conta");
     }, [bookingExperienceId, bookingAccessState, navigate]);
+    // HU45: lista (/reservas) e detalhe (/reservas/<id>) das pré-reservas.
+    const bookingsRoute = path === "/reservas" || path.startsWith("/reservas/");
+    const bookingDetailId = path.startsWith("/reservas/")
+        ? decodeRouteSegment(path.split("/")[2])
+        : undefined;
     const needsProfileSelection =
         role === null &&
-        ["/conta", "/notificacoes", "/reservas"].includes(path);
+        (["/conta", "/notificacoes"].includes(path) || bookingsRoute);
     const screenPath = needsProfileSelection ? "/escolher-perfil" : path;
     const showProfileSelection = screenPath === "/escolher-perfil";
     const showLogin =
@@ -522,6 +529,31 @@ export function App() {
                         focusContact={query.get("contato") === "1"}
                     />
                 )}
+                {bookingsRoute &&
+                    !needsProfileSelection &&
+                    (role === "consumer" || role === "producer" ? (
+                        bookingDetailId ? (
+                            <BookingDetailPage
+                                key={path}
+                                id={bookingDetailId}
+                                role={role}
+                                onNavigate={navigate}
+                            />
+                        ) : (
+                            <BookingsPage
+                                key={role}
+                                role={role}
+                                onNavigate={navigate}
+                            />
+                        )
+                    ) : (
+                        <section className="booking-page">
+                            <h1>Pré-reservas</h1>
+                            <p>
+                                O perfil de administradora não tem pré-reservas.
+                            </p>
+                        </section>
+                    ))}
                 {path.startsWith("/produtor/") && (
                     <PublicTrajectoryPage
                         key={path}
@@ -597,3 +629,12 @@ export function App() {
 }
 
 export default App;
+
+/** Segmento da rota sem escape; um "%" solto não derruba a tela. */
+function decodeRouteSegment(segment: string): string {
+    try {
+        return decodeURIComponent(segment);
+    } catch {
+        return segment;
+    }
+}

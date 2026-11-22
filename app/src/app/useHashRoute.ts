@@ -38,6 +38,7 @@ const getInitialRoute = () => {
     ].includes(requested.split("?")[0]) ||
         requested.startsWith("/oferta/") ||
         /^\/pre-reserva\/[^/?]+$/.test(requested.split("?")[0]) ||
+        /^\/reservas\/[^/?]+$/.test(requested.split("?")[0]) ||
         /^\/produtor\/[^/?]+$/.test(requested.split("?")[0]) ||
         /^\/admin\/usuarios(?:\/[^/?]+)?$/.test(requested.split("?")[0])
         ? requested
