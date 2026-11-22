@@ -131,3 +131,7 @@ export function receivedBookingError(error: unknown) {
         ? error.status
         : undefined;
 }
+
+export function receivedBookingErrorMessage(error: unknown) {
+    return error instanceof ApiHttpError ? error.message : undefined;
+}

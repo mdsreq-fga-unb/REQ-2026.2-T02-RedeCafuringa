@@ -32,6 +32,8 @@ import { Booking } from './schemas/booking.schema.js';
 
 const EXPERIENCE_UNAVAILABLE = 'Experiência indisponível para pré-reserva';
 const IN_PAST = 'A data e o horário da pré-reserva não podem estar no passado';
+const PAST_BOOKING_CANNOT_BE_ACCEPTED =
+  'Não é possível aceitar uma pré-reserva com data e horário passados.';
 
 type BookingDoc = Booking & { _id: Types.ObjectId };
 type BookableExperience = { _id: Types.ObjectId; produtor: Types.ObjectId };
@@ -125,6 +127,28 @@ export class BookingsService implements BeforeApplicationShutdown {
   ): Promise<ReceivedBookingResponse> {
     if (!isObjectIdOrHexString(id)) {
       throw new NotFoundException('Pré-reserva não encontrada.');
+    }
+
+    if (dto.status === BookingStatus.ACEITA) {
+      const current = await this.bookings
+        .findById(id)
+        .select('produtor status data horario')
+        .lean()
+        .exec();
+      if (!current) throw new NotFoundException('Pré-reserva não encontrada.');
+      if (current.produtor.toString() !== producerId) {
+        throw new ForbiddenException(
+          'Você não tem permissão para responder esta pré-reserva.',
+        );
+      }
+      if (current.status !== BookingStatus.PENDENTE) {
+        throw new ConflictException(
+          `Pré-reserva indisponível para resposta. Situação atual: ${current.status}.`,
+        );
+      }
+      if (isBookingInPast(current.data, current.horario)) {
+        throw new BadRequestException(PAST_BOOKING_CANNOT_BE_ACCEPTED);
+      }
     }
 
     const updated = await this.bookings

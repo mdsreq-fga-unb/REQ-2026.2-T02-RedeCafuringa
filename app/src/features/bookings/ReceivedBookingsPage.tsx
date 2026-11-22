@@ -6,6 +6,7 @@ import {
     getReceivedBooking,
     listReceivedBookings,
     receivedBookingError,
+    receivedBookingErrorMessage,
     respondToBooking,
     type BookingDecision,
     type ReceivedBooking,
@@ -284,6 +285,11 @@ export function ReceivedBookingPage({
                         : status === 401
                           ? "Sua sessão expirou. Entre novamente para responder."
                           : "Solicitação indisponível.",
+                );
+            } else if (status === 400) {
+                setError(
+                    receivedBookingErrorMessage(failure) ??
+                        "A resposta enviada é inválida.",
                 );
             } else {
                 setError(
