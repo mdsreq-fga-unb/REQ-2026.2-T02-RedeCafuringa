@@ -78,6 +78,11 @@ export const OPENAPI_TAGS: ReadonlyArray<{
       'Pré-reserva de experiências pelo consumidor, sujeita à resposta do produtor (HU44, RN19)',
   },
   {
+    name: 'search',
+    description:
+      'Busca pública de ofertas: produtores, produtos e experiências, agrupados por tipo (HU36, RN15)',
+  },
+  {
     name: 'health',
     description:
       'Saúde do serviço, para o Docker, o deploy e monitores externos',

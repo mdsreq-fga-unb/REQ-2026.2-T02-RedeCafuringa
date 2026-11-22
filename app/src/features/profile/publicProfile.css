@@ -117,10 +117,20 @@
     border-radius: 15px;
     background: #fff;
 }
-.explore-search > span:first-child {
-    font-size: 30px;
+.explore-search-submit {
+    flex: none;
+    min-width: 32px;
+    min-height: 32px;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: var(--orange-text);
+    font-size: 30px;
     line-height: 1;
+    cursor: pointer;
+}
+.explore-search-error {
+    margin: -14px 3px 18px;
 }
 .explore-search input {
     min-width: 0;

@@ -23,6 +23,7 @@ import { HealthModule } from './modules/health/health.module.js';
 import { MetricsModule } from './modules/metrics/metrics.module.js';
 import { ProducerProfileModule } from './modules/producer-profile/producer-profile.module.js';
 import { ProductsModule } from './modules/products/products.module.js';
+import { SearchModule } from './modules/search/search.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 
 @Module({
@@ -151,6 +152,7 @@ import { UsersModule } from './modules/users/users.module.js';
     ProductsModule,
     ExperiencesModule,
     BookingsModule,
+    SearchModule,
   ],
   // A ordem importa: rate limit antes da autenticação (força bruta de token
   // também é limitada) e autenticação antes do papel.

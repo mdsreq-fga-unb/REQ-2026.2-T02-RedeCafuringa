@@ -588,6 +588,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Buscar ofertas
+         * @description HU36 (CA01-CA09), RN15: busca pública, sem login, por produtores, produtos e experiências da região. Procura o termo, sem diferenciar acentos e maiúsculas, no nome do produto ou da experiência, no nome da iniciativa e, nos produtores, também na trajetória e nas atividades. Só aparecem ofertas disponíveis de produtores ativos e perfis publicados. O resultado vem agrupado por tipo, cada grupo com `itens` (até `limite`) e `total`; grupo vazio significa que nada foi encontrado naquele tipo. Termo ausente, curto, longo ou só com símbolos devolve 400 com a orientação de correção. Eventos ficam fora do MVP.
+         */
+        get: operations["searchFind"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1317,6 +1337,43 @@ export interface components {
              * @example 2026-11-21T12:00:00.000Z
              */
             criadoEm: string;
+        };
+        SearchProducersResult: {
+            /** @description Produtores com perfil publicado que combinam com o termo (iniciativa, trajetória ou atividades), até o limite pedido */
+            itens: components["schemas"]["PublicTrajectoryResponse"][];
+            /**
+             * @description Total de produtores que combinam, mesmo além do limite
+             * @example 3
+             */
+            total: number;
+        };
+        SearchProductsResult: {
+            /** @description Produtos disponíveis que combinam com o termo (nome ou iniciativa), do mais novo ao mais antigo */
+            itens: components["schemas"]["ProductResponse"][];
+            /**
+             * @description Total de produtos que combinam, mesmo além do limite
+             * @example 8
+             */
+            total: number;
+        };
+        SearchExperiencesResult: {
+            /** @description Experiências disponíveis que combinam com o termo (nome ou iniciativa), da mais nova à mais antiga */
+            itens: components["schemas"]["ExperienceResponse"][];
+            /**
+             * @description Total de experiências que combinam, mesmo além do limite
+             * @example 2
+             */
+            total: number;
+        };
+        SearchResponse: {
+            /**
+             * @description Termo pesquisado, sem espaços sobrando
+             * @example cafe
+             */
+            termo: string;
+            produtores: components["schemas"]["SearchProducersResult"];
+            produtos: components["schemas"]["SearchProductsResult"];
+            experiencias: components["schemas"]["SearchExperiencesResult"];
         };
     };
     responses: never;
@@ -3071,6 +3128,8 @@ export interface operations {
             query?: {
                 /** @description Só as experiências deste produtor (catálogo do perfil) */
                 produtor?: string;
+                /** @description Trecho do nome da experiência ou do nome da iniciativa do produtor, sem diferenciar acentos e maiúsculas (HU36, RN15) */
+                busca?: string;
                 /** @description Página desejada, a partir de 1 */
                 pagina?: number;
                 /** @description Quantidade de experiências por página */
@@ -3344,6 +3403,40 @@ export interface operations {
             };
             /** @description Experiência inexistente, indisponível ou de produtor desativado (CA07) */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    searchFind: {
+        parameters: {
+            query?: {
+                /** @description Termo da busca: de 2 a 100 caracteres, com ao menos uma letra ou número. Procura sem diferenciar acentos e maiúsculas. Obrigatório: sem ele a resposta é 400 com a orientação de correção. */
+                busca?: string;
+                /** @description Quantidade máxima de resultados em cada tipo de oferta */
+                limite?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resultados agrupados por tipo de oferta (podem estar vazios) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResponse"];
+                };
+            };
+            /** @description Termo de busca inválido ou limite fora do intervalo */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

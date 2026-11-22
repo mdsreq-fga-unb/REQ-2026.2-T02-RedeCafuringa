@@ -50,3 +50,12 @@ describe("useHashRoute", () => {
         expect(result.current.route).toBe("/explorar");
     });
 });
+
+describe("useHashRoute — busca de ofertas (HU36)", () => {
+    it("reconhece a rota de busca e preserva o termo", () => {
+        window.location.hash = "#/buscar?q=caf%C3%A9";
+        const { result } = renderHook(() => useHashRoute());
+
+        expect(result.current.route).toBe("/buscar?q=caf%C3%A9");
+    });
+});

@@ -6,6 +6,7 @@ const getInitialRoute = () => {
     return [
         "/perfil",
         "/explorar",
+        "/buscar",
         "/admin/acesso",
         "/admin/entrar",
         "/cadastro/administrador",

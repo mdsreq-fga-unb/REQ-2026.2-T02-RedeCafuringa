@@ -1,6 +1,6 @@
 import type { Product } from "./productTypes";
 
-function normalize(text: string): string {
+export function normalizeSearchText(text: string): string {
     return text
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
@@ -9,11 +9,11 @@ function normalize(text: string): string {
 }
 
 export function filterProducts(products: Product[], query: string): Product[] {
-    const term = normalize(query);
+    const term = normalizeSearchText(query);
     if (!term) return products;
     return products.filter(
         (product) =>
-            normalize(product.name).includes(term) ||
-            normalize(product.producerName).includes(term),
+            normalizeSearchText(product.name).includes(term) ||
+            normalizeSearchText(product.producerName).includes(term),
     );
 }

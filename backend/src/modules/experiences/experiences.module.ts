@@ -20,5 +20,6 @@ import { Experience, ExperienceSchema } from './schemas/experience.schema.js';
   ],
   controllers: [ExperiencesController],
   providers: [ExperiencesService],
+  exports: [ExperiencesService],
 })
 export class ExperiencesModule {}
