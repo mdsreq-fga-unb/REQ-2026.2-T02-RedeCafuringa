@@ -98,13 +98,11 @@ describe("HU45 — detalhe da pré-reserva", () => {
 
         it("consumidora: mostra a mensagem como sua e a responsável pela experiência", async () => {
             renderPage({
-                load: vi
-                    .fn()
-                    .mockResolvedValue(
-                        booking({
-                            counterpart: { id: "p1", name: "Sítio Raízes" },
-                        }),
-                    ),
+                load: vi.fn().mockResolvedValue(
+                    booking({
+                        counterpart: { id: "p1", name: "Sítio Raízes" },
+                    }),
+                ),
             });
 
             expect(

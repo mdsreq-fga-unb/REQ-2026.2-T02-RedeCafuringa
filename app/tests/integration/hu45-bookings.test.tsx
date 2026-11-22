@@ -9,8 +9,17 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "@/app/App";
 import { json, seedSession } from "../fixtures/hu12";
+import { renderAdminApp } from "../fixtures/renderAdminApp";
 
 vi.mock("@/features/auth/authMode", () => ({ isMockAuthEnabled: false }));
+// Sessão de administradora só existe depois do login (não é lida do navegador).
+vi.mock("@/features/auth/authService", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("@/features/auth/authService")>()),
+    login: async () => ({
+        token: "admin-session-token",
+        user: { id: "a1", name: "Administradora", role: "admin" },
+    }),
+}));
 
 const detail = (overrides: Record<string, unknown> = {}) => ({
     id: "b1",
@@ -182,9 +191,7 @@ describe("HU45 — consultar pré-reservas no app", () => {
 
     it("administradora recebe um aviso e não consulta a API", async () => {
         const fetchMock = api();
-        seedSession("admin");
-        window.location.hash = "#/reservas";
-        render(<App />);
+        await renderAdminApp("#/reservas");
 
         expect(
             await screen.findByText(
