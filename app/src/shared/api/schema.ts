@@ -568,6 +568,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/bookings/received": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar pré-reservas recebidas
+         * @description HU47/CA01: lista as solicitações vinculadas às experiências do produtor autenticado, sem expor dados privados dos envolvidos.
+         */
+        get: operations["bookingsListReceived"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/received/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar detalhes de pré-reserva recebida
+         * @description HU47/CA02 e CA05: apresenta os dados necessários à análise somente ao produtor responsável.
+         */
+        get: operations["bookingsGetReceived"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/received/{id}/response": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Responder pré-reserva recebida
+         * @description HU47/CA03-CA07: registra aceite ou recusa somente para uma solicitação pendente pertencente ao produtor autenticado.
+         */
+        patch: operations["bookingsRespond"];
+        trace?: never;
+    };
     "/api/v1/bookings": {
         parameters: {
             query?: never;
@@ -1263,6 +1323,76 @@ export interface components {
              * @example 20
              */
             limite: number;
+        };
+        ReceivedBookingResponse: {
+            /** @example 64b0c0ffee0000000000b001 */
+            id: string;
+            /**
+             * @description Experiência solicitada
+             * @example 64b0c0ffee0000000000e001
+             */
+            experienciaId: string;
+            /**
+             * Format: date
+             * @example 2026-12-10
+             */
+            data: string;
+            /** @example 09:00 */
+            horario: string;
+            /** @example 4 */
+            participantes: number;
+            /**
+             * @example pix
+             * @enum {string}
+             */
+            formaPagamento: "pix" | "dinheiro" | "cartao_credito" | "cartao_debito";
+            /**
+             * @description Ausente quando o solicitante não deixou recado
+             * @example Vamos com duas crianças.
+             */
+            mensagem?: string;
+            /**
+             * @description Situação da solicitação. Nasce pendente, aguardando a resposta do produtor (RN19, CA06).
+             * @example pendente
+             * @enum {string}
+             */
+            status: "pendente" | "aceita" | "recusada" | "cancelada";
+            /**
+             * @description Data do envio
+             * @example 2026-11-21T12:00:00.000Z
+             */
+            criadoEm: string;
+            /**
+             * @description Código curto para identificar a solicitação
+             * @example CAF-4A12BC
+             */
+            codigo: string;
+            /** @example Visita e Degustação de Queijos */
+            experienciaNome: string;
+            /** @example Ana Oliveira */
+            consumidorNome: string;
+            /**
+             * @description Valor total em reais, calculado a partir da oferta e pessoas
+             * @example 182
+             */
+            valorTotal: number;
+            /**
+             * @description Mensagem enviada pelo produtor ao responder
+             * @example Podemos receber vocês às 9h.
+             */
+            mensagemResposta?: string;
+        };
+        RespondBookingDto: {
+            /**
+             * @description Decisão do produtor sobre a pré-reserva
+             * @enum {string}
+             */
+            status: "aceita" | "recusada";
+            /**
+             * @description Mensagem do produtor ao responder a solicitação
+             * @example Podemos receber vocês às 9h.
+             */
+            mensagemResposta?: string;
         };
         CreateBookingDto: {
             /**
@@ -3344,6 +3474,169 @@ export interface operations {
                 };
                 content: {
                     "image/webp": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsListReceived: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReceivedBookingResponse"][];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: PRODUTOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsGetReceived: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReceivedBookingResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description A solicitação pertence a outro produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsRespond: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RespondBookingDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReceivedBookingResponse"];
+                };
+            };
+            /** @description A resposta enviada é inválida */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description A solicitação pertence a outro produtor
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description A solicitação não está mais pendente */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

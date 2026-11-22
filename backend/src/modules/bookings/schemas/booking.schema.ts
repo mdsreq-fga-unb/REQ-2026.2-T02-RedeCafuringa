@@ -45,6 +45,10 @@ export class Booking {
   @Prop()
   mensagem?: string;
 
+  /** Resposta opcional do produtor (HU47). */
+  @Prop({ trim: true })
+  mensagemResposta?: string;
+
   /** RN19: nasce pendente; só a resposta do produtor confirma. */
   @Prop({
     required: true,

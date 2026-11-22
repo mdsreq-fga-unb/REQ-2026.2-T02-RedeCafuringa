@@ -1,4 +1,5 @@
 process.env.AUTH_THROTTLE_LIMIT = '1000';
+process.env.MAIL_RETRY_DELAYS_MS = '0';
 
 import { getModelToken } from '@nestjs/mongoose';
 import { MailService } from '../src/common/mail/mail.service.js';
@@ -52,6 +53,7 @@ describe('HU47/RF47 — Responder pré-reserva de experiência (e2e)', () => {
       .expect(200);
     return {
       id: user._id.toHexString(),
+      email: dto.email,
       auth: `Bearer ${login.body.accessToken as string}`,
     };
   }
@@ -129,6 +131,11 @@ describe('HU47/RF47 — Responder pré-reserva de experiência (e2e)', () => {
       const consumer = await consumerAccount();
       const ownBooking = await requestBooking(consumer.auth, ownExperience);
       await requestBooking(consumer.auth, otherExperience);
+      const storedBooking = await bookings()
+        .findById(ownBooking.id)
+        .lean()
+        .exec();
+      expect(storedBooking?.produtor.toString()).toBe(owner.id);
 
       const list = await getReceived(owner.auth).expect(200);
 
@@ -331,11 +338,14 @@ describe('HU47/RF47 — Responder pré-reserva de experiência (e2e)', () => {
         mensagemResposta: 'Podemos receber vocês às 9h.',
       }).expect(200);
 
-      await vi.waitFor(() =>
+      await vi.waitFor(() => {
         expect(send).toHaveBeenCalledWith(
           expect.objectContaining({ to: consumer.email }),
-        ),
-      );
+        );
+        expect(send).toHaveBeenCalledWith(
+          expect.objectContaining({ to: producer.email }),
+        );
+      });
     });
 
     it('preserva a resposta registrada mesmo se o envio de e-mail falhar', async () => {

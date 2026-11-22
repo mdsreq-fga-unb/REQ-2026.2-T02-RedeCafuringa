@@ -1,6 +1,9 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import type { ConfigService } from '@nestjs/config';
 import { Types } from 'mongoose';
 import type { Model } from 'mongoose';
+import type { MailService } from '../../common/mail/mail.service.js';
+import type { MetricsRegistry } from '../metrics/metrics.registry.js';
 import type { Experience } from '../experiences/schemas/experience.schema.js';
 import { Role } from '../users/domain/role.js';
 import type { User } from '../users/schemas/user.schema.js';
@@ -54,12 +57,18 @@ function setup() {
   const users = {
     findOne: vi.fn().mockReturnValue(query({ _id: producerId })),
   };
+  const mail = { send: vi.fn().mockResolvedValue(undefined) };
+  const config = { get: vi.fn().mockReturnValue('') };
+  const metrics = { recordMailFailure: vi.fn() };
   const service = new BookingsService(
     bookings as unknown as Model<Booking>,
     experiences as unknown as Model<Experience>,
     users as unknown as Model<User>,
+    mail as unknown as MailService,
+    config as unknown as ConfigService,
+    metrics as unknown as MetricsRegistry,
   );
-  return { service, bookings, experiences, users };
+  return { service, bookings, experiences, users, mail, config, metrics };
 }
 
 describe('BookingsService (HU44/RF44)', () => {
