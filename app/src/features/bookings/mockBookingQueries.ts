@@ -47,7 +47,7 @@ function toApiDetail(
         ...(record.mensagem ? { mensagem: record.mensagem } : {}),
         status: record.status,
         criadoEm: record.criadoEm,
-        atualizadoEm: record.criadoEm,
+        atualizadoEm: record.atualizadoEm ?? record.criadoEm,
         experiencia: {
             nome: experience?.name ?? "Experiência indisponível",
             local: experience?.local ?? "",

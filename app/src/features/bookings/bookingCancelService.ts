@@ -1,7 +1,9 @@
+import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { ApiHttpError, getApiClient, type ApiClient } from "@/shared/api";
 import { adaptBookingResponse } from "./bookingAdapter";
 import { BookingSessionError, isBookingResponse } from "./bookingService";
 import type { Booking } from "./bookingTypes";
+import { cancelMockBooking } from "./mockBookingService";
 
 const ACCESS_TOKEN_KEY = "cafuringa-token";
 
@@ -30,6 +32,7 @@ export async function cancelBooking(
 ): Promise<Booking> {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     if (!token) throw new BookingSessionError();
+    if (isMockAuthEnabled) return cancelInDemo(id);
 
     let data: unknown;
     try {
@@ -57,4 +60,18 @@ export async function cancelBooking(
     if (!isBookingResponse(data) || data.status !== "cancelada")
         throw new Error("Resposta de cancelamento inválida.");
     return adaptBookingResponse(data);
+}
+
+/** Demonstração: mesmas regras, sobre as pré-reservas guardadas no navegador. */
+function cancelInDemo(id: string): Booking {
+    const userId = localStorage.getItem("cafuringa-user-id");
+    if (!userId) throw new BookingSessionError();
+    const result = cancelMockBooking(id, userId);
+    if (result.ok) return adaptBookingResponse(result.booking);
+    throw result.reason === "nao-encontrada"
+        ? new BookingCancelError(
+              "nao-encontrada",
+              "Pré-reserva não encontrada.",
+          )
+        : new BookingCancelError("nao-cancelavel", result.message);
 }
