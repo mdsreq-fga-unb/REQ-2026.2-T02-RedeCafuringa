@@ -588,6 +588,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/bookings/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar as minhas pré-reservas (consumidor)
+         * @description HU45/RF45 (CA01, CA02, CA06, CA07): solicitações feitas pela conta autenticada, da mais nova à mais antiga, com a situação gravada agora (RN21). Filtro opcional por `status` e paginação por `pagina`/`limite` (padrão 1 e 20, máximo 50). Sem solicitações devolve 200 com `itens` vazio. O dono vem do token, nunca da query (RNF08). Exclusivo do perfil CONSUMIDOR.
+         */
+        get: operations["bookingsListMine"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/received": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar as pré-reservas recebidas (produtor)
+         * @description HU45/RF45 (CA01, CA03, CA06, CA07): solicitações recebidas para as experiências do produtor autenticado, da mais nova à mais antiga, com a situação gravada agora (RN21). `contraparte` é o consumidor (só id e nome, RNF11). Filtro opcional por `status` e paginação como em `GET /bookings/mine`. Sem solicitações devolve 200 com `itens` vazio. Exclusivo do perfil PRODUTOR.
+         */
+        get: operations["bookingsListReceived"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bookings/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar uma pré-reserva
+         * @description HU45/RF45 (CA04, CA05, CA07): detalhe de uma solicitação com a experiência e o outro lado. O consumidor só vê as suas e o produtor só as recebidas; qualquer outra, inexistente ou com id inválido responde 404, sem revelar se existe (RNF08, RNF11). Mostra a situação atualmente gravada.
+         */
+        get: operations["bookingsFindOne"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/bookings/{id}/cancel": {
         parameters: {
             query?: never;
@@ -1357,6 +1417,101 @@ export interface components {
              * @example 2026-11-21T12:00:00.000Z
              */
             criadoEm: string;
+        };
+        BookingExperienceResponse: {
+            /** @example Trilha guiada da nascente */
+            nome: string;
+            /** @example Sítio Boa Vista, Núcleo Rural Cafuringa */
+            local: string;
+            /**
+             * @description Reais por pessoa, até 2 casas
+             * @example 45
+             */
+            valorPorPessoa: number;
+            /**
+             * @description Se a experiência ainda está na oferta pública (RN10). A solicitação continua consultável mesmo depois que ela sai.
+             * @example true
+             */
+            disponivel: boolean;
+            /**
+             * @description Caminho da primeira foto, relativo à URL base da API. Ausente quando a experiência não está mais disponível, porque a foto pública deixa de existir.
+             * @example /experiences/64b0c0ffee0000000000e001/photos/64b0c0ffee0000000000f001?v=Q2FmdXJpbmdhRm90
+             */
+            foto?: string;
+        };
+        BookingCounterpartResponse: {
+            /** @example 64b0c0ffee0000000000a001 */
+            id: string;
+            /**
+             * @description Para o consumidor: nome da iniciativa do produtor (ou o nome dele, se não houver). Para o produtor: nome do consumidor. Nunca e-mail, telefone ou documentos (RNF11).
+             * @example Sítio Raízes
+             */
+            nome: string;
+        };
+        BookingDetailResponse: {
+            /** @example 64b0c0ffee0000000000b001 */
+            id: string;
+            /**
+             * @description Experiência solicitada
+             * @example 64b0c0ffee0000000000e001
+             */
+            experienciaId: string;
+            /**
+             * Format: date
+             * @example 2026-12-10
+             */
+            data: string;
+            /** @example 09:00 */
+            horario: string;
+            /** @example 4 */
+            participantes: number;
+            /**
+             * @example pix
+             * @enum {string}
+             */
+            formaPagamento: "pix" | "dinheiro" | "cartao_credito" | "cartao_debito";
+            /**
+             * @description Ausente quando o solicitante não deixou recado
+             * @example Vamos com duas crianças.
+             */
+            mensagem?: string;
+            /**
+             * @description Situação da solicitação. Nasce pendente, aguardando a resposta do produtor (RN19, CA06).
+             * @example pendente
+             * @enum {string}
+             */
+            status: "pendente" | "aceita" | "recusada" | "cancelada";
+            /**
+             * @description Data do envio
+             * @example 2026-11-21T12:00:00.000Z
+             */
+            criadoEm: string;
+            experiencia: components["schemas"]["BookingExperienceResponse"];
+            contraparte: components["schemas"]["BookingCounterpartResponse"];
+            /**
+             * @description Última alteração (mudança de situação, por exemplo)
+             * @example 2026-11-21T12:30:00.000Z
+             */
+            atualizadoEm: string;
+        };
+        BookingListResponse: {
+            /** @description Solicitações da página; vazio quando não há nenhuma (CA06), nunca erro. */
+            itens: components["schemas"]["BookingDetailResponse"][];
+            /**
+             * @description Total que atende aos filtros
+             * @example 12
+             */
+            total: number;
+            /**
+             * @description Página devolvida
+             * @example 1
+             */
+            pagina: number;
+            /**
+             * @description Tamanho da página
+             * @example 20
+             */
+            limite: number;
         };
         SearchProducersResult: {
             /** @description Produtores com perfil publicado que combinam com o termo (iniciativa, trajetória ou atividades), até o limite pedido */
@@ -3422,6 +3577,163 @@ export interface operations {
                 };
             };
             /** @description Experiência inexistente, indisponível ou de produtor desativado (CA07) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsListMine: {
+        parameters: {
+            query?: {
+                /** @description Só as solicitações nesta situação (RN21) */
+                status?: "pendente" | "aceita" | "recusada" | "cancelada";
+                /** @description Página desejada, a partir de 1 */
+                pagina?: number;
+                /** @description Quantidade de solicitações por página */
+                limite?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Página de solicitações (pode vir vazia, CA06) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingListResponse"];
+                };
+            };
+            /** @description `status` fora do ciclo de vida, `pagina`/`limite` inválidos ou filtro desconhecido (mensagens em `message`) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: CONSUMIDOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsListReceived: {
+        parameters: {
+            query?: {
+                /** @description Só as solicitações nesta situação (RN21) */
+                status?: "pendente" | "aceita" | "recusada" | "cancelada";
+                /** @description Página desejada, a partir de 1 */
+                pagina?: number;
+                /** @description Quantidade de solicitações por página */
+                limite?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Página de solicitações recebidas (pode vir vazia, CA06) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingListResponse"];
+                };
+            };
+            /** @description `status` fora do ciclo de vida, `pagina`/`limite` inválidos ou filtro desconhecido (mensagens em `message`) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: PRODUTOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsFindOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Id da pré-reserva */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingDetailResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: CONSUMIDOR, PRODUTOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Solicitação inexistente, de outra conta ou de experiência de outro produtor, ou id inválido (CA05) */
             404: {
                 headers: {
                     [name: string]: unknown;

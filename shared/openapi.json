@@ -2945,6 +2945,275 @@
         ]
       }
     },
+    "/api/v1/bookings/mine": {
+      "get": {
+        "description": "HU45/RF45 (CA01, CA02, CA06, CA07): solicitações feitas pela conta autenticada, da mais nova à mais antiga, com a situação gravada agora (RN21). Filtro opcional por `status` e paginação por `pagina`/`limite` (padrão 1 e 20, máximo 50). Sem solicitações devolve 200 com `itens` vazio. O dono vem do token, nunca da query (RNF08). Exclusivo do perfil CONSUMIDOR.",
+        "operationId": "bookingsListMine",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Só as solicitações nesta situação (RN21)",
+            "schema": {
+              "example": "pendente",
+              "type": "string",
+              "enum": [
+                "pendente",
+                "aceita",
+                "recusada",
+                "cancelada"
+              ]
+            }
+          },
+          {
+            "name": "pagina",
+            "required": false,
+            "in": "query",
+            "description": "Página desejada, a partir de 1",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Quantidade de solicitações por página",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "example": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de solicitações (pode vir vazia, CA06)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`status` fora do ciclo de vida, `pagina`/`limite` inválidos ou filtro desconhecido (mensagens em `message`)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: CONSUMIDOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Consultar as minhas pré-reservas (consumidor)",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/received": {
+      "get": {
+        "description": "HU45/RF45 (CA01, CA03, CA06, CA07): solicitações recebidas para as experiências do produtor autenticado, da mais nova à mais antiga, com a situação gravada agora (RN21). `contraparte` é o consumidor (só id e nome, RNF11). Filtro opcional por `status` e paginação como em `GET /bookings/mine`. Sem solicitações devolve 200 com `itens` vazio. Exclusivo do perfil PRODUTOR.",
+        "operationId": "bookingsListReceived",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Só as solicitações nesta situação (RN21)",
+            "schema": {
+              "example": "pendente",
+              "type": "string",
+              "enum": [
+                "pendente",
+                "aceita",
+                "recusada",
+                "cancelada"
+              ]
+            }
+          },
+          {
+            "name": "pagina",
+            "required": false,
+            "in": "query",
+            "description": "Página desejada, a partir de 1",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "description": "Quantidade de solicitações por página",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "example": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de solicitações recebidas (pode vir vazia, CA06)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`status` fora do ciclo de vida, `pagina`/`limite` inválidos ou filtro desconhecido (mensagens em `message`)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Consultar as pré-reservas recebidas (produtor)",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/{id}": {
+      "get": {
+        "description": "HU45/RF45 (CA04, CA05, CA07): detalhe de uma solicitação com a experiência e o outro lado. O consumidor só vê as suas e o produtor só as recebidas; qualquer outra, inexistente ou com id inválido responde 404, sem revelar se existe (RNF08, RNF11). Mostra a situação atualmente gravada.",
+        "operationId": "bookingsFindOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Id da pré-reserva",
+            "schema": {
+              "example": "64b0c0ffee0000000000b001",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Exclusivo para: CONSUMIDOR, PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Solicitação inexistente, de outra conta ou de experiência de outro produtor, ou id inválido (CA05)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Consultar uma pré-reserva",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
     "/api/v1/bookings/{id}/cancel": {
       "patch": {
         "description": "HU46/RF46 (CA02-CA07): o consumidor cancela a própria solicitação de pré-reserva. Sem corpo: a confirmação (\"Sim, cancelar solicitação\" / \"Manter solicitação\", CA02 e CA04) é da interface, que só chama este endpoint quando o usuário confirma. Só solicitações pendentes podem ser canceladas pelo solicitante (RN20); a situação passa a `cancelada` e nunca volta a `pendente` (RN21). A troca é atômica: cancelar de novo, ou cancelar depois de o produtor responder, devolve 409 e não altera nada. Solicitação de outro usuário responde 404, como se não existisse (CA05, RNF11). Exclusivo do perfil CONSUMIDOR (RNF08).",
@@ -4374,6 +4643,173 @@
           "formaPagamento",
           "status",
           "criadoEm"
+        ]
+      },
+      "BookingExperienceResponse": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "Trilha guiada da nascente"
+          },
+          "local": {
+            "type": "string",
+            "example": "Sítio Boa Vista, Núcleo Rural Cafuringa"
+          },
+          "valorPorPessoa": {
+            "type": "number",
+            "example": 45,
+            "description": "Reais por pessoa, até 2 casas"
+          },
+          "disponivel": {
+            "type": "boolean",
+            "example": true,
+            "description": "Se a experiência ainda está na oferta pública (RN10). A solicitação continua consultável mesmo depois que ela sai."
+          },
+          "foto": {
+            "type": "string",
+            "example": "/experiences/64b0c0ffee0000000000e001/photos/64b0c0ffee0000000000f001?v=Q2FmdXJpbmdhRm90",
+            "description": "Caminho da primeira foto, relativo à URL base da API. Ausente quando a experiência não está mais disponível, porque a foto pública deixa de existir."
+          }
+        },
+        "required": [
+          "nome",
+          "local",
+          "valorPorPessoa",
+          "disponivel"
+        ]
+      },
+      "BookingCounterpartResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000a001"
+          },
+          "nome": {
+            "type": "string",
+            "example": "Sítio Raízes",
+            "description": "Para o consumidor: nome da iniciativa do produtor (ou o nome dele, se não houver). Para o produtor: nome do consumidor. Nunca e-mail, telefone ou documentos (RNF11)."
+          }
+        },
+        "required": [
+          "id",
+          "nome"
+        ]
+      },
+      "BookingDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000b001"
+          },
+          "experienciaId": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000e001",
+            "description": "Experiência solicitada"
+          },
+          "data": {
+            "type": "string",
+            "example": "2026-12-10",
+            "format": "date"
+          },
+          "horario": {
+            "type": "string",
+            "example": "09:00"
+          },
+          "participantes": {
+            "type": "number",
+            "example": 4
+          },
+          "formaPagamento": {
+            "type": "string",
+            "enum": [
+              "pix",
+              "dinheiro",
+              "cartao_credito",
+              "cartao_debito"
+            ],
+            "example": "pix"
+          },
+          "mensagem": {
+            "type": "string",
+            "example": "Vamos com duas crianças.",
+            "description": "Ausente quando o solicitante não deixou recado"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pendente",
+              "aceita",
+              "recusada",
+              "cancelada"
+            ],
+            "example": "pendente",
+            "description": "Situação da solicitação. Nasce pendente, aguardando a resposta do produtor (RN19, CA06)."
+          },
+          "criadoEm": {
+            "type": "string",
+            "example": "2026-11-21T12:00:00.000Z",
+            "description": "Data do envio"
+          },
+          "experiencia": {
+            "$ref": "#/components/schemas/BookingExperienceResponse"
+          },
+          "contraparte": {
+            "$ref": "#/components/schemas/BookingCounterpartResponse"
+          },
+          "atualizadoEm": {
+            "type": "string",
+            "example": "2026-11-21T12:30:00.000Z",
+            "description": "Última alteração (mudança de situação, por exemplo)"
+          }
+        },
+        "required": [
+          "id",
+          "experienciaId",
+          "data",
+          "horario",
+          "participantes",
+          "formaPagamento",
+          "status",
+          "criadoEm",
+          "experiencia",
+          "contraparte",
+          "atualizadoEm"
+        ]
+      },
+      "BookingListResponse": {
+        "type": "object",
+        "properties": {
+          "itens": {
+            "description": "Solicitações da página; vazio quando não há nenhuma (CA06), nunca erro.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookingDetailResponse"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 12,
+            "description": "Total que atende aos filtros"
+          },
+          "pagina": {
+            "type": "number",
+            "example": 1,
+            "description": "Página devolvida"
+          },
+          "limite": {
+            "type": "number",
+            "example": 20,
+            "description": "Tamanho da página"
+          }
+        },
+        "required": [
+          "itens",
+          "total",
+          "pagina",
+          "limite"
         ]
       },
       "SearchProducersResult": {

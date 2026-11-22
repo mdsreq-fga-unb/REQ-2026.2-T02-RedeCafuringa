@@ -18,6 +18,10 @@ export function BottomNavigation({
         path === "/catalogo" ||
         path === "/produtos" ||
         path.startsWith("/produtor/");
+    // HU45: lista e detalhe das pré-reservas.
+    const bookingsActive =
+        path === "/reservas" || path.startsWith("/reservas/");
+    const addActive = ["/produtos/novo", "/experiencias/nova"].includes(path);
     const accountActive =
         path === "/conta" || (isProducer && path === "/minha-trajetoria");
     return (
@@ -69,24 +73,12 @@ export function BottomNavigation({
             <button
                 data-action={isProducer ? "add-product" : undefined}
                 aria-current={
-                    (
-                        isProducer
-                            ? ["/produtos/novo", "/experiencias/nova"].includes(
-                                  path,
-                              )
-                            : path === "/reservas"
-                    )
+                    (isProducer ? addActive : bookingsActive)
                         ? "page"
                         : undefined
                 }
                 className={
-                    [
-                        "/produtos/novo",
-                        "/experiencias/nova",
-                        "/reservas",
-                    ].includes(path)
-                        ? "active"
-                        : ""
+                    (isProducer ? addActive : bookingsActive) ? "active" : ""
                 }
                 onClick={() =>
                     onNavigate(
@@ -118,6 +110,23 @@ export function BottomNavigation({
                 </svg>
                 {role === "producer" ? "Adicionar" : "Pré-reservas"}
             </button>
+            {isProducer && (
+                <button
+                    className={bookingsActive ? "active" : ""}
+                    aria-current={bookingsActive ? "page" : undefined}
+                    onClick={() => onNavigate("/reservas")}
+                >
+                    <svg
+                        className="nav-icon"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                    >
+                        <rect x="3" y="5" width="18" height="16" rx="1" />
+                        <path d="M7 3v4m10-4v4M3 10h18" />
+                    </svg>
+                    Pré-reservas
+                </button>
+            )}
             <button
                 className={accountActive ? "active" : ""}
                 aria-current={accountActive ? "page" : undefined}
