@@ -28,6 +28,9 @@ export const PARTICIPANTES_MIN = 1;
 export const PARTICIPANTES_MAX = 50;
 export const MENSAGEM_MAX = 500;
 
+/** Nome mostrado quando a experiência da solicitação não está mais disponível. */
+export const UNKNOWN_EXPERIENCE_NAME = 'Experiência indisponível';
+
 /** Horários de hora em hora, cobrindo o dia todo: 00:00 a 23:00. */
 export const BOOKING_HOURS: readonly string[] = Array.from(
   { length: 24 },

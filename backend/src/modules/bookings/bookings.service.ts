@@ -24,7 +24,12 @@ import {
   bookingProducerFilter,
   INITIAL_BOOKING_STATUS,
   isBookingInPast,
+  UNKNOWN_EXPERIENCE_NAME,
 } from './domain/booking.js';
+import {
+  bookingStatusText,
+  buildBookingConsultationLink,
+} from './domain/booking-notification.js';
 import type { BookingResponse } from './dto/booking.response.js';
 import type { CreateBookingDto } from './dto/create-booking.dto.js';
 import type { ReceivedBookingResponse } from './dto/received-booking.response.js';
@@ -227,7 +232,8 @@ export class BookingsService implements BeforeApplicationShutdown {
     const code = `CAF-${id.slice(-6).toUpperCase()}`;
     const appUrl = this.config.get<string>('APP_PUBLIC_URL');
     const cancelled = booking.status === BookingStatus.CANCELADA;
-    const name = experience?.nome ?? 'Experiência indisponível';
+    const statusText = bookingStatusText(booking.status);
+    const name = experience?.nome ?? UNKNOWN_EXPERIENCE_NAME;
     const purpose = cancelled ? 'booking_cancellation' : 'booking_response';
     const details = `Solicitação: ${code}\nExperiência: ${name}\nData: ${booking.data}\nHorário: ${booking.horario}`;
     const delays = parseRetryDelays(
@@ -246,16 +252,13 @@ export class BookingsService implements BeforeApplicationShutdown {
           );
           return;
         }
-        const link = appUrl
-          ? new URL(
-              `/#/reservas/${id}?origem=notificacoes${producerProfile ? '&perfil=producer' : ''}`,
-              appUrl,
-            )
-          : null;
+        const link = buildBookingConsultationLink(appUrl, id, {
+          producer: producerProfile,
+        });
         const intro =
           producerProfile && !cancelled
-            ? `Sua resposta à solicitação de pré-reserva foi registrada como ${booking.status}.`
-            : `A solicitação de pré-reserva foi ${booking.status}.`;
+            ? `Sua resposta à solicitação de pré-reserva foi registrada como ${statusText}.`
+            : `A solicitação de pré-reserva foi ${statusText}.`;
         const result = await sendWithRetry(
           (message) => this.mail.send(message),
           {
@@ -263,8 +266,8 @@ export class BookingsService implements BeforeApplicationShutdown {
             subject:
               producerProfile && !cancelled
                 ? `Resposta registrada: ${name}`
-                : `Pré-reserva ${booking.status}: ${name}`,
-            text: `${intro}\n${details}${link ? `\nConsultar pré-reserva: ${link.href}` : ''}`,
+                : `Pré-reserva ${statusText}: ${name}`,
+            text: `${intro}\n${details}${link ? `\nConsultar pré-reserva: ${link}` : ''}`,
           },
           delays,
         );
