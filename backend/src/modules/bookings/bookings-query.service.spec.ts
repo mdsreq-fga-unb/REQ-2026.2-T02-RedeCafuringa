@@ -5,7 +5,15 @@ import type { Experience } from '../experiences/schemas/experience.schema.js';
 import { Role } from '../users/domain/role.js';
 import type { User } from '../users/schemas/user.schema.js';
 import { BookingsQueryService } from './bookings-query.service.js';
-import { BookingStatus, PaymentMethod } from './domain/booking.js';
+import {
+  BookingStatus,
+  PaymentMethod,
+  UNKNOWN_EXPERIENCE_NAME,
+} from './domain/booking.js';
+import {
+  NOTIFIABLE_BOOKING_STATUSES,
+  NOTIFICATIONS_LIMIT,
+} from './dto/booking-notification.response.js';
 import type { Booking } from './schemas/booking.schema.js';
 
 const CREATED_AT = new Date('2026-11-21T13:30:05.000Z');
@@ -337,6 +345,144 @@ describe('BookingsQueryService (HU45/RF45)', () => {
         ),
       ).rejects.toThrow(NotFoundException);
       expect(bookings.aggregate).not.toHaveBeenCalled();
+    });
+
+    it('HU47: mostra a mensagem da resposta do produtor quando houver', async () => {
+      const booking = row({
+        status: BookingStatus.ACEITA,
+        mensagemResposta: 'Esperamos vocês!',
+      });
+      const { service } = setup([booking]);
+
+      const res = await service.findOne(
+        { id: consumerId.toHexString(), perfil: Role.CONSUMIDOR },
+        String(booking._id),
+      );
+
+      expect(res.mensagemResposta).toBe('Esperamos vocês!');
+    });
+
+    it('HU47: sem resposta do produtor, o campo não aparece', async () => {
+      const booking = row();
+      const { service } = setup([booking]);
+
+      const res = await service.findOne(
+        { id: consumerId.toHexString(), perfil: Role.CONSUMIDOR },
+        String(booking._id),
+      );
+
+      expect(res).not.toHaveProperty('mensagemResposta');
+    });
+  });
+
+  describe('listNotifications — alterações de situação (HU48)', () => {
+    const bookingId = new Types.ObjectId('64b0c0ffee0000000000abcd');
+
+    function notification(overrides: Row = {}): Row {
+      return {
+        _id: bookingId,
+        data: '2026-12-10',
+        horario: '09:00',
+        participantes: 4,
+        status: BookingStatus.ACEITA,
+        experienciaNome: 'Trilha guiada da nascente',
+        ...overrides,
+      };
+    }
+
+    it('consumidor: só as próprias, nas situações notificáveis, das mais recentes, até o limite', async () => {
+      const { service, bookings } = setup([notification()]);
+
+      await service.listNotifications({
+        id: consumerId.toHexString(),
+        perfil: Role.CONSUMIDOR,
+      });
+
+      const [match, sort, limit, lookup] = pipelineOf(bookings);
+      expect(match).toEqual({
+        $match: {
+          consumidor: consumerId,
+          status: { $in: NOTIFIABLE_BOOKING_STATUSES },
+        },
+      });
+      expect(sort).toEqual({ $sort: { atualizadoEm: -1, _id: -1 } });
+      expect(limit).toEqual({ $limit: NOTIFICATIONS_LIMIT });
+      expect(NOTIFICATIONS_LIMIT).toBe(50);
+      expect(lookup).toHaveProperty('$lookup.from', 'experiences');
+    });
+
+    it('produtor: só as das experiências dele', async () => {
+      const { service, bookings } = setup([notification()]);
+
+      await service.listNotifications({
+        id: producerId.toHexString(),
+        perfil: Role.PRODUTOR,
+      });
+
+      expect(pipelineOf(bookings)[0]).toEqual({
+        $match: {
+          produtor: { $in: [producerId, producerId.toHexString()] },
+          status: { $in: NOTIFIABLE_BOOKING_STATUSES },
+        },
+      });
+    });
+
+    it('perfil sem pré-reservas (administrador) devolve lista vazia sem consultar o banco', async () => {
+      const { service, bookings } = setup();
+
+      await expect(
+        service.listNotifications({
+          id: new Types.ObjectId().toHexString(),
+          perfil: Role.ADMINISTRADOR,
+        }),
+      ).resolves.toEqual([]);
+      expect(bookings.aggregate).not.toHaveBeenCalled();
+    });
+
+    it('monta cada notificação com id da alteração, código e dados da reserva', async () => {
+      const { service } = setup([
+        notification({ status: BookingStatus.RECUSADA }),
+      ]);
+
+      const [item] = await service.listNotifications({
+        id: consumerId.toHexString(),
+        perfil: Role.CONSUMIDOR,
+      });
+
+      expect(item).toEqual({
+        id: '64b0c0ffee0000000000abcd:recusada',
+        reservaId: '64b0c0ffee0000000000abcd',
+        codigo: 'CAF-00ABCD',
+        experienciaNome: 'Trilha guiada da nascente',
+        data: '2026-12-10',
+        horario: '09:00',
+        participantes: 4,
+        status: BookingStatus.RECUSADA,
+      });
+    });
+
+    it('experiência que não existe mais aparece com o nome padrão', async () => {
+      const semExperiencia = notification();
+      delete semExperiencia.experienciaNome;
+      const { service } = setup([semExperiencia]);
+
+      const [item] = await service.listNotifications({
+        id: consumerId.toHexString(),
+        perfil: Role.CONSUMIDOR,
+      });
+
+      expect(item.experienciaNome).toBe(UNKNOWN_EXPERIENCE_NAME);
+    });
+
+    it('sem alterações, devolve lista vazia', async () => {
+      const { service } = setup([]);
+
+      await expect(
+        service.listNotifications({
+          id: consumerId.toHexString(),
+          perfil: Role.CONSUMIDOR,
+        }),
+      ).resolves.toEqual([]);
     });
   });
 });
