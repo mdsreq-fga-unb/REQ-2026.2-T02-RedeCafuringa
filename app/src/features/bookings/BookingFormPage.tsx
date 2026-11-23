@@ -6,6 +6,8 @@ import type { Product } from "@/features/offers/productTypes";
 import {
     BookingDateField,
     BookingSelectField,
+    BookingTimeField,
+    BookingParticipantsField,
     BookingTextAreaField,
 } from "./BookingFields";
 import {
@@ -14,11 +16,7 @@ import {
     saveBookingDraft,
 } from "./bookingDraft";
 import { describeBookingError } from "./bookingErrors";
-import {
-    HOUR_OPTIONS,
-    PARTICIPANT_OPTIONS,
-    PAYMENT_OPTIONS,
-} from "./bookingOptions";
+import { PAYMENT_OPTIONS } from "./bookingOptions";
 import { buildBookingPayload } from "./bookingPayload";
 import { createBooking } from "./bookingService";
 import type {
@@ -54,6 +52,7 @@ const FIELD_IDS: Record<BookingField, string> = {
     horario: "booking-time",
     participantes: "booking-participants",
     formaPagamento: "booking-payment",
+    mensagem: "booking-message",
 };
 
 /** Ordem da tela: o primeiro campo com erro recebe o foco. */
@@ -62,6 +61,7 @@ const FOCUS_ORDER: BookingField[] = [
     "horario",
     "participantes",
     "formaPagamento",
+    "mensagem",
 ];
 
 export function BookingFormPage({
@@ -149,21 +149,19 @@ export function BookingFormPage({
                     error={errors.data}
                     onChange={(value) => setField("data", value)}
                 />
-                <BookingSelectField
+                <BookingTimeField
                     id={FIELD_IDS.horario}
                     label="Horário"
                     required
                     value={values.horario}
-                    options={HOUR_OPTIONS}
                     error={errors.horario}
                     onChange={(value) => setField("horario", value)}
                 />
-                <BookingSelectField
+                <BookingParticipantsField
                     id={FIELD_IDS.participantes}
                     label="Participantes"
                     required
                     value={values.participantes}
-                    options={PARTICIPANT_OPTIONS}
                     error={errors.participantes}
                     onChange={(value) => setField("participantes", value)}
                 />
@@ -177,7 +175,8 @@ export function BookingFormPage({
                     onChange={(value) => setField("formaPagamento", value)}
                 />
                 <BookingTextAreaField
-                    id="booking-message"
+                    id={FIELD_IDS.mensagem}
+                    error={errors.mensagem}
                     label="Mensagem ao produtor"
                     value={values.mensagem}
                     onChange={(value) => setField("mensagem", value)}

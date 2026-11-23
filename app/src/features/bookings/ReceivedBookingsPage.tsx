@@ -186,9 +186,11 @@ export function ReceivedBookingsPage({ onNavigate }: { onNavigate: Navigate }) {
 
 export function ReceivedBookingPage({
     id,
+    backRoute = RECEIVED_BOOKINGS_ROUTE,
     onNavigate,
 }: {
     id: string;
+    backRoute?: string;
     onNavigate: Navigate;
 }) {
     const [booking, setBooking] = useState<ReceivedBooking | null>(null);
@@ -237,7 +239,7 @@ export function ReceivedBookingPage({
         if (loaded || sent) heading.current?.focus();
     }, [loaded, confirmingRefusal, sent]);
 
-    const backToList = () => onNavigate(RECEIVED_BOOKINGS_ROUTE);
+    const backToList = () => onNavigate(backRoute);
     const backFromRefusal = () => {
         setError("");
         setConfirmingRefusal(false);

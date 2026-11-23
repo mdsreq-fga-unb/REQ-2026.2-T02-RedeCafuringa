@@ -58,6 +58,7 @@ import type { RegisteredProduct } from "@/features/offers/productService";
 import { apiResourceUrl } from "@/shared/api";
 import { BookingRoutePage } from "@/features/bookings/BookingRoutePage";
 import { BookingSentPage } from "@/features/bookings/BookingSentPage";
+import { useUnreadBookingUpdates } from "@/features/bookings/useUnreadBookingUpdates";
 import { BookingNotificationsPage } from "@/features/bookings/BookingNotificationsPage";
 import { BookingsPage } from "@/features/bookings/BookingsPage";
 import { BookingDetailPage } from "@/features/bookings/BookingDetailPage";
@@ -122,6 +123,14 @@ export function App() {
         useContactSettings();
 
     const path = route.split("?")[0];
+    const notificationsToken =
+        role === "consumer" || role === "producer"
+            ? localStorage.getItem("cafuringa-token")
+            : null;
+    const { hasUnread, reportUpdates, updates } = useUnreadBookingUpdates(
+        notificationsToken ? `${role}:${userId}:${notificationsToken}` : null,
+        path === RECEIVED_BOOKINGS_ROUTE,
+    );
     const published = publishedProducts.at(-1);
     const catalogOffers = [
         ...publishedProducts.map((product) => ({
@@ -564,6 +573,8 @@ export function App() {
                 )}
                 {role === "consumer" && path === RECEIVED_BOOKINGS_ROUTE && (
                     <BookingNotificationsPage
+                        onUpdatesLoaded={reportUpdates}
+                        updates={updates}
                         key={userId}
                         onNavigate={navigate}
                     />
@@ -575,6 +586,8 @@ export function App() {
                             onNavigate={navigate}
                         />
                         <BookingNotificationsPage
+                            onUpdatesLoaded={reportUpdates}
+                            updates={updates}
                             key={`updates:${userId}`}
                             embedded
                             onNavigate={navigate}
@@ -650,13 +663,26 @@ export function App() {
                                 />
                             )
                         ) : bookingDetailId ? (
-                            <BookingDetailPage
-                                key={`${role}:${userId}:${path}`}
-                                id={bookingDetailId}
-                                role={role}
-                                fromNotifications={fromNotifications}
-                                onNavigate={navigate}
-                            />
+                            role === "producer" ? (
+                                <ReceivedBookingPage
+                                    key={`${userId}:${bookingDetailId}`}
+                                    id={bookingDetailId}
+                                    backRoute={
+                                        fromNotifications
+                                            ? RECEIVED_BOOKINGS_ROUTE
+                                            : BOOKINGS_LIST_ROUTE
+                                    }
+                                    onNavigate={navigate}
+                                />
+                            ) : (
+                                <BookingDetailPage
+                                    key={`${role}:${userId}:${path}`}
+                                    id={bookingDetailId}
+                                    role={role}
+                                    fromNotifications={fromNotifications}
+                                    onNavigate={navigate}
+                                />
+                            )
                         ) : (
                             <BookingsPage
                                 key={role}
@@ -737,6 +763,7 @@ export function App() {
             </main>
             {!isAuthFlow && !receivedDetailPath && (
                 <BottomNavigation
+                    hasUnreadNotifications={hasUnread}
                     path={path}
                     role={role}
                     onNavigate={navigate}
@@ -748,7 +775,7 @@ export function App() {
 
 export default App;
 
-/** Segmento da rota sem escape; um "%" solto não derruba a tela. */
+// Mantém o segmento original quando a rota tem um escape inválido.
 function decodeRouteSegment(segment: string): string {
     try {
         return decodeURIComponent(segment);

@@ -63,12 +63,12 @@ const UPDATED_AT = new Intl.DateTimeFormat("pt-BR", {
 
 function Details({ booking, role }: { booking: BookingDetail; role: Role }) {
     const rows: Array<[string, string]> = [
-        ["Local", booking.experience.local],
         ["Data", formatBookingDate(booking.date)],
         ["Horário", formatBookingTime(booking.time)],
         ["Participantes", formatParticipants(booking.participants)],
         ["Valor total", bookingTotal(booking)],
         ["Pagamento", paymentLabel(booking.paymentMethod)],
+        ["Local", booking.experience.local],
         [
             role === "producer" ? "Solicitada por" : "Responsável",
             booking.counterpart.name,
@@ -199,23 +199,50 @@ export function BookingDetailPage({
             )}
 
             {state.status === "ready" && (
-                <>
-                    <h1
-                        className={`booking-status booking-status--${state.booking.status}`}
+                <div className="booking-detail-content">
+                    <header
+                        className="booking-detail-header"
+                        data-status={state.booking.status}
                     >
-                        {STATUS_TITLES[state.booking.status]}
-                    </h1>
-                    <p>{bookingCode(state.booking.id)}</p>
-                    <p className="booking-updated">
-                        {`Última atualização: ${UPDATED_AT.format(new Date(state.booking.updatedAt))}`}
-                    </p>
-                    <h2>{state.booking.experience.name}</h2>
-                    {!state.booking.experience.available && (
-                        <p className="booking-notice">
-                            Esta experiência não está mais disponível.
-                        </p>
+                        <h1
+                            className={`booking-status booking-status--${state.booking.status}`}
+                        >
+                            {STATUS_TITLES[state.booking.status]}
+                        </h1>
+                        <div className="booking-detail-meta">
+                            <strong>{bookingCode(state.booking.id)}</strong>
+                            <p className="booking-updated">
+                                {`Última atualização: ${UPDATED_AT.format(new Date(state.booking.updatedAt))}`}
+                            </p>
+                        </div>
+                    </header>
+                    <section
+                        className="booking-detail-summary"
+                        aria-labelledby="booking-experience-title"
+                    >
+                        <h2 id="booking-experience-title">
+                            {state.booking.experience.name}
+                        </h2>
+                        {!state.booking.experience.available && (
+                            <p className="booking-notice">
+                                Esta experiência não está mais disponível.
+                            </p>
+                        )}
+                        <Details booking={state.booking} role={role} />
+                    </section>
+                    {state.booking.responseMessage && (
+                        <section
+                            className="booking-message booking-message--response"
+                            aria-labelledby="booking-response-title"
+                        >
+                            <h2 id="booking-response-title">
+                                {role === "consumer"
+                                    ? "Mensagem do produtor"
+                                    : "Sua resposta"}
+                            </h2>
+                            <p>{state.booking.responseMessage}</p>
+                        </section>
                     )}
-                    <Details booking={state.booking} role={role} />
                     {state.booking.message && (
                         <section
                             className="booking-message"
@@ -227,19 +254,6 @@ export function BookingDetailPage({
                                     : "Sua mensagem"}
                             </h2>
                             <p>{state.booking.message}</p>
-                        </section>
-                    )}
-                    {state.booking.responseMessage && (
-                        <section
-                            className="booking-message"
-                            aria-labelledby="booking-response-title"
-                        >
-                            <h2 id="booking-response-title">
-                                {role === "consumer"
-                                    ? "Mensagem do produtor"
-                                    : "Sua resposta"}
-                            </h2>
-                            <p>{state.booking.responseMessage}</p>
                         </section>
                     )}
                     {role === "consumer" &&
@@ -291,7 +305,7 @@ export function BookingDetailPage({
                                 Cancelar solicitação
                             </button>
                         )}
-                </>
+                </div>
             )}
         </section>
     );

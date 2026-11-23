@@ -13,8 +13,13 @@ function readKey(id: string) {
     return `cafuringa-booking-update:${role}:${userId}:${id}`;
 }
 
+export const BOOKING_UPDATE_READ_EVENT = "cafuringa:booking-update-read";
+
 export function markBookingUpdateRead(id: string) {
     localStorage.setItem(readKey(id), "read");
+    window.dispatchEvent(
+        new CustomEvent(BOOKING_UPDATE_READ_EVENT, { detail: id }),
+    );
 }
 
 export async function listBookingUpdates(

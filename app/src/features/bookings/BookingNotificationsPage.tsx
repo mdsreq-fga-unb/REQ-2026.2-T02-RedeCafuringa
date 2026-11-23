@@ -91,20 +91,26 @@ function UpdateList({
 export function BookingNotificationsPage({
     embedded = false,
     onNavigate,
+    onUpdatesLoaded,
+    updates,
 }: {
     embedded?: boolean;
+    updates: BookingUpdate[];
+    onUpdatesLoaded: (updates: BookingUpdate[]) => void;
     onNavigate: (path: string) => void;
 }) {
-    const [state, setState] = useState<
-        BookingUpdate[] | "error" | "session" | null
-    >(null);
+    const [state, setState] = useState<"ready" | "error" | "session" | null>(
+        null,
+    );
     const [attempt, setAttempt] = useState(0);
 
     useEffect(() => {
         const controller = new AbortController();
         void listBookingUpdates(controller.signal).then(
             (updates) => {
-                if (!controller.signal.aborted) setState(updates);
+                if (controller.signal.aborted) return;
+                setState("ready");
+                onUpdatesLoaded(updates);
             },
             (error: unknown) => {
                 if (!controller.signal.aborted)
@@ -116,7 +122,7 @@ export function BookingNotificationsPage({
             },
         );
         return () => controller.abort();
-    }, [attempt]);
+    }, [attempt, onUpdatesLoaded]);
 
     return (
         <section
@@ -159,7 +165,7 @@ export function BookingNotificationsPage({
                     notificações.
                 </p>
             ) : (
-                <UpdateList updates={state} onNavigate={onNavigate} />
+                <UpdateList updates={updates} onNavigate={onNavigate} />
             )}
         </section>
     );

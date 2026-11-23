@@ -159,6 +159,26 @@ describe("HU48 — notificações de alteração de pré-reserva", () => {
         expect(screen.queryByText("Nova atualização")).toBeNull();
     });
 
+    it("sinaliza notificações no menu e apaga a bolinha ao abrir a última atualização", async () => {
+        mockApi();
+        const { user } = renderAt("#/explorar");
+        const notifications = screen.getByRole("button", {
+            name: "Notificações",
+        });
+        await waitFor(() =>
+            expect(notifications.getAttribute("aria-description")).toBe(
+                "Há notificações novas",
+            ),
+        );
+
+        await user.click(notifications);
+        await user.click(
+            await screen.findByRole("link", { name: /^Ver detalhes/ }),
+        );
+        await screen.findByRole("heading", { name: "Pré-reserva aceita" });
+        expect(notifications.getAttribute("aria-description")).toBeNull();
+    });
+
     it("CA02–CA04 e RN22: produtor consulta o cancelamento da solicitação vinculada", async () => {
         localStorage.setItem("cafuringa-role", "producer");
         const { list, fetchMock } = mockApi();

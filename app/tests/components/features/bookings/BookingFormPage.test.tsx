@@ -95,20 +95,65 @@ describe("BookingFormPage: estrutura (HU44 CA02 e CA03)", () => {
         expect(screen.queryByText(/Local:/)).toBeNull();
     });
 
-    it("tem o campo de data desejada", () => {
+    it("permite selecionar a data desejada no calendário do app", async () => {
+        const user = userEvent.setup();
         renderPage();
-        const input = screen.getByLabelText("Data desejada");
-        expect(input.getAttribute("type")).toBe("date");
+        await user.click(
+            screen.getByRole("button", { name: "Abrir calendário" }),
+        );
+        expect(
+            screen.getByRole("dialog", { name: "Selecionar data desejada" }),
+        ).toBeTruthy();
+        await user.click(screen.getByRole("button", { name: "Próximo mês" }));
+        await user.click(screen.getByRole("button", { name: /^1 de / }));
+        expect(
+            (screen.getByLabelText("Data desejada") as HTMLInputElement).value,
+        ).toMatch(/^01\/\d{2}\/\d{4}$/);
     });
 
-    it("oferece horários de hora em hora, de 00h00 a 23h00", () => {
+    it("permite ajustar participantes e mostra o limite da mensagem", async () => {
+        const user = userEvent.setup();
         renderPage();
-        const labels = optionLabels(screen.getByLabelText("Horário"));
-        expect(labels).toHaveLength(25);
-        expect(labels[0]).toBe("Selecione");
-        expect(labels[1]).toBe("00h00");
-        expect(labels[10]).toBe("09h00");
-        expect(labels[24]).toBe("23h00");
+        const less = screen.getByRole("button", {
+            name: "Diminuir participantes",
+        }) as HTMLButtonElement;
+        const more = screen.getByRole("button", {
+            name: "Aumentar participantes",
+        });
+        expect(less.disabled).toBe(true);
+        await user.click(more);
+        expect(
+            (screen.getByLabelText("Participantes") as HTMLSelectElement).value,
+        ).toBe("1");
+        await user.click(more);
+        await user.click(less);
+        expect(
+            (screen.getByLabelText("Participantes") as HTMLSelectElement).value,
+        ).toBe("1");
+
+        const message = screen.getByLabelText("Mensagem ao produtor");
+        expect(message.getAttribute("maxlength")).toBe("500");
+        await user.type(message, "Olá");
+        expect(screen.getByText("3 / 500 caracteres")).toBeTruthy();
+    });
+
+    it("abre os horários de hora em hora e destaca a escolha", async () => {
+        const user = userEvent.setup();
+        renderPage();
+        const trigger = screen.getByLabelText("Horário");
+        await user.click(trigger);
+        expect(
+            screen.getAllByRole("button", { name: /^\d{2}h00$/ }),
+        ).toHaveLength(24);
+        await user.click(screen.getByRole("button", { name: "09h00" }));
+        expect(trigger.textContent).toBe("09h00");
+        expect(document.activeElement).toBe(trigger);
+        await user.click(trigger);
+        expect(
+            screen.getByRole("button", { name: "09h00", pressed: true }),
+        ).toBeTruthy();
+        await user.keyboard("{Escape}");
+        expect(trigger.getAttribute("aria-expanded")).toBe("false");
     });
 
     it("oferece de 1 a 50 participantes", () => {
@@ -137,7 +182,6 @@ describe("BookingFormPage: estrutura (HU44 CA02 e CA03)", () => {
         renderPage();
         for (const label of [
             "Data desejada",
-            "Horário",
             "Participantes",
             "Forma de pagamento",
         ]) {
@@ -174,7 +218,8 @@ describe("BookingFormPage: estrutura (HU44 CA02 e CA03)", () => {
         fireEvent.change(screen.getByLabelText("Data desejada"), {
             target: { value: "2026-12-20" },
         });
-        await user.selectOptions(screen.getByLabelText("Horário"), "09:00");
+        await user.click(screen.getByLabelText("Horário"));
+        await user.click(screen.getByRole("button", { name: "09h00" }));
         await user.selectOptions(screen.getByLabelText("Participantes"), "2");
         await user.selectOptions(
             screen.getByLabelText("Forma de pagamento"),
@@ -187,7 +232,7 @@ describe("BookingFormPage: estrutura (HU44 CA02 e CA03)", () => {
 
         const value = (label: string) =>
             (screen.getByLabelText(label) as HTMLInputElement).value;
-        expect(value("Data desejada")).toBe("2026-12-20");
+        expect(value("Data desejada")).toBe("20/12/2026");
         expect(value("Horário")).toBe("09:00");
         expect(value("Participantes")).toBe("2");
         expect(value("Forma de pagamento")).toBe("pix");
@@ -224,9 +269,11 @@ async function fillForm(user: User, fill: FormFill) {
         });
     }
     if (fill.horario) {
-        await user.selectOptions(
-            screen.getByLabelText("Horário"),
-            fill.horario,
+        await user.click(screen.getByLabelText("Horário"));
+        await user.click(
+            screen.getByRole("button", {
+                name: fill.horario.replace(":", "h"),
+            }),
         );
     }
     if (fill.participantes) {
@@ -510,7 +557,7 @@ describe("BookingFormPage: falha no envio (HU44 CA08)", () => {
         );
         const value = (label: string) =>
             (screen.getByLabelText(label) as HTMLInputElement).value;
-        expect(value("Data desejada")).toBe("2026-12-20");
+        expect(value("Data desejada")).toBe("20/12/2026");
         expect(value("Horário")).toBe("09:00");
         expect(value("Participantes")).toBe("2");
         expect(value("Forma de pagamento")).toBe("pix");
@@ -605,7 +652,7 @@ describe("BookingFormPage: falha no envio (HU44 CA08)", () => {
             cleanup();
 
             renderPage();
-            expect(value("Data desejada")).toBe("2026-12-20");
+            expect(value("Data desejada")).toBe("20/12/2026");
             expect(value("Horário")).toBe("09:00");
             expect(value("Participantes")).toBe("2");
             expect(value("Forma de pagamento")).toBe("pix");

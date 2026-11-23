@@ -186,6 +186,28 @@ describe("HU47 — responder pré-reserva de experiência", () => {
     });
 
     it.each([
+        ["", "#/reservas"],
+        ["?origem=notificacoes", "#/notificacoes"],
+    ])(
+        "permite responder pelo detalhe compartilhado (%s)",
+        async (query, backRoute) => {
+            mockApi();
+            const { user } = start(`#/reservas/${booking.id}${query}`);
+
+            await screen.findByRole("heading", { name: "Pendente" });
+            expect(
+                screen.getByRole("button", { name: "Aceitar pré-reserva" }),
+            ).toBeTruthy();
+            expect(
+                screen.getByRole("button", { name: "Recusar solicitação" }),
+            ).toBeTruthy();
+
+            await user.click(screen.getByRole("button", { name: "Voltar" }));
+            expect(window.location.hash).toBe(backRoute);
+        },
+    );
+
+    it.each([
         { action: "Aceitar pré-reserva", status: "aceita", label: "Aceito" },
         {
             action: "Recusar solicitação",
