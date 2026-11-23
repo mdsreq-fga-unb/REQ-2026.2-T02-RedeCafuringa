@@ -352,4 +352,37 @@ describe("HU48 — notificações de alteração de pré-reserva", () => {
             expect(screen.getByText(message)).toBeTruthy();
         },
     );
+
+    it.each([
+        { status: "aceita", heading: "Pré-reserva aceita" },
+        { status: "recusada", heading: "Pré-reserva recusada" },
+    ])(
+        "CA05: consultar o detalhe pelo link do e-mail marca a atualização $status como lida",
+        async ({ status, heading }) => {
+            const { detail } = mockApi();
+            detail.mockReturnValue(json({ ...pending, status }));
+            const readKey = `cafuringa-booking-update:consumer:titular:${pending.id}:${status}`;
+            expect(localStorage.getItem(readKey)).toBeNull();
+
+            renderAt(detailRoute);
+            await screen.findByRole("heading", { name: heading });
+
+            await waitFor(() =>
+                expect(localStorage.getItem(readKey)).toBe("read"),
+            );
+        },
+    );
+
+    it("não registra leitura para uma solicitação ainda pendente", async () => {
+        const { detail } = mockApi();
+        detail.mockReturnValue(json({ ...pending, status: "pendente" }));
+
+        renderAt(detailRoute);
+        await screen.findByRole("heading", { name: "Aguardando resposta" });
+
+        const keys = Object.keys(localStorage).filter((key) =>
+            key.startsWith("cafuringa-booking-update:"),
+        );
+        expect(keys).toEqual([]);
+    });
 });
