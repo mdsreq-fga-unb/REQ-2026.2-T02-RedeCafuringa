@@ -218,52 +218,73 @@
 
 .booking-card {
     display: grid;
-    gap: 4px;
-    padding: 14px 16px;
+    gap: 8px;
+    padding: 14px 16px 4px;
     border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: 14px;
     background: #fff;
+    overflow-wrap: anywhere;
+}
+
+.booking-card-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px 12px;
 }
 
 .booking-card h2 {
     margin: 0;
     color: var(--ink);
-    font-size: 17px;
+    font-size: 18px;
+    line-height: 1.25;
 }
 
 .booking-card p {
     margin: 0;
     color: var(--muted);
     font-size: 14px;
-}
-
-.booking-card .booking-card-kind {
-    color: var(--orange-text);
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
+    line-height: 1.4;
 }
 
 .booking-card .booking-status {
+    padding: 4px 9px;
+    border-radius: 8px;
+    font-size: 12px;
     font-weight: 700;
 }
 
 .booking-card .booking-status--pendente {
+    background: #fcf3dc;
     color: var(--orange-text-strong);
 }
 
 .booking-card .booking-status--aceita {
+    background: #ebf5eb;
     color: #1f6b2a;
 }
 
 .booking-card .booking-status--recusada,
 .booking-card .booking-status--cancelada {
+    background: #fcf0ec;
     color: #a83232;
 }
 
 .booking-card .text-action {
-    justify-self: start;
-    margin-top: 4px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 0;
+    border-top: 1px solid var(--line);
+    color: var(--orange-text-strong);
+    font-weight: 700;
+}
+
+.booking-card .text-action:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .booking-list-empty,

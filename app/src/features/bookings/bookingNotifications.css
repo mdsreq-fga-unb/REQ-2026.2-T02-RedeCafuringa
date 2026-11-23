@@ -88,3 +88,11 @@
 .booking-notification-error + .button {
     margin-top: 12px;
 }
+
+.booking-update[data-pending="true"] {
+    border-inline-start: 4px solid #e48434;
+}
+
+.booking-notifications [data-status="pendente"] {
+    color: var(--orange-text-strong);
+}

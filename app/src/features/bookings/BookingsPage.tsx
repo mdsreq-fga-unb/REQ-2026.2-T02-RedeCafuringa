@@ -54,17 +54,20 @@ function BookingCard({
     const titleId = `booking-${booking.id}-title`;
     return (
         <article className="booking-card" aria-labelledby={titleId}>
-            <p className="booking-card-kind">Pré-reserva</p>
-            <h2 id={titleId}>{booking.experience.name}</h2>
+            <div className="booking-card-heading">
+                <h2 id={titleId}>{booking.experience.name}</h2>
+                <p
+                    className={`booking-status booking-status--${booking.status}`}
+                >
+                    {bookingStatusLabel(booking.status)}
+                </p>
+            </div>
             <p>
                 {`${formatBookingDate(booking.date)} · ${formatBookingTime(booking.time)} · ${formatParticipants(booking.participants)}`}
             </p>
             {role === "producer" && (
                 <p>{`Solicitada por ${booking.counterpart.name}`}</p>
             )}
-            <p className={`booking-status booking-status--${booking.status}`}>
-                {bookingStatusLabel(booking.status)}
-            </p>
             <button
                 type="button"
                 className="text-action"

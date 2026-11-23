@@ -23,6 +23,9 @@ export type ReceivedBooking = BookingResponse & {
     mensagemResposta?: string;
 };
 
+export const BOOKING_RESPONSE_RECORDED_EVENT =
+    "cafuringa:booking-response-recorded";
+
 export type BookingDecision = "aceita" | "recusada";
 
 const receivedPath = "/bookings/received";

@@ -82,7 +82,7 @@ function mockApi() {
         }
         if (url.pathname === bookingsPath && method === "GET") {
             return json({
-                itens: [current, accepted].map((item) => ({
+                itens: [accepted, current].map((item) => ({
                     ...item,
                     experiencia: {
                         nome: item.experienciaNome,
@@ -160,6 +160,15 @@ describe("HU47 — responder pré-reserva de experiência", () => {
         expect(await screen.findByText(/1 solicitação.*aguarda/)).toBeTruthy();
         expect(screen.getByText(consumerName)).toBeTruthy();
         expect(screen.getByText(accepted.consumidorNome)).toBeTruthy();
+        const cards = screen.getAllByRole("listitem");
+        expect(cards[0].textContent).toContain("Nova solicitação");
+        expect(cards[0].textContent).toContain(consumerName);
+        expect(cards[1].textContent).not.toContain("Nova solicitação");
+        expect(
+            screen
+                .getByRole("button", { name: "Notificações" })
+                .getAttribute("aria-description"),
+        ).toBe("Há notificações novas");
         const listCall = fetchMock.mock.calls.find(([url]) =>
             String(url).endsWith(bookingsPath),
         );
@@ -254,6 +263,12 @@ describe("HU47 — responder pré-reserva de experiência", () => {
             });
             expect(
                 screen.queryByRole("link", { name: /^Responder/ }),
+            ).toBeNull();
+            expect(screen.queryByText("Nova solicitação")).toBeNull();
+            expect(
+                screen
+                    .getByRole("button", { name: "Notificações" })
+                    .getAttribute("aria-description"),
             ).toBeNull();
             const updated = details.find(
                 (link) => link.getAttribute("href") === detailRoute,

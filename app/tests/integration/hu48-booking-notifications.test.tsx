@@ -70,6 +70,7 @@ const json = (body: unknown, status = 200) =>
 // Respostas da API usadas para verificar o fluxo de navegação.
 function mockApi() {
     const list = vi.fn(() => json([update]));
+    const received = vi.fn(() => json({ itens: [], total: 0 }));
     const detail = vi.fn(() =>
         json({
             ...pending,
@@ -88,14 +89,13 @@ function mockApi() {
                 email: privateEmail,
             });
         }
-        if (url.pathname === "/api/v1/bookings/received")
-            return json({ itens: [], total: 0 });
+        if (url.pathname === "/api/v1/bookings/received") return received();
         if (url.pathname === listPath) return list();
         if (url.pathname === detailPath) return detail();
         return json({ message: "Rota inexistente" }, 404);
     });
     vi.stubGlobal("fetch", fetchMock);
-    return { list, detail, fetchMock };
+    return { list, detail, received, fetchMock };
 }
 
 function renderAt(route: string) {
@@ -181,14 +181,22 @@ describe("HU48 — notificações de alteração de pré-reserva", () => {
 
     it("CA02–CA04 e RN22: produtor consulta o cancelamento da solicitação vinculada", async () => {
         localStorage.setItem("cafuringa-role", "producer");
-        const { list, fetchMock } = mockApi();
-        list.mockReturnValue(json([{ ...update, status: "cancelada" }]));
+        const { received, fetchMock } = mockApi();
+        received.mockReturnValue(
+            json({ itens: [{ ...pending, status: "cancelada" }], total: 1 }),
+        );
         renderAt(listRoute);
 
         const card = within(await screen.findByRole("listitem"));
         expect(card.getByText("Cancelado")).toBeTruthy();
         expect(card.getByText(pending.codigo)).toBeTruthy();
-        expectProtectedRead(fetchMock, listPath);
+        expect(card.queryByText("Nova solicitação")).toBeNull();
+        expect(
+            screen
+                .getByRole("button", { name: "Notificações" })
+                .getAttribute("aria-description"),
+        ).toBeNull();
+        expectProtectedRead(fetchMock, "/api/v1/bookings/received");
     });
 
     it("CA05: o link direto de um visitante exige login antes de consultar dados", async () => {

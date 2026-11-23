@@ -127,10 +127,14 @@ export function App() {
         role === "consumer" || role === "producer"
             ? localStorage.getItem("cafuringa-token")
             : null;
-    const { hasUnread, reportUpdates, updates } = useUnreadBookingUpdates(
-        notificationsToken ? `${role}:${userId}:${notificationsToken}` : null,
-        path === RECEIVED_BOOKINGS_ROUTE,
-    );
+    const { hasUnread, reportUpdates, updates, received, reportReceived } =
+        useUnreadBookingUpdates(
+            notificationsToken
+                ? `${role}:${userId}:${notificationsToken}`
+                : null,
+            path === RECEIVED_BOOKINGS_ROUTE,
+            role === "producer",
+        );
     const published = publishedProducts.at(-1);
     const catalogOffers = [
         ...publishedProducts.map((product) => ({
@@ -580,19 +584,12 @@ export function App() {
                     />
                 )}
                 {producerBookingsPath && !receivedBookingsBlocked && (
-                    <>
-                        <ReceivedBookingsPage
-                            key={userId}
-                            onNavigate={navigate}
-                        />
-                        <BookingNotificationsPage
-                            onUpdatesLoaded={reportUpdates}
-                            updates={updates}
-                            key={`updates:${userId}`}
-                            embedded
-                            onNavigate={navigate}
-                        />
-                    </>
+                    <ReceivedBookingsPage
+                        key={userId}
+                        bookings={received}
+                        onBookingsLoaded={reportReceived}
+                        onNavigate={navigate}
+                    />
                 )}
                 {receivedBookingId && !receivedBookingsBlocked && (
                     <ReceivedBookingPage

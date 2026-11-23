@@ -3,6 +3,7 @@ import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import {
+    BOOKING_RESPONSE_RECORDED_EVENT,
     getReceivedBooking,
     listReceivedBookings,
     receivedBookingError,
@@ -19,6 +20,8 @@ import {
 } from "./bookingRoutes";
 import "./bookings.css";
 import "./receivedBookings.css";
+import "./bookingNotifications.css";
+import { formatBookingDate } from "./bookingDetails";
 
 const statusLabels: Record<BookingStatus, string> = {
     pendente: "Pendente",
@@ -41,20 +44,6 @@ const paymentLabels: Record<PaymentMethod, string> = {
     cartao_debito: "Cartão de débito",
 };
 
-const monthLabels = [
-    "jan",
-    "fev",
-    "mar",
-    "abr",
-    "mai",
-    "jun",
-    "jul",
-    "ago",
-    "set",
-    "out",
-    "nov",
-    "dez",
-];
 const currency = new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
@@ -64,8 +53,16 @@ const accessDenied = "Você não tem permissão para acessar esta solicitação.
 
 type Navigate = (path: string) => void;
 
-export function ReceivedBookingsPage({ onNavigate }: { onNavigate: Navigate }) {
-    const [bookings, setBookings] = useState<ReceivedBooking[] | null>(null);
+export function ReceivedBookingsPage({
+    bookings,
+    onBookingsLoaded,
+    onNavigate,
+}: {
+    bookings: ReceivedBooking[];
+    onBookingsLoaded: (items: ReceivedBooking[]) => void;
+    onNavigate: Navigate;
+}) {
+    const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState("");
     const [attempt, setAttempt] = useState(0);
 
@@ -73,7 +70,9 @@ export function ReceivedBookingsPage({ onNavigate }: { onNavigate: Navigate }) {
         const controller = new AbortController();
         void listReceivedBookings(controller.signal).then(
             (items) => {
-                if (!controller.signal.aborted) setBookings(items);
+                if (controller.signal.aborted) return;
+                onBookingsLoaded(items);
+                setLoaded(true);
             },
             (failure: unknown) => {
                 if (controller.signal.aborted) return;
@@ -88,12 +87,12 @@ export function ReceivedBookingsPage({ onNavigate }: { onNavigate: Navigate }) {
             },
         );
         return () => controller.abort();
-    }, [attempt]);
+    }, [attempt, onBookingsLoaded]);
 
-    const pending =
-        bookings?.filter((item) => item.status === "pendente").length ?? 0;
+    const pending = bookings.filter((item) => item.status === "pendente");
+    const previous = bookings.filter((item) => item.status !== "pendente");
     return (
-        <section className="login-page booking-page received-bookings">
+        <section className="login-page booking-page booking-notifications">
             <BackButton
                 label="Voltar"
                 onClick={() => onNavigate("/explorar")}
@@ -115,46 +114,55 @@ export function ReceivedBookingsPage({ onNavigate }: { onNavigate: Navigate }) {
                         Tentar novamente
                     </ActionButton>
                 </>
-            ) : bookings === null ? (
+            ) : !loaded ? (
                 <p role="status">Carregando solicitações…</p>
             ) : bookings.length === 0 ? (
                 <p>Você ainda não recebeu solicitações de pré-reserva.</p>
             ) : (
                 <>
-                    {pending > 0 && (
+                    {pending.length > 0 && (
                         <p className="booking-notice" role="status">
-                            {pending === 1
+                            {pending.length === 1
                                 ? "1 solicitação de pré-reserva aguarda sua resposta."
-                                : `${pending} solicitações de pré-reserva aguardam sua resposta.`}
+                                : `${pending.length} solicitações de pré-reserva aguardam sua resposta.`}
                         </p>
                     )}
-                    <ul className="received-list">
-                        {bookings.map((item) => {
-                            const [, month, day] = item.data.split("-");
+                    <ul className="booking-updates">
+                        {[...pending, ...previous].map((item) => {
                             const action =
                                 item.status === "pendente"
                                     ? "Responder"
                                     : "Ver detalhes";
                             const path = receivedBookingRoute(item.id);
                             return (
-                                <li key={item.id} className="received-card">
-                                    <p className="received-card-label">
-                                        Nova solicitação
-                                    </p>
-                                    <h2>{item.consumidorNome}</h2>
-                                    <p
-                                        className="received-status"
-                                        data-status={item.status}
-                                    >
-                                        {statusLabels[item.status]}
-                                    </p>
+                                <li
+                                    key={item.id}
+                                    className="booking-update"
+                                    data-pending={item.status === "pendente"}
+                                >
+                                    <div className="booking-update-meta">
+                                        <span>{item.codigo}</span>
+                                        {item.status === "pendente" && (
+                                            <span className="booking-update-badge">
+                                                Nova solicitação
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h2>{item.experienciaNome}</h2>
+                                    <p>{item.consumidorNome}</p>
                                     <p>
-                                        {day} {monthLabels[Number(month) - 1]} •{" "}
+                                        {formatBookingDate(item.data)} •{" "}
                                         {formatTime(item.horario)} •{" "}
                                         {item.participantes}{" "}
                                         {item.participantes === 1
                                             ? "pessoa"
                                             : "pessoas"}
+                                    </p>
+                                    <p
+                                        className="booking-update-status"
+                                        data-status={item.status}
+                                    >
+                                        {statusLabels[item.status]}
                                     </p>
                                     <a
                                         href={`#${path}`}
@@ -253,8 +261,18 @@ export function ReceivedBookingPage({
         setSaving(true);
         setError("");
         try {
-            await respondToBooking(id, decision, message, controller.signal);
+            const response = await respondToBooking(
+                id,
+                decision,
+                message,
+                controller.signal,
+            );
             if (controller.signal.aborted) return;
+            window.dispatchEvent(
+                new CustomEvent(BOOKING_RESPONSE_RECORDED_EVENT, {
+                    detail: response,
+                }),
+            );
             setMessage("");
             setBooking(null);
             setSent(true);

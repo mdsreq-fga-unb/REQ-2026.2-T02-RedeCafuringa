@@ -89,12 +89,10 @@ function UpdateList({
 }
 
 export function BookingNotificationsPage({
-    embedded = false,
     onNavigate,
     onUpdatesLoaded,
     updates,
 }: {
-    embedded?: boolean;
     updates: BookingUpdate[];
     onUpdatesLoaded: (updates: BookingUpdate[]) => void;
     onNavigate: (path: string) => void;
@@ -128,19 +126,12 @@ export function BookingNotificationsPage({
         <section
             className="login-page booking-page booking-notifications"
             aria-busy={state === null}
-            aria-label={embedded ? "Alterações nas pré-reservas" : undefined}
         >
-            {embedded ? (
-                <h2>Alterações nas pré-reservas</h2>
-            ) : (
-                <>
-                    <BackButton
-                        label="Voltar"
-                        onClick={() => onNavigate("/explorar")}
-                    />
-                    <h1>Notificações</h1>
-                </>
-            )}
+            <BackButton
+                label="Voltar"
+                onClick={() => onNavigate("/explorar")}
+            />
+            <h1>Notificações</h1>
             {state === null ? (
                 <p role="status">Carregando notificações…</p>
             ) : state === "error" ? (
