@@ -156,6 +156,24 @@ describe('HU46/RF46 — Cancelar pré-reserva (e2e)', () => {
     await t.request().get(`${BOOKINGS}/notifications`).expect(401);
   });
 
+  it('HU48: devolve no máximo as 50 alterações mais recentes, da mais nova à mais antiga', async () => {
+    const { id: consumerId, token } = await consumerSession();
+    const ids: string[] = [];
+    for (let i = 0; i < 55; i += 1) {
+      ids.push(await seedBooking(consumerId, BookingStatus.RECUSADA));
+    }
+
+    const response = await t
+      .request()
+      .get(`${BOOKINGS}/notifications`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(response.body).toHaveLength(50);
+    expect(response.body[0].reservaId).toBe(ids[54]);
+    expect(response.body[49].reservaId).toBe(ids[5]);
+  });
+
   // CA02 e CA04 (confirmar ou desistir) são da interface: "Manter solicitação"
   // simplesmente não chama este endpoint, então não há o que testar na API.
 
