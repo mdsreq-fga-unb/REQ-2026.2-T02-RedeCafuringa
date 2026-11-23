@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 type CalendarMonth = { year: number; month: number };
 
@@ -27,6 +27,9 @@ export function DatePicker({
     children,
 }: DatePickerProps) {
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const dialogRef = useRef<HTMLDivElement>(null);
     const [visibleMonth, setVisibleMonth] = useState<CalendarMonth>(() => {
         const initialDate = selectedDate ?? minDate ?? maxDate ?? new Date();
         return {
@@ -59,12 +62,31 @@ export function DatePicker({
         Date.UTC(visibleMonth.year, visibleMonth.month + 1, 1),
     );
 
+    const closeCalendar = () => {
+        setIsCalendarOpen(false);
+        triggerRef.current?.focus();
+    };
+
+    // Ao abrir, o foco entra no calendário; clicar fora o fecha.
+    useEffect(() => {
+        if (!isCalendarOpen) return;
+        dialogRef.current?.focus();
+        const closeOnOutsidePress = (event: MouseEvent) => {
+            if (!containerRef.current?.contains(event.target as Node)) {
+                setIsCalendarOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", closeOnOutsidePress);
+        return () =>
+            document.removeEventListener("mousedown", closeOnOutsidePress);
+    }, [isCalendarOpen]);
+
     const selectDay = (day: number) => {
         const date = new Date(
             Date.UTC(visibleMonth.year, visibleMonth.month, day),
         );
         onSelect(date);
-        setIsCalendarOpen(false);
+        closeCalendar();
     };
 
     const calendarCells = Array.from(
@@ -76,9 +98,10 @@ export function DatePicker({
     );
 
     return (
-        <div className="birth-date-control">
+        <div className="birth-date-control" ref={containerRef}>
             {children}
             <button
+                ref={triggerRef}
                 className="birth-calendar-trigger"
                 type="button"
                 aria-label="Abrir calendário"
@@ -103,12 +126,12 @@ export function DatePicker({
                 <div
                     className="birth-calendar"
                     id={id}
+                    ref={dialogRef}
+                    tabIndex={-1}
                     role="dialog"
                     aria-label={label}
                     onKeyDown={(event) => {
-                        if (event.key === "Escape") {
-                            setIsCalendarOpen(false);
-                        }
+                        if (event.key === "Escape") closeCalendar();
                     }}
                 >
                     <div className="birth-calendar-header">
