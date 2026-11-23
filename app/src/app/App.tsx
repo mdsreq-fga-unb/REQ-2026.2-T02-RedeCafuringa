@@ -123,8 +123,11 @@ export function App() {
         useContactSettings();
 
     const path = route.split("?")[0];
+    // Rotas administrativas não consultam pré-reservas: o titular de outro
+    // perfil só pode consultar o próprio cadastro antes da autorização (HU04).
     const notificationsToken =
-        role === "consumer" || role === "producer"
+        (role === "consumer" || role === "producer") &&
+        !path.startsWith("/admin")
             ? localStorage.getItem("cafuringa-token")
             : null;
     const { hasUnread, reportUpdates, updates, received, reportReceived } =
