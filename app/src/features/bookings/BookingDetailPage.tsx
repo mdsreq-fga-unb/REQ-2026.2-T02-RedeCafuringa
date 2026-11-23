@@ -16,6 +16,7 @@ import {
     experienceDetailsRoute,
     RECEIVED_BOOKINGS_ROUTE,
 } from "./bookingRoutes";
+import { markBookingUpdateRead } from "./bookingNotificationsService";
 import { getBooking } from "./bookingQueryService";
 import { BookingSessionError } from "./bookingService";
 import type { BookingStatus } from "./bookingTypes";
@@ -108,6 +109,10 @@ export function BookingDetailPage({
         load(id, { signal: controller.signal }).then(
             (booking) => {
                 if (controller.signal.aborted) return;
+                // Ver o detalhe, por qualquer caminho, é ler a atualização.
+                if (booking && booking.status !== "pendente") {
+                    markBookingUpdateRead(`${booking.id}:${booking.status}`);
+                }
                 setState(
                     booking
                         ? { status: "ready", booking }
