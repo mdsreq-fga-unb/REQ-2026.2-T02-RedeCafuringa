@@ -29,44 +29,12 @@
     border-radius: 14px;
 }
 
-.received-list {
-    display: grid;
-    gap: 20px;
-    margin: 16px 0 0;
-    padding: 0;
-    list-style: none;
-}
-
-.received-card,
 .received-reply,
 .received-detail textarea {
     padding: 16px;
     border: 1px solid #cdd8ce;
     border-radius: 14px;
     background: var(--surface, #fff);
-}
-
-.received-card h2 {
-    margin-top: 12px;
-}
-
-.received-card .received-card-label {
-    color: var(--orange-text);
-    font-size: 0.8125rem;
-    text-transform: uppercase;
-}
-
-.received-card .received-status {
-    margin-bottom: 8px;
-}
-
-.received-card a {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    min-height: 44px;
-    color: var(--orange-text);
-    font-weight: 700;
 }
 
 .received-detail .booking-sent-icon {

@@ -37,6 +37,8 @@ function isBookingDetail(data: unknown): data is ApiBookingDetail {
         Number.isFinite(data.participantes) &&
         PAYMENT_METHODS.some((method) => method === data.formaPagamento) &&
         BOOKING_STATUSES.some((status) => status === data.status) &&
+        (data.mensagemResposta === undefined ||
+            typeof data.mensagemResposta === "string") &&
         typeof data.criadoEm === "string" &&
         typeof data.atualizadoEm === "string" &&
         isRecord(experiencia) &&
@@ -144,7 +146,8 @@ export async function getBooking(
             { headers, signal },
         );
     } catch (error) {
-        if (error instanceof ApiHttpError && error.status === 404) return null;
+        if (error instanceof ApiHttpError && [403, 404].includes(error.status))
+            return null;
         sessionAware(error);
     }
     if (!isBookingDetail(data))

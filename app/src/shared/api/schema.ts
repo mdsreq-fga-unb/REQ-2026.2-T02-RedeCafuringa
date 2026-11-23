@@ -668,6 +668,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/bookings/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Consultar alterações das próprias pré-reservas
+         * @description HU48/RF48: lista aceites, recusas e cancelamentos registrados nas solicitações vinculadas à conta autenticada, da alteração mais recente à mais antiga.
+         */
+        get: operations["bookingsListNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/bookings/{id}": {
         parameters: {
             query?: never;
@@ -1596,6 +1616,8 @@ export interface components {
              * @example 2026-11-21T12:00:00.000Z
              */
             criadoEm: string;
+            /** @description Resposta do produtor à solicitação */
+            mensagemResposta?: string;
             experiencia: components["schemas"]["BookingExperienceResponse"];
             contraparte: components["schemas"]["BookingCounterpartResponse"];
             /**
@@ -1622,6 +1644,27 @@ export interface components {
              * @example 20
              */
             limite: number;
+        };
+        BookingNotificationResponse: {
+            /** @description Identificador da alteração */
+            id: string;
+            /** @description Id da pré-reserva para abrir a consulta */
+            reservaId: string;
+            /** @description Código exibido na consulta */
+            codigo: string;
+            /** @description Nome da experiência solicitada */
+            experienciaNome: string;
+            /** @description Data da pré-reserva (AAAA-MM-DD) */
+            data: string;
+            /** @description Horário da pré-reserva (HH:MM) */
+            horario: string;
+            /** @description Quantidade de participantes */
+            participantes: number;
+            /**
+             * @description Situação registrada
+             * @enum {string}
+             */
+            status: "aceita" | "recusada" | "cancelada";
         };
         SearchProducersResult: {
             /** @description Produtores com perfil publicado que combinam com o termo (iniciativa, trajetória ou atividades), até o limite pedido */
@@ -3921,6 +3964,42 @@ export interface operations {
                 };
             };
             /** @description Exclusivo para: PRODUTOR */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsListNotifications: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingNotificationResponse"][];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Exclusivo para: CONSUMIDOR, PRODUTOR */
             403: {
                 headers: {
                     [name: string]: unknown;

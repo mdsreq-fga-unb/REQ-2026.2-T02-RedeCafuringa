@@ -80,8 +80,11 @@ function api() {
 }
 
 const bookingCalls = (fetchMock: ReturnType<typeof api>) =>
-    fetchMock.mock.calls.filter(([input]) =>
-        String(input).includes("/bookings"),
+    fetchMock.mock.calls.filter(
+        ([input]) =>
+            String(input).includes("/bookings") &&
+            !String(input).includes("/bookings/notifications") &&
+            !String(input).endsWith("/bookings/received"),
     );
 
 beforeEach(() => {

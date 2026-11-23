@@ -7,9 +7,11 @@ export type BookingFormValues = {
 };
 
 export type BookingField =
-    "data" | "horario" | "participantes" | "formaPagamento";
+    "data" | "horario" | "participantes" | "formaPagamento" | "mensagem";
 
 export type BookingFormErrors = Partial<Record<BookingField, string>>;
+
+export const BOOKING_MESSAGE_MAX = 500;
 
 export const MAX_PARTICIPANTS = 50;
 

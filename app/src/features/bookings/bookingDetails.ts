@@ -9,6 +9,7 @@ export type ApiBookingList = components["schemas"]["BookingListResponse"];
 /** Pré-reserva consultada (HU45): a solicitação, a experiência e o outro lado. */
 export type BookingDetail = Booking & {
     updatedAt: string;
+    responseMessage?: string;
     experience: {
         name: string;
         local: string;
@@ -46,6 +47,9 @@ export function adaptBookingDetail(
         participants: api.participantes,
         paymentMethod: api.formaPagamento,
         ...(api.mensagem ? { message: api.mensagem } : {}),
+        ...(api.mensagemResposta
+            ? { responseMessage: api.mensagemResposta }
+            : {}),
         status: api.status,
         createdAt: api.criadoEm,
         updatedAt: api.atualizadoEm,
@@ -60,6 +64,10 @@ export function adaptBookingDetail(
         },
         counterpart: { id: contraparte.id, name: contraparte.nome },
     };
+}
+
+export function bookingCode(id: string): string {
+    return `CAF-${id.slice(-6).toUpperCase()}`;
 }
 
 export function bookingStatusLabel(status: BookingStatus): string {

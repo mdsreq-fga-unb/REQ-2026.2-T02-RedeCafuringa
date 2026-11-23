@@ -1,0 +1,98 @@
+.login-page.booking-notifications {
+    max-width: 720px;
+    margin-inline: auto;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.booking-notifications h1,
+.booking-notifications h2 {
+    color: var(--ink);
+}
+
+.booking-notifications h2 {
+    margin: 0 0 6px;
+    font-size: 1.125rem;
+}
+
+.booking-notifications p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.booking-notifications .booking-notice {
+    margin-block: 12px 16px;
+    border-radius: 14px;
+}
+
+.booking-updates {
+    display: grid;
+    gap: 14px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.booking-update {
+    border: 1px solid #d4ded2;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.booking-update {
+    padding: clamp(16px, 4vw, 24px);
+}
+
+.booking-update-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    color: var(--orange-text-strong);
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.booking-update-badge {
+    padding: 4px 9px;
+    border-radius: 8px;
+    background: #ffecd9;
+}
+
+.booking-update .booking-update-status {
+    margin-top: 10px;
+    font-weight: 700;
+}
+
+.booking-update a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 44px;
+    color: var(--orange-text-strong);
+    font-weight: 700;
+    text-underline-offset: 3px;
+}
+
+.booking-notifications [data-status="aceita"] {
+    color: #23613b;
+}
+
+.booking-notifications :is([data-status="recusada"], [data-status="cancelada"]),
+.booking-notification-error {
+    color: #8c2d26;
+}
+
+.booking-notification-error + .button {
+    margin-top: 12px;
+}
+
+.booking-update[data-pending="true"] {
+    border-inline-start: 4px solid #e48434;
+}
+
+.booking-notifications [data-status="pendente"] {
+    color: var(--orange-text-strong);
+}

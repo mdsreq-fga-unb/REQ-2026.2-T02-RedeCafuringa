@@ -1,3 +1,4 @@
+import { DatePicker } from "@/components/ui/DatePicker";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useState } from "react";
 import type { FormEvent } from "react";
@@ -46,13 +47,6 @@ function displayBirthDate(date: Date): string {
     return `${day}-${month}-${date.getUTCFullYear()}`;
 }
 
-type CalendarMonth = { year: number; month: number };
-
-function shiftCalendarMonth({ year, month }: CalendarMonth, amount: number) {
-    const date = new Date(Date.UTC(year, month + amount, 1));
-    return { year: date.getUTCFullYear(), month: date.getUTCMonth() };
-}
-
 export function BirthDateField({
     value,
     error,
@@ -62,56 +56,22 @@ export function BirthDateField({
     error?: string;
     onChange: (value: string) => void;
 }) {
-    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-    const [visibleMonth, setVisibleMonth] = useState<CalendarMonth>(() => {
-        const selectedDate = parseBirthDate(value) ?? new Date();
-        return {
-            year: selectedDate.getUTCFullYear(),
-            month: selectedDate.getUTCMonth(),
-        };
-    });
-    const selectedDate = parseBirthDate(value);
     const today = new Date();
-    const monthStart = new Date(
-        Date.UTC(visibleMonth.year, visibleMonth.month, 1),
+    const maxDate = new Date(
+        Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()),
     );
-    const daysInMonth = new Date(
-        Date.UTC(visibleMonth.year, visibleMonth.month + 1, 0),
-    ).getUTCDate();
-    const leadingDays = (monthStart.getUTCDay() + 6) % 7;
-    const monthName = new Intl.DateTimeFormat("pt-BR", {
-        month: "long",
-        timeZone: "UTC",
-    })
-        .format(monthStart)
-        .replace(/^./, (character) => character.toLocaleUpperCase("pt-BR"));
-    const maximumMonth = {
-        year: today.getFullYear(),
-        month: today.getMonth(),
-    };
-
-    const selectDay = (day: number) => {
-        const date = new Date(
-            Date.UTC(visibleMonth.year, visibleMonth.month, day),
-        );
-        onChange(displayBirthDate(date));
-        setIsCalendarOpen(false);
-    };
-
-    const calendarCells = Array.from(
-        { length: leadingDays + daysInMonth },
-        (_, index) => {
-            if (index < leadingDays) return null;
-            return index - leadingDays + 1;
-        },
-    );
-
     return (
         <div className="signup-field">
             <label className="field-label" htmlFor="signup-birth-date">
                 Data de nascimento <span aria-hidden="true">*</span>
             </label>
-            <div className="birth-date-control">
+            <DatePicker
+                id="signup-birth-calendar"
+                label="Selecionar data de nascimento"
+                selectedDate={parseBirthDate(value) ?? null}
+                maxDate={maxDate}
+                onSelect={(date) => onChange(displayBirthDate(date))}
+            >
                 <input
                     id="signup-birth-date"
                     className="text-input signup-input"
@@ -130,171 +90,13 @@ export function BirthDateField({
                         onChange(formatBirthDate(event.target.value))
                     }
                 />
-                <button
-                    className="birth-calendar-trigger"
-                    type="button"
-                    aria-label="Abrir calendário"
-                    aria-haspopup="dialog"
-                    aria-expanded={isCalendarOpen}
-                    aria-controls="signup-birth-calendar"
-                    title="Abrir calendário"
-                    onClick={() => {
-                        const selected = parseBirthDate(value);
-                        if (selected) {
-                            setVisibleMonth({
-                                year: selected.getUTCFullYear(),
-                                month: selected.getUTCMonth(),
-                            });
-                        }
-                        setIsCalendarOpen((open) => !open);
-                    }}
-                >
-                    <CalendarIcon />
-                </button>
-                {isCalendarOpen && (
-                    <div
-                        className="birth-calendar"
-                        id="signup-birth-calendar"
-                        role="dialog"
-                        aria-label="Selecionar data de nascimento"
-                        onKeyDown={(event) => {
-                            if (event.key === "Escape") {
-                                setIsCalendarOpen(false);
-                            }
-                        }}
-                    >
-                        <div className="birth-calendar-header">
-                            <button
-                                className="birth-calendar-nav"
-                                type="button"
-                                aria-label="Mês anterior"
-                                onClick={() =>
-                                    setVisibleMonth((month) =>
-                                        shiftCalendarMonth(month, -1),
-                                    )
-                                }
-                            >
-                                <span aria-hidden="true">‹</span>
-                            </button>
-                            <strong>{monthName}</strong>
-                            <select
-                                className="birth-calendar-year"
-                                aria-label="Ano"
-                                value={visibleMonth.year}
-                                onChange={(event) =>
-                                    setVisibleMonth((month) => ({
-                                        ...month,
-                                        year: Number(event.target.value),
-                                    }))
-                                }
-                            >
-                                {Array.from(
-                                    { length: today.getFullYear() - 1899 },
-                                    (_, index) => today.getFullYear() - index,
-                                ).map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                ))}
-                            </select>
-                            <button
-                                className="birth-calendar-nav"
-                                type="button"
-                                aria-label="Próximo mês"
-                                disabled={
-                                    visibleMonth.year === maximumMonth.year &&
-                                    visibleMonth.month >= maximumMonth.month
-                                }
-                                onClick={() =>
-                                    setVisibleMonth((month) =>
-                                        shiftCalendarMonth(month, 1),
-                                    )
-                                }
-                            >
-                                <span aria-hidden="true">›</span>
-                            </button>
-                        </div>
-                        <div
-                            className="birth-calendar-weekdays"
-                            aria-hidden="true"
-                        >
-                            {[
-                                "Seg",
-                                "Ter",
-                                "Qua",
-                                "Qui",
-                                "Sex",
-                                "Sáb",
-                                "Dom",
-                            ].map((weekday) => (
-                                <span key={weekday}>{weekday}</span>
-                            ))}
-                        </div>
-                        <div
-                            className="birth-calendar-days"
-                            role="group"
-                            aria-label="Dias do mês"
-                        >
-                            {calendarCells.map((day, index) => {
-                                if (day === null) {
-                                    return (
-                                        <span
-                                            className="birth-calendar-empty"
-                                            key={`empty-${index}`}
-                                            aria-hidden="true"
-                                        />
-                                    );
-                                }
-
-                                const isFutureDate =
-                                    visibleMonth.year > today.getFullYear() ||
-                                    (visibleMonth.year ===
-                                        today.getFullYear() &&
-                                        (visibleMonth.month >
-                                            today.getMonth() ||
-                                            (visibleMonth.month ===
-                                                today.getMonth() &&
-                                                day > today.getDate())));
-                                const isSelected =
-                                    selectedDate?.getUTCFullYear() ===
-                                        visibleMonth.year &&
-                                    selectedDate.getUTCMonth() ===
-                                        visibleMonth.month &&
-                                    selectedDate.getUTCDate() === day;
-
-                                return (
-                                    <button
-                                        className="birth-calendar-day"
-                                        key={day}
-                                        type="button"
-                                        aria-label={`${day} de ${monthName} de ${visibleMonth.year}`}
-                                        aria-pressed={isSelected}
-                                        disabled={isFutureDate}
-                                        onClick={() => selectDay(day)}
-                                    >
-                                        {day}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
-            </div>
+            </DatePicker>
             {error && (
                 <p className="field-error" id="signup-birth-date-error">
                     {error}
                 </p>
             )}
         </div>
-    );
-}
-
-function CalendarIcon() {
-    return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="3.5" y="5" width="17" height="16" rx="2" />
-            <path d="M7.5 3v4M16.5 3v4M3.5 9h17" />
-        </svg>
     );
 }
 

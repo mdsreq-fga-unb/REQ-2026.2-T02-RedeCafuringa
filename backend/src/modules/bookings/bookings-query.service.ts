@@ -13,12 +13,19 @@ import type {
   BookingDetailResponse,
   BookingListResponse,
 } from './dto/booking-detail.response.js';
+import {
+  NOTIFIABLE_BOOKING_STATUSES,
+  NOTIFICATIONS_LIMIT,
+  type BookingNotificationResponse,
+} from './dto/booking-notification.response.js';
 import type { ListBookingsQuery } from './dto/list-bookings.query.js';
-import { bookingProducerFilter } from './domain/booking.js';
+import {
+  bookingProducerFilter,
+  UNKNOWN_EXPERIENCE_NAME,
+} from './domain/booking.js';
 import { Booking } from './schemas/booking.schema.js';
 
 const NOT_FOUND = 'Pré-reserva não encontrada';
-const UNKNOWN_EXPERIENCE = 'Experiência indisponível';
 const UNKNOWN_PARTY = 'Usuário indisponível';
 
 /** De quem é a consulta: define o filtro de dono e quem é "o outro lado". */
@@ -71,6 +78,66 @@ export class BookingsQueryService {
     return this.list('produtor', userId, query);
   }
 
+  /** Nos fluxos atuais, cada notificação corresponde à saída de pendente. */
+  async listNotifications(
+    user: AuthenticatedUser,
+  ): Promise<BookingNotificationResponse[]> {
+    const side = sideOf(user.perfil);
+    if (!side) return [];
+
+    type NotificationRow = Pick<
+      BookingRow,
+      '_id' | 'data' | 'horario' | 'participantes'
+    > & {
+      status: BookingNotificationResponse['status'];
+      experienciaNome?: string;
+    };
+    const rows = await this.bookings
+      .aggregate<NotificationRow>([
+        {
+          $match: {
+            [side]: ownerFilter(side, user.id),
+            status: { $in: NOTIFIABLE_BOOKING_STATUSES },
+          },
+        },
+        { $sort: { atualizadoEm: -1, _id: -1 } },
+        { $limit: NOTIFICATIONS_LIMIT },
+        {
+          $lookup: {
+            from: this.experiences.collection.name,
+            localField: 'experiencia',
+            foreignField: '_id',
+            pipeline: [{ $project: { _id: 0, nome: 1 } }],
+            as: 'experienciaDados',
+          },
+        },
+        {
+          $project: {
+            data: 1,
+            horario: 1,
+            participantes: 1,
+            status: 1,
+            experienciaNome: { $arrayElemAt: ['$experienciaDados.nome', 0] },
+          },
+        },
+      ])
+      .exec();
+
+    return rows.map((row) => {
+      const reservaId = row._id.toString();
+      return {
+        id: `${reservaId}:${row.status}`,
+        reservaId,
+        codigo: `CAF-${reservaId.slice(-6).toUpperCase()}`,
+        experienciaNome: row.experienciaNome ?? UNKNOWN_EXPERIENCE_NAME,
+        data: row.data,
+        horario: row.horario,
+        participantes: row.participantes,
+        status: row.status,
+      };
+    });
+  }
+
   /**
    * CA04, CA05: detalhe de uma solicitação. Registro inexistente, de terceiros
    * ou com id inválido respondem igual (404), para não revelar que existe.
@@ -95,7 +162,9 @@ export class BookingsQueryService {
       ])
       .exec();
     if (!row) throw new NotFoundException(NOT_FOUND);
-    return this.toResponse(row, side);
+    const detail = this.toResponse(row, side);
+    if (row.mensagemResposta) detail.mensagemResposta = row.mensagemResposta;
+    return detail;
   }
 
   private async list(
@@ -201,7 +270,7 @@ export class BookingsQueryService {
         new Date()
       ).toISOString(),
       experiencia: {
-        nome: experience?.nome ?? UNKNOWN_EXPERIENCE,
+        nome: experience?.nome ?? UNKNOWN_EXPERIENCE_NAME,
         local: experience?.local ?? '',
         valorPorPessoa: fromCentavos(experience?.valorCentavos ?? 0),
         disponivel: experience ? available : false,

@@ -58,6 +58,8 @@ import type { RegisteredProduct } from "@/features/offers/productService";
 import { apiResourceUrl } from "@/shared/api";
 import { BookingRoutePage } from "@/features/bookings/BookingRoutePage";
 import { BookingSentPage } from "@/features/bookings/BookingSentPage";
+import { useUnreadBookingUpdates } from "@/features/bookings/useUnreadBookingUpdates";
+import { BookingNotificationsPage } from "@/features/bookings/BookingNotificationsPage";
 import { BookingsPage } from "@/features/bookings/BookingsPage";
 import { BookingDetailPage } from "@/features/bookings/BookingDetailPage";
 import { BookingCancelPage } from "@/features/bookings/BookingCancelPage";
@@ -70,6 +72,9 @@ import {
     BOOKINGS_LIST_ROUTE,
     RECEIVED_BOOKINGS_ROUTE,
     parseReceivedBookingRoute,
+    bookingConsultationLoginRoute,
+    bookingConsultationReturnRoute,
+    parseBookingConsultationRoute,
     bookingAccess,
     bookingLoginRoute,
     bookingReturnRoute,
@@ -118,6 +123,21 @@ export function App() {
         useContactSettings();
 
     const path = route.split("?")[0];
+    // Rotas administrativas não consultam pré-reservas: o titular de outro
+    // perfil só pode consultar o próprio cadastro antes da autorização (HU04).
+    const notificationsToken =
+        (role === "consumer" || role === "producer") &&
+        !path.startsWith("/admin")
+            ? localStorage.getItem("cafuringa-token")
+            : null;
+    const { hasUnread, reportUpdates, updates, received, reportReceived } =
+        useUnreadBookingUpdates(
+            notificationsToken
+                ? `${role}:${userId}:${notificationsToken}`
+                : null,
+            path === RECEIVED_BOOKINGS_ROUTE,
+            role === "producer",
+        );
     const published = publishedProducts.at(-1);
     const catalogOffers = [
         ...publishedProducts.map((product) => ({
@@ -259,9 +279,36 @@ export function App() {
     useEffect(() => {
         if (cancelBlocked) navigate(bookingDetailPath);
     }, [cancelBlocked, bookingDetailPath, navigate]);
+    const fromNotifications = query.get("origem") === "notificacoes";
+    const consultationId = fromNotifications
+        ? parseBookingConsultationRoute(path)
+        : null;
+    const consultationRole = role === "consumer" || role === "producer";
+    const consultationToken = localStorage.getItem("cafuringa-token");
+    const producerConsultation =
+        role === "producer" || query.get("perfil") === "producer";
+    useEffect(() => {
+        if (!consultationId || (consultationRole && consultationToken)) return;
+        if (role === "admin") navigate("/admin/acesso");
+        else
+            navigate(
+                bookingConsultationLoginRoute(
+                    consultationId,
+                    producerConsultation,
+                ),
+            );
+    }, [
+        consultationId,
+        consultationRole,
+        consultationToken,
+        producerConsultation,
+        role,
+        navigate,
+    ]);
     const needsProfileSelection =
         role === null &&
-        (["/conta", "/notificacoes"].includes(path) || bookingsRoute);
+        (["/conta", "/notificacoes"].includes(path) ||
+            (bookingsRoute && !consultationId));
     const screenPath = needsProfileSelection ? "/escolher-perfil" : path;
     const showProfileSelection = screenPath === "/escolher-perfil";
     const showLogin =
@@ -324,6 +371,14 @@ export function App() {
 
     const handleSignIn = (auth: AuthResult) => {
         signIn(auth);
+        const consultationReturn = bookingConsultationReturnRoute(
+            route,
+            auth.user.role,
+        );
+        if (consultationReturn) {
+            changeRoute(consultationReturn);
+            return;
+        }
         const bookingReturn = bookingReturnRoute(route, auth.user.role);
         if (bookingReturn) {
             changeRoute(bookingReturn);
@@ -523,8 +578,21 @@ export function App() {
                         onContinue={() => navigate("/explorar")}
                     />
                 )}
+                {role === "consumer" && path === RECEIVED_BOOKINGS_ROUTE && (
+                    <BookingNotificationsPage
+                        onUpdatesLoaded={reportUpdates}
+                        updates={updates}
+                        key={userId}
+                        onNavigate={navigate}
+                    />
+                )}
                 {producerBookingsPath && !receivedBookingsBlocked && (
-                    <ReceivedBookingsPage key={userId} onNavigate={navigate} />
+                    <ReceivedBookingsPage
+                        key={userId}
+                        bookings={received}
+                        onBookingsLoaded={reportReceived}
+                        onNavigate={navigate}
+                    />
                 )}
                 {receivedBookingId && !receivedBookingsBlocked && (
                     <ReceivedBookingPage
@@ -582,6 +650,8 @@ export function App() {
                     />
                 )}
                 {bookingsRoute &&
+                    (!consultationId ||
+                        (consultationRole && consultationToken)) &&
                     !needsProfileSelection &&
                     (role === "consumer" || role === "producer" ? (
                         bookingCancelRoute && bookingDetailId ? (
@@ -593,12 +663,26 @@ export function App() {
                                 />
                             )
                         ) : bookingDetailId ? (
-                            <BookingDetailPage
-                                key={path}
-                                id={bookingDetailId}
-                                role={role}
-                                onNavigate={navigate}
-                            />
+                            role === "producer" ? (
+                                <ReceivedBookingPage
+                                    key={`${userId}:${bookingDetailId}`}
+                                    id={bookingDetailId}
+                                    backRoute={
+                                        fromNotifications
+                                            ? RECEIVED_BOOKINGS_ROUTE
+                                            : BOOKINGS_LIST_ROUTE
+                                    }
+                                    onNavigate={navigate}
+                                />
+                            ) : (
+                                <BookingDetailPage
+                                    key={`${role}:${userId}:${path}`}
+                                    id={bookingDetailId}
+                                    role={role}
+                                    fromNotifications={fromNotifications}
+                                    onNavigate={navigate}
+                                />
+                            )
                         ) : (
                             <BookingsPage
                                 key={role}
@@ -679,6 +763,7 @@ export function App() {
             </main>
             {!isAuthFlow && !receivedDetailPath && (
                 <BottomNavigation
+                    hasUnreadNotifications={hasUnread}
                     path={path}
                     role={role}
                     onNavigate={navigate}
@@ -690,7 +775,7 @@ export function App() {
 
 export default App;
 
-/** Segmento da rota sem escape; um "%" solto não derruba a tela. */
+// Mantém o segmento original quando a rota tem um escape inválido.
 function decodeRouteSegment(segment: string): string {
     try {
         return decodeURIComponent(segment);

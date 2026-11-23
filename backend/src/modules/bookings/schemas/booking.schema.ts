@@ -75,3 +75,12 @@ BookingSchema.index({ produtor: 1, status: 1, criadoEm: -1, _id: -1 });
 // Recebidas sem filtro de situação (`GET /bookings/received`): o índice acima
 // tem `status` no meio e obrigaria a ordenar em memória.
 BookingSchema.index({ produtor: 1, criadoEm: -1, _id: -1 });
+// Notificações (`GET /bookings/notifications`, HU48): filtram por conta e
+// situação e ordenam pela atualização mais recente, sem ordenar em memória.
+BookingSchema.index({
+  consumidor: 1,
+  status: 1,
+  atualizadoEm: -1,
+  _id: -1,
+});
+BookingSchema.index({ produtor: 1, status: 1, atualizadoEm: -1, _id: -1 });

@@ -1,5 +1,6 @@
 import {
     BOOKING_HOURS,
+    BOOKING_MESSAGE_MAX,
     MAX_PARTICIPANTS,
     PAYMENT_METHODS,
     type BookingField,
@@ -7,7 +8,7 @@ import {
     type BookingFormValues,
 } from "./bookingTypes";
 
-const REQUIRED_MESSAGES: Record<BookingField, string> = {
+const REQUIRED_MESSAGES: Record<Exclude<BookingField, "mensagem">, string> = {
     data: "Informe a data desejada.",
     horario: "Escolha o horário.",
     participantes: "Informe o número de participantes.",
@@ -95,7 +96,9 @@ export function validateBookingForm(
     now: Date = new Date(),
 ): BookingFormErrors {
     const errors: BookingFormErrors = {};
-    for (const field of Object.keys(REQUIRED_MESSAGES) as BookingField[]) {
+    for (const field of Object.keys(
+        REQUIRED_MESSAGES,
+    ) as (keyof typeof REQUIRED_MESSAGES)[]) {
         const value = values[field].trim();
         if (!value) {
             errors[field] = REQUIRED_MESSAGES[field];
@@ -103,6 +106,9 @@ export function validateBookingForm(
         }
         const rule = VALUE_RULES[field];
         if (rule && !rule.isValid(value)) errors[field] = rule.message;
+    }
+    if (values.mensagem.length > BOOKING_MESSAGE_MAX) {
+        errors.mensagem = `Escreva uma mensagem de até ${BOOKING_MESSAGE_MAX} caracteres.`;
     }
     validateSchedule(values, now, errors);
     return errors;

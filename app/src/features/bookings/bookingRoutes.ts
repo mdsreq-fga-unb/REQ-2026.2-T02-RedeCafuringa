@@ -4,10 +4,37 @@
  */
 export const BOOKING_SENT_ROUTE = "/pre-reserva-enviada";
 
-/** Lista de pré-reservas: placeholder até a HU45 (rota do item "Pré-reservas"). */
+/** Rota do item "Pré-reservas". */
 export const BOOKINGS_LIST_ROUTE = "/reservas";
-
 export const RECEIVED_BOOKINGS_ROUTE = "/notificacoes";
+
+export function bookingConsultationRoute(id: string) {
+    return `${BOOKINGS_LIST_ROUTE}/${encodeURIComponent(id)}?origem=notificacoes`;
+}
+
+export function parseBookingConsultationRoute(path: string) {
+    const match = /^\/reservas\/([^/?]+)$/.exec(path);
+    if (!match) return null;
+    try {
+        return decodeURIComponent(match[1]);
+    } catch {
+        return null;
+    }
+}
+
+export function bookingConsultationLoginRoute(id: string, producer: boolean) {
+    return `/login/${producer ? "producer" : "consumer"}?${new URLSearchParams({ reserva: id })}`;
+}
+
+export function bookingConsultationReturnRoute(
+    route: string,
+    role: string | null,
+) {
+    if (role !== "consumer" && role !== "producer") return null;
+    const query = new URLSearchParams(route.split("?")[1] ?? "");
+    const id = query.get("reserva");
+    return id ? bookingConsultationRoute(id) : null;
+}
 
 export function receivedBookingRoute(id: string): string {
     return `${RECEIVED_BOOKINGS_ROUTE}/${encodeURIComponent(id)}`;

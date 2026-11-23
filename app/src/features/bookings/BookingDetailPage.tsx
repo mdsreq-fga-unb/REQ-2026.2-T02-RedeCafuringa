@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
 import {
+    bookingCode,
     bookingTotal,
     formatBookingDate,
     formatBookingTime,
@@ -9,6 +10,13 @@ import {
     paymentLabel,
     type BookingDetail,
 } from "./bookingDetails";
+import {
+    bookingConsultationLoginRoute,
+    bookingRoute,
+    experienceDetailsRoute,
+    RECEIVED_BOOKINGS_ROUTE,
+} from "./bookingRoutes";
+import { markBookingUpdateRead } from "./bookingNotificationsService";
 import { getBooking } from "./bookingQueryService";
 import { BookingSessionError } from "./bookingService";
 import type { BookingStatus } from "./bookingTypes";
@@ -24,6 +32,7 @@ type LoadBooking = (
 type BookingDetailPageProps = {
     id: string;
     role: Role;
+    fromNotifications?: boolean;
     onNavigate: (path: string) => void;
     load?: LoadBooking;
 };
@@ -55,12 +64,12 @@ const UPDATED_AT = new Intl.DateTimeFormat("pt-BR", {
 
 function Details({ booking, role }: { booking: BookingDetail; role: Role }) {
     const rows: Array<[string, string]> = [
-        ["Local", booking.experience.local],
         ["Data", formatBookingDate(booking.date)],
         ["Horário", formatBookingTime(booking.time)],
         ["Participantes", formatParticipants(booking.participants)],
         ["Valor total", bookingTotal(booking)],
         ["Pagamento", paymentLabel(booking.paymentMethod)],
+        ["Local", booking.experience.local],
         [
             role === "producer" ? "Solicitada por" : "Responsável",
             booking.counterpart.name,
@@ -87,9 +96,11 @@ function Details({ booking, role }: { booking: BookingDetail; role: Role }) {
 export function BookingDetailPage({
     id,
     role,
+    fromNotifications = false,
     onNavigate,
     load = getBooking,
 }: BookingDetailPageProps) {
+    const backRoute = fromNotifications ? RECEIVED_BOOKINGS_ROUTE : LIST_ROUTE;
     const [state, setState] = useState<State>({ status: "loading" });
     const [attempt, setAttempt] = useState(0);
 
@@ -98,6 +109,10 @@ export function BookingDetailPage({
         load(id, { signal: controller.signal }).then(
             (booking) => {
                 if (controller.signal.aborted) return;
+                // Ver o detalhe, por qualquer caminho, é ler a atualização.
+                if (booking && booking.status !== "pendente") {
+                    markBookingUpdateRead(`${booking.id}:${booking.status}`);
+                }
                 setState(
                     booking
                         ? { status: "ready", booking }
@@ -124,7 +139,7 @@ export function BookingDetailPage({
             className="booking-page booking-detail-page"
             aria-busy={state.status === "loading"}
         >
-            <BackButton label="Voltar" onClick={() => onNavigate(LIST_ROUTE)} />
+            <BackButton label="Voltar" onClick={() => onNavigate(backRoute)} />
 
             {state.status === "loading" && (
                 <p role="status">Carregando pré-reserva…</p>
@@ -158,7 +173,16 @@ export function BookingDetailPage({
                     <ActionButton
                         variant="orange"
                         type="button"
-                        onClick={() => onNavigate(`/login/${role}`)}
+                        onClick={() =>
+                            onNavigate(
+                                fromNotifications
+                                    ? bookingConsultationLoginRoute(
+                                          id,
+                                          role === "producer",
+                                      )
+                                    : `/login/${role}`,
+                            )
+                        }
                     >
                         Entrar
                     </ActionButton>
@@ -166,7 +190,7 @@ export function BookingDetailPage({
             )}
 
             {state.status === "missing" && (
-                <div className="booking-list-empty">
+                <div className="booking-list-empty" role="alert">
                     <h1>Pré-reserva não encontrada</h1>
                     <p>Ela não existe ou não está vinculada à sua conta.</p>
                     <ActionButton
@@ -180,22 +204,50 @@ export function BookingDetailPage({
             )}
 
             {state.status === "ready" && (
-                <>
-                    <h1
-                        className={`booking-status booking-status--${state.booking.status}`}
+                <div className="booking-detail-content">
+                    <header
+                        className="booking-detail-header"
+                        data-status={state.booking.status}
                     >
-                        {STATUS_TITLES[state.booking.status]}
-                    </h1>
-                    <p className="booking-updated">
-                        {`Última atualização: ${UPDATED_AT.format(new Date(state.booking.updatedAt))}`}
-                    </p>
-                    <h2>{state.booking.experience.name}</h2>
-                    {!state.booking.experience.available && (
-                        <p className="booking-notice">
-                            Esta experiência não está mais disponível.
-                        </p>
+                        <h1
+                            className={`booking-status booking-status--${state.booking.status}`}
+                        >
+                            {STATUS_TITLES[state.booking.status]}
+                        </h1>
+                        <div className="booking-detail-meta">
+                            <strong>{bookingCode(state.booking.id)}</strong>
+                            <p className="booking-updated">
+                                {`Última atualização: ${UPDATED_AT.format(new Date(state.booking.updatedAt))}`}
+                            </p>
+                        </div>
+                    </header>
+                    <section
+                        className="booking-detail-summary"
+                        aria-labelledby="booking-experience-title"
+                    >
+                        <h2 id="booking-experience-title">
+                            {state.booking.experience.name}
+                        </h2>
+                        {!state.booking.experience.available && (
+                            <p className="booking-notice">
+                                Esta experiência não está mais disponível.
+                            </p>
+                        )}
+                        <Details booking={state.booking} role={role} />
+                    </section>
+                    {state.booking.responseMessage && (
+                        <section
+                            className="booking-message booking-message--response"
+                            aria-labelledby="booking-response-title"
+                        >
+                            <h2 id="booking-response-title">
+                                {role === "consumer"
+                                    ? "Mensagem do produtor"
+                                    : "Sua resposta"}
+                            </h2>
+                            <p>{state.booking.responseMessage}</p>
+                        </section>
                     )}
-                    <Details booking={state.booking} role={role} />
                     {state.booking.message && (
                         <section
                             className="booking-message"
@@ -209,6 +261,40 @@ export function BookingDetailPage({
                             <p>{state.booking.message}</p>
                         </section>
                     )}
+                    {role === "consumer" &&
+                        state.booking.experience.available &&
+                        state.booking.status === "aceita" && (
+                            <ActionButton
+                                variant="outline"
+                                type="button"
+                                onClick={() =>
+                                    onNavigate(
+                                        experienceDetailsRoute(
+                                            state.booking.experienceId,
+                                        ),
+                                    )
+                                }
+                            >
+                                Ver experiência e contato
+                            </ActionButton>
+                        )}
+                    {role === "consumer" &&
+                        state.booking.experience.available &&
+                        state.booking.status === "recusada" && (
+                            <ActionButton
+                                variant="orange"
+                                type="button"
+                                onClick={() =>
+                                    onNavigate(
+                                        bookingRoute(
+                                            state.booking.experienceId,
+                                        ),
+                                    )
+                                }
+                            >
+                                Fazer nova pré-reserva
+                            </ActionButton>
+                        )}
                     {/* HU46 CA02: só a solicitante cancela, e só se pendente (RN20). */}
                     {role === "consumer" &&
                         state.booking.status === "pendente" && (
@@ -224,7 +310,7 @@ export function BookingDetailPage({
                                 Cancelar solicitação
                             </button>
                         )}
-                </>
+                </div>
             )}
         </section>
     );

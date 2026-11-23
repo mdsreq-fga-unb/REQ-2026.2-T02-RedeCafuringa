@@ -69,7 +69,8 @@ describe("HU44 — solicitar pré-reserva de experiência", () => {
         fireEvent.change(screen.getByLabelText("Data desejada"), {
             target: { value: "2030-01-15" },
         });
-        await user.selectOptions(screen.getByLabelText("Horário"), "09:00");
+        await user.click(screen.getByLabelText("Horário"));
+        await user.click(screen.getByRole("button", { name: "09h00" }));
         await user.selectOptions(screen.getByLabelText("Participantes"), "2");
         await user.selectOptions(
             screen.getByLabelText("Forma de pagamento"),

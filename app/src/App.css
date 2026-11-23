@@ -808,6 +808,12 @@ h2 {
     stroke-width: 1.7;
 }
 
+.nav-icon .nav-notification-dot {
+    fill: #b52d27;
+    stroke: #fffefa;
+    stroke-width: 1.5;
+}
+
 .bottom-nav button.active {
     color: var(--orange-text-strong);
     font-weight: 700;

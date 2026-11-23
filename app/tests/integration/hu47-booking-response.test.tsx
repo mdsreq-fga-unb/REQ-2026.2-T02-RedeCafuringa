@@ -82,7 +82,7 @@ function mockApi() {
         }
         if (url.pathname === bookingsPath && method === "GET") {
             return json({
-                itens: [current, accepted].map((item) => ({
+                itens: [accepted, current].map((item) => ({
                     ...item,
                     experiencia: {
                         nome: item.experienciaNome,
@@ -160,6 +160,15 @@ describe("HU47 — responder pré-reserva de experiência", () => {
         expect(await screen.findByText(/1 solicitação.*aguarda/)).toBeTruthy();
         expect(screen.getByText(consumerName)).toBeTruthy();
         expect(screen.getByText(accepted.consumidorNome)).toBeTruthy();
+        const cards = screen.getAllByRole("listitem");
+        expect(cards[0].textContent).toContain("Nova solicitação");
+        expect(cards[0].textContent).toContain(consumerName);
+        expect(cards[1].textContent).not.toContain("Nova solicitação");
+        expect(
+            screen
+                .getByRole("button", { name: "Notificações" })
+                .getAttribute("aria-description"),
+        ).toBe("Há notificações novas");
         const listCall = fetchMock.mock.calls.find(([url]) =>
             String(url).endsWith(bookingsPath),
         );
@@ -184,6 +193,28 @@ describe("HU47 — responder pré-reserva de experiência", () => {
             screen.getByRole("textbox", { name: /Mensagem para Ana Oliveira/ }),
         ).toBeTruthy();
     });
+
+    it.each([
+        ["", "#/reservas"],
+        ["?origem=notificacoes", "#/notificacoes"],
+    ])(
+        "permite responder pelo detalhe compartilhado (%s)",
+        async (query, backRoute) => {
+            mockApi();
+            const { user } = start(`#/reservas/${booking.id}${query}`);
+
+            await screen.findByRole("heading", { name: "Pendente" });
+            expect(
+                screen.getByRole("button", { name: "Aceitar pré-reserva" }),
+            ).toBeTruthy();
+            expect(
+                screen.getByRole("button", { name: "Recusar solicitação" }),
+            ).toBeTruthy();
+
+            await user.click(screen.getByRole("button", { name: "Voltar" }));
+            expect(window.location.hash).toBe(backRoute);
+        },
+    );
 
     it.each([
         { action: "Aceitar pré-reserva", status: "aceita", label: "Aceito" },
@@ -232,6 +263,12 @@ describe("HU47 — responder pré-reserva de experiência", () => {
             });
             expect(
                 screen.queryByRole("link", { name: /^Responder/ }),
+            ).toBeNull();
+            expect(screen.queryByText("Nova solicitação")).toBeNull();
+            expect(
+                screen
+                    .getByRole("button", { name: "Notificações" })
+                    .getAttribute("aria-description"),
             ).toBeNull();
             const updated = details.find(
                 (link) => link.getAttribute("href") === detailRoute,

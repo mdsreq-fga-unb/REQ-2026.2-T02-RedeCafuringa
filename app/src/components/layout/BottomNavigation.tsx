@@ -3,12 +3,14 @@ import type { Role } from "../../shared/types";
 type BottomNavigationProps = {
     path: string;
     role: Role | null;
+    hasUnreadNotifications?: boolean;
     onNavigate: (path: string) => void;
 };
 
 export function BottomNavigation({
     path,
     role,
+    hasUnreadNotifications = false,
     onNavigate,
 }: BottomNavigationProps) {
     const isProducer = role === "producer";
@@ -56,6 +58,9 @@ export function BottomNavigation({
             <button
                 className={path === "/notificacoes" ? "active" : ""}
                 aria-current={path === "/notificacoes" ? "page" : undefined}
+                aria-description={
+                    hasUnreadNotifications ? "Há notificações novas" : undefined
+                }
                 onClick={() =>
                     onNavigate(role ? "/notificacoes" : "/escolher-perfil")
                 }
@@ -67,6 +72,14 @@ export function BottomNavigation({
                 >
                     <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z" />
                     <path d="M10 21h4" />
+                    {hasUnreadNotifications && (
+                        <circle
+                            className="nav-notification-dot"
+                            cx="19"
+                            cy="5"
+                            r="4"
+                        />
+                    )}
                 </svg>
                 Notificações
             </button>

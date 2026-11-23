@@ -47,6 +47,9 @@ export class BookingCounterpartResponse {
  * (CA07).
  */
 export class BookingDetailResponse extends BookingResponse {
+  @ApiPropertyOptional({ description: 'Resposta do produtor à solicitação' })
+  mensagemResposta?: string;
+
   @ApiProperty({ type: BookingExperienceResponse })
   experiencia: BookingExperienceResponse;
 

@@ -24,7 +24,12 @@ import {
   bookingProducerFilter,
   INITIAL_BOOKING_STATUS,
   isBookingInPast,
+  UNKNOWN_EXPERIENCE_NAME,
 } from './domain/booking.js';
+import {
+  bookingStatusText,
+  buildBookingConsultationLink,
+} from './domain/booking-notification.js';
 import type { BookingResponse } from './dto/booking.response.js';
 import type { CreateBookingDto } from './dto/create-booking.dto.js';
 import type { ReceivedBookingResponse } from './dto/received-booking.response.js';
@@ -192,8 +197,8 @@ export class BookingsService implements BeforeApplicationShutdown {
       );
     }
 
+    this.notifyParticipants(updated);
     const [response] = await this.toReceivedResponses([updated]);
-    this.notifyResponseParticipants(updated);
     return response;
   }
 
@@ -201,8 +206,8 @@ export class BookingsService implements BeforeApplicationShutdown {
     await Promise.allSettled(this.pendingNotifications);
   }
 
-  private notifyResponseParticipants(booking: BookingDoc): void {
-    const task = this.sendResponseNotifications(booking)
+  private notifyParticipants(booking: BookingDoc): void {
+    const task = this.sendNotifications(booking)
       .catch((error: unknown) => {
         const name = error instanceof Error ? error.name : 'erro desconhecido';
         this.logger.warn(
@@ -213,7 +218,7 @@ export class BookingsService implements BeforeApplicationShutdown {
     this.pendingNotifications.add(task);
   }
 
-  private async sendResponseNotifications(booking: BookingDoc): Promise<void> {
+  private async sendNotifications(booking: BookingDoc): Promise<void> {
     const [consumer, producer, experience] = await Promise.all([
       this.users.findById(booking.consumidor).select('email').lean().exec(),
       this.users.findById(booking.produtor).select('email').lean().exec(),
@@ -223,45 +228,57 @@ export class BookingsService implements BeforeApplicationShutdown {
         .lean()
         .exec(),
     ]);
-    if (!consumer || !producer || !experience) {
-      throw new Error('Dados necessários à notificação não encontrados');
-    }
-
-    const accepted = booking.status === BookingStatus.ACEITA;
-    const decision = accepted ? 'aceita' : 'recusada';
-    const message = booking.mensagemResposta
-      ? `\nMensagem do produtor: ${booking.mensagemResposta}`
-      : '';
-    const details = `Experiência: ${experience.nome}\nData: ${booking.data}\nHorário: ${booking.horario}`;
-    const emails = [
-      {
-        to: consumer.email,
-        subject: `Pré-reserva ${decision}: ${experience.nome}`,
-        text: `Sua solicitação de pré-reserva foi ${decision}.\n${details}${message}`,
-      },
-      {
-        to: producer.email,
-        subject: `Resposta registrada: ${experience.nome}`,
-        text: `Sua resposta à solicitação de pré-reserva foi registrada como ${decision}.\n${details}${message}`,
-      },
-    ];
-    const results = await Promise.all(
-      emails.map((email) =>
-        sendWithRetry(
-          (mailMessage) => this.mail.send(mailMessage),
-          email,
-          parseRetryDelays(this.config.get<string>('MAIL_RETRY_DELAYS_MS')),
-        ),
-      ),
+    const id = booking._id.toString();
+    const code = `CAF-${id.slice(-6).toUpperCase()}`;
+    const appUrl = this.config.get<string>('APP_PUBLIC_URL');
+    const cancelled = booking.status === BookingStatus.CANCELADA;
+    const statusText = bookingStatusText(booking.status);
+    const name = experience?.nome ?? UNKNOWN_EXPERIENCE_NAME;
+    const purpose = cancelled ? 'booking_cancellation' : 'booking_response';
+    const details = `Solicitação: ${code}\nExperiência: ${name}\nData: ${booking.data}\nHorário: ${booking.horario}`;
+    const delays = parseRetryDelays(
+      this.config.get<string>('MAIL_RETRY_DELAYS_MS'),
     );
-
-    for (const result of results) {
-      if (result.delivered) continue;
-      this.metrics.recordMailFailure('booking_response');
-      this.logger.warn(
-        `Notificação de resposta de pré-reserva não entregue após ${result.attempts} tentativas: ${result.errorName}`,
-      );
-    }
+    const recipients = [
+      { to: consumer?.email, producerProfile: false },
+      { to: producer?.email, producerProfile: true },
+    ];
+    await Promise.all(
+      recipients.map(async ({ to, producerProfile }) => {
+        if (!to) {
+          this.metrics.recordMailFailure(purpose);
+          this.logger.warn(
+            'Notificação de pré-reserva sem destinatário disponível',
+          );
+          return;
+        }
+        const link = buildBookingConsultationLink(appUrl, id, {
+          producer: producerProfile,
+        });
+        const intro =
+          producerProfile && !cancelled
+            ? `Sua resposta à solicitação de pré-reserva foi registrada como ${statusText}.`
+            : `A solicitação de pré-reserva foi ${statusText}.`;
+        const result = await sendWithRetry(
+          (message) => this.mail.send(message),
+          {
+            to,
+            subject:
+              producerProfile && !cancelled
+                ? `Resposta registrada: ${name}`
+                : `Pré-reserva ${statusText}: ${name}`,
+            text: `${intro}\n${details}${link ? `\nConsultar pré-reserva: ${link}` : ''}`,
+          },
+          delays,
+        );
+        if (!result.delivered) {
+          this.metrics.recordMailFailure(purpose);
+          this.logger.warn(
+            `Notificação de pré-reserva não entregue após ${result.attempts} tentativas: ${result.errorName}`,
+          );
+        }
+      }),
+    );
   }
 
   private async toReceivedResponses(
@@ -366,7 +383,10 @@ export class BookingsService implements BeforeApplicationShutdown {
       )
       .lean<BookingDoc>()
       .exec();
-    if (cancelled) return this.toResponse(cancelled);
+    if (cancelled) {
+      this.notifyParticipants(cancelled);
+      return this.toResponse(cancelled);
+    }
 
     // Nada foi gravado: descobre se a solicitação não é do usuário (404) ou se a
     // situação atual não permite cancelar (409).

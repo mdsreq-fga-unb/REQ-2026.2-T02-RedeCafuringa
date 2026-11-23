@@ -1,5 +1,6 @@
 import {
   Body,
+  Header,
   Controller,
   Get,
   HttpCode,
@@ -33,6 +34,7 @@ import {
   BookingDetailResponse,
   BookingListResponse,
 } from './dto/booking-detail.response.js';
+import { BookingNotificationResponse } from './dto/booking-notification.response.js';
 import { BookingResponse } from './dto/booking.response.js';
 import { CreateBookingDto } from './dto/create-booking.dto.js';
 import { ListBookingsQuery } from './dto/list-bookings.query.js';
@@ -209,7 +211,26 @@ export class BookingsController {
   }
 
   @Roles(Role.CONSUMIDOR, Role.PRODUTOR)
+  @Get('notifications')
+  @Header('Cache-Control', 'no-store')
+  @ApiBearerAuth('bearer')
+  @ApiOperation({
+    summary: 'Consultar alterações das próprias pré-reservas',
+    description:
+      'HU48/RF48: lista aceites, recusas e cancelamentos registrados nas solicitações vinculadas à conta autenticada, da alteração mais recente à mais antiga.',
+  })
+  @ApiOkResponse({ type: [BookingNotificationResponse] })
+  @ApiUnauthorizedResponse({ type: ErrorResponse })
+  @ApiForbiddenResponse({ type: ErrorResponse })
+  listNotifications(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<BookingNotificationResponse[]> {
+    return this.queries.listNotifications(user);
+  }
+
+  @Roles(Role.CONSUMIDOR, Role.PRODUTOR)
   @Get(':id')
+  @Header('Cache-Control', 'no-store')
   @ApiBearerAuth('bearer')
   @ApiParam({
     name: 'id',
