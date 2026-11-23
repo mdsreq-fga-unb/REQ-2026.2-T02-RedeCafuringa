@@ -15,14 +15,17 @@ import type {
 } from './dto/booking-detail.response.js';
 import {
   NOTIFIABLE_BOOKING_STATUSES,
+  NOTIFICATIONS_LIMIT,
   type BookingNotificationResponse,
 } from './dto/booking-notification.response.js';
 import type { ListBookingsQuery } from './dto/list-bookings.query.js';
-import { bookingProducerFilter } from './domain/booking.js';
+import {
+  bookingProducerFilter,
+  UNKNOWN_EXPERIENCE_NAME,
+} from './domain/booking.js';
 import { Booking } from './schemas/booking.schema.js';
 
 const NOT_FOUND = 'Pré-reserva não encontrada';
-const UNKNOWN_EXPERIENCE = 'Experiência indisponível';
 const UNKNOWN_PARTY = 'Usuário indisponível';
 
 /** De quem é a consulta: define o filtro de dono e quem é "o outro lado". */
@@ -98,6 +101,7 @@ export class BookingsQueryService {
           },
         },
         { $sort: { atualizadoEm: -1, _id: -1 } },
+        { $limit: NOTIFICATIONS_LIMIT },
         {
           $lookup: {
             from: this.experiences.collection.name,
@@ -125,7 +129,7 @@ export class BookingsQueryService {
         id: `${reservaId}:${row.status}`,
         reservaId,
         codigo: `CAF-${reservaId.slice(-6).toUpperCase()}`,
-        experienciaNome: row.experienciaNome ?? UNKNOWN_EXPERIENCE,
+        experienciaNome: row.experienciaNome ?? UNKNOWN_EXPERIENCE_NAME,
         data: row.data,
         horario: row.horario,
         participantes: row.participantes,
@@ -266,7 +270,7 @@ export class BookingsQueryService {
         new Date()
       ).toISOString(),
       experiencia: {
-        nome: experience?.nome ?? UNKNOWN_EXPERIENCE,
+        nome: experience?.nome ?? UNKNOWN_EXPERIENCE_NAME,
         local: experience?.local ?? '',
         valorPorPessoa: fromCentavos(experience?.valorCentavos ?? 0),
         disponivel: experience ? available : false,

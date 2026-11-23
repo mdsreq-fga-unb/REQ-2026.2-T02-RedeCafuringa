@@ -7,6 +7,9 @@ export const NOTIFIABLE_BOOKING_STATUSES = [
   BookingStatus.CANCELADA,
 ] as const;
 
+/** Quantas alterações a listagem devolve, das mais recentes (HU48). */
+export const NOTIFICATIONS_LIMIT = 50;
+
 export class BookingNotificationResponse {
   @ApiProperty({ description: 'Identificador da alteração' })
   id: string;
