@@ -90,7 +90,7 @@ function setup() {
   };
   const mail = { send: vi.fn().mockResolvedValue(undefined) };
   const config = {
-    get: vi.fn((key: string) =>
+    get: vi.fn<(key: string) => string>((key) =>
       key === 'APP_PUBLIC_URL' ? 'https://app.example.test' : '0',
     ),
   };
@@ -480,4 +480,66 @@ describe('BookingsService (HU47/RF47)', () => {
 
     expect(mail.send).not.toHaveBeenCalled();
   });
+});
+
+describe('BookingsService (HU48/RF48) — link do e-mail', () => {
+  const id = receivedBooking._id.toHexString();
+  const owner = producerId.toHexString();
+  const acceptance = { status: BookingStatus.ACEITA } as const;
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  async function acceptWith(appUrl: string) {
+    const ctx = setup();
+    ctx.config.get.mockImplementation((key) =>
+      key === 'APP_PUBLIC_URL' ? appUrl : '0',
+    );
+    ctx.bookings.findOneAndUpdate.mockReturnValue(
+      query({ ...receivedBooking, ...acceptance }),
+    );
+    await ctx.service.respond(owner, id, acceptance);
+    await ctx.service.beforeApplicationShutdown();
+    return ctx;
+  }
+
+  it('CA05: mantém o caminho publicado de APP_PUBLIC_URL no link de cada envolvido', async () => {
+    const { mail } = await acceptWith('https://cafuringa.example.test/app/');
+
+    expect(mail.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'consumidor@example.test',
+        text: expect.stringContaining(
+          `https://cafuringa.example.test/app/#/reservas/${id}?origem=notificacoes`,
+        ),
+      }),
+    );
+    expect(mail.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'produtor@example.test',
+        text: expect.stringContaining(
+          `https://cafuringa.example.test/app/#/reservas/${id}?origem=notificacoes&perfil=producer`,
+        ),
+      }),
+    );
+  });
+
+  it.each(['não é uma url', 'http://cafuringa.example.test'])(
+    'CA02, CA07: envia o aviso sem link quando APP_PUBLIC_URL é inválida ou insegura (%s)',
+    async (appUrl) => {
+      const { mail, metrics } = await acceptWith(appUrl);
+
+      expect(mail.send).toHaveBeenCalledTimes(2);
+      for (const [message] of mail.send.mock.calls) {
+        expect(message.text).not.toContain('Consultar pré-reserva');
+      }
+      expect(metrics.recordMailFailure).not.toHaveBeenCalled();
+    },
+  );
 });
