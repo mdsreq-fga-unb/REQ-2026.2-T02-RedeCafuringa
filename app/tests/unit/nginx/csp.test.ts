@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { youtubeEmbedUrl } from "@/features/video/youtube";
 import {
+    FRAME_HOSTS,
     IMAGE_HOSTS,
     apiOrigin,
     buildCsp,
@@ -102,6 +104,20 @@ describe("buildCsp", () => {
                 "img-src",
             ),
         ).toEqual(["'self'", "data:", "https://api.exemplo.com"]);
+    });
+
+    it("vídeo do YouTube: libera só o domínio sem cookies em frame-src", () => {
+        expect(FRAME_HOSTS).toEqual(["https://www.youtube-nocookie.com"]);
+        expect(directive(buildCsp(), "frame-src")).toEqual([...FRAME_HOSTS]);
+        // O embed montado pelo app tem que sair de um host liberado.
+        const embed = new URL(youtubeEmbedUrl("dQw4w9WgXcQ")!);
+        expect(FRAME_HOSTS).toContain(embed.origin);
+    });
+
+    it("sem hosts de vídeo, frame-src fica 'none'", () => {
+        expect(directive(buildCsp({ frameHosts: [] }), "frame-src")).toEqual([
+            "'none'",
+        ]);
     });
 
     it("não repete diretivas", () => {
