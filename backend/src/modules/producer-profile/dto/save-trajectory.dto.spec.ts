@@ -141,3 +141,55 @@ describe('HU12/CA03 — validação da trajetória', () => {
     expect(messages.length).toBeGreaterThan(0);
   });
 });
+
+describe('trajetória — link de vídeo do YouTube', () => {
+  const LINK = 'https://youtu.be/dQw4w9WgXcQ';
+  const VIDEO_URL_ERROR =
+    'Cole um link de vídeo do YouTube, como https://www.youtube.com/watch?v=…';
+
+  it('omitido, é válido e não muda o vídeo salvo', async () => {
+    const { dto, messages } = await check({ trajetoria: 'Minha história' });
+
+    expect(messages).toEqual([]);
+    expect(dto.videoUrl).toBeUndefined();
+  });
+
+  it('aceita o link', async () => {
+    const { dto, messages } = await check({
+      trajetoria: 'Minha história',
+      videoUrl: ` ${LINK} `,
+    });
+
+    expect(messages).toEqual([]);
+    expect(dto.videoUrl).toBe(LINK);
+  });
+
+  it('null é o pedido explícito de remover o vídeo', async () => {
+    const { dto, messages } = await check({
+      trajetoria: 'Minha história',
+      videoUrl: null,
+    });
+
+    expect(messages).toEqual([]);
+    expect(dto.videoUrl).toBeNull();
+  });
+
+  it('em branco equivale a não informar', async () => {
+    const { dto, messages } = await check({
+      trajetoria: 'Minha história',
+      videoUrl: '',
+    });
+
+    expect(messages).toEqual([]);
+    expect(dto.videoUrl).toBeUndefined();
+  });
+
+  it.each(['https://vimeo.com/123', 42, true])(
+    'recusa %j com a orientação',
+    async (videoUrl) => {
+      expect(
+        (await check({ trajetoria: 'Minha história', videoUrl })).messages,
+      ).toEqual([VIDEO_URL_ERROR]);
+    },
+  );
+});
