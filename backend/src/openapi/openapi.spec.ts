@@ -286,7 +286,10 @@ describe('contrato OpenAPI', () => {
     }
     expect(schemas.SaveTrajectoryDto.properties).toHaveProperty('videoUrl');
     expect(schemas.SaveTrajectoryDto.required ?? []).not.toContain('videoUrl');
-    expect(schemas.SaveTrajectoryDto.properties?.videoUrl.nullable).toBe(true);
+    expect(schemas.SaveTrajectoryDto.properties?.videoUrl).toMatchObject({
+      type: 'string',
+      nullable: true,
+    });
     for (const output of ['ProductResponse', 'ExperienceResponse']) {
       expect(schemas[output].properties?.videoId, output).toMatchObject({
         type: 'string',

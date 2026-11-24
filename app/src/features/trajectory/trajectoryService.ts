@@ -7,23 +7,14 @@ import { prepareProfilePhoto } from "./photoResize";
 import type { TrajectoryDraft } from "./trajectoryModel";
 import { demoPublicProfiles } from "@/features/profile/publicProfileDemo";
 
-/** Id do vídeo do YouTube; ausente quando não há vídeo. */
-type WithVideo = { videoId?: string | null };
-export type OwnTrajectory = components["schemas"]["OwnTrajectoryResponse"] &
-    WithVideo;
+export type OwnTrajectory = components["schemas"]["OwnTrajectoryResponse"];
 export type PublicTrajectory =
-    components["schemas"]["PublicTrajectoryResponse"] & {
-        localidade?: string;
-    } & WithVideo;
+    components["schemas"]["PublicTrajectoryResponse"] & { localidade?: string };
 // O DTO do backend aceita string | null; o schema atual omite o tipo da união nullable.
 export type SaveTrajectory = Omit<
     components["schemas"]["SaveTrajectoryDto"],
     "telefone"
-> & {
-    telefone?: string | null;
-    /** Link do YouTube; omitido mantém o vídeo, `null` remove. */
-    videoUrl?: string | null;
-};
+> & { telefone?: string | null };
 
 // Demonstração: dados separados por produtor e sem chamadas ao backend real.
 const demoTrajectories = new Map<string, OwnTrajectory>();

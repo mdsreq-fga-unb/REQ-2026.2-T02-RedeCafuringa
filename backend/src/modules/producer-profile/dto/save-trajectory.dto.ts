@@ -82,6 +82,7 @@ export class SaveTrajectoryDto {
   telefonePublico?: boolean;
 
   @ApiPropertyOptional({
+    type: String,
     example: 'https://youtu.be/dQw4w9WgXcQ',
     nullable: true,
     maxLength: VIDEO_URL_MAX,

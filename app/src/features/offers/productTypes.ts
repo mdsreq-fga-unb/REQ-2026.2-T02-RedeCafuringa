@@ -1,9 +1,6 @@
 import type { components } from "@/shared/api/schema";
 
-/** `videoId` ainda não está no contrato gerado; vem da API de vídeo. */
-export type ApiProduct = components["schemas"]["ProductResponse"] & {
-    videoId?: string | null;
-};
+export type ApiProduct = components["schemas"]["ProductResponse"];
 
 export type ApiProductList = components["schemas"]["ProductListResponse"];
 
