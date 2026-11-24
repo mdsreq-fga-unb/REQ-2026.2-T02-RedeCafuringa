@@ -58,7 +58,10 @@ describe("VideoEmbed — vídeo do YouTube incorporado", () => {
             <VideoEmbed videoId={ID} title="Queijo minas artesanal" />,
         );
 
+        // O conteúdo do iframe é do YouTube; o axe no jsdom não consegue
+        // entrar nele, então só a página em volta é avaliada.
         const report = await axe.run(container, {
+            iframes: false,
             runOnly: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
             rules: { "color-contrast": { enabled: false } },
         });

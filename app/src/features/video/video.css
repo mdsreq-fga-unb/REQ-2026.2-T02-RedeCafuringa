@@ -1,0 +1,33 @@
+/* Vídeo do YouTube incorporado: ocupa a largura disponível, em 16:9. */
+
+.video-embed {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+}
+
+.video-embed-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--ink);
+}
+
+.video-embed-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.video-embed-link {
+    align-self: flex-start;
+    color: var(--orange-text);
+    font-weight: 600;
+}
