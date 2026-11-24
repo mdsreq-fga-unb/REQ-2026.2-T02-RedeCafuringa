@@ -9,10 +9,20 @@ type Props = {
     /** Orientação do formulário, que valida no envio (validateVideoUrl). */
     error?: string;
     disabled?: boolean;
+    /** Para que serve o vídeo nesta tela; aparece antes da dica de formato. */
+    description?: string;
 };
 
 /** Link opcional de vídeo do YouTube, com prévia quando o link é válido. */
-export function VideoUrlField({ id, value, onChange, error, disabled }: Props) {
+export function VideoUrlField({
+    id,
+    value,
+    onChange,
+    error,
+    disabled,
+    description,
+}: Props) {
+    const descriptionId = `${id}-description`;
     const hintId = `${id}-hint`;
     const errorId = `${id}-error`;
     const videoId = extractYoutubeId(value);
@@ -21,6 +31,11 @@ export function VideoUrlField({ id, value, onChange, error, disabled }: Props) {
             <label className="field-label" htmlFor={id}>
                 Vídeo do YouTube (opcional)
             </label>
+            {description && (
+                <p className="video-url-description" id={descriptionId}>
+                    {description}
+                </p>
+            )}
             <p className="video-url-hint" id={hintId}>
                 Cole o link do vídeo, por exemplo https://youtu.be/…
             </p>
@@ -36,7 +51,13 @@ export function VideoUrlField({ id, value, onChange, error, disabled }: Props) {
                 disabled={disabled}
                 onChange={(event) => onChange(event.target.value)}
                 aria-invalid={error ? true : undefined}
-                aria-describedby={error ? `${hintId} ${errorId}` : hintId}
+                aria-describedby={[
+                    description && descriptionId,
+                    hintId,
+                    error && errorId,
+                ]
+                    .filter(Boolean)
+                    .join(" ")}
             />
             {error && (
                 <p className="field-error" id={errorId} role="alert">

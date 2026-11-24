@@ -219,6 +219,7 @@ export function TrajectoryForm({
                     <div className="trajectory-field">
                         <VideoUrlField
                             id={`${id}-videoUrl`}
+                            description="Conte sua história em vídeo: a família, a propriedade e o dia a dia. O vídeo aparece no seu perfil público."
                             value={draft.videoUrl}
                             error={errors.videoUrl}
                             onChange={(value) => change("videoUrl", value)}

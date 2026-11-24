@@ -534,6 +534,11 @@ export function ProductRegistrationPage({
                     <div className="product-field">
                         <VideoUrlField
                             id="product-videoUrl"
+                            description={
+                                experience
+                                    ? "Mostre como é a experiência: o lugar, as atividades e o que a pessoa vai viver. O vídeo aparece na página da experiência."
+                                    : "Mostre seu produto em vídeo: como é feito, a colheita ou o preparo. O vídeo aparece na página do produto."
+                            }
                             value={draft.videoUrl}
                             error={errors.videoUrl}
                             disabled={pending}
