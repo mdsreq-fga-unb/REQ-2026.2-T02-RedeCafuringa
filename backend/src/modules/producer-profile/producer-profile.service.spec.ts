@@ -496,3 +496,98 @@ describe('ProducerProfileService', () => {
     });
   });
 });
+
+describe('ProducerProfileService — vídeo do YouTube na trajetória', () => {
+  const ID = 'dQw4w9WgXcQ';
+  const userId = '64b000000000000000000001';
+
+  type Update = {
+    $set: Record<string, unknown>;
+    $unset?: Record<string, unknown>;
+  };
+
+  it('com link, grava só o id do vídeo e o devolve', async () => {
+    const { service, model } = setup();
+    model.findOneAndUpdate.mockReturnValue(
+      query(producerDoc({ trajetoria: 'x', trajetoriaVideoId: ID })),
+    );
+
+    const result = await service.save(userId, {
+      trajetoria: 'x',
+      videoUrl: `https://youtu.be/${ID}`,
+    });
+
+    const update = model.findOneAndUpdate.mock.calls[0][1] as Update;
+    expect(update.$set.trajetoriaVideoId).toBe(ID);
+    expect(update.$set).not.toHaveProperty('videoUrl');
+    expect(update.$unset).toBeUndefined();
+    expect(result.videoId).toBe(ID);
+  });
+
+  it('sem o campo, não toca no vídeo salvo', async () => {
+    const { service, model } = setup();
+    model.findOneAndUpdate.mockReturnValue(query(producerDoc()));
+
+    await service.save(userId, { trajetoria: 'x' });
+
+    const update = model.findOneAndUpdate.mock.calls[0][1] as Update;
+    expect(update.$set).not.toHaveProperty('trajetoriaVideoId');
+    expect(update.$unset).toBeUndefined();
+  });
+
+  it('null remove o vídeo, junto com o telefone se também pedido', async () => {
+    const { service, model } = setup();
+    model.findOneAndUpdate.mockReturnValue(query(producerDoc()));
+
+    await service.save(userId, {
+      trajetoria: 'x',
+      telefone: null,
+      videoUrl: null,
+    });
+
+    const update = model.findOneAndUpdate.mock.calls[0][1] as Update;
+    expect(update.$unset).toEqual({ telefone: 1, trajetoriaVideoId: 1 });
+    expect(update.$set).not.toHaveProperty('trajetoriaVideoId');
+  });
+
+  it('lê o vídeo de volta junto com a trajetória', async () => {
+    const { service, model } = setup();
+    model.findOneAndUpdate.mockReturnValue(query(producerDoc()));
+
+    await service.save(userId, { trajetoria: 'x' });
+
+    const [, , options] = model.findOneAndUpdate.mock.calls[0] as [
+      unknown,
+      unknown,
+      { projection: string },
+    ];
+    expect(options.projection.split(' ')).toContain('trajetoriaVideoId');
+  });
+
+  it('a trajetória própria mostra o vídeo; sem vídeo, o campo não aparece', async () => {
+    const { service, model } = setup();
+    model.findOne.mockReturnValue(
+      query(producerDoc({ trajetoria: 'x', trajetoriaVideoId: ID })),
+    );
+    expect((await service.getOwn(userId)).videoId).toBe(ID);
+
+    model.findOne.mockReturnValue(query(producerDoc({ trajetoria: 'x' })));
+    expect(await service.getOwn(userId)).not.toHaveProperty('videoId');
+  });
+
+  it('o perfil público e a lista pública mostram o vídeo', async () => {
+    const { service, model } = setup();
+    const doc = producerDoc({ trajetoria: 'História', trajetoriaVideoId: ID });
+    model.findOne.mockReturnValue(query(doc));
+    model.find.mockReturnValue(query([doc]));
+
+    expect((await service.getPublic(doc.id)).videoId).toBe(ID);
+    expect((await service.listPublic())[0].videoId).toBe(ID);
+    const fields = (
+      model.findOne.mock.results[0].value as {
+        select: ReturnType<typeof vi.fn>;
+      }
+    ).select.mock.calls[0][0] as string;
+    expect(fields.split(' ')).toContain('trajetoriaVideoId');
+  });
+});
