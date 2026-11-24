@@ -4,6 +4,7 @@ import {
     extractYoutubeId,
     validateVideoUrl,
     youtubeEmbedUrl,
+    youtubeWatchUrl,
 } from "@/features/video/youtube";
 
 const ID = "dQw4w9WgXcQ";
@@ -72,5 +73,19 @@ describe("vídeo do YouTube — youtubeEmbedUrl", () => {
     it("recusa id fora do formato, para nunca montar um endereço arbitrário", () => {
         expect(youtubeEmbedUrl("../../evil")).toBeNull();
         expect(youtubeEmbedUrl("")).toBeNull();
+    });
+});
+
+describe("vídeo do YouTube — youtubeWatchUrl", () => {
+    it("monta o link para assistir, usado ao reabrir o formulário", () => {
+        expect(youtubeWatchUrl(ID)).toBe(
+            `https://www.youtube.com/watch?v=${ID}`,
+        );
+    });
+
+    it("sem id válido, devolve vazio", () => {
+        expect(youtubeWatchUrl(null)).toBe("");
+        expect(youtubeWatchUrl(undefined)).toBe("");
+        expect(youtubeWatchUrl("../evil")).toBe("");
     });
 });
