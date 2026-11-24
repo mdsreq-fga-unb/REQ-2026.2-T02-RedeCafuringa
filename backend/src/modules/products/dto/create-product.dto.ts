@@ -1,13 +1,19 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   ValidateBy,
   type ValidationArguments,
 } from 'class-validator';
+import {
+  IsYoutubeUrl,
+  NormalizeVideoUrl,
+} from '../../../common/video/is-youtube-url.decorator.js';
+import { VIDEO_URL_MAX } from '../../../common/video/youtube.js';
 import { normalizeFreeText } from '../../producer-profile/domain/trajectory.js';
 import {
   type AmountProblem,
@@ -115,4 +121,15 @@ export class CreateProductDto {
     },
   )
   gramasPorUnidade: number;
+
+  @ApiPropertyOptional({
+    example: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    maxLength: VIDEO_URL_MAX,
+    description:
+      'Link de um vídeo do YouTube (watch, youtu.be, shorts ou embed). A API guarda só o id do vídeo e devolve `videoId`. Em branco equivale a sem vídeo.',
+  })
+  @NormalizeVideoUrl()
+  @IsOptional()
+  @IsYoutubeUrl()
+  videoUrl?: string;
 }

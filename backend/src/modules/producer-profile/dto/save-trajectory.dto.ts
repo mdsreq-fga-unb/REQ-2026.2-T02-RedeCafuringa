@@ -14,6 +14,11 @@ import {
   normalizeFreeText,
   TRAJECTORY_MAX,
 } from '../domain/trajectory.js';
+import {
+  IsYoutubeUrl,
+  NormalizeVideoUrl,
+} from '../../../common/video/is-youtube-url.decorator.js';
+import { VIDEO_URL_MAX } from '../../../common/video/youtube.js';
 
 const normalize = ({ value }: { value: unknown }) => normalizeFreeText(value);
 
@@ -75,4 +80,17 @@ export class SaveTrajectoryDto {
   @ValidateIf((_object, value) => value !== undefined)
   @IsBoolean({ message: 'telefonePublico deve ser verdadeiro ou falso' })
   telefonePublico?: boolean;
+
+  @ApiPropertyOptional({
+    example: 'https://youtu.be/dQw4w9WgXcQ',
+    nullable: true,
+    maxLength: VIDEO_URL_MAX,
+    description:
+      'Link de um vídeo do YouTube para o perfil público. Se omitido (ou em branco), o vídeo salvo não muda. Com `null`, o vídeo é removido. A API guarda só o id e devolve `videoId`.',
+  })
+  @NormalizeVideoUrl()
+  // null é o pedido explícito de remover o vídeo; IsOptional deixa passar.
+  @IsOptional()
+  @IsYoutubeUrl()
+  videoUrl?: string | null;
 }
