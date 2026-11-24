@@ -1,6 +1,7 @@
 import { ApiHttpError, getApiClient, type ApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
+import { extractYoutubeId } from "@/features/video/youtube";
 import { toProductList } from "./productAdapter";
 import { saveDemoOffer, notifyOffersChanged } from "./publishedOffers";
 import { listMockProducts } from "./mockProductService";
@@ -41,6 +42,8 @@ export type ProductDraft = {
     preco: string;
     gramas: string;
     fotos: File[];
+    /** Link do YouTube, opcional; a API guarda só o id do vídeo. */
+    videoUrl?: string;
 };
 
 export type RegisteredProduct = {
@@ -51,6 +54,8 @@ export type RegisteredProduct = {
     precoPorUnidade: number;
     gramasPorUnidade: number;
     fotos: string[];
+    /** Id do vídeo do YouTube, ou `null` sem vídeo. */
+    videoId?: string | null;
     produtor: ApiProduct["produtor"];
     /** Presente nas respostas da API (RN10); as rotas públicas só trazem disponíveis. */
     disponivel?: boolean;
@@ -104,6 +109,7 @@ export async function registerProduct(
             precoPorUnidade: Number(draft.preco),
             gramasPorUnidade: Number(draft.gramas),
             fotos,
+            videoId: extractYoutubeId(draft.videoUrl ?? ""),
             produtor: {
                 id:
                     localStorage.getItem("cafuringa-user-id") ??
@@ -122,6 +128,8 @@ export async function registerProduct(
     body.set("descricao", draft.descricao.trim());
     body.set("precoPorUnidade", String(Number(draft.preco)));
     body.set("gramasPorUnidade", String(Number(draft.gramas)));
+    const videoUrl = draft.videoUrl?.trim();
+    if (videoUrl) body.set("videoUrl", videoUrl);
     // RNF06/RNF11: reduz cada foto no aparelho e descarta o EXIF/GPS antes de
     // enviar (mesmo preparo da foto de perfil). Uma de cada vez, para poupar memória.
     for (const foto of draft.fotos)

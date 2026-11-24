@@ -3,6 +3,7 @@ import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { saveDemoOffer, notifyOffersChanged } from "./publishedOffers";
 import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
 import type { ApiProduct } from "./productTypes";
+import { extractYoutubeId } from "@/features/video/youtube";
 
 export type ExperienceDraft = {
     nome: string;
@@ -12,6 +13,8 @@ export type ExperienceDraft = {
     local: string;
     duracao: string;
     fotos: File[];
+    /** Link do YouTube, opcional; a API guarda só o id do vídeo. */
+    videoUrl?: string;
 };
 
 export type RegisteredExperience = {
@@ -23,6 +26,8 @@ export type RegisteredExperience = {
     local: string;
     duracao: string;
     fotos: string[];
+    /** Id do vídeo do YouTube, ou `null` sem vídeo. */
+    videoId?: string | null;
     /** Responsável pela oferta (CA03, CA08): só dados de divulgação. */
     produtor: ApiProduct["produtor"];
     /** Presente nas respostas da API (RN10); as rotas públicas só trazem disponíveis. */
@@ -73,6 +78,7 @@ export async function registerExperience(
             local: draft.local.trim(),
             duracao: draft.duracao.trim(),
             fotos,
+            videoId: extractYoutubeId(draft.videoUrl ?? ""),
             produtor: {
                 id:
                     localStorage.getItem("cafuringa-user-id") ??
@@ -92,6 +98,8 @@ export async function registerExperience(
     body.set("valorPorPessoa", String(Number(draft.preco.replace(",", "."))));
     body.set("local", draft.local.trim());
     body.set("duracao", draft.duracao.trim());
+    const videoUrl = draft.videoUrl?.trim();
+    if (videoUrl) body.set("videoUrl", videoUrl);
     // RNF06/RNF11: reduz cada foto no aparelho e descarta o EXIF/GPS antes de
     // enviar (mesmo preparo da foto de perfil). Uma de cada vez, para poupar memória.
     for (const foto of draft.fotos)

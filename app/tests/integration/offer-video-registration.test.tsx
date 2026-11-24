@@ -145,10 +145,7 @@ describe("vídeo do YouTube no cadastro de experiência", () => {
         typeVideo(LINK);
 
         await user.selectOptions(f.categoria, "Produtos");
-        await user.selectOptions(
-            experienceFixture.fields().categoria,
-            "Experiência",
-        );
+        await user.selectOptions(f.categoria, "Experiência");
 
         expect(videoField().value).toBe(LINK);
     });
