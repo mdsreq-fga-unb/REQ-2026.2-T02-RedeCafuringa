@@ -13,6 +13,14 @@
  */
 export const IMAGE_HOSTS: readonly string[] = ["https://images.unsplash.com"];
 
+/**
+ * Hosts que podem ser incorporados em iframe. Hoje: o vídeo do YouTube das ofertas e da
+ * trajetória, sempre pelo domínio sem cookies (features/video/youtube.ts).
+ */
+export const FRAME_HOSTS: readonly string[] = [
+    "https://www.youtube-nocookie.com",
+];
+
 /** Origem (esquema + host + porta) da API, ou undefined se a URL não for http(s) válida. */
 export function apiOrigin(apiUrl: string | undefined): string | undefined {
     const value = (apiUrl ?? "").trim();
@@ -32,11 +40,13 @@ export type CspOptions = {
     /** VITE_API_URL do build. */
     apiUrl?: string;
     imageHosts?: readonly string[];
+    frameHosts?: readonly string[];
 };
 
 export function buildCsp({
     apiUrl,
     imageHosts = IMAGE_HOSTS,
+    frameHosts = FRAME_HOSTS,
 }: CspOptions = {}): string {
     const api = apiOrigin(apiUrl);
     const directives: Record<string, string[]> = {
@@ -50,6 +60,8 @@ export function buildCsp({
         "connect-src": ["'self'", ...(api ? [api] : [])],
         "manifest-src": ["'self'"],
         "worker-src": ["'self'"],
+        // Só o embed do vídeo; sem hosts, nenhum iframe carrega.
+        "frame-src": frameHosts.length ? [...frameHosts] : ["'none'"],
         "object-src": ["'none'"],
         "base-uri": ["'self'"],
         "form-action": ["'self'"],
