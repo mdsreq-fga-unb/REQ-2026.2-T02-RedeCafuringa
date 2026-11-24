@@ -136,3 +136,18 @@ describe("trajetória — vídeo do YouTube", () => {
         expect(sentBody(api).videoUrl).toBeNull();
     });
 });
+
+describe("trajetória — descrição do motivo do vídeo", () => {
+    it("explica para que serve o vídeo", async () => {
+        seedSession();
+        mockTrajectoryApi();
+
+        await openEditor();
+
+        expect(
+            screen.getByText(
+                "Conte sua história em vídeo: a família, a propriedade e o dia a dia. O vídeo aparece no seu perfil público.",
+            ),
+        ).toBeTruthy();
+    });
+});

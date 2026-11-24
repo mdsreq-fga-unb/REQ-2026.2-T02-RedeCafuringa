@@ -131,3 +131,52 @@ describe("VideoUrlField — link do vídeo no cadastro", () => {
         expect(report.violations).toEqual([]);
     });
 });
+
+describe("VideoUrlField — descrição do motivo do vídeo", () => {
+    const DESCRIPTION =
+        "Mostre seu produto em vídeo: como é feito, a colheita ou o preparo. O vídeo aparece na página do produto.";
+
+    it("mostra a descrição antes da dica e associa as duas ao campo", () => {
+        render(
+            <VideoUrlField
+                id="video"
+                value=""
+                description={DESCRIPTION}
+                onChange={() => {}}
+            />,
+        );
+
+        const description = document.getElementById("video-description");
+        expect(description?.textContent).toBe(DESCRIPTION);
+        expect(
+            description?.compareDocumentPosition(
+                document.getElementById("video-hint")!,
+            ),
+        ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+        expect(input().getAttribute("aria-describedby")).toBe(
+            "video-description video-hint",
+        );
+    });
+
+    it("com erro, o campo continua descrito pela descrição, pela dica e pelo erro", () => {
+        render(
+            <VideoUrlField
+                id="video"
+                value="https://vimeo.com/1"
+                description={DESCRIPTION}
+                error={VIDEO_URL_ERROR}
+                onChange={() => {}}
+            />,
+        );
+
+        expect(input().getAttribute("aria-describedby")).toBe(
+            "video-description video-hint video-error",
+        );
+    });
+
+    it("sem descrição, não mostra o parágrafo", () => {
+        render(<VideoUrlField id="video" value="" onChange={() => {}} />);
+
+        expect(document.getElementById("video-description")).toBeNull();
+    });
+});

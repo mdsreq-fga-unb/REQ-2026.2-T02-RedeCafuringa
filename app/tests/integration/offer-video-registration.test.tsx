@@ -150,3 +150,29 @@ describe("vídeo do YouTube no cadastro de experiência", () => {
         expect(videoField().value).toBe(LINK);
     });
 });
+
+describe("vídeo do YouTube — descrição do motivo no cadastro", () => {
+    it("produto explica para que serve o vídeo", async () => {
+        productFixture.session();
+        productFixture.mockProductApi();
+        await productFixture.openProduct();
+
+        expect(
+            screen.getByText(
+                "Mostre seu produto em vídeo: como é feito, a colheita ou o preparo. O vídeo aparece na página do produto.",
+            ),
+        ).toBeTruthy();
+    });
+
+    it("experiência explica para que serve o vídeo", async () => {
+        experienceFixture.session();
+        experienceFixture.mockExperienceApi();
+        await experienceFixture.openExperience();
+
+        expect(
+            screen.getByText(
+                "Mostre como é a experiência: o lugar, as atividades e o que a pessoa vai viver. O vídeo aparece na página da experiência.",
+            ),
+        ).toBeTruthy();
+    });
+});
