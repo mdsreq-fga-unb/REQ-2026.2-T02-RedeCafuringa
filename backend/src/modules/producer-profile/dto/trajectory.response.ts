@@ -40,6 +40,13 @@ export class OwnTrajectoryResponse {
       'Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.',
   })
   fotoUrl?: string;
+
+  @ApiPropertyOptional({
+    example: 'dQw4w9WgXcQ',
+    description:
+      'Id do vídeo do YouTube da trajetória. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}. Ausente se não houver vídeo.',
+  })
+  videoId?: string;
 }
 
 /** Trajetória como consumidores e visitantes a veem (RN07: só dados públicos). */
@@ -90,4 +97,11 @@ export class PublicTrajectoryResponse {
       'Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.',
   })
   fotoUrl?: string;
+
+  @ApiPropertyOptional({
+    example: 'dQw4w9WgXcQ',
+    description:
+      'Id do vídeo do YouTube da trajetória. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}. Ausente se não houver vídeo.',
+  })
+  videoId?: string;
 }
