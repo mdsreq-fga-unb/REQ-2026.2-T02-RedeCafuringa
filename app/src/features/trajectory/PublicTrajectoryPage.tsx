@@ -7,6 +7,8 @@ import { getPublicTrajectory, photoSrc } from "./trajectoryService";
 import type { PublicTrajectory } from "./trajectoryService";
 import { ProducerCatalogPage } from "@/features/profile/ProducerCatalogPage";
 import { WhatsAppContactLink, whatsAppContactUrl } from "@/features/contact";
+import { VideoEmbed } from "@/features/video/VideoEmbed";
+import { youtubeEmbedUrl } from "@/features/video/youtube";
 import "./trajectory.css";
 import "@/features/profile/publicProfile.css";
 
@@ -128,6 +130,15 @@ export function PublicTrajectoryPage({
                             <p className="body-copy trajectory-public-text">
                                 {data.atividades}
                             </p>
+                        </>
+                    )}
+                    {data.videoId && youtubeEmbedUrl(data.videoId) && (
+                        <>
+                            <h2>Vídeo</h2>
+                            <VideoEmbed
+                                videoId={data.videoId}
+                                title={data.nomeIniciativa || "produtora"}
+                            />
                         </>
                     )}
                     {canViewContact && data.telefone && (

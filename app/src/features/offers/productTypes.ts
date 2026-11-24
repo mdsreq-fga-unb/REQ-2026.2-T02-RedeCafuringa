@@ -1,6 +1,9 @@
 import type { components } from "@/shared/api/schema";
 
-export type ApiProduct = components["schemas"]["ProductResponse"];
+/** `videoId` ainda não está no contrato gerado; vem da API de vídeo. */
+export type ApiProduct = components["schemas"]["ProductResponse"] & {
+    videoId?: string | null;
+};
 
 export type ApiProductList = components["schemas"]["ProductListResponse"];
 
@@ -15,6 +18,8 @@ export type Product = {
     category?: string;
     local?: string;
     duracao?: string;
+    /** Id do vídeo do YouTube divulgado pela produtora. */
+    videoId?: string;
     id: string;
     name: string;
     producerName: string;
