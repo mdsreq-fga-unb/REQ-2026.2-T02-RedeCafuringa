@@ -27,7 +27,7 @@ describe("trajetória — vídeo do YouTube na demonstração", () => {
     });
 
     it("sem o campo, mantém o vídeo salvo; com null, remove", async () => {
-        localStorage.setItem("cafuringa-token", "mock-token-3");
+        localStorage.setItem("cafuringa-token", "mock-token-2");
         await saveTrajectory({
             trajetoria: "História",
             videoUrl: `https://youtu.be/${ID}`,
@@ -41,6 +41,6 @@ describe("trajetória — vídeo do YouTube na demonstração", () => {
             videoUrl: null,
         });
         expect((await getOwnTrajectory()).videoId).toBeUndefined();
-        expect(await getPublicTrajectory("3")).not.toHaveProperty("videoId");
+        expect(await getPublicTrajectory("2")).not.toHaveProperty("videoId");
     });
 });

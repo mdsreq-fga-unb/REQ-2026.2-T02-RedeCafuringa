@@ -50,6 +50,12 @@ export function validateVideoUrl(value: string): string | undefined {
     return extractYoutubeId(value) ? undefined : VIDEO_URL_ERROR;
 }
 
+/** Link para assistir, usado para preencher o campo com o vídeo salvo. */
+export function youtubeWatchUrl(id: string | null | undefined): string {
+    const valid = validId(id);
+    return valid ? `https://www.youtube.com/watch?v=${valid}` : "";
+}
+
 export function youtubeEmbedUrl(id: string): string | null {
     const valid = validId(id);
     return valid ? `https://www.youtube-nocookie.com/embed/${valid}` : null;

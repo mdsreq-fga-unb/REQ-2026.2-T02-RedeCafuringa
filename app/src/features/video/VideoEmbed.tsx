@@ -1,4 +1,4 @@
-import { youtubeEmbedUrl } from "./youtube";
+import { youtubeEmbedUrl, youtubeWatchUrl } from "./youtube";
 import "./video.css";
 
 type Props = {
@@ -25,7 +25,7 @@ export function VideoEmbed({ videoId, title }: Props) {
             </div>
             <a
                 className="video-embed-link"
-                href={`https://www.youtube.com/watch?v=${videoId}`}
+                href={youtubeWatchUrl(videoId)}
                 target="_blank"
                 rel="noopener noreferrer"
             >

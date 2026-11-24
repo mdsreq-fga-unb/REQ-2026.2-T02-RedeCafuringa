@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { youtubeWatchUrl } from "@/features/video/youtube";
 import { emptyTrajectory, trajectoryBody } from "./trajectoryModel";
 import type { TrajectoryDraft } from "./trajectoryModel";
 import {
@@ -45,6 +46,8 @@ export function TrajectoryPage({
                     phone: data.telefone ?? "",
                     phonePublic: data.telefonePublico,
                     photoUrl: photoSrc(data.fotoUrl),
+                    videoUrl: youtubeWatchUrl(data.videoId),
+                    hadVideo: Boolean(data.videoId),
                 });
             })
             .catch((cause: unknown) => {
@@ -63,6 +66,12 @@ export function TrajectoryPage({
         setSaved(false);
         try {
             await saveTrajectory(trajectoryBody(draft));
+            // Salvo o link, um novo apagamento passa a pedir a remoção.
+            if (active.current)
+                setDraft((current) => ({
+                    ...current,
+                    hadVideo: Boolean(draft.videoUrl.trim()),
+                }));
         } catch (cause) {
             if (active.current) setError(trajectoryError(cause));
             return;
