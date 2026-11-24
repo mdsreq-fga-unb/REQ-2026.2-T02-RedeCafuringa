@@ -50,6 +50,10 @@ export class Product {
   @Prop({ type: [ProductPhotoRefSchema], required: true })
   fotos: ProductPhotoRef[];
 
+  /** Id do vídeo do YouTube; o link enviado não é guardado. */
+  @Prop()
+  videoId?: string;
+
   /**
    * RN10/RF18: um produto pode sair da oferta pública sem ser excluído. Nasce
    * disponível; a HU de disponibilidade passa a alterar este campo.

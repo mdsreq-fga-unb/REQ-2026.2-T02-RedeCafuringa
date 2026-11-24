@@ -6,6 +6,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { isObjectIdOrHexString, Model, Types } from 'mongoose';
 import { PhotoOwnerType } from '../../common/photos/photo-gallery.policy.js';
+import { extractYoutubeId } from '../../common/video/youtube.js';
 import {
   PhotoGalleryService,
   type StoredPhoto,
@@ -87,6 +88,7 @@ export class ProductsService {
     const processed = await this.gallery.prepare(PhotoOwnerType.PRODUTO, files);
 
     const productId = new Types.ObjectId();
+    const videoId = extractYoutubeId(dto.videoUrl);
     // Fotos primeiro: quem lê o produto nunca encontra uma foto ausente.
     const fotos = await this.gallery.store(owner(productId), processed);
     try {
@@ -99,6 +101,7 @@ export class ProductsService {
         precoCentavos: toCentavos(dto.precoPorUnidade),
         gramasPorUnidade: dto.gramasPorUnidade,
         fotos,
+        ...(videoId ? { videoId } : {}),
         ...(key ? { chaveIdempotencia: key } : {}),
       });
       return this.toResponse(created.toObject() as ProductDoc, producer);
@@ -260,6 +263,7 @@ export class ProductsService {
         ...(primeiroNome ? { primeiroNome } : {}),
         ...(localidade ? { localidade } : {}),
       },
+      videoId: product.videoId ?? null,
       criadoEm: (product.criadoEm ?? new Date()).toISOString(),
       disponivel: product.disponivel ?? true,
     };

@@ -55,6 +55,15 @@ export class ProductResponse {
   })
   fotos: string[];
 
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    example: 'dQw4w9WgXcQ',
+    description:
+      'Id do vídeo do YouTube divulgado pelo produtor, ou `null` sem vídeo. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}.',
+  })
+  videoId: string | null;
+
   @ApiProperty({ type: ProductProducerResponse })
   produtor: ProductProducerResponse;
 
