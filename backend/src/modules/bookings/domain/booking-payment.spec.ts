@@ -1,4 +1,7 @@
+import { BookingStatus } from './booking.js';
 import {
+  type PaymentAction,
+  paymentActionError,
   PaymentStatus,
   PRAZO_SINAL_HORAS,
   SINAL_PERCENTUAL,
@@ -118,5 +121,95 @@ describe('pagamento da pré-reserva — effectivePaymentStatus', () => {
         depois,
       ),
     ).toBe(PaymentStatus.AGUARDANDO_SINAL);
+  });
+});
+
+describe('pagamento da pré-reserva — paymentActionError', () => {
+  const agora = new Date('2026-11-21T12:00:00.000Z');
+  const prazoSinal = new Date('2026-11-22T12:00:00.000Z');
+  const vencido = new Date('2026-11-20T12:00:00.000Z');
+  const aceita = (situacao: PaymentStatus, prazo = prazoSinal) => ({
+    status: BookingStatus.ACEITA,
+    pagamento: { situacao, prazoSinal: prazo },
+  });
+
+  it.each<[PaymentAction, ReturnType<typeof aceita>]>([
+    ['enviar-comprovante', aceita(PaymentStatus.AGUARDANDO_SINAL)],
+    ['confirmar-sinal', aceita(PaymentStatus.AGUARDANDO_SINAL)],
+    ['confirmar-sinal', aceita(PaymentStatus.COMPROVANTE_ENVIADO)],
+    // Pagou depois do prazo: a produtora ainda pode confirmar.
+    ['confirmar-sinal', aceita(PaymentStatus.AGUARDANDO_SINAL, vencido)],
+    ['nao-encontrado', aceita(PaymentStatus.COMPROVANTE_ENVIADO)],
+  ])('%s é permitido em %j', (acao, estado) => {
+    expect(paymentActionError(acao, estado, agora)).toBeNull();
+  });
+
+  it.each<[PaymentAction, object, string]>([
+    [
+      'enviar-comprovante',
+      { status: BookingStatus.PENDENTE },
+      'Só é possível avisar o pagamento de uma pré-reserva aceita.',
+    ],
+    [
+      'confirmar-sinal',
+      {
+        status: BookingStatus.CANCELADA,
+        pagamento: { situacao: PaymentStatus.AGUARDANDO_SINAL },
+      },
+      'Só é possível confirmar o sinal de uma pré-reserva aceita.',
+    ],
+    [
+      'nao-encontrado',
+      { status: BookingStatus.RECUSADA },
+      'Só é possível contestar o pagamento de uma pré-reserva aceita.',
+    ],
+    [
+      'enviar-comprovante',
+      { status: BookingStatus.ACEITA },
+      'Esta pré-reserva não pede sinal.',
+    ],
+    [
+      'confirmar-sinal',
+      aceita(PaymentStatus.DISPENSADO),
+      'Esta pré-reserva não pede sinal.',
+    ],
+    [
+      'enviar-comprovante',
+      aceita(PaymentStatus.AGUARDANDO_SINAL, vencido),
+      'O prazo para pagar o sinal terminou. Fale com a produtora.',
+    ],
+    [
+      'enviar-comprovante',
+      aceita(PaymentStatus.COMPROVANTE_ENVIADO),
+      'Você já avisou que pagou o sinal. A produtora vai conferir.',
+    ],
+    [
+      'enviar-comprovante',
+      aceita(PaymentStatus.SINAL_CONFIRMADO),
+      'O sinal desta pré-reserva já foi confirmado.',
+    ],
+    [
+      'confirmar-sinal',
+      aceita(PaymentStatus.SINAL_CONFIRMADO),
+      'O sinal desta pré-reserva já foi confirmado.',
+    ],
+    [
+      'nao-encontrado',
+      aceita(PaymentStatus.AGUARDANDO_SINAL),
+      'A consumidora ainda não avisou que pagou o sinal.',
+    ],
+    [
+      'nao-encontrado',
+      aceita(PaymentStatus.SINAL_CONFIRMADO),
+      'O sinal desta pré-reserva já foi confirmado.',
+    ],
+  ])('%s em %j: %s', (acao, estado, mensagem) => {
+    expect(
+      paymentActionError(
+        acao,
+        estado as Parameters<typeof paymentActionError>[1],
+        agora,
+      ),
+    ).toBe(mensagem);
   });
 });
