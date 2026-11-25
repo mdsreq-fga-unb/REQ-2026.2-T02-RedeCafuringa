@@ -99,7 +99,7 @@ export class BookingsQueryService {
 
     type NotificationRow = Pick<
       BookingRow,
-      '_id' | 'data' | 'horario' | 'participantes'
+      '_id' | 'data' | 'horario' | 'participantes' | 'pagamento'
     > & {
       status: BookingNotificationResponse['status'];
       experienciaNome?: string;
@@ -129,6 +129,11 @@ export class BookingsQueryService {
             horario: 1,
             participantes: 1,
             status: 1,
+            // Pagamento por Pix: cada mudança do sinal é uma notificação nova.
+            'pagamento.situacao': 1,
+            'pagamento.prazoSinal': 1,
+            'pagamento.sinalNoCancelamento': 1,
+            'pagamento.devolvidoEm': 1,
             experienciaNome: { $arrayElemAt: ['$experienciaDados.nome', 0] },
           },
         },
@@ -137,8 +142,14 @@ export class BookingsQueryService {
 
     return rows.map((row) => {
       const reservaId = row._id.toString();
+      const view = row.pagamento ? paymentView(row.pagamento) : undefined;
+      const id = [reservaId, row.status, view?.situacao, view?.devolucao]
+        .filter(Boolean)
+        .join(':');
       return {
-        id: `${reservaId}:${row.status}`,
+        id,
+        ...(view ? { pagamento: view.situacao } : {}),
+        ...(view?.devolucao ? { devolucao: view.devolucao } : {}),
         reservaId,
         codigo: `CAF-${reservaId.slice(-6).toUpperCase()}`,
         experienciaNome: row.experienciaNome ?? UNKNOWN_EXPERIENCE_NAME,
