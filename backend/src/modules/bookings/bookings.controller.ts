@@ -37,7 +37,10 @@ import {
   BookingPaymentResponse,
 } from './dto/booking-detail.response.js';
 import { BookingNotificationResponse } from './dto/booking-notification.response.js';
-import { BookingResponse } from './dto/booking.response.js';
+import {
+  BookingResponse,
+  CancelBookingResponse,
+} from './dto/booking.response.js';
 import { CreateBookingDto } from './dto/create-booking.dto.js';
 import { ListBookingsQuery } from './dto/list-bookings.query.js';
 import { ReceivedBookingResponse } from './dto/received-booking.response.js';
@@ -274,11 +277,12 @@ export class BookingsController {
   @ApiOperation({
     summary: 'Cancelar pré-reserva',
     description:
-      'HU46/RF46 (CA02-CA07): o consumidor cancela a própria solicitação de pré-reserva. Sem corpo: a confirmação ("Sim, cancelar solicitação" / "Manter solicitação", CA02 e CA04) é da interface, que só chama este endpoint quando o usuário confirma. Só solicitações pendentes podem ser canceladas pelo solicitante (RN20); a situação passa a `cancelada` e nunca volta a `pendente` (RN21). A troca é atômica: cancelar de novo, ou cancelar depois de o produtor responder, devolve 409 e não altera nada. Solicitação de outro usuário responde 404, como se não existisse (CA05, RNF11). Exclusivo do perfil CONSUMIDOR (RNF08).',
+      'HU46/RF46 (CA02-CA07): o consumidor cancela a própria solicitação de pré-reserva. Sem corpo: a confirmação ("Sim, cancelar solicitação" / "Manter solicitação", CA02 e CA04) é da interface, que só chama este endpoint quando o usuário confirma. Cancela a solicitação pendente ou aceita (RN20 revista em 25/11/2026, pagamento por Pix); a situação passa a `cancelada` e nunca volta (RN21). Na aceita com sinal pago, até 72 horas antes a produtora devolve o sinal; depois, o sinal fica com ela. A troca é atômica: cancelar de novo, ou cancelar a recusada, devolve 409 e não altera nada. Solicitação de outro usuário responde 404, como se não existisse (CA05, RNF11). Exclusivo do perfil CONSUMIDOR (RNF08).',
   })
   @ApiOkResponse({
-    type: BookingResponse,
-    description: 'Solicitação cancelada, já com a situação atualizada (CA06)',
+    type: CancelBookingResponse,
+    description:
+      'Solicitação cancelada, já com a situação atualizada (CA06). Com sinal pago, `sinal` diz se a produtora devolve ou retém o valor.',
     example: {
       id: '64b0c0ffee0000000000b001',
       experienciaId: '64b0c0ffee0000000000e001',
@@ -321,7 +325,7 @@ export class BookingsController {
   })
   @ApiConflictResponse({
     description:
-      'A solicitação não está pendente: já aceita (só o produtor cancela), recusada ou já cancelada. Nada é alterado (RN20, RN21). A mensagem diz o motivo.',
+      'A solicitação foi recusada, já foi cancelada ou mudou no meio. Nada é alterado (RN20, RN21). A mensagem diz o motivo.',
     type: ErrorResponse,
     example: {
       statusCode: 409,
@@ -332,7 +336,7 @@ export class BookingsController {
   cancel(
     @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
-  ): Promise<BookingResponse> {
+  ): Promise<CancelBookingResponse> {
     return this.bookings.cancel(user.id, id);
   }
 
@@ -439,5 +443,75 @@ export class BookingsController {
     @Param('id') id: string,
   ): Promise<BookingPaymentResponse> {
     return this.payments.reportNotFound(user.id, id);
+  }
+
+  @Roles(Role.PRODUTOR)
+  @Patch('received/:id/cancel')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('bearer')
+  @ApiParam({ name: 'id', example: '64b0c0ffee0000000000b001' })
+  @ApiOperation({
+    summary: 'Cancelar pré-reserva aceita (produtora)',
+    description:
+      'RN20 revista (25/11/2026, pagamento por Pix): a produtora responsável cancela uma pré-reserva aceita. Se o sinal estava pago, ela devolve o valor integral, a qualquer momento; a API só registra (`sinal.resultado: devolver`). A pendente se responde pela HU47. Exclusivo do perfil PRODUTOR.',
+  })
+  @ApiOkResponse({ type: CancelBookingResponse })
+  @ApiConflictResponse({
+    description:
+      'A solicitação não está aceita (pendente, recusada ou já cancelada), ou mudou no meio. A mensagem diz o motivo.',
+    type: ErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'A pré-reserva é de outro produtor, ou perfil sem permissão',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Pré-reserva não encontrada',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  cancelByProducer(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<CancelBookingResponse> {
+    return this.bookings.cancelByProducer(user.id, id);
+  }
+
+  @Roles(Role.PRODUTOR)
+  @Patch('received/:id/payment/refunded')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('bearer')
+  @ApiParam({ name: 'id', example: '64b0c0ffee0000000000b001' })
+  @ApiOperation({
+    summary: 'Registrar a devolução do sinal',
+    description:
+      'Pagamento por Pix: depois de um cancelamento em que o sinal deve ser devolvido, a produtora registra que fez o Pix de volta. Só uma vez. Exclusivo do perfil PRODUTOR.',
+  })
+  @ApiOkResponse({ type: BookingPaymentResponse })
+  @ApiConflictResponse({
+    description:
+      'Não há sinal a devolver, ou a devolução já foi registrada. A mensagem diz o motivo.',
+    type: ErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'A pré-reserva é de outro produtor, ou perfil sem permissão',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Pré-reserva não encontrada',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  reportRefunded(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<BookingPaymentResponse> {
+    return this.payments.reportRefunded(user.id, id);
   }
 }

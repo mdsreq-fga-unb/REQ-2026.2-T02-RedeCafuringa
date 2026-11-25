@@ -47,3 +47,26 @@ export class BookingResponse {
   })
   criadoEm: string;
 }
+
+/** O que acontece com o sinal no cancelamento (pagamento por Pix). */
+export class CancelDepositResponse {
+  @ApiProperty({
+    enum: ['devolver', 'retido'],
+    example: 'devolver',
+    description:
+      '`devolver`: a produtora devolve o sinal por Pix; `retido`: o sinal fica com ela (menos de 72 horas)',
+  })
+  resultado: 'devolver' | 'retido';
+
+  @ApiProperty({ example: 91, description: 'Valor do sinal, em reais' })
+  valor: number;
+}
+
+/** Cancelamento: a solicitação cancelada e, se havia sinal pago, o destino dele. */
+export class CancelBookingResponse extends BookingResponse {
+  @ApiPropertyOptional({
+    type: CancelDepositResponse,
+    description: 'Só quando havia sinal pago',
+  })
+  sinal?: CancelDepositResponse;
+}

@@ -123,6 +123,37 @@ export class BookingPaymentService {
     throw await this.producerFailure('nao-encontrado', producerId, bookingId);
   }
 
+  /** Depois do cancelamento, a produtora registra que devolveu o sinal (uma vez só). */
+  async reportRefunded(
+    producerId: string,
+    id: string,
+  ): Promise<BookingPaymentResponse> {
+    const bookingId = this.validId(id);
+    const updated = await this.update(
+      {
+        _id: bookingId,
+        produtor: bookingProducerFilter(producerId),
+        status: BookingStatus.CANCELADA,
+        'pagamento.sinalNoCancelamento': 'devolver',
+        'pagamento.devolvidoEm': { $exists: false },
+      },
+      { $set: { 'pagamento.devolvidoEm': new Date() } },
+    );
+    if (updated) return paymentView(updated);
+
+    const current = await this.current(bookingId);
+    if (!current) throw new NotFoundException(NOT_FOUND);
+    if (String(current.produtor) !== producerId)
+      throw new ForbiddenException(FORBIDDEN);
+    throw new ConflictException(
+      current.status === BookingStatus.CANCELADA &&
+        current.pagamento?.sinalNoCancelamento === 'devolver' &&
+        current.pagamento.devolvidoEm
+        ? 'A devolução do sinal já foi registrada.'
+        : 'Não há sinal a devolver nesta pré-reserva.',
+    );
+  }
+
   private validId(id: string): Types.ObjectId {
     if (!isObjectIdOrHexString(id)) throw new NotFoundException(NOT_FOUND);
     return new Types.ObjectId(id);

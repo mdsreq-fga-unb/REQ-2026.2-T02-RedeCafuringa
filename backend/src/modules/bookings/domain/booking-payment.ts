@@ -132,9 +132,19 @@ export function paymentView(
     restanteCentavos: number;
     situacao: PaymentStatus;
     prazoSinal?: Date;
+    sinalNoCancelamento?: 'devolver' | 'retido';
+    devolvidoEm?: Date;
   },
   agora: Date = new Date(),
 ) {
+  const devolucao =
+    pagamento.sinalNoCancelamento === 'retido'
+      ? ('retido' as const)
+      : pagamento.sinalNoCancelamento === 'devolver'
+        ? pagamento.devolvidoEm
+          ? ('feita' as const)
+          : ('pendente' as const)
+        : undefined;
   return {
     total: pagamento.totalCentavos / 100,
     sinal: pagamento.sinalCentavos / 100,
@@ -143,5 +153,6 @@ export function paymentView(
     ...(pagamento.prazoSinal
       ? { prazoSinal: pagamento.prazoSinal.toISOString() }
       : {}),
+    ...(devolucao ? { devolucao } : {}),
   };
 }

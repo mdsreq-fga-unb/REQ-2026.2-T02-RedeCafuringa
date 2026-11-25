@@ -35,7 +35,14 @@ import {
   sinalDeadline,
   splitPayment,
 } from './domain/booking-payment.js';
-import type { BookingResponse } from './dto/booking.response.js';
+import {
+  cancellationOutcome,
+  type QuemCancela,
+} from './domain/booking-cancellation.js';
+import type {
+  BookingResponse,
+  CancelBookingResponse,
+} from './dto/booking.response.js';
 import type { CreateBookingDto } from './dto/create-booking.dto.js';
 import type { ReceivedBookingResponse } from './dto/received-booking.response.js';
 import type { RespondBookingDto } from './dto/respond-booking.dto.js';
@@ -47,16 +54,29 @@ const PAST_BOOKING_CANNOT_BE_ACCEPTED =
   'Não é possível aceitar uma pré-reserva com data e horário passados.';
 const BOOKING_NOT_FOUND = 'Pré-reserva não encontrada';
 
-/** HU46/RN20, RN21: por que uma solicitação que não está pendente não cancela. */
+/**
+ * HU46/RN20, RN21: por que a solicitação não cancela. Desde 25/11/2026 (RN20
+ * revista, pagamento por Pix) a aceita também se cancela, com a regra do sinal.
+ */
 const NOT_CANCELLABLE: Partial<Record<BookingStatus, string>> = {
-  [BookingStatus.ACEITA]:
-    'Esta pré-reserva já foi aceita: apenas o produtor responsável pode cancelá-la',
   [BookingStatus.RECUSADA]:
     'Esta pré-reserva foi recusada pelo produtor e não pode ser cancelada',
   [BookingStatus.CANCELADA]: 'Esta pré-reserva já foi cancelada',
 };
 const NOT_CANCELLABLE_DEFAULT =
-  'Apenas pré-reservas pendentes podem ser canceladas';
+  'Apenas pré-reservas pendentes ou aceitas podem ser canceladas';
+const STATUS_CHANGED =
+  'A situação da pré-reserva mudou. Confira e tente de novo.';
+/** A produtora só cancela a aceita: a pendente ela responde (HU47). */
+const PRODUCER_NOT_CANCELLABLE: Partial<Record<BookingStatus, string>> = {
+  [BookingStatus.PENDENTE]:
+    'Esta pré-reserva ainda está pendente: responda aceitando ou recusando.',
+  [BookingStatus.RECUSADA]:
+    'Esta pré-reserva foi recusada e não pode ser cancelada.',
+  [BookingStatus.CANCELADA]: 'Esta pré-reserva já foi cancelada.',
+};
+
+type CancelSource = Pick<Booking, 'status' | 'data' | 'horario' | 'pagamento'>;
 
 type BookingDoc = Booking & { _id: Types.ObjectId };
 type BookableExperience = { _id: Types.ObjectId; produtor: Types.ObjectId };
@@ -405,7 +425,7 @@ export class BookingsService implements BeforeApplicationShutdown {
    * (RN21). Solicitação de terceiro responde como inexistente (404): quem não é
    * o dono não descobre que ela existe (CA05, RNF11).
    */
-  async cancel(userId: string, id: string): Promise<BookingResponse> {
+  async cancel(userId: string, id: string): Promise<CancelBookingResponse> {
     if (!isObjectIdOrHexString(id)) {
       throw new NotFoundException(BOOKING_NOT_FOUND);
     }
@@ -433,13 +453,103 @@ export class BookingsService implements BeforeApplicationShutdown {
     // situação atual não permite cancelar (409).
     const current = await this.bookings
       .findOne({ _id: bookingId, consumidor: consumer })
-      .select('status')
-      .lean<{ status: BookingStatus }>()
+      .select('status data horario pagamento')
+      .lean<CancelSource>()
       .exec();
     if (!current) throw new NotFoundException(BOOKING_NOT_FOUND);
+    if (current.status === BookingStatus.ACEITA)
+      return this.cancelAccepted(
+        { _id: bookingId, consumidor: consumer },
+        current,
+        'consumidora',
+      );
     throw new ConflictException(
       NOT_CANCELLABLE[current.status] ?? NOT_CANCELLABLE_DEFAULT,
     );
+  }
+
+  /** A produtora cancela a aceita e sempre devolve o sinal pago. Outra produtora: 403. */
+  async cancelByProducer(
+    producerId: string,
+    id: string,
+  ): Promise<CancelBookingResponse> {
+    if (!isObjectIdOrHexString(id)) {
+      throw new NotFoundException(BOOKING_NOT_FOUND);
+    }
+    const bookingId = new Types.ObjectId(id);
+    const current = await this.bookings
+      .findById(bookingId)
+      .select('produtor status data horario pagamento')
+      .lean<CancelSource & Pick<Booking, 'produtor'>>()
+      .exec();
+    if (!current) throw new NotFoundException(BOOKING_NOT_FOUND);
+    if (String(current.produtor) !== producerId) {
+      throw new ForbiddenException(
+        'Você não tem permissão para cancelar esta pré-reserva.',
+      );
+    }
+    if (current.status !== BookingStatus.ACEITA) {
+      throw new ConflictException(
+        PRODUCER_NOT_CANCELLABLE[current.status] ?? STATUS_CHANGED,
+      );
+    }
+    return this.cancelAccepted(
+      { _id: bookingId, produtor: bookingProducerFilter(producerId) },
+      current,
+      'produtora',
+    );
+  }
+
+  /**
+   * Cancela a aceita aplicando a regra do sinal sobre a situação lida. A
+   * gravação é condicionada a essa mesma situação: se ela mudou no meio
+   * (sinal confirmado, outro cancelamento), nada é gravado e responde 409.
+   */
+  private async cancelAccepted(
+    owner: Record<string, unknown>,
+    current: CancelSource,
+    quemCancela: QuemCancela,
+  ): Promise<CancelBookingResponse> {
+    const outcome = cancellationOutcome({
+      quemCancela,
+      data: current.data,
+      horario: current.horario,
+      pagamento: current.pagamento,
+    });
+    const cancelled = await this.bookings
+      .findOneAndUpdate(
+        {
+          ...owner,
+          status: BookingStatus.ACEITA,
+          'pagamento.situacao': current.pagamento?.situacao ?? null,
+        },
+        {
+          $set: {
+            status: BookingStatus.CANCELADA,
+            canceladaEm: new Date(),
+            canceladaPor: quemCancela,
+            ...(outcome.sinal === 'sem-sinal'
+              ? {}
+              : { 'pagamento.sinalNoCancelamento': outcome.sinal }),
+          },
+        },
+        { returnDocument: 'after' },
+      )
+      .lean<BookingDoc>()
+      .exec();
+    if (!cancelled) throw new ConflictException(STATUS_CHANGED);
+    this.notifyParticipants(cancelled);
+    return {
+      ...this.toResponse(cancelled),
+      ...(outcome.sinal === 'sem-sinal'
+        ? {}
+        : {
+            sinal: {
+              resultado: outcome.sinal,
+              valor: outcome.valorCentavos / 100,
+            },
+          }),
+    };
   }
 
   private toResponse(booking: BookingDoc): BookingResponse {

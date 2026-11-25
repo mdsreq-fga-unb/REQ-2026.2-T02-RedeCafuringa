@@ -42,6 +42,14 @@ export class BookingPayment {
   /** Quando a produtora confirmou o sinal no extrato. */
   @Prop()
   sinalConfirmadoEm?: Date;
+
+  /** No cancelamento com sinal pago: a produtora devolve, ou o sinal fica com ela. */
+  @Prop({ enum: ['devolver', 'retido'], type: String })
+  sinalNoCancelamento?: 'devolver' | 'retido';
+
+  /** Quando a produtora registrou que devolveu o sinal. */
+  @Prop()
+  devolvidoEm?: Date;
 }
 
 const BookingPaymentSchema = SchemaFactory.createForClass(BookingPayment);
@@ -96,6 +104,10 @@ export class Booking {
   /** HU46/RN20: quando o consumidor cancelou. Ausente nas demais solicitações. */
   @Prop()
   canceladaEm?: Date;
+
+  /** Quem cancelou (RN20 revista: a aceita pode ser cancelada pelas duas). */
+  @Prop({ enum: ['consumidora', 'produtora'], type: String })
+  canceladaPor?: 'consumidora' | 'produtora';
 
   /** RN19: nasce pendente; só a resposta do produtor confirma. */
   @Prop({

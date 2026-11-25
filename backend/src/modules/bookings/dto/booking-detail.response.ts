@@ -36,6 +36,14 @@ export class BookingPaymentResponse {
       'Prazo para pagar o sinal; ausente quando o sinal é dispensado',
   })
   prazoSinal?: string;
+
+  @ApiPropertyOptional({
+    enum: ['pendente', 'feita', 'retido'],
+    example: 'pendente',
+    description:
+      'Depois de um cancelamento com sinal pago: a produtora ainda deve devolver (`pendente`), já devolveu (`feita`) ou o sinal ficou com ela (`retido`)',
+  })
+  devolucao?: 'pendente' | 'feita' | 'retido';
 }
 
 /**
