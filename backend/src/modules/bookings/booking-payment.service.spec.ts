@@ -343,3 +343,93 @@ describe('BookingPaymentService — a produtora devolveu o sinal', () => {
     ).rejects.toThrow(ForbiddenException);
   });
 });
+
+describe('BookingPaymentService — sem sinal e pagamento recebido', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('a produtora garante a vaga sem sinal, mesmo depois do prazo', async () => {
+    const { service, bookings } = setup();
+    bookings.findOneAndUpdate.mockReturnValue(
+      query(
+        booking({
+          pagamento: { ...pagamento, situacao: PaymentStatus.DISPENSADO },
+        }),
+      ),
+    );
+
+    const res = await service.waive(producerId.toHexString(), id.toHexString());
+
+    const [filter, update] = callOf(bookings);
+    expect(filter).toEqual({
+      _id: id,
+      produtor: { $in: [producerId, producerId.toHexString()] },
+      status: BookingStatus.ACEITA,
+      'pagamento.situacao': PaymentStatus.AGUARDANDO_SINAL,
+    });
+    expect(update.$set).toEqual({
+      'pagamento.situacao': PaymentStatus.DISPENSADO,
+      'pagamento.dispensadoEm': NOW,
+    });
+    expect(res.situacao).toBe(PaymentStatus.DISPENSADO);
+  });
+
+  it('a produtora registra que recebeu o pagamento', async () => {
+    const { service, bookings } = setup();
+    bookings.findOneAndUpdate.mockReturnValue(
+      query(
+        booking({
+          pagamento: {
+            ...pagamento,
+            situacao: PaymentStatus.PAGAMENTO_RECEBIDO,
+          },
+        }),
+      ),
+    );
+
+    const res = await service.reportReceived(
+      producerId.toHexString(),
+      id.toHexString(),
+    );
+
+    const [filter, update] = callOf(bookings);
+    expect(filter['pagamento.situacao']).toEqual({
+      $in: [PaymentStatus.SINAL_CONFIRMADO, PaymentStatus.DISPENSADO],
+    });
+    expect(update.$set).toEqual({
+      'pagamento.situacao': PaymentStatus.PAGAMENTO_RECEBIDO,
+      'pagamento.recebidoEm': NOW,
+    });
+    expect(res.situacao).toBe(PaymentStatus.PAGAMENTO_RECEBIDO);
+  });
+
+  it('registrar o pagamento com o sinal por pagar: 409 com o motivo', async () => {
+    const { service, bookings } = setup();
+    bookings.findById.mockReturnValue(query(booking()));
+
+    await expect(
+      service.reportReceived(producerId.toHexString(), id.toHexString()),
+    ).rejects.toThrow(
+      new ConflictException(
+        'Confirme ou dispense o sinal antes de registrar o pagamento.',
+      ),
+    );
+  });
+
+  it('de outra produtora: 403', async () => {
+    const { service, bookings } = setup();
+    bookings.findById.mockReturnValue(
+      query(booking({ produtor: new Types.ObjectId() })),
+    );
+
+    await expect(
+      service.waive(producerId.toHexString(), id.toHexString()),
+    ).rejects.toThrow(ForbiddenException);
+  });
+});

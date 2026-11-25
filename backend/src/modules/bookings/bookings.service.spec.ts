@@ -628,6 +628,25 @@ describe('BookingsService — pagamento no aceite (Pix)', () => {
     expect(updateOf(bookings).$set).not.toHaveProperty('pagamento');
   });
 
+  it('experiência que não exige sinal: o sinal fica dispensado', async () => {
+    const { service, bookings, experiences } = setup();
+    experiences.findById.mockReturnValue(
+      query({ nome: 'Trilha', valorCentavos: 4550, exigeSinal: false }),
+    );
+    bookings.findOneAndUpdate.mockReturnValue(
+      query({ ...receivedBooking, status: BookingStatus.ACEITA }),
+    );
+
+    await service.respond(owner, id, { status: BookingStatus.ACEITA });
+    await service.beforeApplicationShutdown();
+
+    expect(updateOf(bookings).$set.pagamento).toMatchObject({
+      totalCentavos: 18200,
+      situacao: 'dispensado',
+    });
+    expect(updateOf(bookings).$set.pagamento).not.toHaveProperty('prazoSinal');
+  });
+
   it('a recusa não cria pagamento', async () => {
     const { service, bookings } = setup();
     bookings.findOneAndUpdate.mockReturnValue(

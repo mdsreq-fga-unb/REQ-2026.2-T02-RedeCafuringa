@@ -241,3 +241,95 @@ describe('pagamento da pré-reserva — devolução no paymentView', () => {
     expect(paymentView(base)).not.toHaveProperty('devolucao');
   });
 });
+
+describe('pagamento da pré-reserva — sem sinal e pagamento recebido', () => {
+  const agora = new Date('2026-11-21T12:00:00.000Z');
+  const aceita = (situacao: PaymentStatus, prazoSinal?: Date) => ({
+    status: BookingStatus.ACEITA,
+    pagamento: { situacao, ...(prazoSinal ? { prazoSinal } : {}) },
+  });
+
+  it.each<[PaymentAction, ReturnType<typeof aceita>]>([
+    [
+      'dispensar-sinal',
+      aceita(
+        PaymentStatus.AGUARDANDO_SINAL,
+        new Date('2026-11-22T12:00:00.000Z'),
+      ),
+    ],
+    // Prazo vencido: a produtora ainda pode garantir a vaga sem sinal.
+    [
+      'dispensar-sinal',
+      aceita(
+        PaymentStatus.AGUARDANDO_SINAL,
+        new Date('2026-11-20T12:00:00.000Z'),
+      ),
+    ],
+    ['registrar-pagamento', aceita(PaymentStatus.SINAL_CONFIRMADO)],
+    ['registrar-pagamento', aceita(PaymentStatus.DISPENSADO)],
+  ])('%s é permitido em %j', (acao, estado) => {
+    expect(paymentActionError(acao, estado, agora)).toBeNull();
+  });
+
+  it.each<[PaymentAction, object, string]>([
+    [
+      'dispensar-sinal',
+      { status: BookingStatus.PENDENTE },
+      'Só é possível dispensar o sinal de uma pré-reserva aceita.',
+    ],
+    [
+      'dispensar-sinal',
+      aceita(PaymentStatus.DISPENSADO),
+      'O sinal desta pré-reserva já foi dispensado.',
+    ],
+    [
+      'dispensar-sinal',
+      aceita(PaymentStatus.COMPROVANTE_ENVIADO),
+      'A consumidora avisou que pagou: confira o extrato e confirme o sinal.',
+    ],
+    [
+      'dispensar-sinal',
+      aceita(PaymentStatus.SINAL_CONFIRMADO),
+      'O sinal desta pré-reserva já foi confirmado.',
+    ],
+    [
+      'registrar-pagamento',
+      {
+        status: BookingStatus.CANCELADA,
+        pagamento: { situacao: PaymentStatus.SINAL_CONFIRMADO },
+      },
+      'Só é possível registrar o pagamento de uma pré-reserva aceita.',
+    ],
+    [
+      'registrar-pagamento',
+      aceita(
+        PaymentStatus.AGUARDANDO_SINAL,
+        new Date('2026-11-22T12:00:00.000Z'),
+      ),
+      'Confirme ou dispense o sinal antes de registrar o pagamento.',
+    ],
+    [
+      'registrar-pagamento',
+      aceita(PaymentStatus.PAGAMENTO_RECEBIDO),
+      'O pagamento desta pré-reserva já foi registrado.',
+    ],
+    [
+      'registrar-pagamento',
+      { status: BookingStatus.ACEITA },
+      'Esta pré-reserva não tem pagamento registrado.',
+    ],
+    [
+      'enviar-comprovante',
+      aceita(PaymentStatus.PAGAMENTO_RECEBIDO),
+      'O pagamento desta pré-reserva já foi registrado.',
+    ],
+  ])('%s em %j: %s', (acao, estado, mensagem) => {
+    expect(
+      paymentActionError(
+        acao,
+        estado as Parameters<typeof paymentActionError>[1],
+        agora,
+      ),
+    ).toBe(mensagem);
+  });
+});
