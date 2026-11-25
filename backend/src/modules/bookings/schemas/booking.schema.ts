@@ -43,6 +43,14 @@ export class BookingPayment {
   @Prop()
   sinalConfirmadoEm?: Date;
 
+  /** Quando a produtora garantiu a vaga sem sinal. */
+  @Prop()
+  dispensadoEm?: Date;
+
+  /** Quando a produtora registrou que recebeu o pagamento. */
+  @Prop()
+  recebidoEm?: Date;
+
   /** No cancelamento com sinal pago: a produtora devolve, ou o sinal fica com ela. */
   @Prop({ enum: ['devolver', 'retido'], type: String })
   sinalNoCancelamento?: 'devolver' | 'retido';

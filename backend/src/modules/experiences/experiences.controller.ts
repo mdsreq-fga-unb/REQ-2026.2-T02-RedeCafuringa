@@ -110,6 +110,18 @@ export class ExperiencesController {
           example: '2 horas',
           description: 'Número inteiro seguido de minutos ou horas',
         },
+        exigeSinal: {
+          type: 'boolean',
+          example: true,
+          description:
+            'Opcional. Se o aceite pede sinal de 50% por Pix. Padrão: sim.',
+        },
+        formasPagamentoNoDia: {
+          type: 'string',
+          example: 'dinheiro,pix',
+          description:
+            'Opcional. Formas aceitas no dia, separadas por vírgula (pix, dinheiro, cartao_credito, cartao_debito).',
+        },
         [FOTOS.campo]: {
           type: 'array',
           minItems: FOTOS.min,

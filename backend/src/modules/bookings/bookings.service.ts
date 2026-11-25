@@ -244,7 +244,7 @@ export class BookingsService implements BeforeApplicationShutdown {
   ): Promise<BookingPayment | undefined> {
     const experience = await this.experiences
       .findById(experienceId)
-      .select('valorCentavos')
+      .select('valorCentavos exigeSinal')
       .lean()
       .exec();
     if (!experience) return undefined;
@@ -253,7 +253,8 @@ export class BookingsService implements BeforeApplicationShutdown {
     return {
       valorPorPessoaCentavos: experience.valorCentavos,
       ...split,
-      ...(split.sinalCentavos > 0
+      // Gratuita, ou a produtora escolheu não pedir sinal: vaga garantida no aceite.
+      ...(split.sinalCentavos > 0 && experience.exigeSinal !== false
         ? {
             situacao: PaymentStatus.AGUARDANDO_SINAL,
             aceitaEm,

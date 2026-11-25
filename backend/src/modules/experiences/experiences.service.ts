@@ -103,6 +103,8 @@ export class ExperiencesService {
         local: dto.local,
         duracao: dto.duracao,
         fotos,
+        exigeSinal: dto.exigeSinal ?? true,
+        formasPagamentoNoDia: dto.formasPagamentoNoDia ?? [],
         ...(key ? { chaveIdempotencia: key } : {}),
       });
       return this.toResponse(created.toObject() as ExperienceDoc, producer);
@@ -263,6 +265,8 @@ export class ExperiencesService {
       },
       criadoEm: (experience.criadoEm ?? new Date()).toISOString(),
       disponivel: experience.disponivel ?? true,
+      exigeSinal: experience.exigeSinal ?? true,
+      formasPagamentoNoDia: experience.formasPagamentoNoDia ?? [],
     };
   }
 }

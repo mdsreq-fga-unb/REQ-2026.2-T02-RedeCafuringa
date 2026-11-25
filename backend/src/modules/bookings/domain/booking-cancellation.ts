@@ -16,6 +16,7 @@ const HORA_MS = 60 * 60 * 1000;
 const PAID = new Set([
   PaymentStatus.COMPROVANTE_ENVIADO,
   PaymentStatus.SINAL_CONFIRMADO,
+  PaymentStatus.PAGAMENTO_RECEBIDO,
 ]);
 
 export type QuemCancela = 'consumidora' | 'produtora';

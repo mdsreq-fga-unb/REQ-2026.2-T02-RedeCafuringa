@@ -21,6 +21,8 @@ export enum PaymentStatus {
   SINAL_CONFIRMADO = 'sinal-confirmado',
   EXPIRADO = 'expirado',
   DISPENSADO = 'dispensado',
+  /** A produtora registrou que recebeu o valor (sinal e restante, ou tudo no dia). */
+  PAGAMENTO_RECEBIDO = 'pagamento-recebido',
 }
 
 export type PaymentSplit = {
@@ -75,7 +77,11 @@ export function effectivePaymentStatus(
 }
 
 export type PaymentAction =
-  'enviar-comprovante' | 'confirmar-sinal' | 'nao-encontrado';
+  | 'enviar-comprovante'
+  | 'confirmar-sinal'
+  | 'nao-encontrado'
+  | 'dispensar-sinal'
+  | 'registrar-pagamento';
 
 const NOT_ACCEPTED: Record<PaymentAction, string> = {
   'enviar-comprovante':
@@ -84,14 +90,18 @@ const NOT_ACCEPTED: Record<PaymentAction, string> = {
     'Só é possível confirmar o sinal de uma pré-reserva aceita.',
   'nao-encontrado':
     'Só é possível contestar o pagamento de uma pré-reserva aceita.',
+  'dispensar-sinal':
+    'Só é possível dispensar o sinal de uma pré-reserva aceita.',
+  'registrar-pagamento':
+    'Só é possível registrar o pagamento de uma pré-reserva aceita.',
 };
 const NO_DEPOSIT = 'Esta pré-reserva não pede sinal.';
 const ALREADY_CONFIRMED = 'O sinal desta pré-reserva já foi confirmado.';
 
 /**
  * Motivo de a ação não valer na situação atual, ou null se vale. A produtora
- * confirma mesmo depois do prazo, para quem pagou atrasado; a consumidora só
- * avisa o pagamento dentro do prazo.
+ * confirma ou dispensa o sinal mesmo depois do prazo (pagou atrasado, ou não
+ * usa Pix); a consumidora só avisa o pagamento dentro do prazo.
  */
 export function paymentActionError(
   acao: PaymentAction,
@@ -103,8 +113,21 @@ export function paymentActionError(
 ): string | null {
   if (estado.status !== BookingStatus.ACEITA) return NOT_ACCEPTED[acao];
   const pagamento = estado.pagamento;
-  if (!pagamento || pagamento.situacao === PaymentStatus.DISPENSADO)
-    return NO_DEPOSIT;
+  if (!pagamento)
+    return acao === 'registrar-pagamento'
+      ? 'Esta pré-reserva não tem pagamento registrado.'
+      : NO_DEPOSIT;
+  if (pagamento.situacao === PaymentStatus.PAGAMENTO_RECEBIDO)
+    return 'O pagamento desta pré-reserva já foi registrado.';
+  if (acao === 'registrar-pagamento')
+    return pagamento.situacao === PaymentStatus.SINAL_CONFIRMADO ||
+      pagamento.situacao === PaymentStatus.DISPENSADO
+      ? null
+      : 'Confirme ou dispense o sinal antes de registrar o pagamento.';
+  if (pagamento.situacao === PaymentStatus.DISPENSADO)
+    return acao === 'dispensar-sinal'
+      ? 'O sinal desta pré-reserva já foi dispensado.'
+      : NO_DEPOSIT;
   if (pagamento.situacao === PaymentStatus.SINAL_CONFIRMADO)
     return ALREADY_CONFIRMED;
   const situacao = effectivePaymentStatus(pagamento, agora);
@@ -117,6 +140,10 @@ export function paymentActionError(
       return null;
     case 'confirmar-sinal':
       return null;
+    case 'dispensar-sinal':
+      return situacao === PaymentStatus.COMPROVANTE_ENVIADO
+        ? 'A consumidora avisou que pagou: confira o extrato e confirme o sinal.'
+        : null;
     case 'nao-encontrado':
       return situacao === PaymentStatus.COMPROVANTE_ENVIADO
         ? null

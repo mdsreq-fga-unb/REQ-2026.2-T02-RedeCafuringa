@@ -1,3 +1,4 @@
+import { PaymentMethod } from '../../bookings/domain/booking.js';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { ExperienceCategory } from '../domain/experience.js';
@@ -55,6 +56,14 @@ export class Experience {
 
   @Prop({ type: [ExperiencePhotoRefSchema], required: true })
   fotos: ExperiencePhotoRef[];
+
+  /** Pagamento por Pix: se o aceite pede sinal de 50%. Ausente nas antigas = sim. */
+  @Prop({ default: true })
+  exigeSinal: boolean;
+
+  /** Como a produtora aceita receber no dia (só divulgação). */
+  @Prop({ type: [String], enum: PaymentMethod, default: [] })
+  formasPagamentoNoDia: PaymentMethod[];
 
   /** RN10: pode sair da oferta pública sem ser excluída. Nasce disponível. */
   @Prop({ default: true })

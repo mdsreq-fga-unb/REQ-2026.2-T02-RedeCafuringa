@@ -514,4 +514,74 @@ export class BookingsController {
   ): Promise<BookingPaymentResponse> {
     return this.payments.reportRefunded(user.id, id);
   }
+
+  @Roles(Role.PRODUTOR)
+  @Patch('received/:id/payment/waive')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('bearer')
+  @ApiParam({ name: 'id', example: '64b0c0ffee0000000000b001' })
+  @ApiOperation({
+    summary: 'Confirmar sem sinal',
+    description:
+      'Pagamento por Pix: para quem não usa Pix, a produtora garante a vaga sem o sinal (situação `dispensado`), mesmo depois do prazo. Ela fica sem proteção contra falta. Exclusivo do perfil PRODUTOR.',
+  })
+  @ApiOkResponse({ type: BookingPaymentResponse })
+  @ApiConflictResponse({
+    description:
+      'Sinal já confirmado, já dispensado, aviso de pagamento a conferir ou pré-reserva não aceita. A mensagem diz o motivo.',
+    type: ErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'A pré-reserva é de outro produtor, ou perfil sem permissão',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Pré-reserva não encontrada',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  waiveDeposit(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<BookingPaymentResponse> {
+    return this.payments.waive(user.id, id);
+  }
+
+  @Roles(Role.PRODUTOR)
+  @Patch('received/:id/payment/received')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('bearer')
+  @ApiParam({ name: 'id', example: '64b0c0ffee0000000000b001' })
+  @ApiOperation({
+    summary: 'Registrar o pagamento recebido',
+    description:
+      'Pagamento por Pix ou no dia: com o sinal confirmado ou dispensado, a produtora registra que recebeu o pagamento (situação `pagamento-recebido`). A API não guarda valores recebidos em dinheiro. Exclusivo do perfil PRODUTOR.',
+  })
+  @ApiOkResponse({ type: BookingPaymentResponse })
+  @ApiConflictResponse({
+    description:
+      'O sinal ainda não foi confirmado nem dispensado, ou o pagamento já foi registrado. A mensagem diz o motivo.',
+    type: ErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'A pré-reserva é de outro produtor, ou perfil sem permissão',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Pré-reserva não encontrada',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  reportPaymentReceived(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<BookingPaymentResponse> {
+    return this.payments.reportReceived(user.id, id);
+  }
 }

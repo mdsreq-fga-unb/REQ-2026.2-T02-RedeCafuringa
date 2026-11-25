@@ -123,6 +123,57 @@ export class BookingPaymentService {
     throw await this.producerFailure('nao-encontrado', producerId, bookingId);
   }
 
+  /** Quem não usa Pix: a produtora garante a vaga sem sinal, mesmo depois do prazo. */
+  async waive(producerId: string, id: string): Promise<BookingPaymentResponse> {
+    const bookingId = this.validId(id);
+    const updated = await this.update(
+      {
+        _id: bookingId,
+        produtor: bookingProducerFilter(producerId),
+        status: BookingStatus.ACEITA,
+        'pagamento.situacao': PaymentStatus.AGUARDANDO_SINAL,
+      },
+      {
+        $set: {
+          'pagamento.situacao': PaymentStatus.DISPENSADO,
+          'pagamento.dispensadoEm': new Date(),
+        },
+      },
+    );
+    if (updated) return paymentView(updated);
+    throw await this.producerFailure('dispensar-sinal', producerId, bookingId);
+  }
+
+  /** A produtora registra que recebeu o pagamento (no dia ou antes). */
+  async reportReceived(
+    producerId: string,
+    id: string,
+  ): Promise<BookingPaymentResponse> {
+    const bookingId = this.validId(id);
+    const updated = await this.update(
+      {
+        _id: bookingId,
+        produtor: bookingProducerFilter(producerId),
+        status: BookingStatus.ACEITA,
+        'pagamento.situacao': {
+          $in: [PaymentStatus.SINAL_CONFIRMADO, PaymentStatus.DISPENSADO],
+        },
+      },
+      {
+        $set: {
+          'pagamento.situacao': PaymentStatus.PAGAMENTO_RECEBIDO,
+          'pagamento.recebidoEm': new Date(),
+        },
+      },
+    );
+    if (updated) return paymentView(updated);
+    throw await this.producerFailure(
+      'registrar-pagamento',
+      producerId,
+      bookingId,
+    );
+  }
+
   /** Depois do cancelamento, a produtora registra que devolveu o sinal (uma vez só). */
   async reportRefunded(
     producerId: string,
