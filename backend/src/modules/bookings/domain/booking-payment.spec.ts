@@ -6,6 +6,7 @@ import {
   PRAZO_SINAL_HORAS,
   SINAL_PERCENTUAL,
   effectivePaymentStatus,
+  paymentView,
   sinalDeadline,
   splitPayment,
 } from './booking-payment.js';
@@ -211,5 +212,32 @@ describe('pagamento da pré-reserva — paymentActionError', () => {
         agora,
       ),
     ).toBe(mensagem);
+  });
+});
+
+describe('pagamento da pré-reserva — devolução no paymentView', () => {
+  const base = {
+    totalCentavos: 18200,
+    sinalCentavos: 9100,
+    restanteCentavos: 9100,
+    situacao: PaymentStatus.SINAL_CONFIRMADO,
+  };
+
+  it.each([
+    [{ sinalNoCancelamento: 'devolver' as const }, 'pendente'],
+    [
+      {
+        sinalNoCancelamento: 'devolver' as const,
+        devolvidoEm: new Date('2026-11-23T12:00:00.000Z'),
+      },
+      'feita',
+    ],
+    [{ sinalNoCancelamento: 'retido' as const }, 'retido'],
+  ])('%j aparece como devolução %s', (cancelamento, devolucao) => {
+    expect(paymentView({ ...base, ...cancelamento }).devolucao).toBe(devolucao);
+  });
+
+  it('sem cancelamento, não há devolução', () => {
+    expect(paymentView(base)).not.toHaveProperty('devolucao');
   });
 });

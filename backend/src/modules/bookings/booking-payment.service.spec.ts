@@ -259,3 +259,87 @@ describe('BookingPaymentService — pagamento do sinal', () => {
     });
   });
 });
+
+describe('BookingPaymentService — a produtora devolveu o sinal', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const cancelada = (extra: Record<string, unknown> = {}) =>
+    booking({
+      status: BookingStatus.CANCELADA,
+      pagamento: {
+        ...pagamento,
+        situacao: PaymentStatus.SINAL_CONFIRMADO,
+        sinalNoCancelamento: 'devolver',
+        ...extra,
+      },
+    });
+
+  it('registra a devolução, uma vez só', async () => {
+    const { service, bookings } = setup();
+    bookings.findOneAndUpdate.mockReturnValue(
+      query(cancelada({ devolvidoEm: NOW })),
+    );
+
+    const res = await service.reportRefunded(
+      producerId.toHexString(),
+      id.toHexString(),
+    );
+
+    const [filter, update] = callOf(bookings);
+    expect(filter).toEqual({
+      _id: id,
+      produtor: { $in: [producerId, producerId.toHexString()] },
+      status: BookingStatus.CANCELADA,
+      'pagamento.sinalNoCancelamento': 'devolver',
+      'pagamento.devolvidoEm': { $exists: false },
+    });
+    expect(update.$set).toEqual({ 'pagamento.devolvidoEm': NOW });
+    expect(res.devolucao).toBe('feita');
+  });
+
+  it.each([
+    [
+      'não havia sinal a devolver',
+      booking({ status: BookingStatus.CANCELADA }),
+      'Não há sinal a devolver nesta pré-reserva.',
+    ],
+    [
+      'o sinal ficou com a produtora',
+      booking({
+        status: BookingStatus.CANCELADA,
+        pagamento: { ...pagamento, sinalNoCancelamento: 'retido' },
+      }),
+      'Não há sinal a devolver nesta pré-reserva.',
+    ],
+    [
+      'a devolução já foi registrada',
+      cancelada({ devolvidoEm: NOW }),
+      'A devolução do sinal já foi registrada.',
+    ],
+  ])('%s: 409 com o motivo', async (_caso, current, message) => {
+    const { service, bookings } = setup();
+    bookings.findById.mockReturnValue(query(current));
+
+    await expect(
+      service.reportRefunded(producerId.toHexString(), id.toHexString()),
+    ).rejects.toThrow(new ConflictException(message));
+  });
+
+  it('de outra produtora: 403', async () => {
+    const { service, bookings } = setup();
+    bookings.findById.mockReturnValue(
+      query({ ...cancelada(), produtor: new Types.ObjectId() }),
+    );
+
+    await expect(
+      service.reportRefunded(producerId.toHexString(), id.toHexString()),
+    ).rejects.toThrow(ForbiddenException);
+  });
+});

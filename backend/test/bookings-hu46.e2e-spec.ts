@@ -177,9 +177,9 @@ describe('HU46/RF46 — Cancelar pré-reserva (e2e)', () => {
   // CA02 e CA04 (confirmar ou desistir) são da interface: "Manter solicitação"
   // simplesmente não chama este endpoint, então não há o que testar na API.
 
-  describe('RN20, RN21: só pendente cancela; o resto responde 409 e nada muda', () => {
+  // RN20 revista em 25/11/2026 (pagamento por Pix): a aceita também se cancela.
+  describe('RN20, RN21: recusada e cancelada respondem 409 e nada muda', () => {
     it.each([
-      [BookingStatus.ACEITA, 'apenas o produtor responsável pode cancelá-la'],
       [BookingStatus.RECUSADA, 'foi recusada pelo produtor'],
       [BookingStatus.CANCELADA, 'já foi cancelada'],
     ])('409 quando está %s', async (status, message) => {
@@ -288,7 +288,7 @@ describe('HU46/RF46 — Cancelar pré-reserva (e2e)', () => {
       expect((await stored(id))?.status).toBe(BookingStatus.CANCELADA);
     });
 
-    it('cancelamento contra a resposta do produtor (HU47): ganha só um e o estado final é coerente', async () => {
+    it('cancelamento contra o aceite do produtor (HU47): o cancelamento sempre vale', async () => {
       // Repete para exercitar as duas ordens de chegada.
       for (let i = 0; i < 10; i++) {
         const { id: consumerId, token } = await consumerSession();
@@ -305,15 +305,11 @@ describe('HU46/RF46 — Cancelar pré-reserva (e2e)', () => {
             .exec(),
         ]);
 
-        const final = (await stored(id))?.status;
-        if (cancelRes.status === 200) {
-          expect(accept.modifiedCount).toBe(0);
-          expect(final).toBe(BookingStatus.CANCELADA);
-        } else {
-          expect(cancelRes.status).toBe(409);
-          expect(accept.modifiedCount).toBe(1);
-          expect(final).toBe(BookingStatus.ACEITA);
-        }
+        // Antes ou depois do aceite, a consumidora pode cancelar; nunca fica
+        // aceita depois de um cancelamento confirmado.
+        expect(cancelRes.status).toBe(200);
+        expect(accept.modifiedCount).toBeLessThanOrEqual(1);
+        expect((await stored(id))?.status).toBe(BookingStatus.CANCELADA);
       }
     });
   });
