@@ -486,3 +486,145 @@ describe('BookingsQueryService (HU45/RF45)', () => {
     });
   });
 });
+
+describe('BookingsQueryService — pagamento e Pix no detalhe', () => {
+  const PRAZO = new Date('2026-11-22T13:30:00.000Z');
+  const consumer = { id: consumerId.toHexString(), perfil: Role.CONSUMIDOR };
+  const producer = { id: producerId.toHexString(), perfil: Role.PRODUTOR };
+
+  const pagamento = {
+    valorPorPessoaCentavos: 4550,
+    totalCentavos: 18200,
+    sinalCentavos: 9100,
+    restanteCentavos: 9100,
+    situacao: 'aguardando-sinal',
+    aceitaEm: new Date('2026-11-21T13:30:00.000Z'),
+    prazoSinal: PRAZO,
+  };
+  const pixProdutora = {
+    pixChave: '+5561999998888',
+    pixRecebedor: 'Maria da Silva',
+    pixPublico: true,
+  };
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-11-22T10:00:00.000Z'));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const accepted = (overrides: Row = {}) =>
+    row({
+      status: BookingStatus.ACEITA,
+      pagamento,
+      pixProdutora,
+      ...overrides,
+    });
+
+  it('mostra o sinal, o restante e o prazo, em reais', async () => {
+    const booking = accepted();
+    const { service } = setup([booking]);
+
+    const res = await service.findOne(consumer, String(booking._id));
+
+    expect(res.pagamento).toEqual({
+      total: 182,
+      sinal: 91,
+      restante: 91,
+      situacao: 'aguardando-sinal',
+      prazoSinal: PRAZO.toISOString(),
+    });
+  });
+
+  it('a consumidora que precisa pagar recebe o Pix da produtora para o sinal', async () => {
+    const booking = accepted();
+    const { service } = setup([booking]);
+
+    const res = await service.findOne(consumer, String(booking._id));
+
+    expect(res.pix).toEqual({
+      chave: '+5561999998888',
+      nomeRecebedor: 'Maria da Silva',
+      cidade: 'BRASILIA',
+      txid: String(booking._id),
+    });
+  });
+
+  it('o Pix da produtora é buscado só no detalhe da consumidora, com só esses campos', async () => {
+    const booking = accepted();
+    const { service, bookings } = setup([booking]);
+
+    await service.findOne(consumer, String(booking._id));
+
+    expect(JSON.stringify(pipelineOf(bookings))).toContain(
+      '{"$project":{"_id":0,"pixChave":1,"pixRecebedor":1,"pixPublico":1}}',
+    );
+  });
+
+  it('prazo vencido: aparece expirado e sem Pix', async () => {
+    vi.setSystemTime(new Date('2026-11-22T13:30:01.000Z'));
+    const booking = accepted();
+    const { service } = setup([booking]);
+
+    const res = await service.findOne(consumer, String(booking._id));
+
+    expect(res.pagamento?.situacao).toBe('expirado');
+    expect(res).not.toHaveProperty('pix');
+  });
+
+  it.each([
+    [
+      'a produtora não autorizou',
+      { pixProdutora: { ...pixProdutora, pixPublico: false } },
+    ],
+    ['a produtora não tem chave', { pixProdutora: {} }],
+    [
+      'o sinal já foi confirmado',
+      { pagamento: { ...pagamento, situacao: 'sinal-confirmado' } },
+    ],
+    [
+      'o sinal foi dispensado',
+      { pagamento: { ...pagamento, situacao: 'dispensado' } },
+    ],
+    ['a pré-reserva foi cancelada', { status: BookingStatus.CANCELADA }],
+  ])('sem Pix quando %s', async (_caso, overrides) => {
+    const booking = accepted(overrides);
+    const { service } = setup([booking]);
+
+    expect(
+      await service.findOne(consumer, String(booking._id)),
+    ).not.toHaveProperty('pix');
+  });
+
+  it('a produtora vê o pagamento, mas não recebe a própria chave no detalhe', async () => {
+    const booking = accepted();
+    const { service, bookings } = setup([booking]);
+
+    const res = await service.findOne(producer, String(booking._id));
+
+    expect(res.pagamento?.sinal).toBe(91);
+    expect(res).not.toHaveProperty('pix');
+    expect(JSON.stringify(pipelineOf(bookings))).not.toContain('pixChave');
+  });
+
+  it('pré-reserva sem pagamento (pendente ou antiga) não traz o campo', async () => {
+    const booking = row();
+    const { service } = setup([booking]);
+
+    expect(
+      await service.findOne(consumer, String(booking._id)),
+    ).not.toHaveProperty('pagamento');
+  });
+
+  it('as listas trazem o pagamento, mas nunca o Pix', async () => {
+    const { service } = setup([accepted()]);
+
+    const res = await service.listMine(consumer.id, {});
+
+    expect(res.itens[0].pagamento?.situacao).toBe('aguardando-sinal');
+    expect(res.itens[0]).not.toHaveProperty('pix');
+  });
+});
