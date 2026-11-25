@@ -504,3 +504,45 @@
         width: 100%;
     }
 }
+
+/* Pagamento por Pix: sinal da pré-reserva aceita. */
+.booking-payment {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    min-width: 0;
+}
+
+.booking-payment h2,
+.booking-payment h3,
+.booking-payment p,
+.booking-payment ul {
+    margin: 0;
+}
+
+.booking-payment h3 {
+    font-size: 16px;
+}
+
+.booking-payment ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-left: 20px;
+    color: var(--ink);
+}
+
+.booking-payment-accept {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.booking-payment-status {
+    margin: 0;
+    font-weight: 600;
+}

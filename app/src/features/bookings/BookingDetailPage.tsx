@@ -16,6 +16,7 @@ import {
     experienceDetailsRoute,
     RECEIVED_BOOKINGS_ROUTE,
 } from "./bookingRoutes";
+import { BookingPaymentSection } from "./BookingPaymentSection";
 import { markBookingUpdateRead } from "./bookingNotificationsService";
 import { getBooking } from "./bookingQueryService";
 import { BookingSessionError } from "./bookingService";
@@ -235,6 +236,13 @@ export function BookingDetailPage({
                         )}
                         <Details booking={state.booking} role={role} />
                     </section>
+                    {state.booking.payment && (
+                        <BookingPaymentSection
+                            role={role}
+                            payment={state.booking.payment}
+                            pix={state.booking.pix}
+                        />
+                    )}
                     {state.booking.responseMessage && (
                         <section
                             className="booking-message booking-message--response"

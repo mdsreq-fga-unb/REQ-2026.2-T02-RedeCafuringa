@@ -3,7 +3,33 @@ import type { components } from "@/shared/api/schema";
 import { PAYMENT_LABELS } from "./bookingOptions";
 import type { Booking, BookingStatus, PaymentMethod } from "./bookingTypes";
 
-export type ApiBookingDetail = components["schemas"]["BookingDetailResponse"];
+/** Situação do sinal (pagamento por Pix), como a API devolve. */
+export type PaymentStatus =
+    | "aguardando-sinal"
+    | "comprovante-enviado"
+    | "sinal-confirmado"
+    | "expirado"
+    | "dispensado";
+
+/** Pagamento e Pix do detalhe; ainda fora do contrato gerado. */
+type ApiPayment = {
+    total: number;
+    sinal: number;
+    restante: number;
+    situacao: PaymentStatus;
+    prazoSinal?: string;
+};
+type ApiPix = {
+    chave: string;
+    nomeRecebedor: string;
+    cidade: string;
+    txid: string;
+};
+export type ApiBookingDetail =
+    components["schemas"]["BookingDetailResponse"] & {
+        pagamento?: ApiPayment;
+        pix?: ApiPix;
+    };
 export type ApiBookingList = components["schemas"]["BookingListResponse"];
 
 /** Pré-reserva consultada (HU45): a solicitação, a experiência e o outro lado. */
@@ -19,7 +45,38 @@ export type BookingDetail = Booking & {
     };
     /** Consumidora (para a produtora) ou responsável (para a consumidora). */
     counterpart: { id: string; name: string };
+    /** Só depois do aceite. Valores em centavos, para o código Pix. */
+    payment?: BookingPayment;
+    /** Só para a consumidora, enquanto o sinal está por pagar. */
+    pix?: BookingPix;
 };
+
+export type BookingPayment = {
+    totalCents: number;
+    depositCents: number;
+    remainingCents: number;
+    status: PaymentStatus;
+    depositDeadline?: string;
+};
+
+export type BookingPix = {
+    key: string;
+    receiver: string;
+    city: string;
+    txid: string;
+};
+
+const toCents = (reais: number) => Math.round(reais * 100);
+
+function adaptPayment(api: ApiPayment): BookingPayment {
+    return {
+        totalCents: toCents(api.total),
+        depositCents: toCents(api.sinal),
+        remainingCents: toCents(api.restante),
+        status: api.situacao,
+        ...(api.prazoSinal ? { depositDeadline: api.prazoSinal } : {}),
+    };
+}
 
 const STATUS_LABELS: Record<BookingStatus, string> = {
     pendente: "Aguardando resposta",
@@ -63,7 +120,36 @@ export function adaptBookingDetail(
                 : {}),
         },
         counterpart: { id: contraparte.id, name: contraparte.nome },
+        ...(api.pagamento ? { payment: adaptPayment(api.pagamento) } : {}),
+        ...(api.pix
+            ? {
+                  pix: {
+                      key: api.pix.chave,
+                      receiver: api.pix.nomeRecebedor,
+                      city: api.pix.cidade,
+                      txid: api.pix.txid,
+                  },
+              }
+            : {}),
     };
+}
+
+const DEADLINE = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+});
+
+/** Prazo do sinal no horário de Brasília: "22/11/2026 às 10h30". */
+export function formatDepositDeadline(iso: string): string {
+    const part = Object.fromEntries(
+        DEADLINE.formatToParts(new Date(iso)).map((p) => [p.type, p.value]),
+    );
+    return `${part.day}/${part.month}/${part.year} às ${part.hour}h${part.minute}`;
 }
 
 export function bookingCode(id: string): string {

@@ -5,6 +5,36 @@ import { listMockBookings, type MockBookingRecord } from "./mockBookingService";
 
 export type MockViewer = { role: string | null; userId: string };
 
+/** Mesmos números da API: sinal de 50%, pago em até 24 horas do aceite. */
+const DEPOSIT_DEADLINE_MS = 24 * 60 * 60 * 1000;
+/** Chave de exemplo: na demonstração não há conta real de produtora. */
+const DEMO_PIX_KEY = "pix.demonstracao@redecafuringa.org";
+
+type DemoPayment = NonNullable<ApiBookingDetail["pagamento"]>;
+
+/** Pagamento da pré-reserva aceita, calculado como a API faz no aceite. */
+function demoPayment(
+    record: MockBookingRecord,
+    experience: Product | undefined,
+): DemoPayment | undefined {
+    if (record.status !== "aceita" || !experience) return undefined;
+    const totalCents =
+        Math.round(experience.price * 100) * record.participantes;
+    const depositCents = Math.ceil(totalCents / 2);
+    if (depositCents === 0)
+        return { total: 0, sinal: 0, restante: 0, situacao: "dispensado" };
+    const acceptedAt = new Date(record.atualizadoEm ?? record.criadoEm);
+    const deadline = new Date(acceptedAt.getTime() + DEPOSIT_DEADLINE_MS);
+    return {
+        total: totalCents / 100,
+        sinal: depositCents / 100,
+        restante: (totalCents - depositCents) / 100,
+        situacao:
+            Date.now() > deadline.getTime() ? "expirado" : "aguardando-sinal",
+        prazoSinal: deadline.toISOString(),
+    };
+}
+
 /** Experiências da demonstração por id, para completar cada pré-reserva. */
 async function experiencesById(): Promise<Map<string, Product>> {
     const experiences = await listExperiences();
@@ -56,6 +86,33 @@ function toApiDetail(
             ...(experience?.image ? { foto: experience.image } : {}),
         },
         contraparte: counterpart,
+        ...withPayment(record, experience, viewer),
+    };
+}
+
+function withPayment(
+    record: MockBookingRecord,
+    experience: Product | undefined,
+    viewer: MockViewer,
+): Pick<ApiBookingDetail, "pagamento" | "pix"> {
+    const pagamento = demoPayment(record, experience);
+    if (!pagamento) return {};
+    const needsPix =
+        viewer.role !== "producer" && pagamento.situacao === "aguardando-sinal";
+    return {
+        pagamento,
+        ...(needsPix
+            ? {
+                  pix: {
+                      chave: DEMO_PIX_KEY,
+                      nomeRecebedor:
+                          experience?.producerName ||
+                          "Produtora da demonstração",
+                      cidade: "BRASILIA",
+                      txid: record.id.replace(/[^A-Za-z0-9]/g, "").slice(0, 25),
+                  },
+              }
+            : {}),
     };
 }
 
@@ -69,9 +126,16 @@ export async function listMockBookingDetails(
             canView(record, experiences.get(record.experienciaId), viewer),
         )
         .sort((a, b) => b.criadoEm.localeCompare(a.criadoEm))
-        .map((record) =>
-            toApiDetail(record, experiences.get(record.experienciaId), viewer),
-        );
+        .map((record) => {
+            // Como na API, a lista nunca traz o Pix; só o detalhe.
+            const item = toApiDetail(
+                record,
+                experiences.get(record.experienciaId),
+                viewer,
+            );
+            delete item.pix;
+            return item;
+        });
 }
 
 /** Detalhe na demonstração; `null` como o 404 da API (CA05). */
