@@ -37,7 +37,7 @@
     margin-bottom: 12px;
 }
 
-.product-field input:not([type="file"]),
+.product-field input:not([type="file"]):not([type="checkbox"]),
 .product-field select,
 .product-field textarea {
     width: 100%;
@@ -329,20 +329,26 @@
     border-color: #a32b22;
 }
 
-/* Pagamento por Pix: sinal e formas aceitas no dia (experiência). */
-.product-checkbox {
+/* Pagamento por Pix: sinal e formas aceitas no dia (experiência). Usa o
+   padrão de caixas de seleção do site (.choice-option, .choice-group). */
+.product-deposit,
+.product-day-payment {
+    grid-column: 1 / -1;
+}
+
+.product-field .choice-option {
     display: flex;
-    align-items: flex-start;
-    gap: 8px;
+    margin: 0;
+    font-size: 15px;
     font-weight: 500;
 }
 
-.product-day-payment {
-    display: flex;
-    flex-direction: column;
+.product-day-payment-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 8px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    min-width: 0;
+}
+
+.product-day-payment .field-label {
+    margin-bottom: 8px;
 }

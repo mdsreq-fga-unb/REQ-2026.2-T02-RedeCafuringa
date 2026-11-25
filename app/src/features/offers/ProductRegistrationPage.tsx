@@ -537,7 +537,7 @@ export function ProductRegistrationPage({
                     {experience && (
                         <>
                             <div className="product-field product-deposit">
-                                <label className="product-checkbox">
+                                <label className="choice-option">
                                     <input
                                         type="checkbox"
                                         checked={draft.exigeSinal}
@@ -558,36 +558,40 @@ export function ProductRegistrationPage({
                                     </p>
                                 )}
                             </div>
-                            <fieldset className="product-field product-day-payment">
-                                <legend>Formas aceitas no dia</legend>
-                                {PAYMENT_METHODS.map((method) => (
-                                    <label
-                                        className="product-checkbox"
-                                        key={method}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={draft.formasPagamentoNoDia.includes(
-                                                method,
-                                            )}
-                                            onChange={(e) =>
-                                                update(
-                                                    "formasPagamentoNoDia",
-                                                    PAYMENT_METHODS.filter(
-                                                        (item) =>
-                                                            item === method
-                                                                ? e.target
-                                                                      .checked
-                                                                : draft.formasPagamentoNoDia.includes(
-                                                                      item,
-                                                                  ),
-                                                    ),
-                                                )
-                                            }
-                                        />
-                                        {PAYMENT_LABELS[method]}
-                                    </label>
-                                ))}
+                            <fieldset className="product-field choice-group product-day-payment">
+                                <legend className="field-label">
+                                    Formas aceitas no dia
+                                </legend>
+                                <div className="product-day-payment-options">
+                                    {PAYMENT_METHODS.map((method) => (
+                                        <label
+                                            className="choice-option"
+                                            key={method}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={draft.formasPagamentoNoDia.includes(
+                                                    method,
+                                                )}
+                                                onChange={(e) =>
+                                                    update(
+                                                        "formasPagamentoNoDia",
+                                                        PAYMENT_METHODS.filter(
+                                                            (item) =>
+                                                                item === method
+                                                                    ? e.target
+                                                                          .checked
+                                                                    : draft.formasPagamentoNoDia.includes(
+                                                                          item,
+                                                                      ),
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                            {PAYMENT_LABELS[method]}
+                                        </label>
+                                    ))}
+                                </div>
                             </fieldset>
                         </>
                     )}
