@@ -2,18 +2,33 @@ import { ApiHttpError, apiResourceUrl, getApiClient } from "@/shared/api";
 import type { components } from "@/shared/api/schema";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { readMockUserDetails } from "@/features/auth/mockAuth";
+import type { PixKeyType } from "@/features/payments/pixCode";
 import { prepareProfilePhoto } from "./photoResize";
 import type { TrajectoryDraft } from "./trajectoryModel";
 import { demoPublicProfiles } from "@/features/profile/publicProfileDemo";
 
-export type OwnTrajectory = components["schemas"]["OwnTrajectoryResponse"];
+/** Pix da produtora (pagamento por Pix); ainda fora do contrato gerado. */
+export type SavePix = {
+    tipo: PixKeyType;
+    chave: string;
+    nomeRecebedor: string;
+    publico?: boolean;
+};
+export type OwnPix = Required<SavePix> & { atualizadoEm?: string };
+export type OwnTrajectory = components["schemas"]["OwnTrajectoryResponse"] & {
+    pix?: OwnPix;
+};
 export type PublicTrajectory =
     components["schemas"]["PublicTrajectoryResponse"] & { localidade?: string };
 // O DTO do backend aceita string | null; o schema atual omite o tipo da união nullable.
 export type SaveTrajectory = Omit<
     components["schemas"]["SaveTrajectoryDto"],
     "telefone"
-> & { telefone?: string | null };
+> & {
+    telefone?: string | null;
+    /** Omitido mantém o Pix; `null` remove. */
+    pix?: SavePix | null;
+};
 
 // Demonstração: dados separados por produtor e sem chamadas ao backend real.
 const demoTrajectories = new Map<string, OwnTrajectory>();
@@ -57,6 +72,16 @@ export async function saveTrajectory(
             body.telefone === null
                 ? undefined
                 : (body.telefone ?? previous?.telefone);
+        const pix: OwnPix | undefined =
+            body.pix === undefined
+                ? previous?.pix
+                : body.pix === null
+                  ? undefined
+                  : {
+                        ...body.pix,
+                        publico: body.pix.publico === true,
+                        atualizadoEm: new Date().toISOString(),
+                    };
         const result: OwnTrajectory = {
             trajetoria: body.trajetoria,
             atividades: body.atividades,
@@ -66,6 +91,7 @@ export async function saveTrajectory(
             ),
             atualizadoEm: new Date().toISOString(),
             ...(previous?.fotoUrl ? { fotoUrl: previous.fotoUrl } : {}),
+            ...(pix ? { pix } : {}),
         };
         demoTrajectories.set(headers.Authorization, result);
         return result;

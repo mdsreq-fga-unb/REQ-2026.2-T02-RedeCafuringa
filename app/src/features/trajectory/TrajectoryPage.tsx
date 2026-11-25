@@ -45,6 +45,15 @@ export function TrajectoryPage({
                     phone: data.telefone ?? "",
                     phonePublic: data.telefonePublico,
                     photoUrl: photoSrc(data.fotoUrl),
+                    ...(data.pix
+                        ? {
+                              pixType: data.pix.tipo,
+                              pixKey: data.pix.chave,
+                              pixReceiver: data.pix.nomeRecebedor,
+                              pixPublic: data.pix.publico,
+                              hadPix: true,
+                          }
+                        : {}),
                 });
             })
             .catch((cause: unknown) => {
@@ -62,7 +71,14 @@ export function TrajectoryPage({
         setError("");
         setSaved(false);
         try {
-            await saveTrajectory(trajectoryBody(draft));
+            const body = trajectoryBody(draft);
+            await saveTrajectory(body);
+            // Salvo o Pix, apagar os campos depois passa a pedir a remoção.
+            if (active.current && body.pix !== undefined)
+                setDraft((current) => ({
+                    ...current,
+                    hadPix: body.pix !== null,
+                }));
         } catch (cause) {
             if (active.current) setError(trajectoryError(cause));
             return;

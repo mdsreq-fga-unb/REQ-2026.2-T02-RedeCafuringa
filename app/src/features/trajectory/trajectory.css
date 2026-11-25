@@ -311,3 +311,20 @@
     stroke-linecap: round;
     stroke-linejoin: round;
 }
+
+/* Pix para receber o sinal das pré-reservas. */
+.trajectory-pix {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+}
+
+.trajectory-pix-notice {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+}
