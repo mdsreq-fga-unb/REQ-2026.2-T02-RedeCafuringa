@@ -628,3 +628,127 @@ describe('BookingsQueryService — pagamento e Pix no detalhe', () => {
     expect(res.itens[0]).not.toHaveProperty('pix');
   });
 });
+
+describe('BookingsQueryService — notificações do sinal por Pix', () => {
+  const bookingId = new Types.ObjectId('64b0c0ffee0000000000abcd');
+  const consumer = { id: consumerId.toHexString(), perfil: Role.CONSUMIDOR };
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-11-22T10:00:00.000Z'));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  function notification(overrides: Row = {}): Row {
+    return {
+      _id: bookingId,
+      data: '2026-12-10',
+      horario: '09:00',
+      participantes: 4,
+      status: BookingStatus.ACEITA,
+      experienciaNome: 'Trilha',
+      ...overrides,
+    };
+  }
+
+  it('lê do banco a situação do sinal e a devolução', async () => {
+    const { service, bookings } = setup([notification()]);
+
+    await service.listNotifications(consumer);
+
+    const project = pipelineOf(bookings).at(-1) as {
+      $project: Record<string, unknown>;
+    };
+    expect(project.$project).toMatchObject({
+      'pagamento.situacao': 1,
+      'pagamento.prazoSinal': 1,
+      'pagamento.sinalNoCancelamento': 1,
+      'pagamento.devolvidoEm': 1,
+    });
+  });
+
+  it('cada mudança do sinal vira uma notificação nova (o id muda)', async () => {
+    const { service } = setup([
+      notification({
+        pagamento: {
+          situacao: 'comprovante-enviado',
+          prazoSinal: new Date('2026-11-22T13:30:00.000Z'),
+        },
+      }),
+    ]);
+
+    const [item] = await service.listNotifications(consumer);
+
+    expect(item.id).toBe('64b0c0ffee0000000000abcd:aceita:comprovante-enviado');
+    expect(item.pagamento).toBe('comprovante-enviado');
+  });
+
+  it('prazo vencido aparece como expirado', async () => {
+    const { service } = setup([
+      notification({
+        pagamento: {
+          situacao: 'aguardando-sinal',
+          prazoSinal: new Date('2026-11-22T09:00:00.000Z'),
+        },
+      }),
+    ]);
+
+    const [item] = await service.listNotifications(consumer);
+
+    expect(item.pagamento).toBe('expirado');
+    expect(item.id).toBe('64b0c0ffee0000000000abcd:aceita:expirado');
+  });
+
+  it('cancelada com sinal a devolver avisa a devolução pendente', async () => {
+    const { service } = setup([
+      notification({
+        status: BookingStatus.CANCELADA,
+        pagamento: {
+          situacao: 'sinal-confirmado',
+          sinalNoCancelamento: 'devolver',
+        },
+      }),
+    ]);
+
+    const [item] = await service.listNotifications(consumer);
+
+    expect(item).toMatchObject({
+      id: '64b0c0ffee0000000000abcd:cancelada:sinal-confirmado:pendente',
+      pagamento: 'sinal-confirmado',
+      devolucao: 'pendente',
+    });
+  });
+
+  it('devolução registrada vira outra notificação', async () => {
+    const { service } = setup([
+      notification({
+        status: BookingStatus.CANCELADA,
+        pagamento: {
+          situacao: 'sinal-confirmado',
+          sinalNoCancelamento: 'devolver',
+          devolvidoEm: new Date('2026-11-21T00:00:00.000Z'),
+        },
+      }),
+    ]);
+
+    const [item] = await service.listNotifications(consumer);
+
+    expect(item.devolucao).toBe('feita');
+    expect(item.id).toBe(
+      '64b0c0ffee0000000000abcd:cancelada:sinal-confirmado:feita',
+    );
+  });
+
+  it('sem pagamento, a notificação fica como antes', async () => {
+    const { service } = setup([notification()]);
+
+    const [item] = await service.listNotifications(consumer);
+
+    expect(item.id).toBe('64b0c0ffee0000000000abcd:aceita');
+    expect(item).not.toHaveProperty('pagamento');
+    expect(item).not.toHaveProperty('devolucao');
+  });
+});
