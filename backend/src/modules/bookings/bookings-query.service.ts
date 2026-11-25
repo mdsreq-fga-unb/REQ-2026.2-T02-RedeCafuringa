@@ -12,6 +12,7 @@ import { User } from '../users/schemas/user.schema.js';
 import type {
   BookingDetailResponse,
   BookingListResponse,
+  BookingPixResponse,
 } from './dto/booking-detail.response.js';
 import {
   NOTIFIABLE_BOOKING_STATUSES,
@@ -21,8 +22,13 @@ import {
 import type { ListBookingsQuery } from './dto/list-bookings.query.js';
 import {
   bookingProducerFilter,
+  BookingStatus,
   UNKNOWN_EXPERIENCE_NAME,
 } from './domain/booking.js';
+import {
+  effectivePaymentStatus,
+  PaymentStatus,
+} from './domain/booking-payment.js';
 import { Booking } from './schemas/booking.schema.js';
 
 const NOT_FOUND = 'Pré-reserva não encontrada';
@@ -43,7 +49,12 @@ type BookingRow = Booking & {
   _id: Types.ObjectId;
   experienciaDados?: ExperienceData;
   outroLado?: { nome?: string; nomeIniciativa?: string };
+  /** Só no detalhe da consumidora (pagamento por Pix). */
+  pixProdutora?: Pick<User, 'pixChave' | 'pixRecebedor' | 'pixPublico'>;
 };
+
+/** Cidade do código Pix: as produtoras da rede ficam na Cafuringa, no DF. */
+const PIX_CIDADE = 'BRASILIA';
 
 /**
  * HU45/RF45: consulta de pré-reservas (RNF08, RNF11).
@@ -159,11 +170,14 @@ export class BookingsQueryService {
           },
         },
         ...this.joins(side),
+        ...(side === 'consumidor' ? this.producerPixJoin() : []),
       ])
       .exec();
     if (!row) throw new NotFoundException(NOT_FOUND);
     const detail = this.toResponse(row, side);
     if (row.mensagemResposta) detail.mensagemResposta = row.mensagemResposta;
+    const pix = side === 'consumidor' ? this.pixFor(row) : undefined;
+    if (pix) detail.pix = pix;
     return detail;
   }
 
@@ -247,6 +261,47 @@ export class BookingsQueryService {
     ];
   }
 
+  /** Só a chave, o nome e a autorização: nada mais da conta da produtora. */
+  private producerPixJoin(): PipelineStage[] {
+    return [
+      {
+        $lookup: {
+          from: this.users.collection.name,
+          localField: 'produtorObjectId',
+          foreignField: '_id',
+          pipeline: [
+            {
+              $project: { _id: 0, pixChave: 1, pixRecebedor: 1, pixPublico: 1 },
+            },
+          ],
+          as: 'pixProdutora',
+        },
+      },
+      { $unwind: { path: '$pixProdutora', preserveNullAndEmptyArrays: true } },
+    ];
+  }
+
+  /** Pix do sinal: pré-reserva aceita, sinal por pagar e chave autorizada. */
+  private pixFor(row: BookingRow): BookingPixResponse | undefined {
+    const pix = row.pixProdutora;
+    if (
+      row.status !== BookingStatus.ACEITA ||
+      !row.pagamento ||
+      effectivePaymentStatus(row.pagamento) !==
+        PaymentStatus.AGUARDANDO_SINAL ||
+      pix?.pixPublico !== true ||
+      !pix.pixChave ||
+      !pix.pixRecebedor
+    )
+      return undefined;
+    return {
+      chave: pix.pixChave,
+      nomeRecebedor: pix.pixRecebedor,
+      cidade: PIX_CIDADE,
+      txid: row._id.toString(),
+    };
+  }
+
   private toResponse(row: BookingRow, side: Side): BookingDetailResponse {
     const experienceId = row.experiencia.toString();
     const experience = row.experienciaDados;
@@ -291,6 +346,19 @@ export class BookingsQueryService {
           row.outroLado?.nome ||
           UNKNOWN_PARTY,
       },
+      ...(row.pagamento
+        ? {
+            pagamento: {
+              total: fromCentavos(row.pagamento.totalCentavos),
+              sinal: fromCentavos(row.pagamento.sinalCentavos),
+              restante: fromCentavos(row.pagamento.restanteCentavos),
+              situacao: effectivePaymentStatus(row.pagamento),
+              ...(row.pagamento.prazoSinal
+                ? { prazoSinal: row.pagamento.prazoSinal.toISOString() }
+                : {}),
+            },
+          }
+        : {}),
     };
   }
 }

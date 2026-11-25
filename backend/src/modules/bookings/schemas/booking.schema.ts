@@ -5,6 +5,38 @@ import {
   INITIAL_BOOKING_STATUS,
   PaymentMethod,
 } from '../domain/booking.js';
+import { PaymentStatus } from '../domain/booking-payment.js';
+
+/**
+ * Pagamento por Pix, criado no aceite: preço congelado, sinal, restante e
+ * prazo. A plataforma não recebe dinheiro; só organiza valores e situações.
+ */
+@Schema({ _id: false, versionKey: false })
+export class BookingPayment {
+  @Prop({ required: true, min: 0 })
+  valorPorPessoaCentavos: number;
+
+  @Prop({ required: true, min: 0 })
+  totalCentavos: number;
+
+  @Prop({ required: true, min: 0 })
+  sinalCentavos: number;
+
+  @Prop({ required: true, min: 0 })
+  restanteCentavos: number;
+
+  @Prop({ required: true, enum: PaymentStatus, type: String })
+  situacao: PaymentStatus;
+
+  @Prop({ required: true })
+  aceitaEm: Date;
+
+  /** Ausente quando o sinal é dispensado. */
+  @Prop()
+  prazoSinal?: Date;
+}
+
+const BookingPaymentSchema = SchemaFactory.createForClass(BookingPayment);
 
 /**
  * HU44/RF44: solicitação de pré-reserva de uma experiência (CP6).
@@ -48,6 +80,10 @@ export class Booking {
   /** Resposta opcional do produtor (HU47). */
   @Prop({ trim: true })
   mensagemResposta?: string;
+
+  /** Pagamento por Pix: só existe depois do aceite. */
+  @Prop({ type: BookingPaymentSchema })
+  pagamento?: BookingPayment;
 
   /** HU46/RN20: quando o consumidor cancelou. Ausente nas demais solicitações. */
   @Prop()

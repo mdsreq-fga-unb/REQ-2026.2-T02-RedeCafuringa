@@ -30,11 +30,16 @@ import {
   bookingStatusText,
   buildBookingConsultationLink,
 } from './domain/booking-notification.js';
+import {
+  PaymentStatus,
+  sinalDeadline,
+  splitPayment,
+} from './domain/booking-payment.js';
 import type { BookingResponse } from './dto/booking.response.js';
 import type { CreateBookingDto } from './dto/create-booking.dto.js';
 import type { ReceivedBookingResponse } from './dto/received-booking.response.js';
 import type { RespondBookingDto } from './dto/respond-booking.dto.js';
-import { Booking } from './schemas/booking.schema.js';
+import { Booking, type BookingPayment } from './schemas/booking.schema.js';
 
 const EXPERIENCE_UNAVAILABLE = 'Experiência indisponível para pré-reserva';
 const IN_PAST = 'A data e o horário da pré-reserva não podem estar no passado';
@@ -137,10 +142,11 @@ export class BookingsService implements BeforeApplicationShutdown {
       throw new NotFoundException('Pré-reserva não encontrada.');
     }
 
+    let pagamento: BookingPayment | undefined;
     if (dto.status === BookingStatus.ACEITA) {
       const current = await this.bookings
         .findById(id)
-        .select('produtor status data horario')
+        .select('produtor status data horario experiencia participantes')
         .lean()
         .exec();
       if (!current) throw new NotFoundException('Pré-reserva não encontrada.');
@@ -157,6 +163,10 @@ export class BookingsService implements BeforeApplicationShutdown {
       if (isBookingInPast(current.data, current.horario)) {
         throw new BadRequestException(PAST_BOOKING_CANNOT_BE_ACCEPTED);
       }
+      pagamento = await this.paymentOnAcceptance(
+        current.experiencia,
+        current.participantes,
+      );
     }
 
     const updated = await this.bookings
@@ -169,6 +179,7 @@ export class BookingsService implements BeforeApplicationShutdown {
         {
           $set: {
             status: dto.status,
+            ...(pagamento ? { pagamento } : {}),
             ...(dto.mensagemResposta
               ? { mensagemResposta: dto.mensagemResposta }
               : {}),
@@ -200,6 +211,36 @@ export class BookingsService implements BeforeApplicationShutdown {
     this.notifyParticipants(updated);
     const [response] = await this.toReceivedResponses([updated]);
     return response;
+  }
+
+  /**
+   * Pagamento por Pix: congela o preço da experiência no aceite, divide o
+   * total em sinal e restante e abre o prazo do sinal. Experiência gratuita
+   * dispensa o sinal; experiência que não existe mais fica sem pagamento.
+   */
+  private async paymentOnAcceptance(
+    experienceId: Types.ObjectId,
+    participantes: number,
+  ): Promise<BookingPayment | undefined> {
+    const experience = await this.experiences
+      .findById(experienceId)
+      .select('valorCentavos')
+      .lean()
+      .exec();
+    if (!experience) return undefined;
+    const aceitaEm = new Date();
+    const split = splitPayment(experience.valorCentavos, participantes);
+    return {
+      valorPorPessoaCentavos: experience.valorCentavos,
+      ...split,
+      ...(split.sinalCentavos > 0
+        ? {
+            situacao: PaymentStatus.AGUARDANDO_SINAL,
+            aceitaEm,
+            prazoSinal: sinalDeadline(aceitaEm),
+          }
+        : { situacao: PaymentStatus.DISPENSADO, aceitaEm }),
+    };
   }
 
   async beforeApplicationShutdown(): Promise<void> {
