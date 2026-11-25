@@ -18,7 +18,12 @@ export type ApiPayment = {
     restante: number;
     situacao: PaymentStatus;
     prazoSinal?: string;
+    /** Depois do cancelamento com sinal pago. */
+    devolucao?: RefundStatus;
 };
+
+/** A produtora ainda deve devolver, já devolveu, ou o sinal ficou com ela. */
+export type RefundStatus = "pendente" | "feita" | "retido";
 type ApiPix = {
     chave: string;
     nomeRecebedor: string;
@@ -57,6 +62,7 @@ export type BookingPayment = {
     remainingCents: number;
     status: PaymentStatus;
     depositDeadline?: string;
+    refund?: RefundStatus;
 };
 
 export type BookingPix = {
@@ -75,6 +81,7 @@ export function adaptPayment(api: ApiPayment): BookingPayment {
         remainingCents: toCents(api.restante),
         status: api.situacao,
         ...(api.prazoSinal ? { depositDeadline: api.prazoSinal } : {}),
+        ...(api.devolucao ? { refund: api.devolucao } : {}),
     };
 }
 

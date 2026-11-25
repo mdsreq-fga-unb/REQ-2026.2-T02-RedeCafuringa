@@ -565,3 +565,9 @@
     flex-wrap: wrap;
     gap: 8px;
 }
+
+.booking-producer-cancel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}

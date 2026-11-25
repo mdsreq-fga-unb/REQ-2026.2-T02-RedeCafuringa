@@ -22,8 +22,11 @@ import { BookingPaymentSection } from "./BookingPaymentSection";
 import {
     confirmDeposit as confirm,
     reportDepositNotFound as reportNotFound,
+    reportDepositRefunded as reportRefunded,
     reportDepositSent as reportSent,
 } from "./bookingPaymentService";
+import { cancelBookingByProducer } from "./bookingCancelService";
+import { ProducerCancel } from "./ProducerCancel";
 import { markBookingUpdateRead } from "./bookingNotificationsService";
 import { getBooking } from "./bookingQueryService";
 import { BookingSessionError } from "./bookingService";
@@ -50,6 +53,9 @@ type BookingDetailPageProps = {
     reportDepositSent?: PaymentAction;
     confirmDeposit?: PaymentAction;
     reportDepositNotFound?: PaymentAction;
+    reportDepositRefunded?: PaymentAction;
+    /** A produtora cancela a pré-reserva aceita (RN20 revista). */
+    cancelAsProducer?: (id: string) => Promise<unknown>;
 };
 
 /** O perfil público só traz o telefone para quem está logado e se ela autorizou. */
@@ -125,6 +131,8 @@ export function BookingDetailPage({
     reportDepositSent = reportSent,
     confirmDeposit = confirm,
     reportDepositNotFound = reportNotFound,
+    reportDepositRefunded = reportRefunded,
+    cancelAsProducer = cancelBookingByProducer,
 }: BookingDetailPageProps) {
     const backRoute = fromNotifications ? RECEIVED_BOOKINGS_ROUTE : LIST_ROUTE;
     const [state, setState] = useState<State>({ status: "loading" });
@@ -311,6 +319,8 @@ export function BookingDetailPage({
                             onReportSent={paymentAction(reportDepositSent)}
                             onConfirm={paymentAction(confirmDeposit)}
                             onNotFound={paymentAction(reportDepositNotFound)}
+                            onRefunded={paymentAction(reportDepositRefunded)}
+                            bookingStatus={state.booking.status}
                         />
                     )}
                     {state.booking.responseMessage && (
@@ -373,9 +383,10 @@ export function BookingDetailPage({
                                 Fazer nova pré-reserva
                             </ActionButton>
                         )}
-                    {/* HU46 CA02: só a solicitante cancela, e só se pendente (RN20). */}
+                    {/* HU46 CA02 e RN20 revista: a solicitante cancela a pendente ou a aceita. */}
                     {role === "consumer" &&
-                        state.booking.status === "pendente" && (
+                        (state.booking.status === "pendente" ||
+                            state.booking.status === "aceita") && (
                             <button
                                 type="button"
                                 className="button booking-cancel-button"
@@ -387,6 +398,14 @@ export function BookingDetailPage({
                             >
                                 Cancelar solicitação
                             </button>
+                        )}
+                    {role === "producer" &&
+                        state.booking.status === "aceita" && (
+                            <ProducerCancel
+                                booking={state.booking}
+                                cancel={() => cancelAsProducer(id)}
+                                onCancelled={() => setAttempt((n) => n + 1)}
+                            />
                         )}
                 </div>
             )}

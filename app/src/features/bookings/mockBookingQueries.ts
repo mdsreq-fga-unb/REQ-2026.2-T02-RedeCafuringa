@@ -1,5 +1,6 @@
 import { listExperiences } from "@/features/offers/catalogItems";
 import type { Product } from "@/features/offers/productTypes";
+import { depositOnCancel } from "./bookingCancellation";
 import type { ApiBookingDetail, PaymentStatus } from "./bookingDetails";
 import {
     DEMO_BOOKINGS_KEY,
@@ -21,6 +22,7 @@ function demoPayment(
     record: MockBookingRecord,
     experience: Product | undefined,
 ): DemoPayment | undefined {
+    if (record.status === "cancelada") return record.pagamentoCancelado;
     if (record.status !== "aceita" || !experience) return undefined;
     const totalCents =
         Math.round(experience.price * 100) * record.participantes;
@@ -43,11 +45,14 @@ function demoPayment(
 }
 
 export type MockPaymentAction =
-    "enviar-comprovante" | "confirmar-sinal" | "nao-encontrado";
+    | "enviar-comprovante"
+    | "confirmar-sinal"
+    | "nao-encontrado"
+    | "sinal-devolvido";
 
 /** Mesmas mensagens da API quando a ação não vale na situação atual. */
 function paymentActionError(
-    action: MockPaymentAction,
+    action: Exclude<MockPaymentAction, "sinal-devolvido">,
     record: MockBookingRecord,
     payment: DemoPayment | undefined,
 ): string | null {
@@ -78,11 +83,23 @@ function paymentActionError(
     return null;
 }
 
-const NEXT_STATUS: Record<MockPaymentAction, PaymentStatus> = {
+const NEXT_STATUS: Record<
+    Exclude<MockPaymentAction, "sinal-devolvido">,
+    PaymentStatus
+> = {
     "enviar-comprovante": "comprovante-enviado",
     "confirmar-sinal": "sinal-confirmado",
     "nao-encontrado": "aguardando-sinal",
 };
+
+function saveRecord(records: MockBookingRecord[], updated: MockBookingRecord) {
+    localStorage.setItem(
+        DEMO_BOOKINGS_KEY,
+        JSON.stringify(
+            records.map((item) => (item.id === updated.id ? updated : item)),
+        ),
+    );
+}
 
 /** Aviso, confirmação ou contestação do sinal, com as regras da API. */
 export async function updateMockPayment(
@@ -103,6 +120,25 @@ export async function updateMockPayment(
         producerAction !== (viewer.role === "producer")
     )
         return { ok: false, message: "Pré-reserva não encontrada." };
+    if (action === "sinal-devolvido") {
+        const refund = record.pagamentoCancelado?.devolucao;
+        if (refund === "feita")
+            return {
+                ok: false,
+                message: "A devolução do sinal já foi registrada.",
+            };
+        if (record.status !== "cancelada" || refund !== "pendente")
+            return {
+                ok: false,
+                message: "Não há sinal a devolver nesta pré-reserva.",
+            };
+        const payment: DemoPayment = {
+            ...record.pagamentoCancelado!,
+            devolucao: "feita",
+        };
+        saveRecord(records, { ...record, pagamentoCancelado: payment });
+        return { ok: true, payment };
+    }
     const error = paymentActionError(
         action,
         record,
@@ -110,13 +146,102 @@ export async function updateMockPayment(
     );
     if (error) return { ok: false, message: error };
     const updated = { ...record, situacaoPagamento: NEXT_STATUS[action] };
-    localStorage.setItem(
-        DEMO_BOOKINGS_KEY,
-        JSON.stringify(
-            records.map((item) => (item.id === id ? updated : item)),
-        ),
-    );
+    saveRecord(records, updated);
     return { ok: true, payment: demoPayment(updated, experience)! };
+}
+
+/** Por que a produtora não cancela: a pendente se responde (HU47). */
+const PRODUCER_NOT_CANCELLABLE: Record<string, string> = {
+    pendente:
+        "Esta pré-reserva ainda está pendente: responda aceitando ou recusando.",
+    recusada: "Esta pré-reserva foi recusada e não pode ser cancelada.",
+    cancelada: "Esta pré-reserva já foi cancelada.",
+};
+
+type DemoCancelled = MockBookingRecord & {
+    sinal?: { resultado: "devolver" | "retido"; valor: number };
+};
+
+/** Cancela a aceita com a regra do sinal, como a API (RN20 revista). */
+export async function cancelMockAccepted(
+    id: string,
+    by: "consumidora" | "produtora",
+    viewer: MockViewer,
+): Promise<
+    | { ok: true; booking: DemoCancelled }
+    | { ok: false; reason: "nao-encontrada" }
+    | { ok: false; reason: "nao-cancelavel"; message: string }
+> {
+    const records = listMockBookings();
+    const record = records.find((item) => item.id === id);
+    const experiences = await experiencesById();
+    const experience = record && experiences.get(record.experienciaId);
+    if (
+        !record ||
+        !canView(record, experience, viewer) ||
+        (by === "produtora") !== (viewer.role === "producer")
+    )
+        return { ok: false, reason: "nao-encontrada" };
+    if (record.status !== "aceita")
+        return {
+            ok: false,
+            reason: "nao-cancelavel",
+            message:
+                (by === "produtora"
+                    ? PRODUCER_NOT_CANCELLABLE[record.status]
+                    : undefined) ?? "Esta pré-reserva não pode ser cancelada.",
+        };
+    const payment = demoPayment(record, experience);
+    const outcome = payment
+        ? depositOnCancel(
+              {
+                  date: record.data,
+                  time: record.horario,
+                  payment: {
+                      totalCents: Math.round(payment.total * 100),
+                      depositCents: Math.round(payment.sinal * 100),
+                      remainingCents: Math.round(payment.restante * 100),
+                      status: payment.situacao,
+                  },
+              },
+              by,
+          )
+        : null;
+    const updated: MockBookingRecord = {
+        ...record,
+        status: "cancelada",
+        atualizadoEm: new Date().toISOString(),
+        ...(payment
+            ? {
+                  pagamentoCancelado: {
+                      ...payment,
+                      ...(outcome
+                          ? {
+                                devolucao:
+                                    outcome.result === "devolver"
+                                        ? ("pendente" as const)
+                                        : ("retido" as const),
+                            }
+                          : {}),
+                  },
+              }
+            : {}),
+    };
+    saveRecord(records, updated);
+    return {
+        ok: true,
+        booking: {
+            ...updated,
+            ...(outcome
+                ? {
+                      sinal: {
+                          resultado: outcome.result,
+                          valor: outcome.cents / 100,
+                      },
+                  }
+                : {}),
+        },
+    };
 }
 
 /** Experiências da demonstração por id, para completar cada pré-reserva. */

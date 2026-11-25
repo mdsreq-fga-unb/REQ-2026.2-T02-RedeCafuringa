@@ -12,6 +12,7 @@ import {
     type BookingPix,
 } from "./bookingDetails";
 import { BookingPaymentError } from "./bookingPaymentService";
+import type { BookingStatus } from "./bookingTypes";
 
 /** Regras que a consumidora aceita antes de ver o código Pix. */
 const CANCELLATION_RULES = [
@@ -29,6 +30,9 @@ type Action = () => Promise<void>;
 type Props = {
     role: "consumer" | "producer";
     payment: BookingPayment;
+    /** Situação da pré-reserva: cancelada, o sinal só aparece se houver devolução. */
+    bookingStatus?: BookingStatus;
+    onRefunded?: Action;
     pix?: BookingPix;
     experienceName?: string;
     date?: string;
@@ -213,12 +217,61 @@ function ReceiptSender({
     );
 }
 
+/** Depois do cancelamento: quem deve devolver o sinal, e se já devolveu. */
+function RefundStatus({
+    role,
+    payment,
+    onRefunded,
+}: Pick<Props, "role" | "payment" | "onRefunded">) {
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState("");
+    const value = formatCentavos(payment.depositCents);
+    const producer = role === "producer";
+    const text = {
+        pendente: producer
+            ? `Devolva o sinal de ${value} por Pix para a consumidora.`
+            : `A produtora vai devolver o sinal de ${value} por Pix.`,
+        feita: producer
+            ? `Devolução do sinal de ${value} registrada.`
+            : `A produtora registrou a devolução do sinal de ${value}.`,
+        retido: producer
+            ? `O sinal de ${value} ficou com você.`
+            : `O sinal de ${value} ficou com a produtora.`,
+    }[payment.refund!];
+    return (
+        <div className="booking-payment-status">
+            <p>{text}</p>
+            {producer && payment.refund === "pendente" && (
+                <ActionButton
+                    variant="green"
+                    type="button"
+                    disabled={busy}
+                    onClick={async () => {
+                        setBusy(true);
+                        setError(await run(onRefunded));
+                        setBusy(false);
+                    }}
+                >
+                    Sinal devolvido
+                </ActionButton>
+            )}
+            {error && (
+                <p className="field-error" role="alert">
+                    {error}
+                </p>
+            )}
+        </div>
+    );
+}
+
 /** Pagamento por Pix da pré-reserva aceita: sinal, prazo, regras e código. */
 export function BookingPaymentSection(props: Props) {
     const { role, payment, pix } = props;
     const [accepted, setAccepted] = useState(false);
     const id = useId();
 
+    if (payment.refund) return <RefundStatus {...props} />;
+    if (props.bookingStatus === "cancelada") return null;
     if (role === "producer") return <ProducerActions {...props} />;
     if (payment.status !== "aguardando-sinal")
         return (
