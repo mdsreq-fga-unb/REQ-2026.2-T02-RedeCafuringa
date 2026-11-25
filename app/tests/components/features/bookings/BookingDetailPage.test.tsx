@@ -320,7 +320,8 @@ describe("HU46 — opção de cancelar no detalhe (CA01, CA02)", () => {
         expect(onNavigate).toHaveBeenCalledWith("/reservas/b%201/cancelar");
     });
 
-    it.each<BookingStatus>(["aceita", "recusada", "cancelada"])(
+    // RN20 revista em 25/11/2026: a aceita também oferece o cancelamento.
+    it.each<BookingStatus>(["recusada", "cancelada"])(
         "RN20: pré-reserva %s não oferece cancelamento à consumidora",
         async (status) => {
             renderPage({

@@ -101,11 +101,8 @@ describe("HU46 — cancelamento na demonstração", () => {
         expect((error as BookingCancelError).reason).toBe("nao-encontrada");
     });
 
+    // RN20 revista em 25/11/2026: a aceita também se cancela.
     it.each<[BookingStatus, string]>([
-        [
-            "aceita",
-            "Esta pré-reserva já foi aceita: apenas o produtor responsável pode cancelá-la",
-        ],
         [
             "recusada",
             "Esta pré-reserva foi recusada pelo produtor e não pode ser cancelada",
