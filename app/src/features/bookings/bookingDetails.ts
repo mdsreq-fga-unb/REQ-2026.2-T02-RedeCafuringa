@@ -9,7 +9,8 @@ export type PaymentStatus =
     | "comprovante-enviado"
     | "sinal-confirmado"
     | "expirado"
-    | "dispensado";
+    | "dispensado"
+    | "pagamento-recebido";
 
 /** Pagamento e Pix do detalhe; ainda fora do contrato gerado. */
 export type ApiPayment = {

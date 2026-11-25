@@ -48,7 +48,9 @@ export type MockPaymentAction =
     | "enviar-comprovante"
     | "confirmar-sinal"
     | "nao-encontrado"
-    | "sinal-devolvido";
+    | "sinal-devolvido"
+    | "dispensar-sinal"
+    | "registrar-pagamento";
 
 /** Mesmas mensagens da API quando a ação não vale na situação atual. */
 function paymentActionError(
@@ -64,9 +66,26 @@ function paymentActionError(
                 "Só é possível confirmar o sinal de uma pré-reserva aceita.",
             "nao-encontrado":
                 "Só é possível contestar o pagamento de uma pré-reserva aceita.",
+            "dispensar-sinal":
+                "Só é possível dispensar o sinal de uma pré-reserva aceita.",
+            "registrar-pagamento":
+                "Só é possível registrar o pagamento de uma pré-reserva aceita.",
         }[action];
-    if (!payment || payment.situacao === "dispensado")
-        return "Esta pré-reserva não pede sinal.";
+    if (!payment)
+        return action === "registrar-pagamento"
+            ? "Esta pré-reserva não tem pagamento registrado."
+            : "Esta pré-reserva não pede sinal.";
+    if (payment.situacao === "pagamento-recebido")
+        return "O pagamento desta pré-reserva já foi registrado.";
+    if (action === "registrar-pagamento")
+        return payment.situacao === "sinal-confirmado" ||
+            payment.situacao === "dispensado"
+            ? null
+            : "Confirme ou dispense o sinal antes de registrar o pagamento.";
+    if (payment.situacao === "dispensado")
+        return action === "dispensar-sinal"
+            ? "O sinal desta pré-reserva já foi dispensado."
+            : "Esta pré-reserva não pede sinal.";
     if (payment.situacao === "sinal-confirmado")
         return "O sinal desta pré-reserva já foi confirmado.";
     if (action === "enviar-comprovante") {
@@ -75,6 +94,11 @@ function paymentActionError(
         if (payment.situacao === "comprovante-enviado")
             return "Você já avisou que pagou o sinal. A produtora vai conferir.";
     }
+    if (
+        action === "dispensar-sinal" &&
+        payment.situacao === "comprovante-enviado"
+    )
+        return "A consumidora avisou que pagou: confira o extrato e confirme o sinal.";
     if (
         action === "nao-encontrado" &&
         payment.situacao !== "comprovante-enviado"
@@ -90,6 +114,8 @@ const NEXT_STATUS: Record<
     "enviar-comprovante": "comprovante-enviado",
     "confirmar-sinal": "sinal-confirmado",
     "nao-encontrado": "aguardando-sinal",
+    "dispensar-sinal": "dispensado",
+    "registrar-pagamento": "pagamento-recebido",
 };
 
 function saveRecord(records: MockBookingRecord[], updated: MockBookingRecord) {

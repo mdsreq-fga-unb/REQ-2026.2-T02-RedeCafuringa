@@ -2,6 +2,7 @@ import { ApiHttpError, getApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { saveDemoOffer, notifyOffersChanged } from "./publishedOffers";
 import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
+import type { PaymentMethod } from "@/features/bookings/bookingTypes";
 import type { ApiProduct } from "./productTypes";
 
 export type ExperienceDraft = {
@@ -12,6 +13,10 @@ export type ExperienceDraft = {
     local: string;
     duracao: string;
     fotos: File[];
+    /** Pagamento por Pix: pedir sinal de 50% no aceite (padrão: sim). */
+    exigeSinal?: boolean;
+    /** Formas aceitas no dia, na ordem da lista de formas de pagamento. */
+    formasPagamentoNoDia?: PaymentMethod[];
 };
 
 export type RegisteredExperience = {
@@ -23,6 +28,8 @@ export type RegisteredExperience = {
     local: string;
     duracao: string;
     fotos: string[];
+    exigeSinal?: boolean;
+    formasPagamentoNoDia?: PaymentMethod[];
     /** Responsável pela oferta (CA03, CA08): só dados de divulgação. */
     produtor: ApiProduct["produtor"];
     /** Presente nas respostas da API (RN10); as rotas públicas só trazem disponíveis. */
@@ -73,6 +80,8 @@ export async function registerExperience(
             local: draft.local.trim(),
             duracao: draft.duracao.trim(),
             fotos,
+            exigeSinal: draft.exigeSinal ?? true,
+            formasPagamentoNoDia: draft.formasPagamentoNoDia ?? [],
             produtor: {
                 id:
                     localStorage.getItem("cafuringa-user-id") ??
@@ -92,6 +101,9 @@ export async function registerExperience(
     body.set("valorPorPessoa", String(Number(draft.preco.replace(",", "."))));
     body.set("local", draft.local.trim());
     body.set("duracao", draft.duracao.trim());
+    body.set("exigeSinal", String(draft.exigeSinal ?? true));
+    if (draft.formasPagamentoNoDia?.length)
+        body.set("formasPagamentoNoDia", draft.formasPagamentoNoDia.join(","));
     // RNF06/RNF11: reduz cada foto no aparelho e descarta o EXIF/GPS antes de
     // enviar (mesmo preparo da foto de perfil). Uma de cada vez, para poupar memória.
     for (const foto of draft.fotos)

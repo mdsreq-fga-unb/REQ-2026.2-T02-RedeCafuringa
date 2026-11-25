@@ -24,6 +24,8 @@ import {
     reportDepositNotFound as reportNotFound,
     reportDepositRefunded as reportRefunded,
     reportDepositSent as reportSent,
+    reportPaymentReceived as paymentReceived,
+    waiveDeposit as waive,
 } from "./bookingPaymentService";
 import { cancelBookingByProducer } from "./bookingCancelService";
 import { ProducerCancel } from "./ProducerCancel";
@@ -54,6 +56,8 @@ type BookingDetailPageProps = {
     confirmDeposit?: PaymentAction;
     reportDepositNotFound?: PaymentAction;
     reportDepositRefunded?: PaymentAction;
+    waiveDeposit?: PaymentAction;
+    reportPaymentReceived?: PaymentAction;
     /** A produtora cancela a pré-reserva aceita (RN20 revista). */
     cancelAsProducer?: (id: string) => Promise<unknown>;
 };
@@ -132,6 +136,8 @@ export function BookingDetailPage({
     confirmDeposit = confirm,
     reportDepositNotFound = reportNotFound,
     reportDepositRefunded = reportRefunded,
+    waiveDeposit = waive,
+    reportPaymentReceived = paymentReceived,
     cancelAsProducer = cancelBookingByProducer,
 }: BookingDetailPageProps) {
     const backRoute = fromNotifications ? RECEIVED_BOOKINGS_ROUTE : LIST_ROUTE;
@@ -141,8 +147,7 @@ export function BookingDetailPage({
     const consumerOwesDeposit =
         role === "consumer" &&
         state.status === "ready" &&
-        state.booking.payment?.status === "aguardando-sinal" &&
-        Boolean(state.booking.pix);
+        state.booking.payment?.status === "aguardando-sinal";
     const producerId =
         state.status === "ready" ? state.booking.counterpart.id : "";
 
@@ -320,6 +325,8 @@ export function BookingDetailPage({
                             onConfirm={paymentAction(confirmDeposit)}
                             onNotFound={paymentAction(reportDepositNotFound)}
                             onRefunded={paymentAction(reportDepositRefunded)}
+                            onWaive={paymentAction(waiveDeposit)}
+                            onReceived={paymentAction(reportPaymentReceived)}
                             bookingStatus={state.booking.status}
                         />
                     )}

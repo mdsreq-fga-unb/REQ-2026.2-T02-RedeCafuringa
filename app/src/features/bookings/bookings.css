@@ -571,3 +571,9 @@
     flex-direction: column;
     gap: 12px;
 }
+
+.booking-no-pix {
+    align-self: flex-start;
+    color: var(--orange-text);
+    font-weight: 600;
+}

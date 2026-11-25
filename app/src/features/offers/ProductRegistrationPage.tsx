@@ -4,6 +4,11 @@ import { BackButton } from "@/components/navigation/BackButton";
 import { ApiHttpError } from "@/shared/api";
 import { PRODUCT_PHOTOS_MAX, registerProduct } from "./productService";
 import type { ProductDraft, RegisteredProduct } from "./productService";
+import {
+    PAYMENT_METHODS,
+    type PaymentMethod,
+} from "@/features/bookings/bookingTypes";
+import { PAYMENT_LABELS } from "@/features/bookings/bookingOptions";
 import "./product-registration.css";
 
 import {
@@ -15,6 +20,8 @@ type OfferDraft = ProductDraft & {
     local: string;
     duracao: string;
     duracaoUnidade: "minutos" | "horas";
+    exigeSinal: boolean;
+    formasPagamentoNoDia: PaymentMethod[];
 };
 type Errors = Partial<Record<keyof OfferDraft, string>>;
 const initialDraft: OfferDraft = {
@@ -26,6 +33,8 @@ const initialDraft: OfferDraft = {
     local: "",
     duracao: "",
     duracaoUnidade: "horas",
+    exigeSinal: true,
+    formasPagamentoNoDia: [],
     fotos: [],
 };
 
@@ -525,6 +534,63 @@ export function ProductRegistrationPage({
                             </ul>
                         )}
                     </div>
+                    {experience && (
+                        <>
+                            <div className="product-field product-deposit">
+                                <label className="product-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        checked={draft.exigeSinal}
+                                        onChange={(e) =>
+                                            update(
+                                                "exigeSinal",
+                                                e.target.checked,
+                                            )
+                                        }
+                                    />
+                                    Pedir sinal de 50% por Pix para garantir a
+                                    vaga
+                                </label>
+                                {!draft.exigeSinal && (
+                                    <p className="product-photo-help">
+                                        Sem sinal, a vaga fica garantida mesmo
+                                        que a pessoa não compareça.
+                                    </p>
+                                )}
+                            </div>
+                            <fieldset className="product-field product-day-payment">
+                                <legend>Formas aceitas no dia</legend>
+                                {PAYMENT_METHODS.map((method) => (
+                                    <label
+                                        className="product-checkbox"
+                                        key={method}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={draft.formasPagamentoNoDia.includes(
+                                                method,
+                                            )}
+                                            onChange={(e) =>
+                                                update(
+                                                    "formasPagamentoNoDia",
+                                                    PAYMENT_METHODS.filter(
+                                                        (item) =>
+                                                            item === method
+                                                                ? e.target
+                                                                      .checked
+                                                                : draft.formasPagamentoNoDia.includes(
+                                                                      item,
+                                                                  ),
+                                                    ),
+                                                )
+                                            }
+                                        />
+                                        {PAYMENT_LABELS[method]}
+                                    </label>
+                                ))}
+                            </fieldset>
+                        </>
+                    )}
                 </fieldset>
                 {failure && (
                     <p role="alert" className="product-field-error">

@@ -3,6 +3,7 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { PixPayment } from "@/features/payments/PixPayment";
 import { formatCentavos } from "@/features/payments/money";
 import {
+    noPixMessage,
     receiptMessage,
     receiptWhatsAppUrl,
 } from "@/features/payments/receiptMessage";
@@ -41,6 +42,8 @@ type Props = {
     onReportSent?: Action;
     onConfirm?: Action;
     onNotFound?: Action;
+    onWaive?: Action;
+    onReceived?: Action;
 };
 
 const deadlineOf = (payment: BookingPayment) =>
@@ -58,6 +61,8 @@ function consumerStatusText(payment: BookingPayment): string {
             return "Sinal confirmado. Sua vaga está garantida.";
         case "dispensado":
             return `Esta experiência não pede sinal. Você paga ${formatCentavos(payment.totalCents)} no dia, com a produtora.`;
+        case "pagamento-recebido":
+            return "A produtora registrou o pagamento. Tudo certo para o dia!";
         default:
             return "";
     }
@@ -75,7 +80,9 @@ function producerStatusText(payment: BookingPayment): string {
         case "expirado":
             return `O prazo do sinal terminou em ${deadlineOf(payment)} sem pagamento. A vaga foi liberada.`;
         case "dispensado":
-            return "Esta experiência não pede sinal.";
+            return "Vaga garantida sem sinal. O pagamento é feito no dia.";
+        case "pagamento-recebido":
+            return "Pagamento recebido.";
     }
 }
 
@@ -95,11 +102,22 @@ function ProducerActions({
     payment,
     onConfirm,
     onNotFound,
-}: Pick<Props, "payment" | "onConfirm" | "onNotFound">) {
+    onWaive,
+    onReceived,
+}: Pick<
+    Props,
+    "payment" | "onConfirm" | "onNotFound" | "onWaive" | "onReceived"
+>) {
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
     const reported = payment.status === "comprovante-enviado";
-    const canConfirm = reported || payment.status === "aguardando-sinal";
+    // Prazo vencido: o Pix pode ter chegado atrasado, ou a vaga vai sem sinal.
+    const open =
+        payment.status === "aguardando-sinal" || payment.status === "expirado";
+    const canConfirm = reported || open;
+    const canReceive =
+        payment.status === "sinal-confirmado" ||
+        payment.status === "dispensado";
     const press = (action?: Action) => async () => {
         setBusy(true);
         setError(await run(action));
@@ -111,16 +129,24 @@ function ProducerActions({
             {reported && (
                 <p>Confira no extrato do seu banco antes de confirmar.</p>
             )}
-            {canConfirm && (
+            {open && (
+                <p>
+                    Sem sinal, a vaga fica garantida mesmo que a pessoa não
+                    compareça.
+                </p>
+            )}
+            {(canConfirm || canReceive) && (
                 <div className="booking-payment-actions">
-                    <ActionButton
-                        variant="green"
-                        type="button"
-                        disabled={busy}
-                        onClick={press(onConfirm)}
-                    >
-                        Confirmar sinal
-                    </ActionButton>
+                    {canConfirm && (
+                        <ActionButton
+                            variant="green"
+                            type="button"
+                            disabled={busy}
+                            onClick={press(onConfirm)}
+                        >
+                            Confirmar sinal
+                        </ActionButton>
+                    )}
                     {reported && (
                         <ActionButton
                             variant="outline"
@@ -129,6 +155,26 @@ function ProducerActions({
                             onClick={press(onNotFound)}
                         >
                             Não encontrei o pagamento
+                        </ActionButton>
+                    )}
+                    {open && (
+                        <ActionButton
+                            variant="outline"
+                            type="button"
+                            disabled={busy}
+                            onClick={press(onWaive)}
+                        >
+                            Confirmar sem sinal
+                        </ActionButton>
+                    )}
+                    {canReceive && (
+                        <ActionButton
+                            variant="green"
+                            type="button"
+                            disabled={busy}
+                            onClick={press(onReceived)}
+                        >
+                            Pagamento recebido
                         </ActionButton>
                     )}
                 </div>
@@ -264,6 +310,30 @@ function RefundStatus({
     );
 }
 
+/** Quem não consegue pagar por Pix pede outra forma à produtora, pelo WhatsApp. */
+function NoPixContact({
+    experienceName = "",
+    date = "",
+    producerPhone,
+}: Pick<Props, "experienceName" | "date" | "producerPhone">) {
+    const url = receiptWhatsAppUrl(
+        producerPhone,
+        noPixMessage({ experienceName, date }),
+    );
+    if (!url) return null;
+    return (
+        <a
+            className="booking-no-pix"
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Não consegue pagar por Pix? Fale com a produtora (abre o WhatsApp)"
+        >
+            Não consegue pagar por Pix? Fale com a produtora
+        </a>
+    );
+}
+
 /** Pagamento por Pix da pré-reserva aceita: sinal, prazo, regras e código. */
 export function BookingPaymentSection(props: Props) {
     const { role, payment, pix } = props;
@@ -292,6 +362,7 @@ export function BookingPaymentSection(props: Props) {
                     <li key={rule}>{rule}</li>
                 ))}
             </ul>
+            <NoPixContact {...props} />
             {pix ? (
                 <>
                     <label className="booking-payment-accept">

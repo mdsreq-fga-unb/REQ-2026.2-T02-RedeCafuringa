@@ -328,3 +328,21 @@
 .duration-control:has([aria-invalid="true"]) {
     border-color: #a32b22;
 }
+
+/* Pagamento por Pix: sinal e formas aceitas no dia (experiência). */
+.product-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.product-day-payment {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+}

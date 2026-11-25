@@ -26,6 +26,8 @@ const PATHS: Record<MockPaymentAction, (id: string) => string> = {
     "confirmar-sinal": (id) => `/bookings/received/${id}/payment/confirm`,
     "nao-encontrado": (id) => `/bookings/received/${id}/payment/not-found`,
     "sinal-devolvido": (id) => `/bookings/received/${id}/payment/refunded`,
+    "dispensar-sinal": (id) => `/bookings/received/${id}/payment/waive`,
+    "registrar-pagamento": (id) => `/bookings/received/${id}/payment/received`,
 };
 
 async function act(
@@ -79,3 +81,11 @@ export const reportDepositNotFound = (id: string, options: Options = {}) =>
 /** Depois do cancelamento, a produtora registra que devolveu o sinal. */
 export const reportDepositRefunded = (id: string, options: Options = {}) =>
     act("sinal-devolvido", id, options);
+
+/** Quem não usa Pix: a produtora garante a vaga sem sinal. */
+export const waiveDeposit = (id: string, options: Options = {}) =>
+    act("dispensar-sinal", id, options);
+
+/** A produtora registra que recebeu o pagamento (no dia ou antes). */
+export const reportPaymentReceived = (id: string, options: Options = {}) =>
+    act("registrar-pagamento", id, options);
