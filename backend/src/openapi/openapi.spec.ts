@@ -273,6 +273,85 @@ describe('contrato OpenAPI', () => {
     }
   });
 
+  it('pagamento por Pix: chave da produtora, sinal, cancelamento e notificações', () => {
+    type Prop = {
+      type?: string;
+      nullable?: boolean;
+      enum?: string[];
+      $ref?: string;
+      allOf?: Array<{ $ref?: string }>;
+      items?: { enum?: string[] };
+    };
+    const schemas = doc.components?.schemas as Record<
+      string,
+      { required?: string[]; properties?: Record<string, Prop> }
+    >;
+    const props = (name: string) => schemas[name]?.properties ?? {};
+    const refersTo = (prop: Prop | undefined, schema: string) =>
+      JSON.stringify(prop ?? {}).includes(`#/components/schemas/${schema}`);
+
+    // Chave Pix: a produtora envia e vê; o perfil público nunca traz.
+    expect(refersTo(props('SaveTrajectoryDto').pix, 'SavePixDto')).toBe(true);
+    expect(props('SaveTrajectoryDto').pix?.nullable).toBe(true);
+    expect(props('SavePixDto').tipo?.enum).toEqual([
+      'cpf',
+      'cnpj',
+      'telefone',
+      'email',
+      'aleatoria',
+    ]);
+    expect(refersTo(props('OwnTrajectoryResponse').pix, 'OwnPixResponse')).toBe(
+      true,
+    );
+    expect(props('PublicTrajectoryResponse')).not.toHaveProperty('pix');
+
+    // Sinal no detalhe da pré-reserva, com a situação valendo agora.
+    expect(
+      refersTo(
+        props('BookingDetailResponse').pagamento,
+        'BookingPaymentResponse',
+      ),
+    ).toBe(true);
+    expect(
+      refersTo(props('BookingDetailResponse').pix, 'BookingPixResponse'),
+    ).toBe(true);
+    expect(props('BookingPaymentResponse').situacao?.enum).toEqual([
+      'aguardando-sinal',
+      'comprovante-enviado',
+      'sinal-confirmado',
+      'expirado',
+      'dispensado',
+      'pagamento-recebido',
+    ]);
+    expect(props('BookingPaymentResponse').devolucao?.enum).toEqual([
+      'pendente',
+      'feita',
+      'retido',
+    ]);
+
+    // Cancelamento com o destino do sinal, e as notificações de cada passo.
+    expect(
+      refersTo(props('CancelBookingResponse').sinal, 'CancelDepositResponse'),
+    ).toBe(true);
+    expect(props('BookingNotificationResponse')).toHaveProperty('pagamento');
+    expect(props('BookingNotificationResponse')).toHaveProperty('devolucao');
+
+    // Experiência: sinal e formas aceitas no dia, sempre presentes na resposta.
+    expect(schemas.ExperienceResponse.required).toEqual(
+      expect.arrayContaining(['exigeSinal', 'formasPagamentoNoDia']),
+    );
+    const form = JSON.stringify(
+      (
+        doc.paths['/api/v1/experiences'] as Record<
+          string,
+          { requestBody?: unknown }
+        >
+      ).post.requestBody,
+    );
+    expect(form).toContain('"exigeSinal"');
+    expect(form).toContain('"formasPagamentoNoDia"');
+  });
+
   it('todo DTO usado na API aparece no contrato', () => {
     const names = Object.keys(doc.components?.schemas ?? {});
     for (const dto of [

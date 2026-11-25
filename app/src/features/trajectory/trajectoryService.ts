@@ -2,33 +2,21 @@ import { ApiHttpError, apiResourceUrl, getApiClient } from "@/shared/api";
 import type { components } from "@/shared/api/schema";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { readMockUserDetails } from "@/features/auth/mockAuth";
-import type { PixKeyType } from "@/features/payments/pixCode";
 import { prepareProfilePhoto } from "./photoResize";
 import type { TrajectoryDraft } from "./trajectoryModel";
 import { demoPublicProfiles } from "@/features/profile/publicProfileDemo";
 
-/** Pix da produtora (pagamento por Pix); ainda fora do contrato gerado. */
-export type SavePix = {
-    tipo: PixKeyType;
-    chave: string;
-    nomeRecebedor: string;
-    publico?: boolean;
-};
-export type OwnPix = Required<SavePix> & { atualizadoEm?: string };
-export type OwnTrajectory = components["schemas"]["OwnTrajectoryResponse"] & {
-    pix?: OwnPix;
-};
+/** Pix da produtora (pagamento por Pix). */
+export type SavePix = components["schemas"]["SavePixDto"];
+export type OwnPix = components["schemas"]["OwnPixResponse"];
+export type OwnTrajectory = components["schemas"]["OwnTrajectoryResponse"];
 export type PublicTrajectory =
     components["schemas"]["PublicTrajectoryResponse"] & { localidade?: string };
 // O DTO do backend aceita string | null; o schema atual omite o tipo da união nullable.
 export type SaveTrajectory = Omit<
     components["schemas"]["SaveTrajectoryDto"],
     "telefone"
-> & {
-    telefone?: string | null;
-    /** Omitido mantém o Pix; `null` remove. */
-    pix?: SavePix | null;
-};
+> & { telefone?: string | null };
 
 // Demonstração: dados separados por produtor e sem chamadas ao backend real.
 const demoTrajectories = new Map<string, OwnTrajectory>();

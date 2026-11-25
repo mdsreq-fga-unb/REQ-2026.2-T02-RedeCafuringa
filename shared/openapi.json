@@ -2562,6 +2562,16 @@
                     "example": "2 horas",
                     "description": "Número inteiro seguido de minutos ou horas"
                   },
+                  "exigeSinal": {
+                    "type": "boolean",
+                    "example": true,
+                    "description": "Opcional. Se o aceite pede sinal de 50% por Pix. Padrão: sim."
+                  },
+                  "formasPagamentoNoDia": {
+                    "type": "string",
+                    "example": "dinheiro,pix",
+                    "description": "Opcional. Formas aceitas no dia, separadas por vírgula (pix, dinheiro, cartao_credito, cartao_debito)."
+                  },
                   "fotos": {
                     "type": "array",
                     "minItems": 1,
@@ -3431,7 +3441,7 @@
     },
     "/api/v1/bookings/{id}/cancel": {
       "patch": {
-        "description": "HU46/RF46 (CA02-CA07): o consumidor cancela a própria solicitação de pré-reserva. Sem corpo: a confirmação (\"Sim, cancelar solicitação\" / \"Manter solicitação\", CA02 e CA04) é da interface, que só chama este endpoint quando o usuário confirma. Só solicitações pendentes podem ser canceladas pelo solicitante (RN20); a situação passa a `cancelada` e nunca volta a `pendente` (RN21). A troca é atômica: cancelar de novo, ou cancelar depois de o produtor responder, devolve 409 e não altera nada. Solicitação de outro usuário responde 404, como se não existisse (CA05, RNF11). Exclusivo do perfil CONSUMIDOR (RNF08).",
+        "description": "HU46/RF46 (CA02-CA07): o consumidor cancela a própria solicitação de pré-reserva. Sem corpo: a confirmação (\"Sim, cancelar solicitação\" / \"Manter solicitação\", CA02 e CA04) é da interface, que só chama este endpoint quando o usuário confirma. Cancela a solicitação pendente ou aceita (RN20 revista em 25/11/2026, pagamento por Pix); a situação passa a `cancelada` e nunca volta (RN21). Na aceita com sinal pago, até 72 horas antes a produtora devolve o sinal; depois, o sinal fica com ela. A troca é atômica: cancelar de novo, ou cancelar a recusada, devolve 409 e não altera nada. Solicitação de outro usuário responde 404, como se não existisse (CA05, RNF11). Exclusivo do perfil CONSUMIDOR (RNF08).",
         "operationId": "bookingsCancel",
         "parameters": [
           {
@@ -3447,11 +3457,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Solicitação cancelada, já com a situação atualizada (CA06)",
+            "description": "Solicitação cancelada, já com a situação atualizada (CA06). Com sinal pago, `sinal` diz se a produtora devolve ou retém o valor.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BookingResponse"
+                  "$ref": "#/components/schemas/CancelBookingResponse"
                 },
                 "example": {
                   "id": "64b0c0ffee0000000000b001",
@@ -3513,7 +3523,7 @@
             }
           },
           "409": {
-            "description": "A solicitação não está pendente: já aceita (só o produtor cancela), recusada ou já cancelada. Nada é alterado (RN20, RN21). A mensagem diz o motivo.",
+            "description": "A solicitação foi recusada, já foi cancelada ou mudou no meio. Nada é alterado (RN20, RN21). A mensagem diz o motivo.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3534,6 +3544,552 @@
           }
         ],
         "summary": "Cancelar pré-reserva",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/{id}/payment/sent": {
+      "patch": {
+        "description": "Pagamento por Pix: a consumidora avisa que pagou o sinal da própria pré-reserva aceita, dentro do prazo. O comprovante vai direto à produtora pelo WhatsApp; a API só registra o aviso (situação `comprovante-enviado`). Pré-reserva de outra conta responde 404. Exclusivo do perfil CONSUMIDOR.",
+        "operationId": "bookingsReportPaymentSent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "64b0c0ffee0000000000b001",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPaymentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Perfil sem permissão\n\nExclusivo para: CONSUMIDOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pré-reserva não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A situação não permite: prazo vencido, aviso já feito, sinal já confirmado ou dispensado. A mensagem diz o motivo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Avisar que pagou o sinal",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/received/{id}/payment/confirm": {
+      "patch": {
+        "description": "Pagamento por Pix: a produtora responsável confirma que o sinal caiu no extrato. Vale com o sinal por pagar ou depois do aviso da consumidora, mesmo depois do prazo (pagamento atrasado). Exclusivo do perfil PRODUTOR.",
+        "operationId": "bookingsConfirmPayment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "64b0c0ffee0000000000b001",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPaymentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "A pré-reserva é de outro produtor, ou perfil sem permissão\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pré-reserva não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A situação não permite: sinal já confirmado, dispensado ou pré-reserva não aceita. A mensagem diz o motivo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Confirmar o sinal recebido",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/received/{id}/payment/not-found": {
+      "patch": {
+        "description": "Pagamento por Pix: depois do aviso da consumidora, a produtora informa que não encontrou o Pix no extrato. A pré-reserva volta a aguardar o sinal, com o prazo de antes. Exclusivo do perfil PRODUTOR.",
+        "operationId": "bookingsReportPaymentNotFound",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "64b0c0ffee0000000000b001",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPaymentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "A pré-reserva é de outro produtor, ou perfil sem permissão\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pré-reserva não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A consumidora ainda não avisou o pagamento, ou o sinal já foi confirmado. A mensagem diz o motivo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Informar que o sinal não foi encontrado",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/received/{id}/cancel": {
+      "patch": {
+        "description": "RN20 revista (25/11/2026, pagamento por Pix): a produtora responsável cancela uma pré-reserva aceita. Se o sinal estava pago, ela devolve o valor integral, a qualquer momento; a API só registra (`sinal.resultado: devolver`). A pendente se responde pela HU47. Exclusivo do perfil PRODUTOR.",
+        "operationId": "bookingsCancelByProducer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "64b0c0ffee0000000000b001",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelBookingResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "A pré-reserva é de outro produtor, ou perfil sem permissão\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pré-reserva não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A solicitação não está aceita (pendente, recusada ou já cancelada), ou mudou no meio. A mensagem diz o motivo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancelar pré-reserva aceita (produtora)",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/received/{id}/payment/refunded": {
+      "patch": {
+        "description": "Pagamento por Pix: depois de um cancelamento em que o sinal deve ser devolvido, a produtora registra que fez o Pix de volta. Só uma vez. Exclusivo do perfil PRODUTOR.",
+        "operationId": "bookingsReportRefunded",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "64b0c0ffee0000000000b001",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPaymentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "A pré-reserva é de outro produtor, ou perfil sem permissão\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pré-reserva não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Não há sinal a devolver, ou a devolução já foi registrada. A mensagem diz o motivo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registrar a devolução do sinal",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/received/{id}/payment/waive": {
+      "patch": {
+        "description": "Pagamento por Pix: para quem não usa Pix, a produtora garante a vaga sem o sinal (situação `dispensado`), mesmo depois do prazo. Ela fica sem proteção contra falta. Exclusivo do perfil PRODUTOR.",
+        "operationId": "bookingsWaiveDeposit",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "64b0c0ffee0000000000b001",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPaymentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "A pré-reserva é de outro produtor, ou perfil sem permissão\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pré-reserva não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Sinal já confirmado, já dispensado, aviso de pagamento a conferir ou pré-reserva não aceita. A mensagem diz o motivo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Confirmar sem sinal",
+        "tags": [
+          "bookings"
+        ]
+      }
+    },
+    "/api/v1/bookings/received/{id}/payment/received": {
+      "patch": {
+        "description": "Pagamento por Pix ou no dia: com o sinal confirmado ou dispensado, a produtora registra que recebeu o pagamento (situação `pagamento-recebido`). A API não guarda valores recebidos em dinheiro. Exclusivo do perfil PRODUTOR.",
+        "operationId": "bookingsReportPaymentReceived",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "64b0c0ffee0000000000b001",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPaymentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem token ou token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "A pré-reserva é de outro produtor, ou perfil sem permissão\n\nExclusivo para: PRODUTOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pré-reserva não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "O sinal ainda não foi confirmado nem dispensado, ou o pagamento já foi registrado. A mensagem diz o motivo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registrar o pagamento recebido",
         "tags": [
           "bookings"
         ]
@@ -3600,7 +4156,7 @@
   "info": {
     "title": "Rede Cafuringa API",
     "description": "API REST da plataforma **Rede Cafuringa**: produtores rurais da Cafuringa divulgam a produção, e consumidores e visitantes descobrem ofertas da região.\n\n### Primeiros passos\n\n1. **Entre:** em **auth › POST /auth/login**, clique em *Try it out* e envie e-mail e senha. A resposta traz `accessToken`.\n2. **Autorize:** clique em **Authorize** (botão com cadeado, logo abaixo desta apresentação), cole o token e confirme. Ele fica salvo neste navegador até você clicar em *Logout*.\n3. **Teste:** abra qualquer rota, *Try it out* e *Execute*. Rotas com cadeado exigem login; as demais são públicas.\n\nUse o campo de busca (*Filter by tag*) para ir direto a um grupo.\n\n### Perfis de acesso (RN01, RNF08)\n\n| Perfil | O que pode fazer |\n|---|---|\n| Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |\n| `CONSUMIDOR` | O mesmo que o visitante, com sessão; solicitar pré-reserva de experiências |\n| `PRODUTOR` | Registrar trajetória e foto de perfil; cadastrar produtos; consultar e responder pré-reservas recebidas |\n| `ADMINISTRADOR` | Consultar usuários e cadastrar outros administradores |\n\nToda rota exige login, exceto as marcadas como públicas (negação por padrão). Perfil sem permissão recebe **403**; sem token ou com token inválido, **401**.\n\n### Convenções\n\n| Tema | Como funciona |\n|---|---|\n| **Erros** | Corpo `ErrorResponse` (`statusCode`, `message`, `error`). Em validação (400), `message` é uma lista de orientações em português, prontas para exibir |\n| **Paginação** | Listas devolvem `{ itens, total, pagina, limite }`; use `?pagina=` e `?limite=` |\n| **Fotos** | Envio em `multipart/form-data`. PNG, JPEG ou WebP; a API regrava em WebP **sem metadados** (EXIF/GPS). Os caminhos devolvidos são relativos à base da API e levam a versão: podem ficar em cache para sempre |\n| **Reenvio seguro** | `POST /products` e `POST /experiences` aceitam `Idempotency-Key`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |\n| **Limites de uso** | Login, cadastro e recuperação de acesso têm limite de tentativas por IP: **429** com `Retry-After` (segundos) |\n| **Rastreio** | Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`); ele volta na resposta e nos logs. Sem ele, a API gera um UUID |\n| **Dados pessoais** | Respostas nunca trazem hash de senha nem CPF completo (vem mascarado). Perfis públicos só mostram dados de divulgação (RN07, RNF11) |\n| **Versão** | SemVer em `info.version`; regras em *docs/shared/contratos.md*. Tipos do front gerados a partir deste contrato (`./scripts/dev.sh contract`) |",
-    "version": "0.16.0",
+    "version": "0.18.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -4392,6 +4948,47 @@
           "trajetoria"
         ]
       },
+      "OwnPixResponse": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "cpf",
+              "cnpj",
+              "telefone",
+              "email",
+              "aleatoria"
+            ],
+            "example": "telefone"
+          },
+          "chave": {
+            "type": "string",
+            "example": "+5561999998888",
+            "description": "Chave normalizada, como entra no código Pix"
+          },
+          "nomeRecebedor": {
+            "type": "string",
+            "example": "Maria da Silva"
+          },
+          "publico": {
+            "type": "boolean",
+            "example": true,
+            "description": "Se verdadeiro, a consumidora com pré-reserva aceita vê a chave para pagar"
+          },
+          "atualizadoEm": {
+            "type": "string",
+            "example": "2026-11-25T12:00:00.000Z",
+            "description": "Última alteração dos dados Pix"
+          }
+        },
+        "required": [
+          "tipo",
+          "chave",
+          "nomeRecebedor",
+          "publico"
+        ]
+      },
       "OwnTrajectoryResponse": {
         "type": "object",
         "properties": {
@@ -4424,10 +5021,55 @@
             "type": "string",
             "example": "/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90",
             "description": "Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto."
+          },
+          "pix": {
+            "description": "Ausente enquanto a produtora não cadastrar a chave Pix",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OwnPixResponse"
+              }
+            ]
           }
         },
         "required": [
           "telefonePublico"
+        ]
+      },
+      "SavePixDto": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "cpf",
+              "cnpj",
+              "telefone",
+              "email",
+              "aleatoria"
+            ],
+            "example": "telefone"
+          },
+          "chave": {
+            "type": "string",
+            "example": "(61) 99999-8888",
+            "description": "A chave como a produtora digitou; a API guarda normalizada (só dígitos, +55 no telefone, e-mail em minúsculas)."
+          },
+          "nomeRecebedor": {
+            "type": "string",
+            "example": "Maria da Silva",
+            "maxLength": 60,
+            "description": "Nome de quem recebe, como aparece no banco. A consumidora confere antes de pagar."
+          },
+          "publico": {
+            "type": "boolean",
+            "example": true,
+            "description": "Se verdadeiro, a consumidora com pré-reserva aceita vê a chave para pagar. Por padrão, privado."
+          }
+        },
+        "required": [
+          "tipo",
+          "chave",
+          "nomeRecebedor"
         ]
       },
       "SaveTrajectoryDto": {
@@ -4455,6 +5097,16 @@
             "type": "boolean",
             "example": true,
             "description": "Se verdadeiro, o telefone aparece no perfil público (RN07). Se omitido, a escolha anterior não muda; por padrão o telefone é privado."
+          },
+          "pix": {
+            "nullable": true,
+            "description": "Chave Pix para receber o sinal das pré-reservas. Se omitido, o Pix salvo não muda. Com `null`, a chave é removida e o Pix fica privado. Nunca aparece no perfil público.",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SavePixDto"
+              }
+            ]
           }
         },
         "required": [
@@ -4665,6 +5317,28 @@
             "type": "boolean",
             "example": true,
             "description": "Se a oferta está disponível (RN10). As rotas públicas só devolvem disponíveis."
+          },
+          "exigeSinal": {
+            "type": "boolean",
+            "example": true,
+            "description": "Pagamento por Pix: se o aceite pede sinal de 50% para garantir a vaga"
+          },
+          "formasPagamentoNoDia": {
+            "type": "array",
+            "example": [
+              "dinheiro",
+              "pix"
+            ],
+            "description": "Formas que a produtora aceita no dia; vazio é combinar com ela",
+            "items": {
+              "type": "string",
+              "enum": [
+                "pix",
+                "dinheiro",
+                "cartao_credito",
+                "cartao_debito"
+              ]
+            }
           }
         },
         "required": [
@@ -4678,7 +5352,9 @@
           "fotos",
           "produtor",
           "criadoEm",
-          "disponivel"
+          "disponivel",
+          "exigeSinal",
+          "formasPagamentoNoDia"
         ]
       },
       "ExperienceListResponse": {
@@ -5029,6 +5705,89 @@
           "nome"
         ]
       },
+      "BookingPaymentResponse": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "example": 182,
+            "description": "Total em reais, com o preço congelado no aceite"
+          },
+          "sinal": {
+            "type": "number",
+            "example": 91,
+            "description": "Sinal em reais (50%), pago antes para garantir a vaga"
+          },
+          "restante": {
+            "type": "number",
+            "example": 91,
+            "description": "Restante em reais, pago no dia com a produtora"
+          },
+          "situacao": {
+            "type": "string",
+            "enum": [
+              "aguardando-sinal",
+              "comprovante-enviado",
+              "sinal-confirmado",
+              "expirado",
+              "dispensado",
+              "pagamento-recebido"
+            ],
+            "example": "aguardando-sinal",
+            "description": "Situação do sinal valendo agora: o prazo vencido já aparece como expirado"
+          },
+          "prazoSinal": {
+            "type": "string",
+            "example": "2026-11-22T13:30:00.000Z",
+            "description": "Prazo para pagar o sinal; ausente quando o sinal é dispensado"
+          },
+          "devolucao": {
+            "type": "string",
+            "enum": [
+              "pendente",
+              "feita",
+              "retido"
+            ],
+            "example": "pendente",
+            "description": "Depois de um cancelamento com sinal pago: a produtora ainda deve devolver (`pendente`), já devolveu (`feita`) ou o sinal ficou com ela (`retido`)"
+          }
+        },
+        "required": [
+          "total",
+          "sinal",
+          "restante",
+          "situacao"
+        ]
+      },
+      "BookingPixResponse": {
+        "type": "object",
+        "properties": {
+          "chave": {
+            "type": "string",
+            "example": "+5561999998888",
+            "description": "Chave normalizada"
+          },
+          "nomeRecebedor": {
+            "type": "string",
+            "example": "Maria da Silva"
+          },
+          "cidade": {
+            "type": "string",
+            "example": "BRASILIA"
+          },
+          "txid": {
+            "type": "string",
+            "example": "65f0c0ffee0000000000abcd",
+            "description": "Identificador da cobrança: o id da pré-reserva"
+          }
+        },
+        "required": [
+          "chave",
+          "nomeRecebedor",
+          "cidade",
+          "txid"
+        ]
+      },
       "BookingDetailResponse": {
         "type": "object",
         "properties": {
@@ -5099,6 +5858,22 @@
             "type": "string",
             "example": "2026-11-21T12:30:00.000Z",
             "description": "Última alteração (mudança de situação, por exemplo)"
+          },
+          "pagamento": {
+            "description": "Só existe depois do aceite",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BookingPaymentResponse"
+              }
+            ]
+          },
+          "pix": {
+            "description": "Só no detalhe da consumidora, enquanto o sinal está por pagar e se a produtora autorizou",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BookingPixResponse"
+              }
+            ]
           }
         },
         "required": [
@@ -5153,7 +5928,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Identificador da alteração"
+            "description": "Identificador da alteração. Inclui a situação do sinal e da devolução: cada mudança do pagamento por Pix gera um id novo (notificação não lida)."
           },
           "reservaId": {
             "type": "string",
@@ -5187,6 +5962,27 @@
               "cancelada"
             ],
             "description": "Situação registrada"
+          },
+          "pagamento": {
+            "type": "string",
+            "enum": [
+              "aguardando-sinal",
+              "comprovante-enviado",
+              "sinal-confirmado",
+              "expirado",
+              "dispensado",
+              "pagamento-recebido"
+            ],
+            "description": "Situação do sinal valendo agora (o prazo vencido aparece como expirado); ausente sem pagamento"
+          },
+          "devolucao": {
+            "type": "string",
+            "enum": [
+              "pendente",
+              "feita",
+              "retido"
+            ],
+            "description": "Depois de um cancelamento com sinal pago"
           }
         },
         "required": [
@@ -5198,6 +5994,105 @@
           "horario",
           "participantes",
           "status"
+        ]
+      },
+      "CancelDepositResponse": {
+        "type": "object",
+        "properties": {
+          "resultado": {
+            "type": "string",
+            "enum": [
+              "devolver",
+              "retido"
+            ],
+            "example": "devolver",
+            "description": "`devolver`: a produtora devolve o sinal por Pix; `retido`: o sinal fica com ela (menos de 72 horas)"
+          },
+          "valor": {
+            "type": "number",
+            "example": 91,
+            "description": "Valor do sinal, em reais"
+          }
+        },
+        "required": [
+          "resultado",
+          "valor"
+        ]
+      },
+      "CancelBookingResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000b001"
+          },
+          "experienciaId": {
+            "type": "string",
+            "example": "64b0c0ffee0000000000e001",
+            "description": "Experiência solicitada"
+          },
+          "data": {
+            "type": "string",
+            "example": "2026-12-10",
+            "format": "date"
+          },
+          "horario": {
+            "type": "string",
+            "example": "09:00"
+          },
+          "participantes": {
+            "type": "number",
+            "example": 4
+          },
+          "formaPagamento": {
+            "type": "string",
+            "enum": [
+              "pix",
+              "dinheiro",
+              "cartao_credito",
+              "cartao_debito"
+            ],
+            "example": "pix"
+          },
+          "mensagem": {
+            "type": "string",
+            "example": "Vamos com duas crianças.",
+            "description": "Ausente quando o solicitante não deixou recado"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pendente",
+              "aceita",
+              "recusada",
+              "cancelada"
+            ],
+            "example": "pendente",
+            "description": "Situação da solicitação. Nasce pendente, aguardando a resposta do produtor (RN19, CA06)."
+          },
+          "criadoEm": {
+            "type": "string",
+            "example": "2026-11-21T12:00:00.000Z",
+            "description": "Data do envio"
+          },
+          "sinal": {
+            "description": "Só quando havia sinal pago",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CancelDepositResponse"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "experienciaId",
+          "data",
+          "horario",
+          "participantes",
+          "formaPagamento",
+          "status",
+          "criadoEm"
         ]
       },
       "SearchProducersResult": {

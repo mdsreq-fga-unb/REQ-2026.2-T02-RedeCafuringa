@@ -8,11 +8,7 @@ import {
     type RefundStatus,
 } from "./bookingDetails";
 
-/** Sinal e devolução (pagamento por Pix): ainda fora do contrato gerado. */
-type Notification = components["schemas"]["BookingNotificationResponse"] & {
-    pagamento?: PaymentStatus;
-    devolucao?: RefundStatus;
-};
+type Notification = components["schemas"]["BookingNotificationResponse"];
 export type BookingUpdate = Notification & { nova: boolean };
 
 const PAYMENT_STATUSES: readonly PaymentStatus[] = [

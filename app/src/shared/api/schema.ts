@@ -723,9 +723,149 @@ export interface paths {
         head?: never;
         /**
          * Cancelar pré-reserva
-         * @description HU46/RF46 (CA02-CA07): o consumidor cancela a própria solicitação de pré-reserva. Sem corpo: a confirmação ("Sim, cancelar solicitação" / "Manter solicitação", CA02 e CA04) é da interface, que só chama este endpoint quando o usuário confirma. Só solicitações pendentes podem ser canceladas pelo solicitante (RN20); a situação passa a `cancelada` e nunca volta a `pendente` (RN21). A troca é atômica: cancelar de novo, ou cancelar depois de o produtor responder, devolve 409 e não altera nada. Solicitação de outro usuário responde 404, como se não existisse (CA05, RNF11). Exclusivo do perfil CONSUMIDOR (RNF08).
+         * @description HU46/RF46 (CA02-CA07): o consumidor cancela a própria solicitação de pré-reserva. Sem corpo: a confirmação ("Sim, cancelar solicitação" / "Manter solicitação", CA02 e CA04) é da interface, que só chama este endpoint quando o usuário confirma. Cancela a solicitação pendente ou aceita (RN20 revista em 25/11/2026, pagamento por Pix); a situação passa a `cancelada` e nunca volta (RN21). Na aceita com sinal pago, até 72 horas antes a produtora devolve o sinal; depois, o sinal fica com ela. A troca é atômica: cancelar de novo, ou cancelar a recusada, devolve 409 e não altera nada. Solicitação de outro usuário responde 404, como se não existisse (CA05, RNF11). Exclusivo do perfil CONSUMIDOR (RNF08).
          */
         patch: operations["bookingsCancel"];
+        trace?: never;
+    };
+    "/api/v1/bookings/{id}/payment/sent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Avisar que pagou o sinal
+         * @description Pagamento por Pix: a consumidora avisa que pagou o sinal da própria pré-reserva aceita, dentro do prazo. O comprovante vai direto à produtora pelo WhatsApp; a API só registra o aviso (situação `comprovante-enviado`). Pré-reserva de outra conta responde 404. Exclusivo do perfil CONSUMIDOR.
+         */
+        patch: operations["bookingsReportPaymentSent"];
+        trace?: never;
+    };
+    "/api/v1/bookings/received/{id}/payment/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Confirmar o sinal recebido
+         * @description Pagamento por Pix: a produtora responsável confirma que o sinal caiu no extrato. Vale com o sinal por pagar ou depois do aviso da consumidora, mesmo depois do prazo (pagamento atrasado). Exclusivo do perfil PRODUTOR.
+         */
+        patch: operations["bookingsConfirmPayment"];
+        trace?: never;
+    };
+    "/api/v1/bookings/received/{id}/payment/not-found": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Informar que o sinal não foi encontrado
+         * @description Pagamento por Pix: depois do aviso da consumidora, a produtora informa que não encontrou o Pix no extrato. A pré-reserva volta a aguardar o sinal, com o prazo de antes. Exclusivo do perfil PRODUTOR.
+         */
+        patch: operations["bookingsReportPaymentNotFound"];
+        trace?: never;
+    };
+    "/api/v1/bookings/received/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Cancelar pré-reserva aceita (produtora)
+         * @description RN20 revista (25/11/2026, pagamento por Pix): a produtora responsável cancela uma pré-reserva aceita. Se o sinal estava pago, ela devolve o valor integral, a qualquer momento; a API só registra (`sinal.resultado: devolver`). A pendente se responde pela HU47. Exclusivo do perfil PRODUTOR.
+         */
+        patch: operations["bookingsCancelByProducer"];
+        trace?: never;
+    };
+    "/api/v1/bookings/received/{id}/payment/refunded": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Registrar a devolução do sinal
+         * @description Pagamento por Pix: depois de um cancelamento em que o sinal deve ser devolvido, a produtora registra que fez o Pix de volta. Só uma vez. Exclusivo do perfil PRODUTOR.
+         */
+        patch: operations["bookingsReportRefunded"];
+        trace?: never;
+    };
+    "/api/v1/bookings/received/{id}/payment/waive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Confirmar sem sinal
+         * @description Pagamento por Pix: para quem não usa Pix, a produtora garante a vaga sem o sinal (situação `dispensado`), mesmo depois do prazo. Ela fica sem proteção contra falta. Exclusivo do perfil PRODUTOR.
+         */
+        patch: operations["bookingsWaiveDeposit"];
+        trace?: never;
+    };
+    "/api/v1/bookings/received/{id}/payment/received": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Registrar o pagamento recebido
+         * @description Pagamento por Pix ou no dia: com o sinal confirmado ou dispensado, a produtora registra que recebeu o pagamento (situação `pagamento-recebido`). A API não guarda valores recebidos em dinheiro. Exclusivo do perfil PRODUTOR.
+         */
+        patch: operations["bookingsReportPaymentReceived"];
         trace?: never;
     };
     "/api/v1/search": {
@@ -1210,6 +1350,30 @@ export interface components {
              */
             fotoUrl?: string;
         };
+        OwnPixResponse: {
+            /**
+             * @example telefone
+             * @enum {string}
+             */
+            tipo: "cpf" | "cnpj" | "telefone" | "email" | "aleatoria";
+            /**
+             * @description Chave normalizada, como entra no código Pix
+             * @example +5561999998888
+             */
+            chave: string;
+            /** @example Maria da Silva */
+            nomeRecebedor: string;
+            /**
+             * @description Se verdadeiro, a consumidora com pré-reserva aceita vê a chave para pagar
+             * @example true
+             */
+            publico: boolean;
+            /**
+             * @description Última alteração dos dados Pix
+             * @example 2026-11-25T12:00:00.000Z
+             */
+            atualizadoEm?: string;
+        };
         OwnTrajectoryResponse: {
             /**
              * @description Ausente enquanto o produtor não registrou a trajetória
@@ -1241,6 +1405,30 @@ export interface components {
              * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
              */
             fotoUrl?: string;
+            /** @description Ausente enquanto a produtora não cadastrar a chave Pix */
+            pix?: components["schemas"]["OwnPixResponse"];
+        };
+        SavePixDto: {
+            /**
+             * @example telefone
+             * @enum {string}
+             */
+            tipo: "cpf" | "cnpj" | "telefone" | "email" | "aleatoria";
+            /**
+             * @description A chave como a produtora digitou; a API guarda normalizada (só dígitos, +55 no telefone, e-mail em minúsculas).
+             * @example (61) 99999-8888
+             */
+            chave: string;
+            /**
+             * @description Nome de quem recebe, como aparece no banco. A consumidora confere antes de pagar.
+             * @example Maria da Silva
+             */
+            nomeRecebedor: string;
+            /**
+             * @description Se verdadeiro, a consumidora com pré-reserva aceita vê a chave para pagar. Por padrão, privado.
+             * @example true
+             */
+            publico?: boolean;
         };
         SaveTrajectoryDto: {
             /**
@@ -1263,6 +1451,8 @@ export interface components {
              * @example true
              */
             telefonePublico?: boolean;
+            /** @description Chave Pix para receber o sinal das pré-reservas. Se omitido, o Pix salvo não muda. Com `null`, a chave é removida e o Pix fica privado. Nunca aparece no perfil público. */
+            pix?: components["schemas"]["SavePixDto"] | null;
         };
         PhotoResponse: {
             /**
@@ -1384,6 +1574,19 @@ export interface components {
              * @example true
              */
             disponivel: boolean;
+            /**
+             * @description Pagamento por Pix: se o aceite pede sinal de 50% para garantir a vaga
+             * @example true
+             */
+            exigeSinal: boolean;
+            /**
+             * @description Formas que a produtora aceita no dia; vazio é combinar com ela
+             * @example [
+             *       "dinheiro",
+             *       "pix"
+             *     ]
+             */
+            formasPagamentoNoDia: ("pix" | "dinheiro" | "cartao_credito" | "cartao_debito")[];
         };
         ExperienceListResponse: {
             /** @description Experiências da página, da mais nova à mais antiga; vazio quando não há registros. */
@@ -1578,6 +1781,56 @@ export interface components {
              */
             nome: string;
         };
+        BookingPaymentResponse: {
+            /**
+             * @description Total em reais, com o preço congelado no aceite
+             * @example 182
+             */
+            total: number;
+            /**
+             * @description Sinal em reais (50%), pago antes para garantir a vaga
+             * @example 91
+             */
+            sinal: number;
+            /**
+             * @description Restante em reais, pago no dia com a produtora
+             * @example 91
+             */
+            restante: number;
+            /**
+             * @description Situação do sinal valendo agora: o prazo vencido já aparece como expirado
+             * @example aguardando-sinal
+             * @enum {string}
+             */
+            situacao: "aguardando-sinal" | "comprovante-enviado" | "sinal-confirmado" | "expirado" | "dispensado" | "pagamento-recebido";
+            /**
+             * @description Prazo para pagar o sinal; ausente quando o sinal é dispensado
+             * @example 2026-11-22T13:30:00.000Z
+             */
+            prazoSinal?: string;
+            /**
+             * @description Depois de um cancelamento com sinal pago: a produtora ainda deve devolver (`pendente`), já devolveu (`feita`) ou o sinal ficou com ela (`retido`)
+             * @example pendente
+             * @enum {string}
+             */
+            devolucao?: "pendente" | "feita" | "retido";
+        };
+        BookingPixResponse: {
+            /**
+             * @description Chave normalizada
+             * @example +5561999998888
+             */
+            chave: string;
+            /** @example Maria da Silva */
+            nomeRecebedor: string;
+            /** @example BRASILIA */
+            cidade: string;
+            /**
+             * @description Identificador da cobrança: o id da pré-reserva
+             * @example 65f0c0ffee0000000000abcd
+             */
+            txid: string;
+        };
         BookingDetailResponse: {
             /** @example 64b0c0ffee0000000000b001 */
             id: string;
@@ -1625,6 +1878,10 @@ export interface components {
              * @example 2026-11-21T12:30:00.000Z
              */
             atualizadoEm: string;
+            /** @description Só existe depois do aceite */
+            pagamento?: components["schemas"]["BookingPaymentResponse"];
+            /** @description Só no detalhe da consumidora, enquanto o sinal está por pagar e se a produtora autorizou */
+            pix?: components["schemas"]["BookingPixResponse"];
         };
         BookingListResponse: {
             /** @description Solicitações da página; vazio quando não há nenhuma (CA06), nunca erro. */
@@ -1646,7 +1903,7 @@ export interface components {
             limite: number;
         };
         BookingNotificationResponse: {
-            /** @description Identificador da alteração */
+            /** @description Identificador da alteração. Inclui a situação do sinal e da devolução: cada mudança do pagamento por Pix gera um id novo (notificação não lida). */
             id: string;
             /** @description Id da pré-reserva para abrir a consulta */
             reservaId: string;
@@ -1665,6 +1922,70 @@ export interface components {
              * @enum {string}
              */
             status: "aceita" | "recusada" | "cancelada";
+            /**
+             * @description Situação do sinal valendo agora (o prazo vencido aparece como expirado); ausente sem pagamento
+             * @enum {string}
+             */
+            pagamento?: "aguardando-sinal" | "comprovante-enviado" | "sinal-confirmado" | "expirado" | "dispensado" | "pagamento-recebido";
+            /**
+             * @description Depois de um cancelamento com sinal pago
+             * @enum {string}
+             */
+            devolucao?: "pendente" | "feita" | "retido";
+        };
+        CancelDepositResponse: {
+            /**
+             * @description `devolver`: a produtora devolve o sinal por Pix; `retido`: o sinal fica com ela (menos de 72 horas)
+             * @example devolver
+             * @enum {string}
+             */
+            resultado: "devolver" | "retido";
+            /**
+             * @description Valor do sinal, em reais
+             * @example 91
+             */
+            valor: number;
+        };
+        CancelBookingResponse: {
+            /** @example 64b0c0ffee0000000000b001 */
+            id: string;
+            /**
+             * @description Experiência solicitada
+             * @example 64b0c0ffee0000000000e001
+             */
+            experienciaId: string;
+            /**
+             * Format: date
+             * @example 2026-12-10
+             */
+            data: string;
+            /** @example 09:00 */
+            horario: string;
+            /** @example 4 */
+            participantes: number;
+            /**
+             * @example pix
+             * @enum {string}
+             */
+            formaPagamento: "pix" | "dinheiro" | "cartao_credito" | "cartao_debito";
+            /**
+             * @description Ausente quando o solicitante não deixou recado
+             * @example Vamos com duas crianças.
+             */
+            mensagem?: string;
+            /**
+             * @description Situação da solicitação. Nasce pendente, aguardando a resposta do produtor (RN19, CA06).
+             * @example pendente
+             * @enum {string}
+             */
+            status: "pendente" | "aceita" | "recusada" | "cancelada";
+            /**
+             * @description Data do envio
+             * @example 2026-11-21T12:00:00.000Z
+             */
+            criadoEm: string;
+            /** @description Só quando havia sinal pago */
+            sinal?: components["schemas"]["CancelDepositResponse"];
         };
         SearchProducersResult: {
             /** @description Produtores com perfil publicado que combinam com o termo (iniciativa, trajetória ou atividades), até o limite pedido */
@@ -3528,6 +3849,16 @@ export interface operations {
                      * @example 2 horas
                      */
                     duracao: string;
+                    /**
+                     * @description Opcional. Se o aceite pede sinal de 50% por Pix. Padrão: sim.
+                     * @example true
+                     */
+                    exigeSinal?: boolean;
+                    /**
+                     * @description Opcional. Formas aceitas no dia, separadas por vírgula (pix, dinheiro, cartao_credito, cartao_debito).
+                     * @example dinheiro,pix
+                     */
+                    formasPagamentoNoDia?: string;
                     /** @description De 1 a 10 imagens PNG, JPEG ou WebP de até 5 MB cada, na ordem da galeria (a primeira é a capa) */
                     fotos: string[];
                 };
@@ -4071,7 +4402,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Solicitação cancelada, já com a situação atualizada (CA06) */
+            /** @description Solicitação cancelada, já com a situação atualizada (CA06). Com sinal pago, `sinal` diz se a produtora devolve ou retém o valor. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -4090,7 +4421,7 @@ export interface operations {
                      *       "criadoEm": "2026-11-21T12:00:00.000Z"
                      *     }
                      */
-                    "application/json": components["schemas"]["BookingResponse"];
+                    "application/json": components["schemas"]["CancelBookingResponse"];
                 };
             };
             /** @description Sem token ou token inválido */
@@ -4145,7 +4476,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
-            /** @description A solicitação não está pendente: já aceita (só o produtor cancela), recusada ou já cancelada. Nada é alterado (RN20, RN21). A mensagem diz o motivo. */
+            /** @description A solicitação foi recusada, já foi cancelada ou mudou no meio. Nada é alterado (RN20, RN21). A mensagem diz o motivo. */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4158,6 +4489,433 @@ export interface operations {
                      *       "error": "Conflict"
                      *     }
                      */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsReportPaymentSent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingPaymentResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description Perfil sem permissão
+             *
+             *     Exclusivo para: CONSUMIDOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description A situação não permite: prazo vencido, aviso já feito, sinal já confirmado ou dispensado. A mensagem diz o motivo. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsConfirmPayment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingPaymentResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description A pré-reserva é de outro produtor, ou perfil sem permissão
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description A situação não permite: sinal já confirmado, dispensado ou pré-reserva não aceita. A mensagem diz o motivo. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsReportPaymentNotFound: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingPaymentResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description A pré-reserva é de outro produtor, ou perfil sem permissão
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description A consumidora ainda não avisou o pagamento, ou o sinal já foi confirmado. A mensagem diz o motivo. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsCancelByProducer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CancelBookingResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description A pré-reserva é de outro produtor, ou perfil sem permissão
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description A solicitação não está aceita (pendente, recusada ou já cancelada), ou mudou no meio. A mensagem diz o motivo. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsReportRefunded: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingPaymentResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description A pré-reserva é de outro produtor, ou perfil sem permissão
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Não há sinal a devolver, ou a devolução já foi registrada. A mensagem diz o motivo. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsWaiveDeposit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingPaymentResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description A pré-reserva é de outro produtor, ou perfil sem permissão
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Sinal já confirmado, já dispensado, aviso de pagamento a conferir ou pré-reserva não aceita. A mensagem diz o motivo. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    bookingsReportPaymentReceived: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingPaymentResponse"];
+                };
+            };
+            /** @description Sem token ou token inválido */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /**
+             * @description A pré-reserva é de outro produtor, ou perfil sem permissão
+             *
+             *     Exclusivo para: PRODUTOR
+             */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Pré-reserva não encontrada */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description O sinal ainda não foi confirmado nem dispensado, ou o pagamento já foi registrado. A mensagem diz o motivo. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };

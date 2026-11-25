@@ -3,39 +3,13 @@ import type { components } from "@/shared/api/schema";
 import { PAYMENT_LABELS } from "./bookingOptions";
 import type { Booking, BookingStatus, PaymentMethod } from "./bookingTypes";
 
-/** Situação do sinal (pagamento por Pix), como a API devolve. */
-export type PaymentStatus =
-    | "aguardando-sinal"
-    | "comprovante-enviado"
-    | "sinal-confirmado"
-    | "expirado"
-    | "dispensado"
-    | "pagamento-recebido";
-
-/** Pagamento e Pix do detalhe; ainda fora do contrato gerado. */
-export type ApiPayment = {
-    total: number;
-    sinal: number;
-    restante: number;
-    situacao: PaymentStatus;
-    prazoSinal?: string;
-    /** Depois do cancelamento com sinal pago. */
-    devolucao?: RefundStatus;
-};
-
+/** Pagamento por Pix do detalhe, como a API devolve. */
+export type ApiPayment = components["schemas"]["BookingPaymentResponse"];
+/** Situação do sinal, já considerando o prazo. */
+export type PaymentStatus = ApiPayment["situacao"];
 /** A produtora ainda deve devolver, já devolveu, ou o sinal ficou com ela. */
-export type RefundStatus = "pendente" | "feita" | "retido";
-type ApiPix = {
-    chave: string;
-    nomeRecebedor: string;
-    cidade: string;
-    txid: string;
-};
-export type ApiBookingDetail =
-    components["schemas"]["BookingDetailResponse"] & {
-        pagamento?: ApiPayment;
-        pix?: ApiPix;
-    };
+export type RefundStatus = NonNullable<ApiPayment["devolucao"]>;
+export type ApiBookingDetail = components["schemas"]["BookingDetailResponse"];
 export type ApiBookingList = components["schemas"]["BookingListResponse"];
 
 /** Pré-reserva consultada (HU45): a solicitação, a experiência e o outro lado. */
