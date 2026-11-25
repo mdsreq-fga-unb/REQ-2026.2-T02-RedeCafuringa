@@ -28,6 +28,7 @@ import {
 import {
   effectivePaymentStatus,
   PaymentStatus,
+  paymentView,
 } from './domain/booking-payment.js';
 import { Booking } from './schemas/booking.schema.js';
 
@@ -346,19 +347,7 @@ export class BookingsQueryService {
           row.outroLado?.nome ||
           UNKNOWN_PARTY,
       },
-      ...(row.pagamento
-        ? {
-            pagamento: {
-              total: fromCentavos(row.pagamento.totalCentavos),
-              sinal: fromCentavos(row.pagamento.sinalCentavos),
-              restante: fromCentavos(row.pagamento.restanteCentavos),
-              situacao: effectivePaymentStatus(row.pagamento),
-              ...(row.pagamento.prazoSinal
-                ? { prazoSinal: row.pagamento.prazoSinal.toISOString() }
-                : {}),
-            },
-          }
-        : {}),
+      ...(row.pagamento ? { pagamento: paymentView(row.pagamento) } : {}),
     };
   }
 }

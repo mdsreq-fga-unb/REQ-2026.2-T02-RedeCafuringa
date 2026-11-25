@@ -6,6 +6,7 @@
  * A situação do pagamento fica separada da situação da pré-reserva (`status`),
  * para não mudar as listas, o detalhe e as notificações que já existem.
  */
+import { BookingStatus } from './booking.js';
 
 /** Parte do total paga antes, para garantir a vaga. */
 export const SINAL_PERCENTUAL = 50;
@@ -71,4 +72,76 @@ export function effectivePaymentStatus(
   )
     return PaymentStatus.EXPIRADO;
   return pagamento.situacao;
+}
+
+export type PaymentAction =
+  'enviar-comprovante' | 'confirmar-sinal' | 'nao-encontrado';
+
+const NOT_ACCEPTED: Record<PaymentAction, string> = {
+  'enviar-comprovante':
+    'Só é possível avisar o pagamento de uma pré-reserva aceita.',
+  'confirmar-sinal':
+    'Só é possível confirmar o sinal de uma pré-reserva aceita.',
+  'nao-encontrado':
+    'Só é possível contestar o pagamento de uma pré-reserva aceita.',
+};
+const NO_DEPOSIT = 'Esta pré-reserva não pede sinal.';
+const ALREADY_CONFIRMED = 'O sinal desta pré-reserva já foi confirmado.';
+
+/**
+ * Motivo de a ação não valer na situação atual, ou null se vale. A produtora
+ * confirma mesmo depois do prazo, para quem pagou atrasado; a consumidora só
+ * avisa o pagamento dentro do prazo.
+ */
+export function paymentActionError(
+  acao: PaymentAction,
+  estado: {
+    status: BookingStatus;
+    pagamento?: { situacao: PaymentStatus; prazoSinal?: Date };
+  },
+  agora: Date = new Date(),
+): string | null {
+  if (estado.status !== BookingStatus.ACEITA) return NOT_ACCEPTED[acao];
+  const pagamento = estado.pagamento;
+  if (!pagamento || pagamento.situacao === PaymentStatus.DISPENSADO)
+    return NO_DEPOSIT;
+  if (pagamento.situacao === PaymentStatus.SINAL_CONFIRMADO)
+    return ALREADY_CONFIRMED;
+  const situacao = effectivePaymentStatus(pagamento, agora);
+  switch (acao) {
+    case 'enviar-comprovante':
+      if (situacao === PaymentStatus.EXPIRADO)
+        return 'O prazo para pagar o sinal terminou. Fale com a produtora.';
+      if (situacao === PaymentStatus.COMPROVANTE_ENVIADO)
+        return 'Você já avisou que pagou o sinal. A produtora vai conferir.';
+      return null;
+    case 'confirmar-sinal':
+      return null;
+    case 'nao-encontrado':
+      return situacao === PaymentStatus.COMPROVANTE_ENVIADO
+        ? null
+        : 'A consumidora ainda não avisou que pagou o sinal.';
+  }
+}
+
+/** Pagamento como a API mostra: reais e a situação valendo agora. */
+export function paymentView(
+  pagamento: {
+    totalCentavos: number;
+    sinalCentavos: number;
+    restanteCentavos: number;
+    situacao: PaymentStatus;
+    prazoSinal?: Date;
+  },
+  agora: Date = new Date(),
+) {
+  return {
+    total: pagamento.totalCentavos / 100,
+    sinal: pagamento.sinalCentavos / 100,
+    restante: pagamento.restanteCentavos / 100,
+    situacao: effectivePaymentStatus(pagamento, agora),
+    ...(pagamento.prazoSinal
+      ? { prazoSinal: pagamento.prazoSinal.toISOString() }
+      : {}),
+  };
 }

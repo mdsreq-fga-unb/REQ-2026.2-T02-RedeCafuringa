@@ -28,11 +28,13 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user.js';
 import { Role } from '../users/domain/role.js';
+import { BookingPaymentService } from './booking-payment.service.js';
 import { BookingsQueryService } from './bookings-query.service.js';
 import { BookingsService } from './bookings.service.js';
 import {
   BookingDetailResponse,
   BookingListResponse,
+  BookingPaymentResponse,
 } from './dto/booking-detail.response.js';
 import { BookingNotificationResponse } from './dto/booking-notification.response.js';
 import { BookingResponse } from './dto/booking.response.js';
@@ -47,6 +49,7 @@ export class BookingsController {
   constructor(
     private readonly bookings: BookingsService,
     private readonly queries: BookingsQueryService,
+    private readonly payments: BookingPaymentService,
   ) {}
 
   @Roles(Role.PRODUTOR)
@@ -331,5 +334,110 @@ export class BookingsController {
     @Param('id') id: string,
   ): Promise<BookingResponse> {
     return this.bookings.cancel(user.id, id);
+  }
+
+  @Roles(Role.CONSUMIDOR)
+  @Patch(':id/payment/sent')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('bearer')
+  @ApiParam({ name: 'id', example: '64b0c0ffee0000000000b001' })
+  @ApiOperation({
+    summary: 'Avisar que pagou o sinal',
+    description:
+      'Pagamento por Pix: a consumidora avisa que pagou o sinal da própria pré-reserva aceita, dentro do prazo. O comprovante vai direto à produtora pelo WhatsApp; a API só registra o aviso (situação `comprovante-enviado`). Pré-reserva de outra conta responde 404. Exclusivo do perfil CONSUMIDOR.',
+  })
+  @ApiOkResponse({ type: BookingPaymentResponse })
+  @ApiConflictResponse({
+    description:
+      'A situação não permite: prazo vencido, aviso já feito, sinal já confirmado ou dispensado. A mensagem diz o motivo.',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Pré-reserva não encontrada',
+    type: ErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'Perfil sem permissão',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  reportPaymentSent(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<BookingPaymentResponse> {
+    return this.payments.reportSent(user.id, id);
+  }
+
+  @Roles(Role.PRODUTOR)
+  @Patch('received/:id/payment/confirm')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('bearer')
+  @ApiParam({ name: 'id', example: '64b0c0ffee0000000000b001' })
+  @ApiOperation({
+    summary: 'Confirmar o sinal recebido',
+    description:
+      'Pagamento por Pix: a produtora responsável confirma que o sinal caiu no extrato. Vale com o sinal por pagar ou depois do aviso da consumidora, mesmo depois do prazo (pagamento atrasado). Exclusivo do perfil PRODUTOR.',
+  })
+  @ApiOkResponse({ type: BookingPaymentResponse })
+  @ApiConflictResponse({
+    description:
+      'A situação não permite: sinal já confirmado, dispensado ou pré-reserva não aceita. A mensagem diz o motivo.',
+    type: ErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'A pré-reserva é de outro produtor, ou perfil sem permissão',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Pré-reserva não encontrada',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  confirmPayment(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<BookingPaymentResponse> {
+    return this.payments.confirm(user.id, id);
+  }
+
+  @Roles(Role.PRODUTOR)
+  @Patch('received/:id/payment/not-found')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('bearer')
+  @ApiParam({ name: 'id', example: '64b0c0ffee0000000000b001' })
+  @ApiOperation({
+    summary: 'Informar que o sinal não foi encontrado',
+    description:
+      'Pagamento por Pix: depois do aviso da consumidora, a produtora informa que não encontrou o Pix no extrato. A pré-reserva volta a aguardar o sinal, com o prazo de antes. Exclusivo do perfil PRODUTOR.',
+  })
+  @ApiOkResponse({ type: BookingPaymentResponse })
+  @ApiConflictResponse({
+    description:
+      'A consumidora ainda não avisou o pagamento, ou o sinal já foi confirmado. A mensagem diz o motivo.',
+    type: ErrorResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'A pré-reserva é de outro produtor, ou perfil sem permissão',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Pré-reserva não encontrada',
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Sem token ou token inválido',
+    type: ErrorResponse,
+  })
+  reportPaymentNotFound(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ): Promise<BookingPaymentResponse> {
+    return this.payments.reportNotFound(user.id, id);
   }
 }

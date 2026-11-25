@@ -6,6 +6,7 @@ import {
   ExperienceSchema,
 } from '../experiences/schemas/experience.schema.js';
 import { User, UserSchema } from '../users/schemas/user.schema.js';
+import { BookingPaymentService } from './booking-payment.service.js';
 import { BookingsController } from './bookings.controller.js';
 import { BookingsQueryService } from './bookings-query.service.js';
 import { BookingsService } from './bookings.service.js';
@@ -25,6 +26,6 @@ import { Booking, BookingSchema } from './schemas/booking.schema.js';
     ]),
   ],
   controllers: [BookingsController],
-  providers: [BookingsService, BookingsQueryService],
+  providers: [BookingsService, BookingsQueryService, BookingPaymentService],
 })
 export class BookingsModule {}

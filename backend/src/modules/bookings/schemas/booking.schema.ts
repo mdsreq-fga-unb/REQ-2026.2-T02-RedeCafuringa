@@ -34,6 +34,14 @@ export class BookingPayment {
   /** Ausente quando o sinal é dispensado. */
   @Prop()
   prazoSinal?: Date;
+
+  /** Quando a consumidora avisou que pagou (o comprovante vai pelo WhatsApp). */
+  @Prop()
+  comprovanteAvisadoEm?: Date;
+
+  /** Quando a produtora confirmou o sinal no extrato. */
+  @Prop()
+  sinalConfirmadoEm?: Date;
 }
 
 const BookingPaymentSchema = SchemaFactory.createForClass(BookingPayment);
