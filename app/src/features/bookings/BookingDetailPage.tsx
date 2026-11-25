@@ -29,7 +29,10 @@ import {
 } from "./bookingPaymentService";
 import { cancelBookingByProducer } from "./bookingCancelService";
 import { ProducerCancel } from "./ProducerCancel";
-import { markBookingUpdateRead } from "./bookingNotificationsService";
+import {
+    bookingUpdateId,
+    markBookingUpdateRead,
+} from "./bookingNotificationsService";
 import { getBooking } from "./bookingQueryService";
 import { BookingSessionError } from "./bookingService";
 import type { BookingStatus } from "./bookingTypes";
@@ -189,7 +192,7 @@ export function BookingDetailPage({
                 if (controller.signal.aborted) return;
                 // Ver o detalhe, por qualquer caminho, é ler a atualização.
                 if (booking && booking.status !== "pendente") {
-                    markBookingUpdateRead(`${booking.id}:${booking.status}`);
+                    markBookingUpdateRead(bookingUpdateId(booking));
                 }
                 setState(
                     booking
