@@ -12,7 +12,7 @@ export type PaymentStatus =
     | "dispensado";
 
 /** Pagamento e Pix do detalhe; ainda fora do contrato gerado. */
-type ApiPayment = {
+export type ApiPayment = {
     total: number;
     sinal: number;
     restante: number;
@@ -68,7 +68,7 @@ export type BookingPix = {
 
 const toCents = (reais: number) => Math.round(reais * 100);
 
-function adaptPayment(api: ApiPayment): BookingPayment {
+export function adaptPayment(api: ApiPayment): BookingPayment {
     return {
         totalCents: toCents(api.total),
         depositCents: toCents(api.sinal),

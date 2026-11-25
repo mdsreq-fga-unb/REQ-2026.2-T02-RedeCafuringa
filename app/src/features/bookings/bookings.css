@@ -546,3 +546,22 @@
     margin: 0;
     font-weight: 600;
 }
+
+.booking-payment-status,
+.booking-payment-receipt {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.booking-payment-status p,
+.booking-payment-receipt p,
+.booking-payment-receipt h3 {
+    margin: 0;
+}
+
+.booking-payment-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}

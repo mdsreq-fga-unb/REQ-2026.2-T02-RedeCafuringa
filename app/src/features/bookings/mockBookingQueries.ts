@@ -1,7 +1,11 @@
 import { listExperiences } from "@/features/offers/catalogItems";
 import type { Product } from "@/features/offers/productTypes";
-import type { ApiBookingDetail } from "./bookingDetails";
-import { listMockBookings, type MockBookingRecord } from "./mockBookingService";
+import type { ApiBookingDetail, PaymentStatus } from "./bookingDetails";
+import {
+    DEMO_BOOKINGS_KEY,
+    listMockBookings,
+    type MockBookingRecord,
+} from "./mockBookingService";
 
 export type MockViewer = { role: string | null; userId: string };
 
@@ -25,14 +29,94 @@ function demoPayment(
         return { total: 0, sinal: 0, restante: 0, situacao: "dispensado" };
     const acceptedAt = new Date(record.atualizadoEm ?? record.criadoEm);
     const deadline = new Date(acceptedAt.getTime() + DEPOSIT_DEADLINE_MS);
+    const saved = record.situacaoPagamento ?? "aguardando-sinal";
     return {
         total: totalCents / 100,
         sinal: depositCents / 100,
         restante: (totalCents - depositCents) / 100,
         situacao:
-            Date.now() > deadline.getTime() ? "expirado" : "aguardando-sinal",
+            saved === "aguardando-sinal" && Date.now() > deadline.getTime()
+                ? "expirado"
+                : saved,
         prazoSinal: deadline.toISOString(),
     };
+}
+
+export type MockPaymentAction =
+    "enviar-comprovante" | "confirmar-sinal" | "nao-encontrado";
+
+/** Mesmas mensagens da API quando a ação não vale na situação atual. */
+function paymentActionError(
+    action: MockPaymentAction,
+    record: MockBookingRecord,
+    payment: DemoPayment | undefined,
+): string | null {
+    if (record.status !== "aceita")
+        return {
+            "enviar-comprovante":
+                "Só é possível avisar o pagamento de uma pré-reserva aceita.",
+            "confirmar-sinal":
+                "Só é possível confirmar o sinal de uma pré-reserva aceita.",
+            "nao-encontrado":
+                "Só é possível contestar o pagamento de uma pré-reserva aceita.",
+        }[action];
+    if (!payment || payment.situacao === "dispensado")
+        return "Esta pré-reserva não pede sinal.";
+    if (payment.situacao === "sinal-confirmado")
+        return "O sinal desta pré-reserva já foi confirmado.";
+    if (action === "enviar-comprovante") {
+        if (payment.situacao === "expirado")
+            return "O prazo para pagar o sinal terminou. Fale com a produtora.";
+        if (payment.situacao === "comprovante-enviado")
+            return "Você já avisou que pagou o sinal. A produtora vai conferir.";
+    }
+    if (
+        action === "nao-encontrado" &&
+        payment.situacao !== "comprovante-enviado"
+    )
+        return "A consumidora ainda não avisou que pagou o sinal.";
+    return null;
+}
+
+const NEXT_STATUS: Record<MockPaymentAction, PaymentStatus> = {
+    "enviar-comprovante": "comprovante-enviado",
+    "confirmar-sinal": "sinal-confirmado",
+    "nao-encontrado": "aguardando-sinal",
+};
+
+/** Aviso, confirmação ou contestação do sinal, com as regras da API. */
+export async function updateMockPayment(
+    id: string,
+    action: MockPaymentAction,
+    viewer: MockViewer,
+): Promise<
+    { ok: true; payment: DemoPayment } | { ok: false; message: string }
+> {
+    const records = listMockBookings();
+    const record = records.find((item) => item.id === id);
+    const experiences = await experiencesById();
+    const experience = record && experiences.get(record.experienciaId);
+    const producerAction = action !== "enviar-comprovante";
+    if (
+        !record ||
+        !canView(record, experience, viewer) ||
+        producerAction !== (viewer.role === "producer")
+    )
+        return { ok: false, message: "Pré-reserva não encontrada." };
+    const error = paymentActionError(
+        action,
+        record,
+        demoPayment(record, experience),
+    );
+    if (error) return { ok: false, message: error };
+    const updated = { ...record, situacaoPagamento: NEXT_STATUS[action] };
+    localStorage.setItem(
+        DEMO_BOOKINGS_KEY,
+        JSON.stringify(
+            records.map((item) => (item.id === id ? updated : item)),
+        ),
+    );
+    return { ok: true, payment: demoPayment(updated, experience)! };
 }
 
 /** Experiências da demonstração por id, para completar cada pré-reserva. */

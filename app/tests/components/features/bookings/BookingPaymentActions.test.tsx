@@ -214,14 +214,12 @@ describe("produtora — confirmar ou contestar o sinal", () => {
             <BookingDetailPage
                 id="b1"
                 role="producer"
-                load={vi
-                    .fn()
-                    .mockResolvedValue(
-                        booking({
-                            payment: { ...payment, status },
-                            pix: undefined,
-                        }),
-                    )}
+                load={vi.fn().mockResolvedValue(
+                    booking({
+                        payment: { ...payment, status },
+                        pix: undefined,
+                    }),
+                )}
                 confirmDeposit={confirm}
                 reportDepositNotFound={notFound}
                 onNavigate={vi.fn()}

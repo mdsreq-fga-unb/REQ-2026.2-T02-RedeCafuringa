@@ -1,3 +1,4 @@
+import type { PaymentStatus } from "./bookingDetails";
 import { adaptBookingResponse } from "./bookingAdapter";
 import type { Booking, BookingPayload, BookingResponse } from "./bookingTypes";
 
@@ -12,6 +13,8 @@ export type MockBookingRecord = BookingResponse & {
     consumidorNome?: string;
     /** Última mudança de situação (HU46). */
     atualizadoEm?: string;
+    /** Situação do sinal depois do aviso ou da confirmação (pagamento por Pix). */
+    situacaoPagamento?: PaymentStatus;
 };
 
 /** Mesmos motivos do servidor quando a solicitação não está pendente (RN20). */

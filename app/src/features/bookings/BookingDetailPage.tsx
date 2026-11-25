@@ -9,6 +9,7 @@ import {
     formatParticipants,
     paymentLabel,
     type BookingDetail,
+    type BookingPayment,
 } from "./bookingDetails";
 import {
     bookingConsultationLoginRoute,
@@ -16,7 +17,13 @@ import {
     experienceDetailsRoute,
     RECEIVED_BOOKINGS_ROUTE,
 } from "./bookingRoutes";
+import { getPublicTrajectory } from "@/features/trajectory/trajectoryService";
 import { BookingPaymentSection } from "./BookingPaymentSection";
+import {
+    confirmDeposit as confirm,
+    reportDepositNotFound as reportNotFound,
+    reportDepositSent as reportSent,
+} from "./bookingPaymentService";
 import { markBookingUpdateRead } from "./bookingNotificationsService";
 import { getBooking } from "./bookingQueryService";
 import { BookingSessionError } from "./bookingService";
@@ -30,13 +37,27 @@ type LoadBooking = (
     options: { signal?: AbortSignal },
 ) => Promise<BookingDetail | null>;
 
+type PaymentAction = (id: string) => Promise<BookingPayment>;
+
 type BookingDetailPageProps = {
     id: string;
     role: Role;
     fromNotifications?: boolean;
     onNavigate: (path: string) => void;
     load?: LoadBooking;
+    /** Telefone autorizado da produtora, para mandar o comprovante (HU39). */
+    loadProducerPhone?: (producerId: string) => Promise<string | undefined>;
+    reportDepositSent?: PaymentAction;
+    confirmDeposit?: PaymentAction;
+    reportDepositNotFound?: PaymentAction;
 };
+
+/** O perfil público só traz o telefone para quem está logado e se ela autorizou. */
+const producerPhone = (producerId: string) =>
+    getPublicTrajectory(producerId).then(
+        (profile) => profile.telefone,
+        () => undefined,
+    );
 
 type State =
     | { status: "loading" }
@@ -100,10 +121,53 @@ export function BookingDetailPage({
     fromNotifications = false,
     onNavigate,
     load = getBooking,
+    loadProducerPhone = producerPhone,
+    reportDepositSent = reportSent,
+    confirmDeposit = confirm,
+    reportDepositNotFound = reportNotFound,
 }: BookingDetailPageProps) {
     const backRoute = fromNotifications ? RECEIVED_BOOKINGS_ROUTE : LIST_ROUTE;
     const [state, setState] = useState<State>({ status: "loading" });
     const [attempt, setAttempt] = useState(0);
+    const [phone, setPhone] = useState<string>();
+    const consumerOwesDeposit =
+        role === "consumer" &&
+        state.status === "ready" &&
+        state.booking.payment?.status === "aguardando-sinal" &&
+        Boolean(state.booking.pix);
+    const producerId =
+        state.status === "ready" ? state.booking.counterpart.id : "";
+
+    useEffect(() => {
+        if (!consumerOwesDeposit || !producerId) return;
+        let active = true;
+        void loadProducerPhone(producerId).then((value) => {
+            if (active) setPhone(value);
+        });
+        return () => {
+            active = false;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [consumerOwesDeposit, producerId]);
+
+    /** Ação no sinal: a tela passa a mostrar o pagamento que a API devolveu. */
+    const paymentAction = (action: PaymentAction) => async () => {
+        const payment = await action(id);
+        setState((current) =>
+            current.status === "ready"
+                ? {
+                      status: "ready",
+                      booking: {
+                          ...current.booking,
+                          payment,
+                          ...(payment.status === "aguardando-sinal"
+                              ? {}
+                              : { pix: undefined }),
+                      },
+                  }
+                : current,
+        );
+    };
 
     useEffect(() => {
         const controller = new AbortController();
@@ -241,6 +305,12 @@ export function BookingDetailPage({
                             role={role}
                             payment={state.booking.payment}
                             pix={state.booking.pix}
+                            experienceName={state.booking.experience.name}
+                            date={state.booking.date}
+                            producerPhone={phone}
+                            onReportSent={paymentAction(reportDepositSent)}
+                            onConfirm={paymentAction(confirmDeposit)}
+                            onNotFound={paymentAction(reportDepositNotFound)}
                         />
                     )}
                     {state.booking.responseMessage && (
