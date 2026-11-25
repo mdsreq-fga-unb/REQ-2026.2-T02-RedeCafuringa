@@ -1,3 +1,4 @@
+import { PIX_KEY_TYPES, type PixKeyType } from '../../../common/pix/pix-key.js';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { Role } from '../domain/role.js';
@@ -64,6 +65,27 @@ export class User {
 
   @Prop()
   trajetoriaAtualizadaEm?: Date;
+
+  /**
+   * Pagamento por Pix: chave normalizada da produtora, para receber o sinal das
+   * pré-reservas. Nunca aparece no perfil público; só a consumidora com
+   * pré-reserva aceita a vê, e só se `pixPublico` for verdadeiro.
+   */
+  @Prop({ enum: PIX_KEY_TYPES, type: String })
+  pixTipo?: PixKeyType;
+
+  @Prop()
+  pixChave?: string;
+
+  @Prop({ trim: true })
+  pixRecebedor?: string;
+
+  @Prop({ default: false })
+  pixPublico: boolean;
+
+  /** Última alteração dos dados Pix, para conferir trocas de chave. */
+  @Prop()
+  pixAtualizadoEm?: Date;
 
   /**
    * HU12/RF12: versão da foto de perfil (o binário fica em `producer_photos`).

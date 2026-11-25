@@ -73,7 +73,8 @@ describe('Trajetória — chave Pix da produtora (e2e)', () => {
 
     const res = await save(auth, {
       trajetoria: TRAJETORIA,
-      pix: { ...pix, tipo: 'telefone' },
+      // Um CPF pode até parecer celular; como e-mail, nunca combina.
+      pix: { ...pix, tipo: 'email' },
     }).expect(400);
 
     expect(res.body.message).toEqual([

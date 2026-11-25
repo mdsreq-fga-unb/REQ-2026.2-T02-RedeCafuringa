@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isObjectIdOrHexString, Model } from 'mongoose';
+import { normalizePixKey } from '../../common/pix/pix-key.js';
 import { Role } from '../users/domain/role.js';
 import { User } from '../users/schemas/user.schema.js';
 import { photoPath } from './domain/profile-photo.js';
@@ -19,7 +20,7 @@ const NOT_FOUND = 'Produtor não encontrado';
  * nunca são lidos do banco aqui (RNF11), nem por acidente.
  */
 const OWN_FIELDS =
-  'trajetoria atividades telefone telefonePublico trajetoriaAtualizadaEm fotoVersao';
+  'trajetoria atividades telefone telefonePublico trajetoriaAtualizadaEm fotoVersao pixTipo pixChave pixRecebedor pixPublico pixAtualizadoEm';
 const PUBLIC_FIELDS =
   'nomeIniciativa categoriaOfertada trajetoria atividades telefone telefonePublico fotoVersao';
 
@@ -31,6 +32,11 @@ type OwnFields = Pick<
   | 'telefonePublico'
   | 'trajetoriaAtualizadaEm'
   | 'fotoVersao'
+  | 'pixTipo'
+  | 'pixChave'
+  | 'pixRecebedor'
+  | 'pixPublico'
+  | 'pixAtualizadoEm'
 >;
 type PublicFields = Pick<
   User,
@@ -74,6 +80,11 @@ export class ProducerProfileService {
     // então a visibilidade volta a privada mesmo que o pedido diga o contrário.
     const removePhone = dto.telefone === null;
     const telefonePublico = removePhone ? false : dto.telefonePublico;
+    const pix = this.pixUpdate(dto);
+    const unset = {
+      ...(removePhone ? { telefone: 1 } : {}),
+      ...pix.unset,
+    };
     const user = await this.users
       .findOneAndUpdate(
         this.activeProducer(userId),
@@ -86,8 +97,9 @@ export class ProducerProfileService {
               ? {}
               : { telefone: dto.telefone }),
             ...(telefonePublico === undefined ? {} : { telefonePublico }),
+            ...pix.set,
           },
-          ...(removePhone ? { $unset: { telefone: 1 } } : {}),
+          ...(Object.keys(unset).length ? { $unset: unset } : {}),
         },
         { returnDocument: 'after', projection: OWN_FIELDS },
       )
@@ -158,6 +170,33 @@ export class ProducerProfileService {
     };
   }
 
+  /**
+   * Pix: omitido mantém o salvo; `null` remove a chave e deixa o Pix privado;
+   * um objeto grava a chave normalizada (o DTO já conferiu que combina com o tipo).
+   */
+  private pixUpdate(dto: SaveTrajectoryDto): {
+    set: Record<string, unknown>;
+    unset: Record<string, 1>;
+  } {
+    if (dto.pix === undefined) return { set: {}, unset: {} };
+    const now = new Date();
+    if (dto.pix === null)
+      return {
+        set: { pixPublico: false, pixAtualizadoEm: now },
+        unset: { pixTipo: 1, pixChave: 1, pixRecebedor: 1 },
+      };
+    return {
+      set: {
+        pixTipo: dto.pix.tipo,
+        pixChave: normalizePixKey(dto.pix.tipo, dto.pix.chave),
+        pixRecebedor: dto.pix.nomeRecebedor,
+        pixPublico: dto.pix.publico === true,
+        pixAtualizadoEm: now,
+      },
+      unset: {},
+    };
+  }
+
   private activeProducer(id: string) {
     return { _id: id, perfil: Role.PRODUTOR, ativo: true };
   }
@@ -173,6 +212,19 @@ export class ProducerProfileService {
         : {}),
       ...(user.fotoVersao
         ? { fotoUrl: photoPath(userId, user.fotoVersao) }
+        : {}),
+      ...(user.pixTipo && user.pixChave
+        ? {
+            pix: {
+              tipo: user.pixTipo,
+              chave: user.pixChave,
+              nomeRecebedor: user.pixRecebedor ?? '',
+              publico: user.pixPublico === true,
+              ...(user.pixAtualizadoEm
+                ? { atualizadoEm: user.pixAtualizadoEm.toISOString() }
+                : {}),
+            },
+          }
         : {}),
     };
   }

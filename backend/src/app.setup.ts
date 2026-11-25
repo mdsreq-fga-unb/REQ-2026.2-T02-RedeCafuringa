@@ -1,4 +1,4 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   DocumentBuilder,
@@ -7,6 +7,7 @@ import {
 } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { Logger } from 'nestjs-pino';
+import { PlainMessagesValidationPipe } from './common/validation/plain-messages.pipe.js';
 import { MetricsRegistry } from './modules/metrics/metrics.registry.js';
 import {
   OPENAPI_DESCRIPTION,
@@ -88,7 +89,7 @@ export function configureApp(app: INestApplication): void {
     maxAge: 600,
   });
   app.useGlobalPipes(
-    new ValidationPipe({
+    new PlainMessagesValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
