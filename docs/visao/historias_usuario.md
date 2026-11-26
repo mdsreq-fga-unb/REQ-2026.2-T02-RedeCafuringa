@@ -366,7 +366,7 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="18" data-iteration="9" data-rf="RF46" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN21" data-cps="CP6" data-oes="OE3" data-dependencias="HU44 HU45" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="18" data-iteration="9" data-rf="RF46" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN21 RN23" data-cps="CP6" data-oes="OE3" data-dependencias="HU44 HU45" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
@@ -384,7 +384,7 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="19" data-iteration="9" data-rf="RF47" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN22" data-cps="CP6" data-oes="OE3" data-dependencias="HU02 HU44" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="19" data-iteration="9" data-rf="RF47" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN22 RN23" data-cps="CP6" data-oes="OE3" data-dependencias="HU02 HU44" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
