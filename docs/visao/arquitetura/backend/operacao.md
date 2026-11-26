@@ -1,6 +1,6 @@
-# Infraestrutura — API + MongoDB
+# Infraestrutura — App, API e MongoDB
 
-> **Público:** quem desenvolve, faz deploy ou opera o backend na VM OCI.  
+> **Público:** quem desenvolve, faz deploy ou opera a plataforma numa VPS (Locaweb ou VM OCI).  
 > **Decisões de stack:** [POC](poc.md).  
 > **Processo de desenvolvimento:** [Guia de estrutura e TDD](guia-estrutura-e-tdd.md).  
 > **Segurança, LGPD e riscos residuais:** [Segurança](seguranca.md).
@@ -10,20 +10,27 @@
 ## 1. Arquitetura
 
 ```text
-PWA (Cloudflare Pages)
-        │ HTTPS
-        ▼
-Caddy :443  ──►  API NestJS :3000  ──►  MongoDB :27017
-(TLS, headers,     (read-only,          (rede interna,
- body/timeouts)     não-root)            sem porta pública)
-        │
-        └──► /api/v1/health/ready (active health check)
+Navegador ── HTTPS ──► Caddy :443  (TLS, HSTS, body/timeouts)
+                          │
+                          ├── /api/*  ──►  API NestJS :3000  ──►  MongoDB :27017
+                          │               (read-only,           (rede interna,
+                          │                não-root)             sem porta pública)
+                          │                    └── /api/v1/health/ready (active health check)
+                          │
+                          └── resto   ──►  App (nginx) :8080
+                                          (PWA estático, read-only, não-root, CSP própria)
 ```
 
-- Rede `edge`: Caddy + API.
+- **Um domínio só** (`APP_DOMAIN`, ex.: `cafuringa.com.br`): o app chama `/api/v1` na própria origem, sem CORS entre domínios. O `www.` redireciona para o domínio principal.
+- Os cabeçalhos de segurança da API são aplicados só em `/api/*`; os do app (CSP e política de permissões) vêm do nginx dele e o Caddy não os sobrescreve. O HSTS vale para o site inteiro.
+- Rede `edge`: Caddy, API e app.
 - Rede `internal` (`internal: true`): API + MongoDB. O Mongo não tem rota para a internet.
 - O host roda `docker compose` com `restart: unless-stopped`.
 - O backup roda no host via systemd timer, fora do Compose.
+
+### 1.1. DNS
+
+No painel do provedor do domínio (na Locaweb, em "DNS"), crie registros **A** de `cafuringa.com.br` e de `www` apontando para o IP público da VPS. O Caddy só consegue emitir o certificado depois que o DNS responde com esse IP e as portas 80 e 443 estão abertas.
 
 ---
 
@@ -47,11 +54,13 @@ cd REQ-2026.2-T02-RedeCafuringa/backend
 cp deploy/.env.example deploy/.env
 chmod 600 deploy/.env
 
-# Edite: API_DOMAIN, CORS_ORIGINS, MONGO_ROOT_*, MONGO_APP_*, METRICS_TOKEN
+# Edite: APP_DOMAIN, CORS_ORIGINS, APP_PUBLIC_URL, MONGO_ROOT_*, MONGO_APP_*, METRICS_TOKEN,
+# JWT_SECRET, PII_* e SMTP_* (segredos novos: openssl rand -hex 32)
 
 docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env up -d --build
 docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env ps
-curl -fsS https://$API_DOMAIN/api/v1/health/ready
+curl -fsS https://$APP_DOMAIN/api/v1/health/ready
+curl -fsS https://$APP_DOMAIN/ >/dev/null && echo 'app ok'
 ```
 
 O Compose **falha** se uma variável obrigatória estiver em branco. O primeiro boot do Mongo executa `deploy/mongo-init/01-app-user.js` e cria o usuário `readWrite` apenas no banco da aplicação.
@@ -103,7 +112,7 @@ Depois de configurar, valide de ponta a ponta:
 ```bash
 ./scripts/dev.sh indexes --prod   # índices únicos (userId, tokenHash) e TTL de password_reset_tokens
 
-curl -fsS -X POST https://$API_DOMAIN/api/v1/auth/password-reset/request \
+curl -fsS -X POST https://$APP_DOMAIN/api/v1/auth/password-reset/request \
   -H 'content-type: application/json' \
   -d '{"email":"<conta-de-teste>"}'
 
@@ -142,10 +151,10 @@ A troca de senha grava `credenciaisAlteradasEm` na conta. A partir daí, todo JW
 cd /opt/rede-cafuringa/backend
 git pull --ff-only
 
-docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env build api
-docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env up -d api caddy
+docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env build api web
+docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env up -d api web caddy
 
-curl -fsS https://$API_DOMAIN/api/v1/health/ready
+curl -fsS https://$APP_DOMAIN/api/v1/health/ready
 ```
 
 **Rollback:** volte o commit (`git checkout <commit-anterior>`) e repita o `build/up`.
@@ -351,8 +360,8 @@ docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env exec -T 
 ## 9. Incidente — checklist
 
 1. `docker compose ... ps` — o que está `unhealthy` ou reiniciando?
-2. `docker compose ... logs --since 15m api mongo caddy` — verificar erros, OOM e disco.
-3. `curl -i https://$API_DOMAIN/api/v1/health/live` e `/ready`.
+2. `docker compose ... logs --since 15m api web mongo caddy` — verificar erros, OOM e disco.
+3. `curl -i https://$APP_DOMAIN/api/v1/health/live` e `/ready`.
 4. `df -h`, `free -m` e `docker stats --no-stream`.
 5. `docker inspect --format '{{json .State.Health}}' <container>`.
 6. **Mongo caiu:** verificar disco, OOM e logs; reiniciar e validar `ready`.
@@ -373,7 +382,7 @@ Não rode no WSL/local: lá os dados de disco, firewall e Docker são da sua má
 
 **Checklist de hardening:**
 
-- [ ] Security List/NSG da OCI: apenas 22 (restrito ao seu IP), 80 e 443.
+- [ ] Firewall do provedor (painel da Locaweb, ou Security List/NSG da OCI) e `ufw` no host: apenas 22 (restrito ao seu IP), 80 e 443.
 - [ ] SSH somente com chave; `PasswordAuthentication no`; `PermitRootLogin no`.
 - [ ] `fail2ban` para SSH.
 - [ ] `unattended-upgrades` habilitado.
@@ -406,8 +415,8 @@ Não rode no WSL/local: lá os dados de disco, firewall e Docker são da sua má
 docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env config
 
 # Health e headers
-curl -i https://$API_DOMAIN/api/v1/health/ready
-curl -i -H "Origin: $CORS_ORIGINS" https://$API_DOMAIN/api/v1/health/live
+curl -i https://$APP_DOMAIN/api/v1/health/ready
+curl -i -H "Origin: $CORS_ORIGINS" https://$APP_DOMAIN/api/v1/health/live
 
 # Mongo
 docker compose ... exec -T mongo mongosh \

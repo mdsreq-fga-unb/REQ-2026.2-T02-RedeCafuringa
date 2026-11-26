@@ -15,16 +15,19 @@
 	}
 }
 
-{$API_DOMAIN} {
+# O www só redireciona para o domínio principal (também com TLS próprio).
+www.{$APP_DOMAIN} {
+	redir https://{$APP_DOMAIN}{uri} permanent
+}
+
+# App e API no mesmo domínio: /api/* vai para a API e o resto para o app.
+# Assim o app chama /api/v1 na própria origem, sem CORS entre domínios.
+{$APP_DOMAIN} {
 	encode zstd gzip
 
-	header {
-		Strict-Transport-Security "max-age=31536000"
-		X-Content-Type-Options "nosniff"
-		X-Frame-Options "DENY"
-		Referrer-Policy "strict-origin-when-cross-origin"
-		Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
-	}
+	# Vale para o site inteiro. Os demais cabeçalhos ficam por rota: os do app
+	# (CSP e política de permissões) vêm do nginx dele e não podem ser sobrescritos.
+	header Strict-Transport-Security "max-age=31536000"
 
 	# JSON nunca passa de 1 MB. Exceções são os envios de foto:
 	# - foto de perfil (HU12/RF12): a API aceita até 5 MB;
@@ -75,19 +78,37 @@
 	# Métricas são internas. O acesso público fica bloqueado; o scrape deve
 	# ser feito na rede interna (ou por um sidecar autorizado).
 	@metrics path /api/v1/metrics
-	respond @metrics 404
 
 	# Swagger UI (só existe se a API subir com SWAGGER_ENABLED=true). Sempre atrás
 	# de basic auth. O docker-compose.prod.yml define, quando o hash não é informado, um
 	# hash de senha descartada: ninguém entra (falha fechada).
 	@swagger path /api/v1/docs /api/v1/docs/*
-	basic_auth @swagger {
-		{$SWAGGER_USER} {$SWAGGER_PASSWORD_HASH}
+
+	# `handle` vem antes de `respond` na ordem do Caddy: as regras da API ficam
+	# dentro deste bloco, senão o 404 das métricas nunca seria aplicado.
+	handle /api/* {
+		header {
+			X-Content-Type-Options "nosniff"
+			X-Frame-Options "DENY"
+			Referrer-Policy "strict-origin-when-cross-origin"
+			Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
+		}
+
+		respond @metrics 404
+
+		basic_auth @swagger {
+			{$SWAGGER_USER} {$SWAGGER_PASSWORD_HASH}
+		}
+
+		reverse_proxy api:3000 {
+			health_uri /api/v1/health/ready
+			health_interval 15s
+			health_timeout 3s
+		}
 	}
 
-	reverse_proxy api:3000 {
-		health_uri /api/v1/health/ready
-		health_interval 15s
-		health_timeout 3s
+	# Todo o resto é o app (PWA) servido pelo nginx do serviço web.
+	handle {
+		reverse_proxy web:8080
 	}
 }
