@@ -15,6 +15,7 @@ function deployFile(name: string): string {
 }
 
 type Service = {
+  image?: string;
   build?: { context?: string; target?: string; args?: Record<string, string> };
   restart?: string;
   read_only?: boolean;
@@ -135,5 +136,22 @@ describe('deploy de produção — exemplo de configuração', () => {
     expect(value('CORS_ORIGINS')).toBe('https://cafuringa.com.br');
     expect(value('APP_PUBLIC_URL')).toBe('https://cafuringa.com.br');
     expect(value('API_DOMAIN')).toBeUndefined();
+  });
+});
+
+describe('deploy de produção — MongoDB', () => {
+  const devCompose = load(
+    readFileSync(
+      fileURLToPath(new URL('../../docker-compose.yml', import.meta.url)),
+      'utf8',
+    ),
+  ) as { services: Record<string, Service | undefined> };
+
+  it('usa a mesma imagem do Mongo que o desenvolvimento, fixada por digest', () => {
+    // A 8.0.34 recusa subir em kernel Linux 6.19 ou mais novo (SERVER-121912),
+    // o que impede o deploy em VPS com Ubuntu recente.
+    const prod = compose.services.mongo?.image;
+    expect(prod).toMatch(/^mongo:8\.0\.\d+@sha256:[0-9a-f]{64}$/);
+    expect(prod).toBe(devCompose.services.mongo?.image);
   });
 });
