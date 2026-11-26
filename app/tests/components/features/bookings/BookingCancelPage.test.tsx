@@ -307,10 +307,13 @@ describe("HU46 — confirmar o cancelamento", () => {
             expect(cancel).not.toHaveBeenCalled();
         });
 
-        it("RN20: pré-reserva que não está pendente não oferece o cancelamento", async () => {
+        // RN20 revista em 25/11/2026: a aceita também se cancela.
+        it("RN20: pré-reserva recusada não oferece o cancelamento", async () => {
             const user = userEvent.setup();
             const { onNavigate } = renderPage({
-                load: vi.fn().mockResolvedValue(booking({ status: "aceita" })),
+                load: vi
+                    .fn()
+                    .mockResolvedValue(booking({ status: "recusada" })),
             });
 
             expect(
@@ -321,7 +324,7 @@ describe("HU46 — confirmar o cancelamento", () => {
             ).toBeTruthy();
             expect(
                 screen.getByText(
-                    "Só é possível cancelar pré-reservas que aguardam resposta. Situação atual: Aceita pela produtora.",
+                    "Só é possível cancelar pré-reservas pendentes ou aceitas. Situação atual: Recusada pela produtora.",
                 ),
             ).toBeTruthy();
             expect(

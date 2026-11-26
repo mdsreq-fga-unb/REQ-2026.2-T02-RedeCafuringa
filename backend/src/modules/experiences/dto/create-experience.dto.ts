@@ -1,7 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
+  IsBoolean,
   IsEnum,
+  IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -9,6 +11,7 @@ import {
   ValidateBy,
   type ValidationArguments,
 } from 'class-validator';
+import { PaymentMethod } from '../../bookings/domain/booking.js';
 import {
   IsYoutubeUrl,
   NormalizeVideoUrl,
@@ -31,6 +34,9 @@ import {
 } from '../domain/experience.js';
 
 const normalize = ({ value }: { value: unknown }) => normalizeFreeText(value);
+const METHODS = Object.values(PaymentMethod);
+const PAYMENT_METHODS = METHODS.join(', ');
+const PAYMENT_METHODS_TEXT = `${METHODS.slice(0, -1).join(', ')} ou ${METHODS.at(-1)}`;
 const decimal = ({ value }: { value: unknown }) => parseDecimal(value);
 // Duração inválida segue como veio, para o validador apontar o problema.
 const duracao = ({ value }: { value: unknown }) =>
@@ -140,6 +146,38 @@ export class CreateExperienceDto {
   @Transform(duracao)
   @IsDuracao()
   duracao: string;
+
+  @ApiPropertyOptional({
+    example: true,
+    description:
+      'Pagamento por Pix: se o aceite pede sinal de 50% para garantir a vaga. Padrão: sim.',
+  })
+  // Multipart manda texto: "true" e "false" viram booleano; o resto é recusado.
+  @Transform(({ value }: { value: unknown }) =>
+    value === 'true' ? true : value === 'false' ? false : value,
+  )
+  @IsOptional()
+  @IsBoolean({ message: 'exigeSinal deve ser verdadeiro ou falso' })
+  exigeSinal?: boolean;
+
+  @ApiPropertyOptional({
+    example: 'dinheiro,pix',
+    description: `Formas aceitas no dia, separadas por vírgula: ${PAYMENT_METHODS}.`,
+  })
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string'
+      ? value
+          .split(',')
+          .map((item) => item.trim())
+          .filter(Boolean)
+      : value,
+  )
+  @IsOptional()
+  @IsIn(Object.values(PaymentMethod), {
+    each: true,
+    message: `Formas de pagamento no dia devem ser ${PAYMENT_METHODS_TEXT}`,
+  })
+  formasPagamentoNoDia?: PaymentMethod[];
 
   @ApiPropertyOptional({
     example: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',

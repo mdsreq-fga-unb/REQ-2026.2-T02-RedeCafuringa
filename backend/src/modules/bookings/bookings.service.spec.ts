@@ -72,7 +72,9 @@ function setup() {
       .mockReturnValue(
         query([{ _id: experienceId, nome: 'Trilha', valorCentavos: 4550 }]),
       ),
-    findById: vi.fn().mockReturnValue(query({ nome: 'Trilha' })),
+    findById: vi
+      .fn()
+      .mockReturnValue(query({ nome: 'Trilha', valorCentavos: 4550 })),
     findOne: vi
       .fn()
       .mockReturnValue(query({ _id: experienceId, produtor: producerId })),
@@ -383,7 +385,14 @@ describe('BookingsService (HU47/RF47)', () => {
         produtor: { $in: [producerId, owner] },
         status: BookingStatus.PENDENTE,
       },
-      { $set: answer },
+      {
+        $set: {
+          ...answer,
+          pagamento: expect.objectContaining({
+            situacao: 'aguardando-sinal',
+          }) as unknown,
+        },
+      },
       { returnDocument: 'after', runValidators: true },
     );
     expect(mail.send).toHaveBeenCalledTimes(2);
@@ -542,4 +551,111 @@ describe('BookingsService (HU48/RF48) — link do e-mail', () => {
       expect(metrics.recordMailFailure).not.toHaveBeenCalled();
     },
   );
+});
+
+describe('BookingsService — pagamento no aceite (Pix)', () => {
+  const id = receivedBooking._id.toHexString();
+  const owner = producerId.toHexString();
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  function updateOf(bookings: { findOneAndUpdate: ReturnType<typeof vi.fn> }) {
+    return bookings.findOneAndUpdate.mock.calls[0][1] as {
+      $set: Record<string, unknown>;
+    };
+  }
+
+  it('congela o preço e abre o prazo de 24 horas para o sinal de 50%', async () => {
+    const { service, bookings, experiences } = setup();
+    bookings.findOneAndUpdate.mockReturnValue(
+      query({ ...receivedBooking, status: BookingStatus.ACEITA }),
+    );
+
+    await service.respond(owner, id, { status: BookingStatus.ACEITA });
+    await service.beforeApplicationShutdown();
+
+    expect(experiences.findById).toHaveBeenCalledWith(experienceId);
+    expect(updateOf(bookings).$set.pagamento).toEqual({
+      valorPorPessoaCentavos: 4550,
+      totalCentavos: 18200,
+      sinalCentavos: 9100,
+      restanteCentavos: 9100,
+      situacao: 'aguardando-sinal',
+      aceitaEm: NOW,
+      prazoSinal: new Date('2026-11-22T13:30:00.000Z'),
+    });
+  });
+
+  it('experiência gratuita: o sinal fica dispensado e não há prazo', async () => {
+    const { service, bookings, experiences } = setup();
+    experiences.findById.mockReturnValue(
+      query({ nome: 'Trilha', valorCentavos: 0 }),
+    );
+    bookings.findOneAndUpdate.mockReturnValue(
+      query({ ...receivedBooking, status: BookingStatus.ACEITA }),
+    );
+
+    await service.respond(owner, id, { status: BookingStatus.ACEITA });
+    await service.beforeApplicationShutdown();
+
+    expect(updateOf(bookings).$set.pagamento).toEqual({
+      valorPorPessoaCentavos: 0,
+      totalCentavos: 0,
+      sinalCentavos: 0,
+      restanteCentavos: 0,
+      situacao: 'dispensado',
+      aceitaEm: NOW,
+    });
+  });
+
+  it('experiência que não existe mais: aceita sem montar o pagamento', async () => {
+    const { service, bookings, experiences } = setup();
+    experiences.findById.mockReturnValue(query(null));
+    bookings.findOneAndUpdate.mockReturnValue(
+      query({ ...receivedBooking, status: BookingStatus.ACEITA }),
+    );
+
+    await service.respond(owner, id, { status: BookingStatus.ACEITA });
+    await service.beforeApplicationShutdown();
+
+    expect(updateOf(bookings).$set).not.toHaveProperty('pagamento');
+  });
+
+  it('experiência que não exige sinal: o sinal fica dispensado', async () => {
+    const { service, bookings, experiences } = setup();
+    experiences.findById.mockReturnValue(
+      query({ nome: 'Trilha', valorCentavos: 4550, exigeSinal: false }),
+    );
+    bookings.findOneAndUpdate.mockReturnValue(
+      query({ ...receivedBooking, status: BookingStatus.ACEITA }),
+    );
+
+    await service.respond(owner, id, { status: BookingStatus.ACEITA });
+    await service.beforeApplicationShutdown();
+
+    expect(updateOf(bookings).$set.pagamento).toMatchObject({
+      totalCentavos: 18200,
+      situacao: 'dispensado',
+    });
+    expect(updateOf(bookings).$set.pagamento).not.toHaveProperty('prazoSinal');
+  });
+
+  it('a recusa não cria pagamento', async () => {
+    const { service, bookings } = setup();
+    bookings.findOneAndUpdate.mockReturnValue(
+      query({ ...receivedBooking, status: BookingStatus.RECUSADA }),
+    );
+
+    await service.respond(owner, id, { status: BookingStatus.RECUSADA });
+    await service.beforeApplicationShutdown();
+
+    expect(updateOf(bookings).$set).not.toHaveProperty('pagamento');
+  });
 });

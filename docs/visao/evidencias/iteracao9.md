@@ -37,6 +37,7 @@ Dessa forma, a Iteração 9 contribui para aproximar consumidores e produtores, 
     | [HU46](../historias/HU46.md) | Cancelar pré-reserva | Cancelamento de solicitações de pré-reserva registradas. |
     | [HU47](../historias/HU47.md) | Responder pré-reserva de experiência | Resposta dos produtores às solicitações recebidas. |
     | [HU48](../historias/HU48.md) | Notificar alteração de pré-reserva | Comunicação de alterações relacionadas às solicitações de pré-reserva. |
+    | [HU49](../historias/HU49.md) | Pagar sinal da pré-reserva por Pix | Sinal de 50% pago por Pix diretamente ao produtor, com aviso do comprovante, confirmação e devolução no cancelamento. |
 
     O desenvolvimento dessas funcionalidades também contou com a estrutura técnica e as orientações descritas no [Guia do Backend — Estrutura de pastas e TDD](../arquitetura/backend/guia-estrutura-e-tdd.md). As práticas de integração e validação do projeto estão documentadas na [Visão Geral de Engenharia](../arquitetura/engenharia/visao-geral.md).
 

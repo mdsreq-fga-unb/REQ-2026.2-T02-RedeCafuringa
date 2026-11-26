@@ -105,6 +105,8 @@ export class ExperiencesService {
         local: dto.local,
         duracao: dto.duracao,
         fotos,
+        exigeSinal: dto.exigeSinal ?? true,
+        formasPagamentoNoDia: dto.formasPagamentoNoDia ?? [],
         ...(videoId ? { videoId } : {}),
         ...(key ? { chaveIdempotencia: key } : {}),
       });
@@ -267,6 +269,8 @@ export class ExperiencesService {
       videoId: experience.videoId ?? null,
       criadoEm: (experience.criadoEm ?? new Date()).toISOString(),
       disponivel: experience.disponivel ?? true,
+      exigeSinal: experience.exigeSinal ?? true,
+      formasPagamentoNoDia: experience.formasPagamentoNoDia ?? [],
     };
   }
 }

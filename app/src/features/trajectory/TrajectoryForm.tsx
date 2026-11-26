@@ -3,10 +3,23 @@ import type { FormEvent } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { formatPhone } from "@/features/register/validators";
+import type { PixKeyType } from "@/features/payments/pixCode";
 import { VideoUrlField } from "@/features/video/VideoUrlField";
-import { TEXT_LIMIT, validateTrajectory } from "./trajectoryModel";
+import {
+    PIX_RECEIVER_MAX,
+    TEXT_LIMIT,
+    validateTrajectory,
+} from "./trajectoryModel";
 import type { TrajectoryDraft, TrajectoryErrors } from "./trajectoryModel";
 import "./trajectory.css";
+
+const PIX_KEY_OPTIONS: ReadonlyArray<[PixKeyType, string]> = [
+    ["cpf", "CPF"],
+    ["cnpj", "CNPJ"],
+    ["telefone", "Telefone"],
+    ["email", "E-mail"],
+    ["aleatoria", "Chave aleatória"],
+];
 
 type Props = {
     draft: TrajectoryDraft;
@@ -280,6 +293,126 @@ export function TrajectoryForm({
                             </span>
                         </label>
                     </div>
+                    <fieldset
+                        className="trajectory-field trajectory-pix"
+                        aria-describedby={`${id}-pix-notice`}
+                    >
+                        <legend className="field-label">
+                            Pix para receber o sinal
+                        </legend>
+                        <p
+                            className="trajectory-pix-notice"
+                            id={`${id}-pix-notice`}
+                        >
+                            A chave aparece só para quem tiver uma pré-reserva
+                            aceita com você, para pagar o sinal. Ela nunca
+                            aparece no seu perfil público.
+                        </p>
+                        <label
+                            className="field-label"
+                            htmlFor={`${id}-pixType`}
+                        >
+                            Tipo da chave Pix
+                        </label>
+                        <select
+                            id={`${id}-pixType`}
+                            data-trajectory-field="pixType"
+                            className="text-input"
+                            value={draft.pixType}
+                            onChange={(event) =>
+                                change(
+                                    "pixType",
+                                    event.target.value as PixKeyType | "",
+                                )
+                            }
+                            aria-invalid={Boolean(errors.pixType)}
+                            aria-describedby={errorId("pixType")}
+                        >
+                            <option value="">Sem chave Pix</option>
+                            {PIX_KEY_OPTIONS.map(([value, label]) => (
+                                <option key={value} value={value}>
+                                    {label}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.pixType && (
+                            <p
+                                className="field-error"
+                                role="alert"
+                                id={errorId("pixType")}
+                            >
+                                {errors.pixType}
+                            </p>
+                        )}
+                        <label className="field-label" htmlFor={`${id}-pixKey`}>
+                            Chave Pix
+                        </label>
+                        <input
+                            id={`${id}-pixKey`}
+                            data-trajectory-field="pixKey"
+                            className="text-input"
+                            autoComplete="off"
+                            spellCheck={false}
+                            value={draft.pixKey}
+                            onChange={(event) =>
+                                change("pixKey", event.target.value)
+                            }
+                            aria-invalid={Boolean(errors.pixKey)}
+                            aria-describedby={errorId("pixKey")}
+                        />
+                        {errors.pixKey && (
+                            <p
+                                className="field-error"
+                                role="alert"
+                                id={errorId("pixKey")}
+                            >
+                                {errors.pixKey}
+                            </p>
+                        )}
+                        <label
+                            className="field-label"
+                            htmlFor={`${id}-pixReceiver`}
+                        >
+                            Nome de quem recebe o Pix
+                        </label>
+                        <input
+                            id={`${id}-pixReceiver`}
+                            data-trajectory-field="pixReceiver"
+                            className="text-input"
+                            autoComplete="name"
+                            maxLength={PIX_RECEIVER_MAX}
+                            value={draft.pixReceiver}
+                            onChange={(event) =>
+                                change("pixReceiver", event.target.value)
+                            }
+                            aria-invalid={Boolean(errors.pixReceiver)}
+                            aria-describedby={errorId("pixReceiver")}
+                        />
+                        {errors.pixReceiver && (
+                            <p
+                                className="field-error"
+                                role="alert"
+                                id={errorId("pixReceiver")}
+                            >
+                                {errors.pixReceiver}
+                            </p>
+                        )}
+                        <label className="trajectory-contact-permission">
+                            <input
+                                type="checkbox"
+                                checked={draft.pixPublic}
+                                onChange={(event) =>
+                                    change("pixPublic", event.target.checked)
+                                }
+                            />
+                            <span className="trajectory-contact-copy">
+                                <strong>
+                                    Mostrar minha chave Pix a quem tiver
+                                    pré-reserva aceita
+                                </strong>
+                            </span>
+                        </label>
+                    </fieldset>
                     <div className="trajectory-field">
                         <label className="field-label" htmlFor={`${id}-photo`}>
                             Adicionar foto (opcional)

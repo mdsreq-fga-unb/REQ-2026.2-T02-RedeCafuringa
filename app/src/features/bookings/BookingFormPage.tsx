@@ -26,12 +26,37 @@ import type {
     BookingFormValues,
 } from "./bookingTypes";
 import { validateBookingForm } from "./bookingValidation";
+import { depositNotice } from "./bookingDepositNotice";
+
+/** Pagamento por Pix: o que acontece com o pagamento se a produtora aceitar. */
+function DepositNotice({
+    experience,
+    participants,
+    method,
+}: {
+    experience: BookingExperience;
+    participants: number;
+    method: string;
+}) {
+    const text = depositNotice({
+        pricePerPerson: experience.price ?? 0,
+        participants,
+        requiresDeposit: experience.requiresDeposit,
+        method,
+    });
+    return (
+        <p className="booking-deposit-notice" aria-live="polite">
+            {text}
+        </p>
+    );
+}
 import "./bookings.css";
 
 export type BookingExperience = Pick<
     Product,
     "id" | "name" | "producerName" | "local" | "duracao"
->;
+> &
+    Partial<Pick<Product, "price" | "requiresDeposit">>;
 
 type BookingFormPageProps = {
     experience: BookingExperience;
@@ -135,6 +160,11 @@ export function BookingFormPage({
                 {experience.duracao && <p>Duração: {experience.duracao}</p>}
                 {experience.local && <p>Local: {experience.local}</p>}
             </div>
+            <DepositNotice
+                experience={experience}
+                participants={Number(values.participantes) || 0}
+                method={values.formaPagamento}
+            />
 
             <form
                 className="login-form booking-form"

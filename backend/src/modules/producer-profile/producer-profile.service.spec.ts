@@ -497,6 +497,146 @@ describe('ProducerProfileService', () => {
   });
 });
 
+describe('ProducerProfileService — chave Pix da produtora', () => {
+  const userId = '64b000000000000000000001';
+  const pix = {
+    tipo: 'telefone' as const,
+    chave: '(61) 99999-8888',
+    nomeRecebedor: 'Maria da Silva',
+    publico: true,
+  };
+
+  type Update = {
+    $set: Record<string, unknown>;
+    $unset?: Record<string, unknown>;
+  };
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('grava a chave normalizada, o recebedor, a autorização e quando mudou', async () => {
+    const { service, model } = setup();
+    model.findOneAndUpdate.mockReturnValue(query(producerDoc()));
+
+    await service.save(userId, { trajetoria: 'x', pix });
+
+    const update = model.findOneAndUpdate.mock.calls[0][1] as Update;
+    expect(update.$set).toMatchObject({
+      pixTipo: 'telefone',
+      pixChave: '+5561999998888',
+      pixRecebedor: 'Maria da Silva',
+      pixPublico: true,
+      pixAtualizadoEm: NOW,
+    });
+  });
+
+  it('sem autorização, a chave fica privada', async () => {
+    const { service, model } = setup();
+    model.findOneAndUpdate.mockReturnValue(query(producerDoc()));
+
+    await service.save(userId, {
+      trajetoria: 'x',
+      pix: { ...pix, publico: undefined },
+    });
+
+    const update = model.findOneAndUpdate.mock.calls[0][1] as Update;
+    expect(update.$set.pixPublico).toBe(false);
+  });
+
+  it('sem o campo, não toca no Pix salvo', async () => {
+    const { service, model } = setup();
+    model.findOneAndUpdate.mockReturnValue(query(producerDoc()));
+
+    await service.save(userId, { trajetoria: 'x' });
+
+    const update = model.findOneAndUpdate.mock.calls[0][1] as Update;
+    expect(Object.keys(update.$set).filter((k) => k.startsWith('pix'))).toEqual(
+      [],
+    );
+    expect(update.$unset).toBeUndefined();
+  });
+
+  it('null remove a chave e deixa o Pix privado', async () => {
+    const { service, model } = setup();
+    model.findOneAndUpdate.mockReturnValue(query(producerDoc()));
+
+    await service.save(userId, { trajetoria: 'x', pix: null });
+
+    const update = model.findOneAndUpdate.mock.calls[0][1] as Update;
+    expect(update.$unset).toEqual({
+      pixTipo: 1,
+      pixChave: 1,
+      pixRecebedor: 1,
+    });
+    expect(update.$set).toMatchObject({
+      pixPublico: false,
+      pixAtualizadoEm: NOW,
+    });
+  });
+
+  it('a trajetória própria mostra o Pix para a produtora conferir', async () => {
+    const { service, model } = setup();
+    model.findOne.mockReturnValue(
+      query(
+        producerDoc({
+          trajetoria: 'x',
+          pixTipo: 'telefone',
+          pixChave: '+5561999998888',
+          pixRecebedor: 'Maria da Silva',
+          pixPublico: true,
+          pixAtualizadoEm: NOW,
+        }),
+      ),
+    );
+
+    expect((await service.getOwn(userId)).pix).toEqual({
+      tipo: 'telefone',
+      chave: '+5561999998888',
+      nomeRecebedor: 'Maria da Silva',
+      publico: true,
+      atualizadoEm: NOW.toISOString(),
+    });
+  });
+
+  it('sem chave cadastrada, a trajetória própria não traz Pix', async () => {
+    const { service, model } = setup();
+    model.findOne.mockReturnValue(query(producerDoc({ trajetoria: 'x' })));
+
+    expect(await service.getOwn(userId)).not.toHaveProperty('pix');
+  });
+
+  it('o perfil público nunca lê nem devolve a chave Pix', async () => {
+    const { service, model } = setup();
+    const doc = producerDoc({
+      trajetoria: 'História',
+      pixTipo: 'cpf',
+      pixChave: '52998224725',
+      pixRecebedor: 'Maria da Silva',
+      pixPublico: true,
+    });
+    model.findOne.mockReturnValue(query(doc));
+    model.find.mockReturnValue(query([doc]));
+
+    const profile = await service.getPublic(doc.id);
+    const [listed] = await service.listPublic();
+
+    for (const result of [profile, listed])
+      expect(JSON.stringify(result)).not.toContain('52998224725');
+    const fields = (
+      model.findOne.mock.results[0].value as {
+        select: ReturnType<typeof vi.fn>;
+      }
+    ).select.mock.calls[0][0] as string;
+    expect(fields).not.toMatch(/pix/i);
+  });
+});
+
 describe('ProducerProfileService — vídeo do YouTube na trajetória', () => {
   const ID = 'dQw4w9WgXcQ';
   const userId = '64b000000000000000000001';

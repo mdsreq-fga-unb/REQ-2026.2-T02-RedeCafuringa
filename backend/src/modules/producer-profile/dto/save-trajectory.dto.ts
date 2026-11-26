@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -8,12 +8,14 @@ import {
   Matches,
   MaxLength,
   ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 import {
   ACTIVITIES_MAX,
   normalizeFreeText,
   TRAJECTORY_MAX,
 } from '../domain/trajectory.js';
+import { SavePixDto } from './save-pix.dto.js';
 import {
   IsYoutubeUrl,
   NormalizeVideoUrl,
@@ -80,6 +82,23 @@ export class SaveTrajectoryDto {
   @ValidateIf((_object, value) => value !== undefined)
   @IsBoolean({ message: 'telefonePublico deve ser verdadeiro ou falso' })
   telefonePublico?: boolean;
+
+  @ApiPropertyOptional({
+    type: SavePixDto,
+    nullable: true,
+    description:
+      'Chave Pix para receber o sinal das pré-reservas. Se omitido, o Pix salvo não muda. Com `null`, a chave é removida e o Pix fica privado. Nunca aparece no perfil público.',
+  })
+  // Lista não é um objeto de Pix: vira texto para cair na mesma orientação.
+  @Transform(({ value }: { value: unknown }) =>
+    Array.isArray(value) ? String(value) : value,
+  )
+  @IsOptional()
+  @ValidateNested({
+    message: 'Pix deve ter o tipo, a chave e o nome do recebedor',
+  })
+  @Type(() => SavePixDto)
+  pix?: SavePixDto | null;
 
   @ApiPropertyOptional({
     type: String,

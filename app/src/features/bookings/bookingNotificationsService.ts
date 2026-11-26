@@ -2,10 +2,154 @@ import { apiResourceUrl, ApiHttpError, getApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import type { components } from "@/shared/api/schema";
 import { listMyBookings, listReceivedBookings } from "./bookingQueryService";
-import { bookingCode } from "./bookingDetails";
+import {
+    bookingCode,
+    type PaymentStatus,
+    type RefundStatus,
+} from "./bookingDetails";
 
 type Notification = components["schemas"]["BookingNotificationResponse"];
 export type BookingUpdate = Notification & { nova: boolean };
+
+const PAYMENT_STATUSES: readonly PaymentStatus[] = [
+    "aguardando-sinal",
+    "comprovante-enviado",
+    "sinal-confirmado",
+    "expirado",
+    "dispensado",
+    "pagamento-recebido",
+];
+const REFUND_STATUSES: readonly RefundStatus[] = [
+    "pendente",
+    "feita",
+    "retido",
+];
+
+/**
+ * Id da atualização, igual ao da API: cada mudança do sinal ou da devolução
+ * é uma notificação nova, e abrir o detalhe marca como lida a mudança atual.
+ */
+export function bookingUpdateId(booking: {
+    id: string;
+    status: string;
+    payment?: { status: PaymentStatus; refund?: RefundStatus };
+}): string {
+    return [
+        booking.id,
+        booking.status,
+        booking.payment?.status,
+        booking.payment?.refund,
+    ]
+        .filter(Boolean)
+        .join(":");
+}
+
+const STATUS_LABEL: Record<Notification["status"], string> = {
+    aceita: "Aceito",
+    recusada: "Recusado",
+    cancelada: "Cancelado",
+};
+
+const PAYMENT_LABEL: Record<
+    PaymentStatus,
+    { consumer: string; producer: string }
+> = {
+    "aguardando-sinal": {
+        consumer: "Aceito: pague o sinal",
+        producer: "Aceito: aguardando o sinal",
+    },
+    "comprovante-enviado": {
+        consumer: "Comprovante enviado",
+        producer: "Confira o pagamento do sinal",
+    },
+    "sinal-confirmado": {
+        consumer: "Sinal confirmado",
+        producer: "Sinal confirmado",
+    },
+    expirado: {
+        consumer: "Prazo do sinal vencido",
+        producer: "Prazo do sinal vencido",
+    },
+    dispensado: { consumer: "Aceito sem sinal", producer: "Aceito sem sinal" },
+    "pagamento-recebido": {
+        consumer: "Pagamento recebido",
+        producer: "Pagamento recebido",
+    },
+};
+
+const REFUND_LABEL: Record<
+    RefundStatus,
+    { consumer: string; producer: string }
+> = {
+    pendente: {
+        consumer: "Cancelado: devolução do sinal pendente",
+        producer: "Cancelado: devolva o sinal",
+    },
+    feita: { consumer: "Sinal devolvido", producer: "Sinal devolvido" },
+    retido: {
+        consumer: "Cancelado: sinal retido",
+        producer: "Cancelado: sinal retido",
+    },
+};
+
+/** O que a notificação diz, conforme quem vê: o próximo passo do sinal, se houver. */
+export function bookingUpdateLabel(
+    update: BookingUpdate,
+    role: "consumer" | "producer",
+): string {
+    if (update.devolucao) return REFUND_LABEL[update.devolucao][role];
+    if (update.status === "aceita" && update.pagamento)
+        return PAYMENT_LABEL[update.pagamento][role];
+    return STATUS_LABEL[update.status];
+}
+
+/** Confere cada notificação e marca as ainda não lidas. */
+export function toBookingUpdates(list: unknown): BookingUpdate[] {
+    if (!Array.isArray(list))
+        throw new Error("Lista de notificações inválida.");
+    return (list as Notification[]).map(
+        ({
+            id,
+            reservaId,
+            codigo,
+            experienciaNome,
+            data,
+            horario,
+            participantes,
+            status,
+            pagamento,
+            devolucao,
+        }) => {
+            if (
+                ![id, reservaId, codigo, experienciaNome, data, horario].every(
+                    (value) => typeof value === "string" && value,
+                ) ||
+                !Number.isSafeInteger(participantes) ||
+                participantes < 1 ||
+                !["aceita", "recusada", "cancelada"].includes(status) ||
+                (pagamento !== undefined &&
+                    !PAYMENT_STATUSES.includes(pagamento)) ||
+                (devolucao !== undefined &&
+                    !REFUND_STATUSES.includes(devolucao))
+            ) {
+                throw new Error("Notificação inválida.");
+            }
+            return {
+                id,
+                reservaId,
+                codigo,
+                experienciaNome,
+                data,
+                horario,
+                participantes,
+                status,
+                ...(pagamento ? { pagamento } : {}),
+                ...(devolucao ? { devolucao } : {}),
+                nova: localStorage.getItem(readKey(id)) !== "read",
+            };
+        },
+    );
+}
 
 function readKey(id: string) {
     const role = localStorage.getItem("cafuringa-role");
@@ -47,7 +191,7 @@ export async function listBookingUpdates(
                     ? []
                     : [
                           {
-                              id: `${item.id}:${item.status}`,
+                              id: bookingUpdateId(item),
                               reservaId: item.id,
                               codigo: bookingCode(item.id),
                               experienciaNome: item.experience.name,
@@ -55,6 +199,12 @@ export async function listBookingUpdates(
                               horario: item.time,
                               participantes: item.participants,
                               status: item.status,
+                              ...(item.payment
+                                  ? { pagamento: item.payment.status }
+                                  : {}),
+                              ...(item.payment?.refund
+                                  ? { devolucao: item.payment.refund }
+                                  : {}),
                           },
                       ],
             );
@@ -71,40 +221,5 @@ export async function listBookingUpdates(
             signal,
         });
     }
-    if (!Array.isArray(notifications))
-        throw new Error("Lista de notificações inválida.");
-    return notifications.map(
-        ({
-            id,
-            reservaId,
-            codigo,
-            experienciaNome,
-            data,
-            horario,
-            participantes,
-            status,
-        }) => {
-            if (
-                ![id, reservaId, codigo, experienciaNome, data, horario].every(
-                    (value) => typeof value === "string" && value,
-                ) ||
-                !Number.isSafeInteger(participantes) ||
-                participantes < 1 ||
-                !["aceita", "recusada", "cancelada"].includes(status)
-            ) {
-                throw new Error("Notificação inválida.");
-            }
-            return {
-                id,
-                reservaId,
-                codigo,
-                experienciaNome,
-                data,
-                horario,
-                participantes,
-                status,
-                nova: localStorage.getItem(readKey(id)) !== "read",
-            };
-        },
-    );
+    return toBookingUpdates(notifications);
 }

@@ -7,6 +7,9 @@ import { prepareProfilePhoto } from "./photoResize";
 import type { TrajectoryDraft } from "./trajectoryModel";
 import { demoPublicProfiles } from "@/features/profile/publicProfileDemo";
 
+/** Pix da produtora (pagamento por Pix). */
+export type SavePix = components["schemas"]["SavePixDto"];
+export type OwnPix = components["schemas"]["OwnPixResponse"];
 export type OwnTrajectory = components["schemas"]["OwnTrajectoryResponse"];
 export type PublicTrajectory =
     components["schemas"]["PublicTrajectoryResponse"] & { localidade?: string };
@@ -58,6 +61,16 @@ export async function saveTrajectory(
             body.telefone === null
                 ? undefined
                 : (body.telefone ?? previous?.telefone);
+        const pix: OwnPix | undefined =
+            body.pix === undefined
+                ? previous?.pix
+                : body.pix === null
+                  ? undefined
+                  : {
+                        ...body.pix,
+                        publico: body.pix.publico === true,
+                        atualizadoEm: new Date().toISOString(),
+                    };
         const videoId =
             body.videoUrl === undefined
                 ? previous?.videoId
@@ -71,6 +84,7 @@ export async function saveTrajectory(
             ),
             atualizadoEm: new Date().toISOString(),
             ...(previous?.fotoUrl ? { fotoUrl: previous.fotoUrl } : {}),
+            ...(pix ? { pix } : {}),
             ...(videoId ? { videoId } : {}),
         };
         demoTrajectories.set(headers.Authorization, result);

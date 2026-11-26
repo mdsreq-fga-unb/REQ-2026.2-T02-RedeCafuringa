@@ -1,0 +1,54 @@
+/* Pagamento por Pix: valor, QR Code e copia e cola, em coluna única. */
+
+.pix-payment {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+}
+
+.pix-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 0;
+}
+
+.pix-summary dt {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.pix-summary dd {
+    margin: 0;
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.pix-amount {
+    font-size: 22px;
+}
+
+.pix-qr {
+    align-self: center;
+    width: 220px;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+}
+
+.pix-code {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-size: 13px;
+    word-break: break-all;
+    resize: none;
+}
+
+.pix-message,
+.pix-unavailable {
+    margin: 0;
+}

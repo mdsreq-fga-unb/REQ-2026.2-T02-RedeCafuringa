@@ -5,18 +5,13 @@ import { ApiHttpError } from "@/shared/api";
 import { bookingConsultationRoute } from "./bookingRoutes";
 import { formatBookingDate, formatBookingTime } from "./bookingDetails";
 import {
+    bookingUpdateLabel,
     listBookingUpdates,
     markBookingUpdateRead,
     type BookingUpdate,
 } from "./bookingNotificationsService";
 import "./bookings.css";
 import "./bookingNotifications.css";
-
-const updateLabel: Record<BookingUpdate["status"], string> = {
-    aceita: "Aceito",
-    recusada: "Recusado",
-    cancelada: "Cancelado",
-};
 
 function UpdateList({
     updates,
@@ -26,6 +21,10 @@ function UpdateList({
     onNavigate: (path: string) => void;
 }) {
     if (!updates.length) return <p>Nenhuma atualização de pré-reserva.</p>;
+    const role =
+        localStorage.getItem("cafuringa-role") === "producer"
+            ? "producer"
+            : "consumer";
 
     return (
         <>
@@ -60,7 +59,7 @@ function UpdateList({
                                 className="booking-update-status"
                                 data-status={item.status}
                             >
-                                {updateLabel[item.status]}
+                                {bookingUpdateLabel(item, role)}
                             </p>
                             <a
                                 href={`#${route}`}

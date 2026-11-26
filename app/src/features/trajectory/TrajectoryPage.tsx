@@ -46,6 +46,15 @@ export function TrajectoryPage({
                     phone: data.telefone ?? "",
                     phonePublic: data.telefonePublico,
                     photoUrl: photoSrc(data.fotoUrl),
+                    ...(data.pix
+                        ? {
+                              pixType: data.pix.tipo,
+                              pixKey: data.pix.chave,
+                              pixReceiver: data.pix.nomeRecebedor,
+                              pixPublic: data.pix.publico,
+                              hadPix: true,
+                          }
+                        : {}),
                     videoUrl: youtubeWatchUrl(data.videoId),
                     hadVideo: Boolean(data.videoId),
                 });
@@ -65,12 +74,16 @@ export function TrajectoryPage({
         setError("");
         setSaved(false);
         try {
-            await saveTrajectory(trajectoryBody(draft));
-            // Salvo o link, um novo apagamento passa a pedir a remoção.
+            const body = trajectoryBody(draft);
+            await saveTrajectory(body);
+            // Salvos o link e o Pix, apagar os campos depois passa a pedir a remoção.
             if (active.current)
                 setDraft((current) => ({
                     ...current,
                     hadVideo: Boolean(draft.videoUrl.trim()),
+                    ...(body.pix !== undefined
+                        ? { hadPix: body.pix !== null }
+                        : {}),
                 }));
         } catch (cause) {
             if (active.current) setError(trajectoryError(cause));

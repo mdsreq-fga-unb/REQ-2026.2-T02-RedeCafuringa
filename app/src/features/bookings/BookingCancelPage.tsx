@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
-import { BookingCancelError, cancelBooking } from "./bookingCancelService";
+import { formatCentavos } from "@/features/payments/money";
+import {
+    BookingCancelError,
+    cancelBooking,
+    type CancelledBooking,
+} from "./bookingCancelService";
+import { depositOnCancel, type DepositOnCancel } from "./bookingCancellation";
 import {
     bookingStatusLabel,
     formatBookingDate,
@@ -18,7 +24,7 @@ type LoadBooking = (
     id: string,
     options: { signal?: AbortSignal },
 ) => Promise<BookingDetail | null>;
-type CancelBooking = (id: string) => Promise<Booking>;
+type CancelBooking = (id: string) => Promise<Booking | CancelledBooking>;
 
 type BookingCancelPageProps = {
     id: string;
@@ -35,10 +41,22 @@ type View =
     | { kind: "not-pending"; booking: BookingDetail }
     | { kind: "confirm"; booking: BookingDetail; failed: boolean }
     | { kind: "blocked"; message: string }
-    | { kind: "done"; booking: BookingDetail };
+    | { kind: "done"; booking: BookingDetail; deposit?: DepositOnCancel };
 
 const NOT_DONE =
     "O cancelamento não foi concluído. Sua pré-reserva continua aguardando resposta. Verifique a conexão e tente novamente.";
+const NOT_DONE_ACCEPTED =
+    "O cancelamento não foi concluído. Sua pré-reserva continua aceita. Verifique a conexão e tente novamente.";
+
+/** O que acontece com o sinal, antes de confirmar e depois de cancelar. */
+function depositText(deposit: DepositOnCancel, before: boolean): string {
+    const value = formatCentavos(deposit.cents);
+    if (deposit.result === "devolver")
+        return `A produtora vai devolver o sinal de ${value} por Pix.`;
+    return before
+        ? `Faltam menos de 72 horas: o sinal de ${value} não será devolvido.`
+        : `O sinal de ${value} ficou com a produtora.`;
+}
 
 function Summary({ booking }: { booking: BookingDetail }) {
     const rows: Array<[string, string]> = [
@@ -59,6 +77,13 @@ function Summary({ booking }: { booking: BookingDetail }) {
                 ))}
         </ul>
     );
+}
+
+function DepositPreview({ booking }: { booking: BookingDetail }) {
+    const deposit = depositOnCancel(booking, "consumidora");
+    return deposit ? (
+        <p className="booking-cancel-warning">{depositText(deposit, true)}</p>
+    ) : null;
 }
 
 /**
@@ -85,7 +110,10 @@ export function BookingCancelPage({
             (booking) => {
                 if (controller.signal.aborted) return;
                 if (!booking) setView({ kind: "missing" });
-                else if (booking.status !== "pendente")
+                else if (
+                    booking.status !== "pendente" &&
+                    booking.status !== "aceita"
+                )
                     setView({ kind: "not-pending", booking });
                 else setView({ kind: "confirm", booking, failed: false });
             },
@@ -109,8 +137,13 @@ export function BookingCancelPage({
         sending.current = true;
         setSubmitting(true);
         try {
-            await cancel(id);
-            setView({ kind: "done", booking });
+            const result = await cancel(id);
+            const deposit = (result as CancelledBooking).deposit;
+            setView({
+                kind: "done",
+                booking,
+                ...(deposit ? { deposit } : {}),
+            });
         } catch (error) {
             if (error instanceof BookingSessionError)
                 setView({ kind: "session" });
@@ -197,7 +230,7 @@ export function BookingCancelPage({
                 <div className="booking-list-empty">
                     <h1>Não é possível cancelar</h1>
                     <p>
-                        {`Só é possível cancelar pré-reservas que aguardam resposta. Situação atual: ${bookingStatusLabel(view.booking.status)}.`}
+                        {`Só é possível cancelar pré-reservas pendentes ou aceitas. Situação atual: ${bookingStatusLabel(view.booking.status)}.`}
                     </p>
                     <ActionButton
                         variant="outline"
@@ -234,9 +267,12 @@ export function BookingCancelPage({
                     <p className="booking-cancel-warning">
                         {`Sua pré-reserva de ${formatBookingDate(view.booking.date)} será cancelada. A produtora verá a solicitação como cancelada.`}
                     </p>
+                    <DepositPreview booking={view.booking} />
                     {view.failed && (
                         <p role="alert" className="form-alert">
-                            {NOT_DONE}
+                            {view.booking.status === "aceita"
+                                ? NOT_DONE_ACCEPTED
+                                : NOT_DONE}
                         </p>
                     )}
                     <div className="login-actions">
@@ -269,6 +305,11 @@ export function BookingCancelPage({
                     <p>
                         {`Você cancelou a pré-reserva de ${view.booking.experience.name}.`}
                     </p>
+                    {view.deposit && (
+                        <p className="booking-cancel-warning">
+                            {depositText(view.deposit, false)}
+                        </p>
+                    )}
                     <div className="login-actions">
                         <ActionButton
                             variant="orange"

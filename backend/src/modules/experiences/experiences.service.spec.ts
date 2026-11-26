@@ -8,6 +8,7 @@ import { Role } from '../users/domain/role.js';
 import type { User } from '../users/schemas/user.schema.js';
 import { ExperienceCategory } from './domain/experience.js';
 import type { CreateExperienceDto } from './dto/create-experience.dto.js';
+import { PaymentMethod } from '../bookings/domain/booking.js';
 import { ExperiencesService } from './experiences.service.js';
 import type { Experience } from './schemas/experience.schema.js';
 
@@ -363,6 +364,58 @@ describe('ExperiencesService (HU21/RF21)', () => {
         ),
       ).rejects.toThrow('Foto não encontrada');
     });
+  });
+});
+
+describe('ExperiencesService — sinal e formas de pagamento no dia', () => {
+  const userId = producerId.toHexString();
+
+  it('por padrão, exige sinal e não lista formas', async () => {
+    const { service, experiences } = setup();
+
+    const res = await service.create(userId, dto, [
+      { buffer: Buffer.from('x') },
+    ]);
+
+    const [saved] = experiences.create.mock.calls[0];
+    expect(saved.exigeSinal).toBe(true);
+    expect(res.exigeSinal).toBe(true);
+    expect(res.formasPagamentoNoDia).toEqual([]);
+  });
+
+  it('grava e devolve a escolha da produtora', async () => {
+    const { service, experiences } = setup();
+
+    const res = await service.create(
+      userId,
+      {
+        ...dto,
+        exigeSinal: false,
+        formasPagamentoNoDia: [PaymentMethod.DINHEIRO],
+      },
+      [{ buffer: Buffer.from('x') }],
+    );
+
+    const [saved] = experiences.create.mock.calls[0];
+    expect(saved).toMatchObject({
+      exigeSinal: false,
+      formasPagamentoNoDia: [PaymentMethod.DINHEIRO],
+    });
+    expect(res).toMatchObject({
+      exigeSinal: false,
+      formasPagamentoNoDia: [PaymentMethod.DINHEIRO],
+    });
+  });
+
+  it('experiência antiga, sem o campo, aparece exigindo sinal', async () => {
+    const { service, experiences } = setup();
+    const doc = experienceDoc();
+    experiences.findOne.mockReturnValue(query(doc));
+
+    const res = await service.getPublic(doc._id.toHexString());
+
+    expect(res.exigeSinal).toBe(true);
+    expect(res.formasPagamentoNoDia).toEqual([]);
   });
 });
 

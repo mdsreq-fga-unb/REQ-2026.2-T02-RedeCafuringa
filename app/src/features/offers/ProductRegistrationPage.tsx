@@ -4,6 +4,11 @@ import { BackButton } from "@/components/navigation/BackButton";
 import { ApiHttpError } from "@/shared/api";
 import { PRODUCT_PHOTOS_MAX, registerProduct } from "./productService";
 import type { ProductDraft, RegisteredProduct } from "./productService";
+import {
+    PAYMENT_METHODS,
+    type PaymentMethod,
+} from "@/features/bookings/bookingTypes";
+import { PAYMENT_LABELS } from "@/features/bookings/bookingOptions";
 import { VideoUrlField } from "@/features/video/VideoUrlField";
 import { validateVideoUrl } from "@/features/video/youtube";
 import "./product-registration.css";
@@ -17,6 +22,8 @@ type OfferDraft = ProductDraft & {
     local: string;
     duracao: string;
     duracaoUnidade: "minutos" | "horas";
+    exigeSinal: boolean;
+    formasPagamentoNoDia: PaymentMethod[];
     videoUrl: string;
 };
 type Errors = Partial<Record<keyof OfferDraft, string>>;
@@ -29,6 +36,8 @@ const initialDraft: OfferDraft = {
     local: "",
     duracao: "",
     duracaoUnidade: "horas",
+    exigeSinal: true,
+    formasPagamentoNoDia: [],
     fotos: [],
     videoUrl: "",
 };
@@ -545,6 +554,67 @@ export function ProductRegistrationPage({
                             onChange={(value) => update("videoUrl", value)}
                         />
                     </div>
+                    {experience && (
+                        <>
+                            <div className="product-field product-deposit">
+                                <label className="choice-option">
+                                    <input
+                                        type="checkbox"
+                                        checked={draft.exigeSinal}
+                                        onChange={(e) =>
+                                            update(
+                                                "exigeSinal",
+                                                e.target.checked,
+                                            )
+                                        }
+                                    />
+                                    Pedir sinal de 50% por Pix para garantir a
+                                    vaga
+                                </label>
+                                {!draft.exigeSinal && (
+                                    <p className="product-photo-help">
+                                        Sem sinal, a vaga fica garantida mesmo
+                                        que a pessoa não compareça.
+                                    </p>
+                                )}
+                            </div>
+                            <fieldset className="product-field choice-group product-day-payment">
+                                <legend className="field-label">
+                                    Formas aceitas no dia
+                                </legend>
+                                <div className="product-day-payment-options">
+                                    {PAYMENT_METHODS.map((method) => (
+                                        <label
+                                            className="choice-option"
+                                            key={method}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={draft.formasPagamentoNoDia.includes(
+                                                    method,
+                                                )}
+                                                onChange={(e) =>
+                                                    update(
+                                                        "formasPagamentoNoDia",
+                                                        PAYMENT_METHODS.filter(
+                                                            (item) =>
+                                                                item === method
+                                                                    ? e.target
+                                                                          .checked
+                                                                    : draft.formasPagamentoNoDia.includes(
+                                                                          item,
+                                                                      ),
+                                                        ),
+                                                    )
+                                                }
+                                            />
+                                            {PAYMENT_LABELS[method]}
+                                        </label>
+                                    ))}
+                                </div>
+                            </fieldset>
+                        </>
+                    )}
                 </fieldset>
                 {failure && (
                     <p role="alert" className="product-field-error">

@@ -2,6 +2,7 @@ import { ApiHttpError, getApiClient } from "@/shared/api";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { saveDemoOffer, notifyOffersChanged } from "./publishedOffers";
 import { prepareProfilePhoto } from "@/features/trajectory/photoResize";
+import type { PaymentMethod } from "@/features/bookings/bookingTypes";
 import type { ApiProduct } from "./productTypes";
 import { extractYoutubeId } from "@/features/video/youtube";
 
@@ -13,6 +14,10 @@ export type ExperienceDraft = {
     local: string;
     duracao: string;
     fotos: File[];
+    /** Pagamento por Pix: pedir sinal de 50% no aceite (padrão: sim). */
+    exigeSinal?: boolean;
+    /** Formas aceitas no dia, na ordem da lista de formas de pagamento. */
+    formasPagamentoNoDia?: PaymentMethod[];
     /** Link do YouTube, opcional; a API guarda só o id do vídeo. */
     videoUrl?: string;
 };
@@ -26,6 +31,8 @@ export type RegisteredExperience = {
     local: string;
     duracao: string;
     fotos: string[];
+    exigeSinal?: boolean;
+    formasPagamentoNoDia?: PaymentMethod[];
     /** Id do vídeo do YouTube, ou `null` sem vídeo. */
     videoId?: string | null;
     /** Responsável pela oferta (CA03, CA08): só dados de divulgação. */
@@ -78,6 +85,8 @@ export async function registerExperience(
             local: draft.local.trim(),
             duracao: draft.duracao.trim(),
             fotos,
+            exigeSinal: draft.exigeSinal ?? true,
+            formasPagamentoNoDia: draft.formasPagamentoNoDia ?? [],
             videoId: extractYoutubeId(draft.videoUrl ?? ""),
             produtor: {
                 id:
@@ -98,6 +107,9 @@ export async function registerExperience(
     body.set("valorPorPessoa", String(Number(draft.preco.replace(",", "."))));
     body.set("local", draft.local.trim());
     body.set("duracao", draft.duracao.trim());
+    body.set("exigeSinal", String(draft.exigeSinal ?? true));
+    if (draft.formasPagamentoNoDia?.length)
+        body.set("formasPagamentoNoDia", draft.formasPagamentoNoDia.join(","));
     const videoUrl = draft.videoUrl?.trim();
     if (videoUrl) body.set("videoUrl", videoUrl);
     // RNF06/RNF11: reduz cada foto no aparelho e descarta o EXIF/GPS antes de

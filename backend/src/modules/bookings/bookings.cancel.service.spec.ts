@@ -150,8 +150,8 @@ describe('BookingsService.cancel (HU46/RF46)', () => {
     });
   });
 
+  // RN20 revista em 25/11/2026: a aceita também se cancela (pagamento por Pix).
   it.each([
-    [BookingStatus.ACEITA, /apenas o produtor|produtor responsável/i],
     [BookingStatus.RECUSADA, /recusada/i],
     [BookingStatus.CANCELADA, /já foi cancelada/i],
   ])(

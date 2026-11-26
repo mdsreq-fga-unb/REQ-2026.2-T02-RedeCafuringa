@@ -1640,7 +1640,8 @@
       "RNF11"
     ],
     "regras": [
-      "RN21"
+      "RN21",
+      "RN23"
     ],
     "cps": [
       "CP6"
@@ -1683,7 +1684,8 @@
       "RNF11"
     ],
     "regras": [
-      "RN22"
+      "RN22",
+      "RN23"
     ],
     "cps": [
       "CP6"
@@ -1745,6 +1747,53 @@
     },
     "dependencias": [
       "HU44",
+      "HU47"
+    ],
+    "responsavel": null,
+    "revisor": "Equipe ByteLab"
+  },
+  {
+    "id": 49,
+    "titulo": "Pagar sinal da pré-reserva por Pix",
+    "situacao": "Em execução",
+    "prioridade": "Baixa",
+    "mvp": true,
+    "iteracao": 9,
+    "ordem": 21,
+    "rf": "RF49",
+    "rnfs": [
+      "RNF03",
+      "RNF04",
+      "RNF05",
+      "RNF08",
+      "RNF10",
+      "RNF11",
+      "RNF13"
+    ],
+    "regras": [
+      "RN17",
+      "RN20",
+      "RN23"
+    ],
+    "cps": [
+      "CP6"
+    ],
+    "oes": [
+      "OE3"
+    ],
+    "avaliacao_priorizacao": {
+      "vn": 3,
+      "es": 4,
+      "cx": 4,
+      "cp": 3,
+      "justificativa": "Sinal protege a produtora contra desistências, mas envolve código Pix, prazos, cancelamento com devolução e novos estados do pagamento; custo alto.",
+      "evidencia": "docs/visao/historias/HU49.md; docs/visao/requisitos_software.md",
+      "revisor": "",
+      "situacao": "proposta técnica; validação da equipe/cliente pendente"
+    },
+    "dependencias": [
+      "HU12",
+      "HU21",
       "HU47"
     ],
     "responsavel": null,

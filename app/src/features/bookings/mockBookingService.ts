@@ -1,3 +1,4 @@
+import type { ApiPayment, PaymentStatus } from "./bookingDetails";
 import { adaptBookingResponse } from "./bookingAdapter";
 import type { Booking, BookingPayload, BookingResponse } from "./bookingTypes";
 
@@ -12,11 +13,14 @@ export type MockBookingRecord = BookingResponse & {
     consumidorNome?: string;
     /** Última mudança de situação (HU46). */
     atualizadoEm?: string;
+    /** Situação do sinal depois do aviso ou da confirmação (pagamento por Pix). */
+    situacaoPagamento?: PaymentStatus;
+    /** Pagamento como estava no cancelamento da aceita, com a devolução. */
+    pagamentoCancelado?: ApiPayment;
 };
 
 /** Mesmos motivos do servidor quando a solicitação não está pendente (RN20). */
 const NOT_CANCELLABLE: Partial<Record<BookingResponse["status"], string>> = {
-    aceita: "Esta pré-reserva já foi aceita: apenas o produtor responsável pode cancelá-la",
     recusada:
         "Esta pré-reserva foi recusada pelo produtor e não pode ser cancelada",
     cancelada: "Esta pré-reserva já foi cancelada",
@@ -25,6 +29,8 @@ const NOT_CANCELLABLE: Partial<Record<BookingResponse["status"], string>> = {
 export type MockCancelResult =
     | { ok: true; booking: BookingResponse }
     | { ok: false; reason: "nao-encontrada" }
+    /** A aceita cancela com a regra do sinal (mockBookingQueries). */
+    | { ok: false; reason: "aceita" }
     | { ok: false; reason: "nao-cancelavel"; message: string };
 
 /** Lista as pré-reservas de demonstração, no formato da API. */
@@ -78,13 +84,14 @@ export function cancelMockBooking(
         (item) => item.id === id && item.consumidorId === userId,
     );
     if (!record) return { ok: false, reason: "nao-encontrada" };
+    if (record.status === "aceita") return { ok: false, reason: "aceita" };
     if (record.status !== "pendente")
         return {
             ok: false,
             reason: "nao-cancelavel",
             message:
                 NOT_CANCELLABLE[record.status] ??
-                "Apenas pré-reservas pendentes podem ser canceladas",
+                "Apenas pré-reservas pendentes ou aceitas podem ser canceladas",
         };
     const updated: MockBookingRecord = {
         ...record,

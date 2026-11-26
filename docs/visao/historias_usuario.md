@@ -45,14 +45,14 @@
     <div class="hu-filters__field">
       <label for="hu-sort-filter">Priorização</label>
       <select id="hu-sort-filter">
-        <option value="">Priorização atual (1º → 20º)</option>
+        <option value="">Priorização atual (1º → 21º)</option>
         <option value="numero">Sem priorização (número das HUs)</option>
-        <option value="desc">Priorização inversa (20º → 1º)</option>
+        <option value="desc">Priorização inversa (21º → 1º)</option>
       </select>
     </div>
   </div>
   <div class="hu-filters__footer">
-    <p id="hu-results-count" role="status" aria-live="polite" aria-atomic="true">48 histórias disponíveis</p>
+    <p id="hu-results-count" role="status" aria-live="polite" aria-atomic="true">49 histórias disponíveis</p>
     <button id="hu-reset" type="button">Limpar filtros</button>
   </div>
 </section>
@@ -60,7 +60,7 @@
 
 <div class="section-cards hu-catalog">
 <!-- REQUISITOS_CARDS_AUTO_INICIO -->
-<div class="hu-card" data-priority-order="1" data-iteration="6" data-rf="RF01" data-rnfs="RNF03 RNF04 RNF05 RNF07 RNF08 RNF10 RNF11 RNF12 RNF15" data-regras="RN01 RN02 RN05 RN08" data-cps="CP1" data-oes="OE2" data-dependencias="" data-dependencias-status="nenhuma" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="1" data-iteration="6" data-rf="RF01" data-rnfs="RNF03 RNF04 RNF05 RNF07 RNF08 RNF10 RNF11 RNF12 RNF15" data-regras="RN01 RN02 RN05 RN08" data-cps="CP1" data-oes="OE2" data-dependencias="" data-dependencias-status="nenhuma" data-responsavel="Pedro Luiz, Lucas Gabriel, Pedro Augusto e Ítalo Alves" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -72,13 +72,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU1/">HU01 — Cadastrar perfil de consumidor</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> Nenhuma identificada</span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Pedro Luiz, Lucas Gabriel, Pedro Augusto e Ítalo Alves</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="2" data-iteration="6" data-rf="RF02" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF11 RNF15" data-regras="RN01 RN02 RN05 RN07 RN08 RN09" data-cps="CP1" data-oes="OE2" data-dependencias="" data-dependencias-status="nenhuma" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="2" data-iteration="6" data-rf="RF02" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF11 RNF15" data-regras="RN01 RN02 RN05 RN07 RN08 RN09" data-cps="CP1" data-oes="OE2" data-dependencias="" data-dependencias-status="nenhuma" data-responsavel="Luccas Rodrigues, Pedro Augusto, Lucas Gabriel e Ítalo Alves" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -90,13 +90,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU2/">HU02 — Cadastrar perfil de produtor</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> Nenhuma identificada</span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Luccas Rodrigues, Pedro Augusto, Lucas Gabriel e Ítalo Alves</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="3" data-iteration="6" data-rf="RF09" data-rnfs="RNF03 RNF08 RNF10 RNF11" data-regras="RN01 RN05" data-cps="CP1" data-oes="OE1" data-dependencias="HU01 HU02" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="3" data-iteration="6" data-rf="RF09" data-rnfs="RNF03 RNF08 RNF10 RNF11" data-regras="RN01 RN05" data-cps="CP1" data-oes="OE1" data-dependencias="HU01 HU02" data-dependencias-status="proposta" data-responsavel="Pedro Luiz, Ítalo Alves e Pedro Augusto" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -108,13 +108,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU9/">HU09 — Autenticar usuário</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU1/">HU01</a>, <a href="../historias/HU2/">HU02</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Pedro Luiz, Ítalo Alves e Pedro Augusto</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="4" data-iteration="6" data-rf="RF12" data-rnfs="RNF03 RNF04 RNF05 RNF07 RNF08 RNF10 RNF11" data-regras="RN01 RN02 RN07 RN09" data-cps="CP1" data-oes="OE2" data-dependencias="HU02 HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="4" data-iteration="6" data-rf="RF12" data-rnfs="RNF03 RNF04 RNF05 RNF07 RNF08 RNF10 RNF11" data-regras="RN01 RN02 RN07 RN09" data-cps="CP1" data-oes="OE2" data-dependencias="HU02 HU09" data-dependencias-status="proposta" data-responsavel="Ítalo Alves e Lucas Gabriel" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -126,13 +126,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU12/">HU12 — Registrar trajetória do produtor</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU2/">HU02</a>, <a href="../historias/HU9/">HU09</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Ítalo Alves e Lucas Gabriel</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="5" data-iteration="6" data-rf="RF03" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF10 RNF11 RNF12" data-regras="RN01 RN03 RN05" data-cps="CP1" data-oes="OE2" data-dependencias="HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="5" data-iteration="6" data-rf="RF03" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF10 RNF11 RNF12" data-regras="RN01 RN03 RN05" data-cps="CP1" data-oes="OE2" data-dependencias="HU09" data-dependencias-status="proposta" data-responsavel="Ítalo Alves, Lucas Gabriel e Pedro Luiz" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -144,13 +144,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU3/">HU03 — Cadastrar usuário administrador</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU9/">HU09</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Ítalo Alves, Lucas Gabriel e Pedro Luiz</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="6" data-iteration="6" data-rf="RF04" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF11 RNF12" data-regras="RN01 RN03" data-cps="CP1" data-oes="OE2" data-dependencias="HU01 HU02 HU03 HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="6" data-iteration="6" data-rf="RF04" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF11 RNF12" data-regras="RN01 RN03" data-cps="CP1" data-oes="OE2" data-dependencias="HU01 HU02 HU03 HU09" data-dependencias-status="proposta" data-responsavel="Pedro Luiz e Lucas Gabriel" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -162,13 +162,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU4/">HU04 — Consultar usuários cadastrados</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU1/">HU01</a>, <a href="../historias/HU2/">HU02</a>, <a href="../historias/HU3/">HU03</a>, <a href="../historias/HU9/">HU09</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Pedro Luiz e Lucas Gabriel</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="7" data-iteration="6" data-rf="RF10" data-rnfs="RNF03 RNF08 RNF10 RNF11" data-regras="RN05" data-cps="CP1" data-oes="OE1" data-dependencias="HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="7" data-iteration="6" data-rf="RF10" data-rnfs="RNF03 RNF08 RNF10 RNF11" data-regras="RN05" data-cps="CP1" data-oes="OE1" data-dependencias="HU09" data-dependencias-status="proposta" data-responsavel="Ítalo Alves e Pedro Augusto" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -180,13 +180,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU10/">HU10 — Recuperar acesso à conta</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU9/">HU09</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Ítalo Alves e Pedro Augusto</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="8" data-iteration="7" data-rf="RF15" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF15" data-regras="RN01 RN02 RN09 RN11" data-cps="CP2" data-oes="OE2" data-dependencias="HU02 HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="8" data-iteration="7" data-rf="RF15" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF15" data-regras="RN01 RN02 RN09 RN11" data-cps="CP2" data-oes="OE2" data-dependencias="HU02 HU09" data-dependencias-status="proposta" data-responsavel="Lucas Gabriel e Ítalo Alves" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -198,13 +198,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU15/">HU15 — Cadastrar produto</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU2/">HU02</a>, <a href="../historias/HU9/">HU09</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Lucas Gabriel e Ítalo Alves</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="9" data-iteration="7" data-rf="RF19" data-rnfs="RNF01 RNF02 RNF04 RNF05 RNF06 RNF10" data-regras="RN10 RN15" data-cps="CP2" data-oes="OE2" data-dependencias="HU15" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="9" data-iteration="7" data-rf="RF19" data-rnfs="RNF01 RNF02 RNF04 RNF05 RNF06 RNF10" data-regras="RN10 RN15" data-cps="CP2" data-oes="OE2" data-dependencias="HU15" data-dependencias-status="proposta" data-responsavel="Pedro Luiz, Pedro Augusto, Lucas Gabriel e Ítalo Alves" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -216,13 +216,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU19/">HU19 — Consultar catálogo de produtos</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU15/">HU15</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Pedro Luiz, Pedro Augusto, Lucas Gabriel e Ítalo Alves</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="10" data-iteration="7" data-rf="RF20" data-rnfs="RNF01 RNF02 RNF04 RNF05 RNF06 RNF10 RNF11" data-regras="RN09 RN11" data-cps="CP2" data-oes="OE2" data-dependencias="HU15 HU19" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="10" data-iteration="7" data-rf="RF20" data-rnfs="RNF01 RNF02 RNF04 RNF05 RNF06 RNF10 RNF11" data-regras="RN09 RN11" data-cps="CP2" data-oes="OE2" data-dependencias="HU15 HU19" data-dependencias-status="proposta" data-responsavel="Pedro Luiz, Pedro Augusto, Lucas Gabriel e Ítalo Alves" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -234,13 +234,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU20/">HU20 — Consultar detalhes do produto</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU15/">HU15</a>, <a href="../historias/HU19/">HU19</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Pedro Luiz, Pedro Augusto, Lucas Gabriel e Ítalo Alves</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="11" data-iteration="7" data-rf="RF21" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF15" data-regras="RN01 RN02 RN09 RN11" data-cps="CP3" data-oes="OE2" data-dependencias="HU02 HU09" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="11" data-iteration="7" data-rf="RF21" data-rnfs="RNF03 RNF04 RNF07 RNF08 RNF15" data-regras="RN01 RN02 RN09 RN11" data-cps="CP3" data-oes="OE2" data-dependencias="HU02 HU09" data-dependencias-status="proposta" data-responsavel="Lucas Gabriel, Ítalo Alves e Pedro Augusto" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -252,13 +252,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU21/">HU21 — Cadastrar experiência</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU2/">HU02</a>, <a href="../historias/HU9/">HU09</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Lucas Gabriel, Ítalo Alves e Pedro Augusto</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="12" data-iteration="8" data-rf="RF24" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF06 RNF15" data-regras="RN10 RN15" data-cps="CP3" data-oes="OE2" data-dependencias="HU21" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="12" data-iteration="8" data-rf="RF24" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF06 RNF15" data-regras="RN10 RN15" data-cps="CP3" data-oes="OE2" data-dependencias="HU21" data-dependencias-status="proposta" data-responsavel="Pedro Augusto e Lucas Gabriel" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -270,13 +270,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU24/">HU24 — Consultar catálogo de experiências</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU21/">HU21</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Pedro Augusto e Lucas Gabriel</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="13" data-iteration="9" data-rf="RF36" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF05 RNF06 RNF12" data-regras="RN15" data-cps="CP4" data-oes="OE2" data-dependencias="HU02 HU15 HU19 HU21 HU24" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="13" data-iteration="9" data-rf="RF36" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF05 RNF06 RNF12" data-regras="RN15" data-cps="CP4" data-oes="OE2" data-dependencias="HU02 HU15 HU19 HU21 HU24" data-dependencias-status="proposta" data-responsavel="Pedro Augusto e Lucas Gabriel" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -288,13 +288,13 @@
     <h3><a class="hu-card-title-link" href="../historias/HU36/">HU36 — Buscar ofertas</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU2/">HU02</a>, <a href="../historias/HU15/">HU15</a>, <a href="../historias/HU19/">HU19</a>, <a href="../historias/HU21/">HU21</a>, <a href="../historias/HU24/">HU24</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Pedro Augusto e Lucas Gabriel</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="14" data-iteration="8" data-rf="RF14" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF06 RNF11" data-regras="RN07 RN09 RN11 RN16" data-cps="CP1" data-oes="OE2" data-dependencias="HU02 HU12" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="14" data-iteration="8" data-rf="RF14" data-rnfs="RNF01 RNF02 RNF03 RNF04 RNF06 RNF11" data-regras="RN07 RN09 RN11 RN16" data-cps="CP1" data-oes="OE2" data-dependencias="HU02 HU12" data-dependencias-status="proposta" data-responsavel="Luccas Rodrigues, Lucas Gabriel e Ítalo Alves" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-planejada">Concluído</span>
@@ -306,7 +306,7 @@
     <h3><a class="hu-card-title-link" href="../historias/HU14/">HU14 — Consultar perfil de produtor</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU2/">HU02</a>, <a href="../historias/HU12/">HU12</a></span>
-      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Responsável:</strong> Luccas Rodrigues, Lucas Gabriel e Ítalo Alves</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>
   </div>
@@ -366,7 +366,7 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="18" data-iteration="9" data-rf="RF46" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN21" data-cps="CP6" data-oes="OE3" data-dependencias="HU44 HU45" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="18" data-iteration="9" data-rf="RF46" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN21 RN23" data-cps="CP6" data-oes="OE3" data-dependencias="HU44 HU45" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
@@ -384,7 +384,7 @@
   </div>
 </div>
 
-<div class="hu-card" data-priority-order="19" data-iteration="9" data-rf="RF47" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN22" data-cps="CP6" data-oes="OE3" data-dependencias="HU02 HU44" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+<div class="hu-card" data-priority-order="19" data-iteration="9" data-rf="RF47" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11" data-regras="RN22 RN23" data-cps="CP6" data-oes="OE3" data-dependencias="HU02 HU44" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
   <div class="hu-card-header">
     <div class="hu-card-status">
       <span class="hu-status hu-status-execucao">Em execução</span>
@@ -414,6 +414,24 @@
     <h3><a class="hu-card-title-link" href="../historias/HU48/">HU48 — Notificar alteração de pré-reserva</a></h3>
     <div class="hu-card-planning">
       <span><strong>Dependências:</strong> <a href="../historias/HU44/">HU44</a>, <a href="../historias/HU47/">HU47</a></span>
+      <span><strong>Responsável:</strong> A definir</span>
+      <span><strong>Revisor:</strong> Equipe ByteLab</span>
+    </div>
+  </div>
+</div>
+
+<div class="hu-card" data-priority-order="21" data-iteration="9" data-rf="RF49" data-rnfs="RNF03 RNF04 RNF05 RNF08 RNF10 RNF11 RNF13" data-regras="RN17 RN20 RN23" data-cps="CP6" data-oes="OE3" data-dependencias="HU12 HU21 HU47" data-dependencias-status="proposta" data-responsavel="A definir" data-revisor="Equipe ByteLab">
+  <div class="hu-card-header">
+    <div class="hu-card-status">
+      <span class="hu-status hu-status-execucao">Em execução</span>
+      <span class="hu-status hu-status-mvp">MVP</span>
+      <span class="hu-status hu-status-prioridade">Baixa</span>
+      <span class="hu-status hu-status-ordem" title="Ordem de implementação — Iteração 9">21º</span>
+      <a class="hu-status hu-status-iteracao" href="../evidencias/iteracao9/" title="Ver evidências da Iteração 9">Iteração 9</a>
+    </div>
+    <h3><a class="hu-card-title-link" href="../historias/HU49/">HU49 — Pagar sinal da pré-reserva por Pix</a></h3>
+    <div class="hu-card-planning">
+      <span><strong>Dependências:</strong> <a href="../historias/HU12/">HU12</a>, <a href="../historias/HU21/">HU21</a>, <a href="../historias/HU47/">HU47</a></span>
       <span><strong>Responsável:</strong> A definir</span>
       <span><strong>Revisor:</strong> Equipe ByteLab</span>
     </div>

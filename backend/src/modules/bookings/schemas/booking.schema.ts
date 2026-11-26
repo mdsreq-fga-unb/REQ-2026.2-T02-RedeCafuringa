@@ -5,6 +5,62 @@ import {
   INITIAL_BOOKING_STATUS,
   PaymentMethod,
 } from '../domain/booking.js';
+import { PaymentStatus } from '../domain/booking-payment.js';
+
+/**
+ * Pagamento por Pix, criado no aceite: preço congelado, sinal, restante e
+ * prazo. A plataforma não recebe dinheiro; só organiza valores e situações.
+ */
+@Schema({ _id: false, versionKey: false })
+export class BookingPayment {
+  @Prop({ required: true, min: 0 })
+  valorPorPessoaCentavos: number;
+
+  @Prop({ required: true, min: 0 })
+  totalCentavos: number;
+
+  @Prop({ required: true, min: 0 })
+  sinalCentavos: number;
+
+  @Prop({ required: true, min: 0 })
+  restanteCentavos: number;
+
+  @Prop({ required: true, enum: PaymentStatus, type: String })
+  situacao: PaymentStatus;
+
+  @Prop({ required: true })
+  aceitaEm: Date;
+
+  /** Ausente quando o sinal é dispensado. */
+  @Prop()
+  prazoSinal?: Date;
+
+  /** Quando a consumidora avisou que pagou (o comprovante vai pelo WhatsApp). */
+  @Prop()
+  comprovanteAvisadoEm?: Date;
+
+  /** Quando a produtora confirmou o sinal no extrato. */
+  @Prop()
+  sinalConfirmadoEm?: Date;
+
+  /** Quando a produtora garantiu a vaga sem sinal. */
+  @Prop()
+  dispensadoEm?: Date;
+
+  /** Quando a produtora registrou que recebeu o pagamento. */
+  @Prop()
+  recebidoEm?: Date;
+
+  /** No cancelamento com sinal pago: a produtora devolve, ou o sinal fica com ela. */
+  @Prop({ enum: ['devolver', 'retido'], type: String })
+  sinalNoCancelamento?: 'devolver' | 'retido';
+
+  /** Quando a produtora registrou que devolveu o sinal. */
+  @Prop()
+  devolvidoEm?: Date;
+}
+
+const BookingPaymentSchema = SchemaFactory.createForClass(BookingPayment);
 
 /**
  * HU44/RF44: solicitação de pré-reserva de uma experiência (CP6).
@@ -49,9 +105,17 @@ export class Booking {
   @Prop({ trim: true })
   mensagemResposta?: string;
 
+  /** Pagamento por Pix: só existe depois do aceite. */
+  @Prop({ type: BookingPaymentSchema })
+  pagamento?: BookingPayment;
+
   /** HU46/RN20: quando o consumidor cancelou. Ausente nas demais solicitações. */
   @Prop()
   canceladaEm?: Date;
+
+  /** Quem cancelou (RN20 revista: a aceita pode ser cancelada pelas duas). */
+  @Prop({ enum: ['consumidora', 'produtora'], type: String })
+  canceladaPor?: 'consumidora' | 'produtora';
 
   /** RN19: nasce pendente; só a resposta do produtor confirma. */
   @Prop({

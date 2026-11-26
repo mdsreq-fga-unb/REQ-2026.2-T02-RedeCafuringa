@@ -90,8 +90,15 @@ describe('contrato OpenAPI', () => {
       'GET /api/v1/users',
       'GET /api/v1/users/producers/me',
       'GET /api/v1/users/{id}',
+      'PATCH /api/v1/bookings/received/{id}/cancel',
+      'PATCH /api/v1/bookings/received/{id}/payment/confirm',
+      'PATCH /api/v1/bookings/received/{id}/payment/not-found',
+      'PATCH /api/v1/bookings/received/{id}/payment/received',
+      'PATCH /api/v1/bookings/received/{id}/payment/refunded',
+      'PATCH /api/v1/bookings/received/{id}/payment/waive',
       'PATCH /api/v1/bookings/received/{id}/response',
       'PATCH /api/v1/bookings/{id}/cancel',
+      'PATCH /api/v1/bookings/{id}/payment/sent',
       'POST /api/v1/auth/login',
       'POST /api/v1/auth/password-reset/confirm',
       'POST /api/v1/auth/password-reset/request',
@@ -146,8 +153,15 @@ describe('contrato OpenAPI', () => {
       'get /api/v1/users',
       'get /api/v1/users/producers/me',
       'get /api/v1/users/{id}',
+      'patch /api/v1/bookings/received/{id}/cancel',
+      'patch /api/v1/bookings/received/{id}/payment/confirm',
+      'patch /api/v1/bookings/received/{id}/payment/not-found',
+      'patch /api/v1/bookings/received/{id}/payment/received',
+      'patch /api/v1/bookings/received/{id}/payment/refunded',
+      'patch /api/v1/bookings/received/{id}/payment/waive',
       'patch /api/v1/bookings/received/{id}/response',
       'patch /api/v1/bookings/{id}/cancel',
+      'patch /api/v1/bookings/{id}/payment/sent',
       'post /api/v1/bookings',
       'post /api/v1/experiences',
       'post /api/v1/products',
@@ -257,6 +271,85 @@ describe('contrato OpenAPI', () => {
         ).not.toContain(prop);
       }
     }
+  });
+
+  it('pagamento por Pix: chave da produtora, sinal, cancelamento e notificações', () => {
+    type Prop = {
+      type?: string;
+      nullable?: boolean;
+      enum?: string[];
+      $ref?: string;
+      allOf?: Array<{ $ref?: string }>;
+      items?: { enum?: string[] };
+    };
+    const schemas = doc.components?.schemas as Record<
+      string,
+      { required?: string[]; properties?: Record<string, Prop> }
+    >;
+    const props = (name: string) => schemas[name]?.properties ?? {};
+    const refersTo = (prop: Prop | undefined, schema: string) =>
+      JSON.stringify(prop ?? {}).includes(`#/components/schemas/${schema}`);
+
+    // Chave Pix: a produtora envia e vê; o perfil público nunca traz.
+    expect(refersTo(props('SaveTrajectoryDto').pix, 'SavePixDto')).toBe(true);
+    expect(props('SaveTrajectoryDto').pix?.nullable).toBe(true);
+    expect(props('SavePixDto').tipo?.enum).toEqual([
+      'cpf',
+      'cnpj',
+      'telefone',
+      'email',
+      'aleatoria',
+    ]);
+    expect(refersTo(props('OwnTrajectoryResponse').pix, 'OwnPixResponse')).toBe(
+      true,
+    );
+    expect(props('PublicTrajectoryResponse')).not.toHaveProperty('pix');
+
+    // Sinal no detalhe da pré-reserva, com a situação valendo agora.
+    expect(
+      refersTo(
+        props('BookingDetailResponse').pagamento,
+        'BookingPaymentResponse',
+      ),
+    ).toBe(true);
+    expect(
+      refersTo(props('BookingDetailResponse').pix, 'BookingPixResponse'),
+    ).toBe(true);
+    expect(props('BookingPaymentResponse').situacao?.enum).toEqual([
+      'aguardando-sinal',
+      'comprovante-enviado',
+      'sinal-confirmado',
+      'expirado',
+      'dispensado',
+      'pagamento-recebido',
+    ]);
+    expect(props('BookingPaymentResponse').devolucao?.enum).toEqual([
+      'pendente',
+      'feita',
+      'retido',
+    ]);
+
+    // Cancelamento com o destino do sinal, e as notificações de cada passo.
+    expect(
+      refersTo(props('CancelBookingResponse').sinal, 'CancelDepositResponse'),
+    ).toBe(true);
+    expect(props('BookingNotificationResponse')).toHaveProperty('pagamento');
+    expect(props('BookingNotificationResponse')).toHaveProperty('devolucao');
+
+    // Experiência: sinal e formas aceitas no dia, sempre presentes na resposta.
+    expect(schemas.ExperienceResponse.required).toEqual(
+      expect.arrayContaining(['exigeSinal', 'formasPagamentoNoDia']),
+    );
+    const form = JSON.stringify(
+      (
+        doc.paths['/api/v1/experiences'] as Record<
+          string,
+          { requestBody?: unknown }
+        >
+      ).post.requestBody,
+    );
+    expect(form).toContain('"exigeSinal"');
+    expect(form).toContain('"formasPagamentoNoDia"');
   });
 
   it('vídeo do YouTube: link opcional na entrada e id na saída', () => {

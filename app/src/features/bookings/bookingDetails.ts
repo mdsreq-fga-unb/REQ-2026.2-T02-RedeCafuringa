@@ -3,6 +3,12 @@ import type { components } from "@/shared/api/schema";
 import { PAYMENT_LABELS } from "./bookingOptions";
 import type { Booking, BookingStatus, PaymentMethod } from "./bookingTypes";
 
+/** Pagamento por Pix do detalhe, como a API devolve. */
+export type ApiPayment = components["schemas"]["BookingPaymentResponse"];
+/** Situação do sinal, já considerando o prazo. */
+export type PaymentStatus = ApiPayment["situacao"];
+/** A produtora ainda deve devolver, já devolveu, ou o sinal ficou com ela. */
+export type RefundStatus = NonNullable<ApiPayment["devolucao"]>;
 export type ApiBookingDetail = components["schemas"]["BookingDetailResponse"];
 export type ApiBookingList = components["schemas"]["BookingListResponse"];
 
@@ -19,7 +25,40 @@ export type BookingDetail = Booking & {
     };
     /** Consumidora (para a produtora) ou responsável (para a consumidora). */
     counterpart: { id: string; name: string };
+    /** Só depois do aceite. Valores em centavos, para o código Pix. */
+    payment?: BookingPayment;
+    /** Só para a consumidora, enquanto o sinal está por pagar. */
+    pix?: BookingPix;
 };
+
+export type BookingPayment = {
+    totalCents: number;
+    depositCents: number;
+    remainingCents: number;
+    status: PaymentStatus;
+    depositDeadline?: string;
+    refund?: RefundStatus;
+};
+
+export type BookingPix = {
+    key: string;
+    receiver: string;
+    city: string;
+    txid: string;
+};
+
+const toCents = (reais: number) => Math.round(reais * 100);
+
+export function adaptPayment(api: ApiPayment): BookingPayment {
+    return {
+        totalCents: toCents(api.total),
+        depositCents: toCents(api.sinal),
+        remainingCents: toCents(api.restante),
+        status: api.situacao,
+        ...(api.prazoSinal ? { depositDeadline: api.prazoSinal } : {}),
+        ...(api.devolucao ? { refund: api.devolucao } : {}),
+    };
+}
 
 const STATUS_LABELS: Record<BookingStatus, string> = {
     pendente: "Aguardando resposta",
@@ -63,7 +102,36 @@ export function adaptBookingDetail(
                 : {}),
         },
         counterpart: { id: contraparte.id, name: contraparte.nome },
+        ...(api.pagamento ? { payment: adaptPayment(api.pagamento) } : {}),
+        ...(api.pix
+            ? {
+                  pix: {
+                      key: api.pix.chave,
+                      receiver: api.pix.nomeRecebedor,
+                      city: api.pix.cidade,
+                      txid: api.pix.txid,
+                  },
+              }
+            : {}),
     };
+}
+
+const DEADLINE = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+});
+
+/** Prazo do sinal no horário de Brasília: "22/11/2026 às 10h30". */
+export function formatDepositDeadline(iso: string): string {
+    const part = Object.fromEntries(
+        DEADLINE.formatToParts(new Date(iso)).map((p) => [p.type, p.value]),
+    );
+    return `${part.day}/${part.month}/${part.year} às ${part.hour}h${part.minute}`;
 }
 
 export function bookingCode(id: string): string {

@@ -1,5 +1,34 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { PIX_KEY_TYPES, type PixKeyType } from '../../../common/pix/pix-key.js';
 import { ProducerCategory } from '../../users/domain/producer-category.js';
+
+/** Pix da própria produtora, para conferir o que a consumidora vai ver. */
+export class OwnPixResponse {
+  @ApiProperty({ enum: PIX_KEY_TYPES, example: 'telefone' })
+  tipo: PixKeyType;
+
+  @ApiProperty({
+    example: '+5561999998888',
+    description: 'Chave normalizada, como entra no código Pix',
+  })
+  chave: string;
+
+  @ApiProperty({ example: 'Maria da Silva' })
+  nomeRecebedor: string;
+
+  @ApiProperty({
+    example: true,
+    description:
+      'Se verdadeiro, a consumidora com pré-reserva aceita vê a chave para pagar',
+  })
+  publico: boolean;
+
+  @ApiPropertyOptional({
+    example: '2026-11-25T12:00:00.000Z',
+    description: 'Última alteração dos dados Pix',
+  })
+  atualizadoEm?: string;
+}
 
 /** Trajetória como o próprio produtor a vê (área logada). */
 export class OwnTrajectoryResponse {
@@ -40,6 +69,12 @@ export class OwnTrajectoryResponse {
       'Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto.',
   })
   fotoUrl?: string;
+
+  @ApiPropertyOptional({
+    type: OwnPixResponse,
+    description: 'Ausente enquanto a produtora não cadastrar a chave Pix',
+  })
+  pix?: OwnPixResponse;
 
   @ApiPropertyOptional({
     example: 'dQw4w9WgXcQ',

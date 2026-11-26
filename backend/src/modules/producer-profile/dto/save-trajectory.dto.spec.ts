@@ -142,6 +142,112 @@ describe('HU12/CA03 — validação da trajetória', () => {
   });
 });
 
+describe('trajetória — chave Pix da produtora', () => {
+  const pix = {
+    tipo: 'telefone',
+    chave: '(61) 99999-8888',
+    nomeRecebedor: 'Maria da Silva',
+    publico: true,
+  };
+
+  it('omitida, é válida e não muda o Pix salvo', async () => {
+    const { dto, messages } = await check({ trajetoria: 'Minha história' });
+
+    expect(messages).toEqual([]);
+    expect(dto.pix).toBeUndefined();
+  });
+
+  it('aceita a chave com o tipo, o nome do recebedor e a autorização', async () => {
+    const { messages } = await check({ trajetoria: 'Minha história', pix });
+
+    expect(messages).toEqual([]);
+  });
+
+  it('null é o pedido explícito de remover o Pix', async () => {
+    const { dto, messages } = await check({
+      trajetoria: 'Minha história',
+      pix: null,
+    });
+
+    expect(messages).toEqual([]);
+    expect(dto.pix).toBeNull();
+  });
+
+  it('sem a autorização, o Pix fica privado', async () => {
+    const { publico: _publico, ...semAutorizacao } = pix;
+    const { messages } = await check({
+      trajetoria: 'Minha história',
+      pix: semAutorizacao,
+    });
+
+    expect(messages).toEqual([]);
+  });
+
+  /** Mensagens do próprio campo e do objeto aninhado (`children`). */
+  async function pixMessages(override: Record<string, unknown>) {
+    const dto = plainToInstance(SaveTrajectoryDto, {
+      trajetoria: 'Minha história',
+      pix: { ...pix, ...override },
+    });
+    const errors = await validate(dto, {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    });
+    return errors.flatMap((e) => [
+      ...Object.values(e.constraints ?? {}),
+      ...(e.children ?? []).flatMap((c) => Object.values(c.constraints ?? {})),
+    ]);
+  }
+
+  it.each([
+    [
+      'tipo desconhecido',
+      { tipo: 'boleto' },
+      'Tipo da chave Pix deve ser cpf, cnpj, telefone, email ou aleatoria',
+    ],
+    [
+      'chave que não combina com o tipo',
+      { tipo: 'cpf', chave: '(61) 99999-8888' },
+      'Chave Pix inválida para o tipo escolhido',
+    ],
+    ['chave vazia', { chave: '' }, 'Chave Pix inválida para o tipo escolhido'],
+    [
+      'sem o nome do recebedor',
+      { nomeRecebedor: '  ' },
+      'Informe o nome de quem recebe o Pix, como aparece no banco',
+    ],
+    [
+      'nome do recebedor longo demais',
+      { nomeRecebedor: 'a'.repeat(61) },
+      'Nome do recebedor deve ter no máximo 60 caracteres',
+    ],
+    [
+      'autorização que não é verdadeiro ou falso',
+      { publico: 'sim' },
+      'pix.publico deve ser verdadeiro ou falso',
+    ],
+  ])('recusa %s', async (_caso, override, message) => {
+    expect(await pixMessages(override)).toEqual([message]);
+  });
+
+  it('recusa Pix que não é um objeto', async () => {
+    const { messages } = await check({
+      trajetoria: 'Minha história',
+      pix: 'maria@exemplo.com',
+    });
+
+    expect(messages).toEqual([
+      'Pix deve ter o tipo, a chave e o nome do recebedor',
+    ]);
+  });
+
+  it('recusa campo fora do contrato dentro do Pix', async () => {
+    expect(await pixMessages({ banco: '001' })).toEqual([
+      'property banco should not exist',
+    ]);
+  });
+});
+
 describe('trajetória — link de vídeo do YouTube', () => {
   const LINK = 'https://youtu.be/dQw4w9WgXcQ';
   const VIDEO_URL_ERROR =

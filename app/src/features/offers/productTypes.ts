@@ -1,4 +1,5 @@
 import type { components } from "@/shared/api/schema";
+import type { PaymentMethod } from "@/features/bookings/bookingTypes";
 
 export type ApiProduct = components["schemas"]["ProductResponse"];
 
@@ -15,6 +16,10 @@ export type Product = {
     category?: string;
     local?: string;
     duracao?: string;
+    /** Experiência: se o aceite pede sinal de 50% por Pix. */
+    requiresDeposit?: boolean;
+    /** Experiência: formas que a produtora aceita no dia. */
+    dayPaymentMethods?: PaymentMethod[];
     /** Id do vídeo do YouTube divulgado pela produtora. */
     videoId?: string;
     id: string;

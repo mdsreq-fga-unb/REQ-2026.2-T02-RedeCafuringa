@@ -32,6 +32,10 @@ export function registeredToCatalogItem(offer: RegisteredOffer): Product {
                   local: offer.local,
                   duracao: offer.duracao,
                   photos: offer.fotos.map(resolve),
+                  requiresDeposit: offer.exigeSinal ?? true,
+                  ...(offer.formasPagamentoNoDia?.length
+                      ? { dayPaymentMethods: offer.formasPagamentoNoDia }
+                      : {}),
               }
             : {}),
     };

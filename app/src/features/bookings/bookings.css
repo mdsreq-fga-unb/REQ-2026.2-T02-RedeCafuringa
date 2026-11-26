@@ -504,3 +504,109 @@
         width: 100%;
     }
 }
+
+/* Pagamento por Pix: sinal da pré-reserva aceita. */
+.booking-payment {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    min-width: 0;
+}
+
+.booking-payment h2,
+.booking-payment h3,
+.booking-payment p,
+.booking-payment ul {
+    margin: 0;
+}
+
+.booking-payment h3 {
+    font-size: 16px;
+}
+
+.booking-payment ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-left: 20px;
+    color: var(--ink);
+}
+
+.booking-payment-accept {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.booking-payment-status {
+    margin: 0;
+    font-weight: 600;
+}
+
+.booking-payment-status,
+.booking-payment-receipt {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.booking-payment-status p,
+.booking-payment-receipt p,
+.booking-payment-receipt h3 {
+    margin: 0;
+}
+
+.booking-payment-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.booking-producer-cancel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.booking-no-pix {
+    align-self: flex-start;
+    color: var(--orange-text);
+    font-weight: 600;
+}
+
+/* Comprovante do sinal: botão de arquivo no padrão dos botões contornados do site. */
+.booking-payment-receipt input[type="file"] {
+    max-width: 100%;
+    color: var(--muted);
+    font: inherit;
+    font-size: 14px;
+}
+
+.booking-payment-receipt input[type="file"]::file-selector-button {
+    min-height: 44px;
+    margin-right: 12px;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 750;
+    cursor: pointer;
+}
+
+.booking-payment-receipt input[type="file"]::file-selector-button:hover {
+    border-color: var(--orange-text);
+    color: var(--orange-text);
+}
+
+.booking-payment-receipt input[type="file"]:focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 3px;
+    border-radius: 14px;
+}

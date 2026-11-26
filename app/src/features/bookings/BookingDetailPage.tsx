@@ -9,6 +9,7 @@ import {
     formatParticipants,
     paymentLabel,
     type BookingDetail,
+    type BookingPayment,
 } from "./bookingDetails";
 import {
     bookingConsultationLoginRoute,
@@ -16,7 +17,22 @@ import {
     experienceDetailsRoute,
     RECEIVED_BOOKINGS_ROUTE,
 } from "./bookingRoutes";
-import { markBookingUpdateRead } from "./bookingNotificationsService";
+import { getPublicTrajectory } from "@/features/trajectory/trajectoryService";
+import { BookingPaymentSection } from "./BookingPaymentSection";
+import {
+    confirmDeposit as confirm,
+    reportDepositNotFound as reportNotFound,
+    reportDepositRefunded as reportRefunded,
+    reportDepositSent as reportSent,
+    reportPaymentReceived as paymentReceived,
+    waiveDeposit as waive,
+} from "./bookingPaymentService";
+import { cancelBookingByProducer } from "./bookingCancelService";
+import { ProducerCancel } from "./ProducerCancel";
+import {
+    bookingUpdateId,
+    markBookingUpdateRead,
+} from "./bookingNotificationsService";
 import { getBooking } from "./bookingQueryService";
 import { BookingSessionError } from "./bookingService";
 import type { BookingStatus } from "./bookingTypes";
@@ -29,13 +45,32 @@ type LoadBooking = (
     options: { signal?: AbortSignal },
 ) => Promise<BookingDetail | null>;
 
+type PaymentAction = (id: string) => Promise<BookingPayment>;
+
 type BookingDetailPageProps = {
     id: string;
     role: Role;
     fromNotifications?: boolean;
     onNavigate: (path: string) => void;
     load?: LoadBooking;
+    /** Telefone autorizado da produtora, para mandar o comprovante (HU39). */
+    loadProducerPhone?: (producerId: string) => Promise<string | undefined>;
+    reportDepositSent?: PaymentAction;
+    confirmDeposit?: PaymentAction;
+    reportDepositNotFound?: PaymentAction;
+    reportDepositRefunded?: PaymentAction;
+    waiveDeposit?: PaymentAction;
+    reportPaymentReceived?: PaymentAction;
+    /** A produtora cancela a pré-reserva aceita (RN20 revista). */
+    cancelAsProducer?: (id: string) => Promise<unknown>;
 };
+
+/** O perfil público só traz o telefone para quem está logado e se ela autorizou. */
+const producerPhone = (producerId: string) =>
+    getPublicTrajectory(producerId).then(
+        (profile) => profile.telefone,
+        () => undefined,
+    );
 
 type State =
     | { status: "loading" }
@@ -99,10 +134,56 @@ export function BookingDetailPage({
     fromNotifications = false,
     onNavigate,
     load = getBooking,
+    loadProducerPhone = producerPhone,
+    reportDepositSent = reportSent,
+    confirmDeposit = confirm,
+    reportDepositNotFound = reportNotFound,
+    reportDepositRefunded = reportRefunded,
+    waiveDeposit = waive,
+    reportPaymentReceived = paymentReceived,
+    cancelAsProducer = cancelBookingByProducer,
 }: BookingDetailPageProps) {
     const backRoute = fromNotifications ? RECEIVED_BOOKINGS_ROUTE : LIST_ROUTE;
     const [state, setState] = useState<State>({ status: "loading" });
     const [attempt, setAttempt] = useState(0);
+    const [phone, setPhone] = useState<string>();
+    const consumerOwesDeposit =
+        role === "consumer" &&
+        state.status === "ready" &&
+        state.booking.payment?.status === "aguardando-sinal";
+    const producerId =
+        state.status === "ready" ? state.booking.counterpart.id : "";
+
+    useEffect(() => {
+        if (!consumerOwesDeposit || !producerId) return;
+        let active = true;
+        void loadProducerPhone(producerId).then((value) => {
+            if (active) setPhone(value);
+        });
+        return () => {
+            active = false;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [consumerOwesDeposit, producerId]);
+
+    /** Ação no sinal: a tela passa a mostrar o pagamento que a API devolveu. */
+    const paymentAction = (action: PaymentAction) => async () => {
+        const payment = await action(id);
+        setState((current) =>
+            current.status === "ready"
+                ? {
+                      status: "ready",
+                      booking: {
+                          ...current.booking,
+                          payment,
+                          ...(payment.status === "aguardando-sinal"
+                              ? {}
+                              : { pix: undefined }),
+                      },
+                  }
+                : current,
+        );
+    };
 
     useEffect(() => {
         const controller = new AbortController();
@@ -111,7 +192,7 @@ export function BookingDetailPage({
                 if (controller.signal.aborted) return;
                 // Ver o detalhe, por qualquer caminho, é ler a atualização.
                 if (booking && booking.status !== "pendente") {
-                    markBookingUpdateRead(`${booking.id}:${booking.status}`);
+                    markBookingUpdateRead(bookingUpdateId(booking));
                 }
                 setState(
                     booking
@@ -235,6 +316,23 @@ export function BookingDetailPage({
                         )}
                         <Details booking={state.booking} role={role} />
                     </section>
+                    {state.booking.payment && (
+                        <BookingPaymentSection
+                            role={role}
+                            payment={state.booking.payment}
+                            pix={state.booking.pix}
+                            experienceName={state.booking.experience.name}
+                            date={state.booking.date}
+                            producerPhone={phone}
+                            onReportSent={paymentAction(reportDepositSent)}
+                            onConfirm={paymentAction(confirmDeposit)}
+                            onNotFound={paymentAction(reportDepositNotFound)}
+                            onRefunded={paymentAction(reportDepositRefunded)}
+                            onWaive={paymentAction(waiveDeposit)}
+                            onReceived={paymentAction(reportPaymentReceived)}
+                            bookingStatus={state.booking.status}
+                        />
+                    )}
                     {state.booking.responseMessage && (
                         <section
                             className="booking-message booking-message--response"
@@ -295,9 +393,10 @@ export function BookingDetailPage({
                                 Fazer nova pré-reserva
                             </ActionButton>
                         )}
-                    {/* HU46 CA02: só a solicitante cancela, e só se pendente (RN20). */}
+                    {/* HU46 CA02 e RN20 revista: a solicitante cancela a pendente ou a aceita. */}
                     {role === "consumer" &&
-                        state.booking.status === "pendente" && (
+                        (state.booking.status === "pendente" ||
+                            state.booking.status === "aceita") && (
                             <button
                                 type="button"
                                 className="button booking-cancel-button"
@@ -309,6 +408,14 @@ export function BookingDetailPage({
                             >
                                 Cancelar solicitação
                             </button>
+                        )}
+                    {role === "producer" &&
+                        state.booking.status === "aceita" && (
+                            <ProducerCancel
+                                booking={state.booking}
+                                cancel={() => cancelAsProducer(id)}
+                                onCancelled={() => setAttempt((n) => n + 1)}
+                            />
                         )}
                 </div>
             )}

@@ -1,3 +1,4 @@
+import { PaymentMethod } from '../../bookings/domain/booking.js';
 import { ApiProperty } from '@nestjs/swagger';
 import { ProductProducerResponse } from '../../products/dto/product.response.js';
 import { ExperienceCategory } from '../domain/experience.js';
@@ -68,6 +69,22 @@ export class ExperienceResponse {
       'Se a oferta está disponível (RN10). As rotas públicas só devolvem disponíveis.',
   })
   disponivel: boolean;
+
+  @ApiProperty({
+    example: true,
+    description:
+      'Pagamento por Pix: se o aceite pede sinal de 50% para garantir a vaga',
+  })
+  exigeSinal: boolean;
+
+  @ApiProperty({
+    enum: PaymentMethod,
+    isArray: true,
+    example: ['dinheiro', 'pix'],
+    description:
+      'Formas que a produtora aceita no dia; vazio é combinar com ela',
+  })
+  formasPagamentoNoDia: PaymentMethod[];
 }
 
 /** Página do catálogo público de experiências (mesmo formato de `GET /products`). */
