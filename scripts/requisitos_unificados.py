@@ -30,15 +30,19 @@ END_MVP = '<!-- REQUISITOS_MVP_AUTO_FIM -->'
 START_ITER = '<!-- REQUISITOS_ITER_AUTO_INICIO -->'
 END_ITER = '<!-- REQUISITOS_ITER_AUTO_FIM -->'
 
+# HU49 (sinal por Pix) entrou no MVP como 21ª história.
+TOTAL_HUS = 49
+MVP_HUS = 21
+
 
 def read_json(repo: Path) -> list[dict]:
     data = json.loads((repo / 'docs/data/historias.json').read_text(encoding='utf-8'))
-    if not isinstance(data, list) or len(data) != 48:
-        raise ValueError('docs/data/historias.json deve conter exatamente 48 registros')
+    if not isinstance(data, list) or len(data) != TOTAL_HUS:
+        raise ValueError(f'docs/data/historias.json deve conter exatamente {TOTAL_HUS} registros')
     seen = set()
     for item in data:
         n = item.get('id')
-        if not isinstance(n, int) or n in seen or not 1 <= n <= 48:
+        if not isinstance(n, int) or n in seen or not 1 <= n <= TOTAL_HUS:
             raise ValueError('ID duplicado, não numérico ou fora da faixa nas HUs')
         seen.add(n)
         for attr in ('titulo', 'situacao', 'prioridade'):
@@ -74,16 +78,16 @@ def read_json(repo: Path) -> list[dict]:
         if item['mvp']:
             if item.get('iteracao') not in (6, 7, 8, 9):
                 raise ValueError(f'HU{n:02d}: iteração inválida para MVP')
-            if not isinstance(item.get('ordem'), int) or not 1 <= item['ordem'] <= 20:
+            if not isinstance(item.get('ordem'), int) or not 1 <= item['ordem'] <= MVP_HUS:
                 raise ValueError(f'HU{n:02d}: ordem inválida')
         elif item.get('iteracao') is not None or item.get('ordem') is not None:
             raise ValueError(f'HU{n:02d}: fora do MVP não deve ter iteração/ordem')
-    if sorted(seen) != list(range(1, 49)):
-        raise ValueError('HUs não vão de 1 a 48')
-    if Counter(x['ordem'] for x in data if x['mvp']) != Counter(range(1,21)):
-        raise ValueError('Ordens de 1º a 20º devem ser únicas')
-    if sum(x['mvp'] for x in data) != 20:
-        raise ValueError('MVP deve ter 20 histórias')
+    if sorted(seen) != list(range(1, TOTAL_HUS + 1)):
+        raise ValueError(f'HUs não vão de 1 a {TOTAL_HUS}')
+    if Counter(x['ordem'] for x in data if x['mvp']) != Counter(range(1, MVP_HUS + 1)):
+        raise ValueError(f'Ordens de 1º a {MVP_HUS}º devem ser únicas')
+    if sum(x['mvp'] for x in data) != MVP_HUS:
+        raise ValueError(f'MVP deve ter {MVP_HUS} histórias')
     by_id={x['id']:x for x in data}
     for item in data:
         for dep in item.get('dependencias') or []:
@@ -101,8 +105,8 @@ def rf_catalog(repo: Path) -> dict[str, str]:
     text = (repo / 'docs/visao/requisitos_software.md').read_text(encoding='utf-8')
     matches = re.findall(r'^\|\s*\*\*(RF\d{1,2})\*\*\s*\|\s*([^|\n]+)\|', text, re.M)
     result = {f'RF{int(k[2:]):02d}': value.strip() for k, value in matches}
-    if len(result) < 48:
-        raise ValueError('Requisitos de Software: tabela RF incompleta; esperado RF01–RF48')
+    if len(result) < TOTAL_HUS:
+        raise ValueError(f'Requisitos de Software: tabela RF incompleta; esperado RF01–RF{TOTAL_HUS}')
     return result
 
 
@@ -241,7 +245,7 @@ def render_page(text: str, uri: str, data: list[dict], names: dict[str,str]) -> 
 
 def sync(repo:Path,check:bool=False)->list[Path]:
     data=read_json(repo);names=rf_catalog(repo)
-    paths = [repo/'docs/visao/historias_usuario.md',repo/'docs/visao/mvp.md',repo/'docs/visao/cronograma.md'] + [repo/f'docs/visao/historias/HU{n}.md' for n in range(1,49)]
+    paths = [repo/'docs/visao/historias_usuario.md',repo/'docs/visao/mvp.md',repo/'docs/visao/cronograma.md'] + [repo/f'docs/visao/historias/HU{n}.md' for n in range(1, TOTAL_HUS + 1)]
     changes=[]
     for path in paths:
         uri=path.relative_to(repo/'docs').as_posix()
@@ -264,7 +268,7 @@ def main():
     args=parser.parse_args()
     repo=Path(args.repo).resolve()
     changed=sync(repo,check=args.check)
-    print(f'Fonte: 48 HUs; arquivos gerados {"a atualizar" if args.check else "atualizados"}: {len(changed)}')
+    print(f'Fonte: {TOTAL_HUS} HUs; arquivos gerados {"a atualizar" if args.check else "atualizados"}: {len(changed)}')
     for p in changed:print('  ',p.relative_to(repo))
 
 if __name__=='__main__':

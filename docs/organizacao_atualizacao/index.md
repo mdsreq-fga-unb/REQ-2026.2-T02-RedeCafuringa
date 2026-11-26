@@ -8,7 +8,7 @@ Esta seção apresenta como a equipe **ByteLab** organiza, consulta, acompanha e
   <a class="orc-jump-card" href="../visao/historias_usuario/">
     <span class="orc-jump-eyebrow">Consulta única</span>
     <strong>Backlog — Cards e Tabela</strong>
-    <span>Consulte as 48 HUs e seus vínculos em uma única visualização, com busca e filtros.</span>
+    <span>Consulte as 49 HUs e seus vínculos em uma única visualização, com busca e filtros.</span>
     <span class="orc-jump-action">Abrir backlog →</span>
   </a>
   <a class="orc-jump-card" href="rastreabilidade/">

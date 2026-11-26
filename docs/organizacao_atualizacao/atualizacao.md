@@ -38,7 +38,7 @@ Uma alteração em um **atributo central** aparece automaticamente nas demais vi
 
 ### Garantias de Integridade
 
-O validador bloqueia IDs duplicados, RF incoerente com a HU, 48 registros incompletos, ordens repetidas, atribuições de iteração a HUs fora do MVP e dados estruturados inválidos. A integração não substitui a validação de conteúdo com a equipe e o cliente.
+O validador bloqueia IDs duplicados, RF incoerente com a HU, 49 registros incompletos, ordens repetidas, atribuições de iteração a HUs fora do MVP e dados estruturados inválidos. A integração não substitui a validação de conteúdo com a equipe e o cliente.
 
 ---
 

@@ -1,4 +1,4 @@
-/* Backlog — visualizações Cards / Tabela a partir dos mesmos 48 registros.
+/* Backlog — visualizações Cards / Tabela a partir dos mesmos 49 registros.
  * Esta tabela não mantém cópias editáveis: espelha os cards gerados da fonte única.
  */
 (function () {
@@ -143,7 +143,7 @@
     const catalog=document.querySelector(".hu-catalog");
     if(!panel || !catalog || catalog.dataset.tableViewInitialized==="true") return;
     const cards=Array.from(catalog.querySelectorAll(":scope > .hu-card"));
-    if(cards.length!==48) return;
+    if(cards.length!==49) return;
     catalog.dataset.tableViewInitialized="true";
 
     const switcher=document.createElement("div");

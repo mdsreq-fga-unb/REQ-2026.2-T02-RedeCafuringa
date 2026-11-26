@@ -1,4 +1,4 @@
-"""Recalcula e confere a prioridade das 20 HUs do MVP a partir do JSON.
+"""Recalcula e confere a prioridade das 21 HUs do MVP a partir do JSON.
 
 Método técnico: ET=(ES+CX+CP)/3; IPA=(VN+5-ET)/2.
 A ordem operacional respeita as dependências e as iterações planejadas.
@@ -19,6 +19,7 @@ DEPENDENCIAS = {
     21: (2, 9), 24: (21,), 36: (19, 24),
     39: (14, 19, 24), 44: (1, 9, 24),
     45: (44,), 46: (44,), 47: (2, 44), 48: (45, 47),
+    49: (12, 21, 47),
 }
 
 
@@ -38,10 +39,10 @@ def pontuar(item):
 
 def calcular(data):
     mvp = [x for x in data if x.get('mvp')]
-    if len(data) != 48 or len(mvp) != 20:
-        raise ValueError('Esperadas 48 histórias e 20 histórias no MVP.')
+    if len(data) != 49 or len(mvp) != 21:
+        raise ValueError('Esperadas 49 histórias e 21 histórias no MVP.')
     por_id = {x['id']: x for x in mvp}
-    if len(por_id) != 20:
+    if len(por_id) != 21:
         raise ValueError('IDs do MVP duplicados')
     notas = {n: pontuar(x) for n, x in por_id.items()}
     for n, deps in DEPENDENCIAS.items():

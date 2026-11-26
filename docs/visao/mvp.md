@@ -66,6 +66,7 @@ A **classificação** vem do IPA. A **ordem de implementação** considera prime
 | 18º | RF46 | Cancelar pré-reserva | [HU46 — Cancelar pré-reserva](historias/HU46.md) | 3 | 2 | 2 | 2 | 2.00 | 3.00 | **Alta** | [Iteração 9](evidencias/iteracao9.md) |
 | 19º | RF47 | Responder pré-reserva de experiência | [HU47 — Responder pré-reserva de experiência](historias/HU47.md) | 3 | 2 | 3 | 2 | 2.33 | 2.83 | **Média** | [Iteração 9](evidencias/iteracao9.md) |
 | 20º | RF48 | Notificar alteração de pré-reserva | [HU48 — Notificar alteração de pré-reserva](historias/HU48.md) | 3 | 3 | 3 | 3 | 3.00 | 2.50 | **Média** | [Iteração 9](evidencias/iteracao9.md) |
+| 21º | RF49 | Pagar sinal da pré-reserva por Pix | [HU49 — Pagar sinal da pré-reserva por Pix](historias/HU49.md) | 3 | 4 | 4 | 3 | 3.67 | 2.17 | **Baixa** | [Iteração 9](evidencias/iteracao9.md) |
 <!-- REQUISITOS_MVP_AUTO_FIM -->
 
 ## 10.3 Requisitos não funcionais transversais do MVP
