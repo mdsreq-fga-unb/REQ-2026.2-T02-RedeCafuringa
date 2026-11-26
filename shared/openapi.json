@@ -2212,6 +2212,12 @@
                     "exclusiveMinimum": true,
                     "maximum": 1000000
                   },
+                  "videoUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "description": "Opcional. Link de um vídeo do YouTube (watch, youtu.be, shorts ou embed). A API guarda só o id e devolve `videoId`. Em branco equivale a sem vídeo."
+                  },
                   "fotos": {
                     "type": "array",
                     "minItems": 1,
@@ -2561,6 +2567,12 @@
                     "type": "string",
                     "example": "2 horas",
                     "description": "Número inteiro seguido de minutos ou horas"
+                  },
+                  "videoUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "description": "Opcional. Link de um vídeo do YouTube (watch, youtu.be, shorts ou embed). A API guarda só o id e devolve `videoId`. Em branco equivale a sem vídeo."
                   },
                   "fotos": {
                     "type": "array",
@@ -3600,7 +3612,7 @@
   "info": {
     "title": "Rede Cafuringa API",
     "description": "API REST da plataforma **Rede Cafuringa**: produtores rurais da Cafuringa divulgam a produção, e consumidores e visitantes descobrem ofertas da região.\n\n### Primeiros passos\n\n1. **Entre:** em **auth › POST /auth/login**, clique em *Try it out* e envie e-mail e senha. A resposta traz `accessToken`.\n2. **Autorize:** clique em **Authorize** (botão com cadeado, logo abaixo desta apresentação), cole o token e confirme. Ele fica salvo neste navegador até você clicar em *Logout*.\n3. **Teste:** abra qualquer rota, *Try it out* e *Execute*. Rotas com cadeado exigem login; as demais são públicas.\n\nUse o campo de busca (*Filter by tag*) para ir direto a um grupo.\n\n### Perfis de acesso (RN01, RNF08)\n\n| Perfil | O que pode fazer |\n|---|---|\n| Visitante (sem login) | Ler perfis públicos, catálogo e produtos; cadastrar-se; recuperar acesso |\n| `CONSUMIDOR` | O mesmo que o visitante, com sessão; solicitar pré-reserva de experiências |\n| `PRODUTOR` | Registrar trajetória e foto de perfil; cadastrar produtos; consultar e responder pré-reservas recebidas |\n| `ADMINISTRADOR` | Consultar usuários e cadastrar outros administradores |\n\nToda rota exige login, exceto as marcadas como públicas (negação por padrão). Perfil sem permissão recebe **403**; sem token ou com token inválido, **401**.\n\n### Convenções\n\n| Tema | Como funciona |\n|---|---|\n| **Erros** | Corpo `ErrorResponse` (`statusCode`, `message`, `error`). Em validação (400), `message` é uma lista de orientações em português, prontas para exibir |\n| **Paginação** | Listas devolvem `{ itens, total, pagina, limite }`; use `?pagina=` e `?limite=` |\n| **Fotos** | Envio em `multipart/form-data`. PNG, JPEG ou WebP; a API regrava em WebP **sem metadados** (EXIF/GPS). Os caminhos devolvidos são relativos à base da API e levam a versão: podem ficar em cache para sempre |\n| **Reenvio seguro** | `POST /products` e `POST /experiences` aceitam `Idempotency-Key`: repetir com a mesma chave após uma queda de conexão não duplica o cadastro |\n| **Limites de uso** | Login, cadastro e recuperação de acesso têm limite de tentativas por IP: **429** com `Retry-After` (segundos) |\n| **Rastreio** | Envie `x-request-id` (1 a 128 caracteres de `A-Za-z0-9._-`); ele volta na resposta e nos logs. Sem ele, a API gera um UUID |\n| **Dados pessoais** | Respostas nunca trazem hash de senha nem CPF completo (vem mascarado). Perfis públicos só mostram dados de divulgação (RN07, RNF11) |\n| **Versão** | SemVer em `info.version`; regras em *docs/shared/contratos.md*. Tipos do front gerados a partir deste contrato (`./scripts/dev.sh contract`) |",
-    "version": "0.16.0",
+    "version": "0.17.0",
     "contact": {
       "name": "Equipe Bytelab",
       "url": "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-RedeCafuringa",
@@ -4385,6 +4397,11 @@
             "type": "string",
             "example": "/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90",
             "description": "Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto."
+          },
+          "videoId": {
+            "type": "string",
+            "example": "dQw4w9WgXcQ",
+            "description": "Id do vídeo do YouTube da trajetória. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}. Ausente se não houver vídeo."
           }
         },
         "required": [
@@ -4424,6 +4441,11 @@
             "type": "string",
             "example": "/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90",
             "description": "Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto."
+          },
+          "videoId": {
+            "type": "string",
+            "example": "dQw4w9WgXcQ",
+            "description": "Id do vídeo do YouTube da trajetória. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}. Ausente se não houver vídeo."
           }
         },
         "required": [
@@ -4455,6 +4477,13 @@
             "type": "boolean",
             "example": true,
             "description": "Se verdadeiro, o telefone aparece no perfil público (RN07). Se omitido, a escolha anterior não muda; por padrão o telefone é privado."
+          },
+          "videoUrl": {
+            "type": "string",
+            "example": "https://youtu.be/dQw4w9WgXcQ",
+            "nullable": true,
+            "maxLength": 2048,
+            "description": "Link de um vídeo do YouTube para o perfil público. Se omitido (ou em branco), o vídeo salvo não muda. Com `null`, o vídeo é removido. A API guarda só o id e devolve `videoId`."
           }
         },
         "required": [
@@ -4543,6 +4572,12 @@
               "type": "string"
             }
           },
+          "videoId": {
+            "type": "string",
+            "nullable": true,
+            "example": "dQw4w9WgXcQ",
+            "description": "Id do vídeo do YouTube divulgado pelo produtor, ou `null` sem vídeo. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}."
+          },
           "produtor": {
             "$ref": "#/components/schemas/ProductProducerResponse"
           },
@@ -4565,6 +4600,7 @@
           "precoPorUnidade",
           "gramasPorUnidade",
           "fotos",
+          "videoId",
           "produtor",
           "criadoEm",
           "disponivel"
@@ -4656,6 +4692,12 @@
               }
             ]
           },
+          "videoId": {
+            "type": "string",
+            "nullable": true,
+            "example": "dQw4w9WgXcQ",
+            "description": "Id do vídeo do YouTube divulgado pelo produtor, ou `null` sem vídeo. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}."
+          },
           "criadoEm": {
             "type": "string",
             "example": "2026-11-16T12:00:00.000Z",
@@ -4677,6 +4719,7 @@
           "duracao",
           "fotos",
           "produtor",
+          "videoId",
           "criadoEm",
           "disponivel"
         ]

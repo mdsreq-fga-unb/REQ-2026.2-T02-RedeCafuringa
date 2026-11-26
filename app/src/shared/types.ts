@@ -9,6 +9,8 @@ export type Offer = {
     price: string;
     details: string[];
     description: string;
+    /** Id do vídeo do YouTube; sem ele, a oferta não mostra vídeo. */
+    videoId?: string;
 };
 
 export type ContactSettings = {

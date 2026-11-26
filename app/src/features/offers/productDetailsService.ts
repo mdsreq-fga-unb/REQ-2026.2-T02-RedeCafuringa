@@ -27,6 +27,7 @@ export async function getProductDetails(
                 ...saved,
                 categoria: "Produtos",
                 disponivel: saved.disponivel ?? true,
+                videoId: saved.videoId ?? null,
                 criadoEm: "",
             };
         } else if (example) data = example;

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isObjectIdOrHexString, Model } from 'mongoose';
+import { extractYoutubeId } from '../../common/video/youtube.js';
 import { Role } from '../users/domain/role.js';
 import { User } from '../users/schemas/user.schema.js';
 import { photoPath } from './domain/profile-photo.js';
@@ -19,9 +20,9 @@ const NOT_FOUND = 'Produtor não encontrado';
  * nunca são lidos do banco aqui (RNF11), nem por acidente.
  */
 const OWN_FIELDS =
-  'trajetoria atividades telefone telefonePublico trajetoriaAtualizadaEm fotoVersao';
+  'trajetoria atividades telefone telefonePublico trajetoriaAtualizadaEm fotoVersao trajetoriaVideoId';
 const PUBLIC_FIELDS =
-  'nomeIniciativa categoriaOfertada trajetoria atividades telefone telefonePublico fotoVersao';
+  'nomeIniciativa categoriaOfertada trajetoria atividades telefone telefonePublico fotoVersao trajetoriaVideoId';
 
 type OwnFields = Pick<
   User,
@@ -31,6 +32,7 @@ type OwnFields = Pick<
   | 'telefonePublico'
   | 'trajetoriaAtualizadaEm'
   | 'fotoVersao'
+  | 'trajetoriaVideoId'
 >;
 type PublicFields = Pick<
   User,
@@ -41,6 +43,7 @@ type PublicFields = Pick<
   | 'telefone'
   | 'telefonePublico'
   | 'fotoVersao'
+  | 'trajetoriaVideoId'
 > & { _id: unknown };
 type PublishedPublicFields = PublicFields & { trajetoria: string };
 
@@ -74,6 +77,13 @@ export class ProducerProfileService {
     // então a visibilidade volta a privada mesmo que o pedido diga o contrário.
     const removePhone = dto.telefone === null;
     const telefonePublico = removePhone ? false : dto.telefonePublico;
+    // Vídeo: omitido mantém o salvo; `null` remove; link guarda só o id.
+    const removeVideo = dto.videoUrl === null;
+    const videoId = extractYoutubeId(dto.videoUrl);
+    const unset = {
+      ...(removePhone ? { telefone: 1 } : {}),
+      ...(removeVideo ? { trajetoriaVideoId: 1 } : {}),
+    };
     const user = await this.users
       .findOneAndUpdate(
         this.activeProducer(userId),
@@ -86,8 +96,9 @@ export class ProducerProfileService {
               ? {}
               : { telefone: dto.telefone }),
             ...(telefonePublico === undefined ? {} : { telefonePublico }),
+            ...(videoId ? { trajetoriaVideoId: videoId } : {}),
           },
-          ...(removePhone ? { $unset: { telefone: 1 } } : {}),
+          ...(Object.keys(unset).length ? { $unset: unset } : {}),
         },
         { returnDocument: 'after', projection: OWN_FIELDS },
       )
@@ -155,6 +166,7 @@ export class ProducerProfileService {
       ...(user.atividades ? { atividades: user.atividades } : {}),
       ...(telefone ? { telefone } : {}),
       ...(user.fotoVersao ? { fotoUrl: photoPath(id, user.fotoVersao) } : {}),
+      ...(user.trajetoriaVideoId ? { videoId: user.trajetoriaVideoId } : {}),
     };
   }
 
@@ -174,6 +186,7 @@ export class ProducerProfileService {
       ...(user.fotoVersao
         ? { fotoUrl: photoPath(userId, user.fotoVersao) }
         : {}),
+      ...(user.trajetoriaVideoId ? { videoId: user.trajetoriaVideoId } : {}),
     };
   }
 }

@@ -15,6 +15,8 @@ export type Product = {
     category?: string;
     local?: string;
     duracao?: string;
+    /** Id do vídeo do YouTube divulgado pela produtora. */
+    videoId?: string;
     id: string;
     name: string;
     producerName: string;

@@ -4,6 +4,8 @@ import { BackButton } from "@/components/navigation/BackButton";
 import { ApiHttpError } from "@/shared/api";
 import { PRODUCT_PHOTOS_MAX, registerProduct } from "./productService";
 import type { ProductDraft, RegisteredProduct } from "./productService";
+import { VideoUrlField } from "@/features/video/VideoUrlField";
+import { validateVideoUrl } from "@/features/video/youtube";
 import "./product-registration.css";
 
 import {
@@ -15,6 +17,7 @@ type OfferDraft = ProductDraft & {
     local: string;
     duracao: string;
     duracaoUnidade: "minutos" | "horas";
+    videoUrl: string;
 };
 type Errors = Partial<Record<keyof OfferDraft, string>>;
 const initialDraft: OfferDraft = {
@@ -27,6 +30,7 @@ const initialDraft: OfferDraft = {
     duracao: "",
     duracaoUnidade: "horas",
     fotos: [],
+    videoUrl: "",
 };
 
 function validate(draft: OfferDraft): Errors {
@@ -80,6 +84,8 @@ function validate(draft: OfferDraft): Errors {
         errors.fotos = "Selecione fotos PNG, JPEG ou WebP.";
     else if (draft.fotos.length > PRODUCT_PHOTOS_MAX)
         errors.fotos = `Adicione no máximo ${PRODUCT_PHOTOS_MAX} fotos.`;
+    const video = validateVideoUrl(draft.videoUrl);
+    if (video) errors.videoUrl = video;
     // O tamanho não é conferido aqui: o envio reduz cada foto no aparelho
     // (prepareProfilePhoto) e a API devolve 413 se ainda passar do limite.
     return errors;
@@ -524,6 +530,20 @@ export function ProductRegistrationPage({
                                 ))}
                             </ul>
                         )}
+                    </div>
+                    <div className="product-field">
+                        <VideoUrlField
+                            id="product-videoUrl"
+                            description={
+                                experience
+                                    ? "Mostre como é a experiência: o lugar, as atividades e o que a pessoa vai viver. O vídeo aparece na página da experiência."
+                                    : "Mostre seu produto em vídeo: como é feito, a colheita ou o preparo. O vídeo aparece na página do produto."
+                            }
+                            value={draft.videoUrl}
+                            error={errors.videoUrl}
+                            disabled={pending}
+                            onChange={(value) => update("videoUrl", value)}
+                        />
                     </div>
                 </fieldset>
                 {failure && (

@@ -56,6 +56,10 @@ export class Experience {
   @Prop({ type: [ExperiencePhotoRefSchema], required: true })
   fotos: ExperiencePhotoRef[];
 
+  /** Id do vídeo do YouTube; o link enviado não é guardado. */
+  @Prop()
+  videoId?: string;
+
   /** RN10: pode sair da oferta pública sem ser excluída. Nasce disponível. */
   @Prop({ default: true })
   disponivel: boolean;

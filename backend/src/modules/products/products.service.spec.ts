@@ -380,3 +380,77 @@ describe('ProductsService (HU15/RF15)', () => {
     });
   });
 });
+
+describe('ProductsService — vídeo do YouTube', () => {
+  const userId = producerId.toHexString();
+  const ID = 'dQw4w9WgXcQ';
+
+  it('grava só o id do vídeo, nunca o link enviado', async () => {
+    const { service, products } = setup();
+
+    const res = await service.create(
+      userId,
+      { ...dto, videoUrl: `https://www.youtube.com/watch?v=${ID}&t=5s` },
+      [{ buffer: Buffer.from('x') }],
+    );
+
+    const [saved] = products.create.mock.calls[0];
+    expect(saved.videoId).toBe(ID);
+    expect(saved).not.toHaveProperty('videoUrl');
+    expect(res.videoId).toBe(ID);
+  });
+
+  it('sem link, não grava vídeo e responde videoId null', async () => {
+    const { service, products } = setup();
+
+    const res = await service.create(userId, dto, [
+      { buffer: Buffer.from('x') },
+    ]);
+
+    expect(products.create.mock.calls[0][0]).not.toHaveProperty('videoId');
+    expect(res.videoId).toBeNull();
+  });
+
+  it('o detalhe público devolve o vídeo salvo', async () => {
+    const { service, products } = setup();
+    const doc = productDoc({ videoId: ID });
+    products.findOne.mockReturnValue(query(doc));
+
+    const res = await service.getPublic(doc._id.toHexString());
+
+    expect(res.videoId).toBe(ID);
+  });
+
+  it('produto antigo, sem vídeo, responde videoId null', async () => {
+    const { service, products } = setup();
+    const doc = productDoc();
+    products.findOne.mockReturnValue(query(doc));
+
+    expect((await service.getPublic(doc._id.toHexString())).videoId).toBeNull();
+  });
+
+  it('o catálogo devolve o vídeo de cada produto', async () => {
+    const { service, products } = setup();
+    products.aggregate.mockReturnValue({
+      exec: vi.fn().mockResolvedValue([
+        {
+          itens: [
+            {
+              ...productDoc({ videoId: ID }),
+              responsavel: { nomeIniciativa: 'Apiário Cafuringa' },
+            },
+            {
+              ...productDoc(),
+              responsavel: { nomeIniciativa: 'Apiário Cafuringa' },
+            },
+          ],
+          total: [{ n: 2 }],
+        },
+      ]),
+    });
+
+    const res = await service.list({});
+
+    expect(res.itens.map((item) => item.videoId)).toEqual([ID, null]);
+  });
+});

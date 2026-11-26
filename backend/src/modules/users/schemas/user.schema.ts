@@ -65,6 +65,10 @@ export class User {
   @Prop()
   trajetoriaAtualizadaEm?: Date;
 
+  /** Id do vídeo do YouTube do perfil público; o link enviado não é guardado. */
+  @Prop()
+  trajetoriaVideoId?: string;
+
   /**
    * HU12/RF12: versão da foto de perfil (o binário fica em `producer_photos`).
    * Ausente quando o produtor não tem foto.

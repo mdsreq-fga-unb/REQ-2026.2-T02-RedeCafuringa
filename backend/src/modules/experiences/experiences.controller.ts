@@ -31,6 +31,7 @@ import {
   ApiUnauthorizedResponse,
   ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
+import { VIDEO_URL_MAX } from '../../common/video/youtube.js';
 import type { Response } from 'express';
 import { ErrorResponse } from '../../common/dto/error.response.js';
 import { PhotoGalleryUpload } from '../../common/photos/photo-gallery-upload.js';
@@ -109,6 +110,13 @@ export class ExperiencesController {
           type: 'string',
           example: '2 horas',
           description: 'Número inteiro seguido de minutos ou horas',
+        },
+        videoUrl: {
+          type: 'string',
+          maxLength: VIDEO_URL_MAX,
+          example: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+          description:
+            'Opcional. Link de um vídeo do YouTube (watch, youtu.be, shorts ou embed). A API guarda só o id e devolve `videoId`. Em branco equivale a sem vídeo.',
         },
         [FOTOS.campo]: {
           type: 'array',
