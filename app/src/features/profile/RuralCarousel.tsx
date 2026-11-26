@@ -1,19 +1,40 @@
 import { useEffect, useRef, useState } from "react";
 
+// Fotos reais da APA da Cafuringa, em dois tamanhos para poupar dados em
+// conexão rural (RNF06): o celular baixa a de 640 px.
 const slides = [
     {
-        image: "/images/rural/campos.webp",
-        description: "Paisagem rural ao pôr do sol",
+        name: "morro",
+        description:
+            "Casa no alto de um morro coberto de Cerrado, com bananeira em primeiro plano",
     },
     {
-        image: "/images/rural/cultivo.webp",
-        description: "Cultivo e trabalho no campo",
+        name: "chale-frente",
+        description:
+            "Chalé de tijolos com varanda de madeira e portas de vidro abertas, entre árvores do Cerrado",
     },
     {
-        image: "/images/rural/horta.webp",
-        description: "Horta e alimentos cultivados na terra",
+        name: "estrada",
+        description: "Estrada de terra vermelha cercada de árvores",
     },
-];
+    {
+        name: "chapada",
+        description: "Chapada vista da rodovia, com vegetação de Cerrado",
+    },
+    {
+        name: "chale-sol",
+        description:
+            "Chalé de tijolos com varanda e rede, sob céu azul com raio de sol",
+    },
+    {
+        name: "serra",
+        description: "Serra vista da estrada, com mata e capim seco",
+    },
+].map(({ name, description }) => ({
+    image: `/images/rural/${name}-1200.webp`,
+    srcSet: `/images/rural/${name}-640.webp 640w, /images/rural/${name}-1200.webp 1200w`,
+    description,
+}));
 
 export function RuralCarousel() {
     const [index, setIndex] = useState(0);
@@ -88,6 +109,8 @@ export function RuralCarousel() {
                     key={slide.image}
                     className={`explore-hero-image${position === index ? " is-active" : ""}`}
                     src={slide.image}
+                    srcSet={slide.srcSet}
+                    sizes="(min-width: 1200px) 1120px, 100vw"
                     alt={slide.description}
                     aria-hidden={position !== index}
                     width="1200"
