@@ -97,7 +97,7 @@ expõe porta; a API usa um usuário `readWrite` apenas no banco `cafuringa`.
 
 ### Mongo 8.0 LTS vs volume antigo
 
-A imagem de produção é `mongo:8.0.34` (LTS). Se um volume foi criado por uma
+A imagem de produção é `mongo:8.0.38` (LTS), a mesma do desenvolvimento. Se um volume foi criado por uma
 versão 8.3 (rapid release), o `mongod` 8.0 **não abre** o volume
 (`featureCompatibilityVersion 8.3`). Nesse caso:
 
