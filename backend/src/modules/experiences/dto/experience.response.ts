@@ -49,6 +49,15 @@ export class ExperienceResponse {
   produtor: ProductProducerResponse;
 
   @ApiProperty({
+    type: String,
+    nullable: true,
+    example: 'dQw4w9WgXcQ',
+    description:
+      'Id do vídeo do YouTube divulgado pelo produtor, ou `null` sem vídeo. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}.',
+  })
+  videoId: string | null;
+
+  @ApiProperty({
     example: '2026-11-16T12:00:00.000Z',
     description: 'Data do cadastro',
   })

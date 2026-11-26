@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isObjectIdOrHexString, Model } from 'mongoose';
 import { normalizePixKey } from '../../common/pix/pix-key.js';
+import { extractYoutubeId } from '../../common/video/youtube.js';
 import { Role } from '../users/domain/role.js';
 import { User } from '../users/schemas/user.schema.js';
 import { photoPath } from './domain/profile-photo.js';
@@ -20,9 +21,9 @@ const NOT_FOUND = 'Produtor não encontrado';
  * nunca são lidos do banco aqui (RNF11), nem por acidente.
  */
 const OWN_FIELDS =
-  'trajetoria atividades telefone telefonePublico trajetoriaAtualizadaEm fotoVersao pixTipo pixChave pixRecebedor pixPublico pixAtualizadoEm';
+  'trajetoria atividades telefone telefonePublico trajetoriaAtualizadaEm fotoVersao trajetoriaVideoId pixTipo pixChave pixRecebedor pixPublico pixAtualizadoEm';
 const PUBLIC_FIELDS =
-  'nomeIniciativa categoriaOfertada trajetoria atividades telefone telefonePublico fotoVersao';
+  'nomeIniciativa categoriaOfertada trajetoria atividades telefone telefonePublico fotoVersao trajetoriaVideoId';
 
 type OwnFields = Pick<
   User,
@@ -37,6 +38,7 @@ type OwnFields = Pick<
   | 'pixRecebedor'
   | 'pixPublico'
   | 'pixAtualizadoEm'
+  | 'trajetoriaVideoId'
 >;
 type PublicFields = Pick<
   User,
@@ -47,6 +49,7 @@ type PublicFields = Pick<
   | 'telefone'
   | 'telefonePublico'
   | 'fotoVersao'
+  | 'trajetoriaVideoId'
 > & { _id: unknown };
 type PublishedPublicFields = PublicFields & { trajetoria: string };
 
@@ -81,8 +84,12 @@ export class ProducerProfileService {
     const removePhone = dto.telefone === null;
     const telefonePublico = removePhone ? false : dto.telefonePublico;
     const pix = this.pixUpdate(dto);
+    // Vídeo: omitido mantém o salvo; `null` remove; link guarda só o id.
+    const removeVideo = dto.videoUrl === null;
+    const videoId = extractYoutubeId(dto.videoUrl);
     const unset = {
       ...(removePhone ? { telefone: 1 } : {}),
+      ...(removeVideo ? { trajetoriaVideoId: 1 } : {}),
       ...pix.unset,
     };
     const user = await this.users
@@ -98,6 +105,7 @@ export class ProducerProfileService {
               : { telefone: dto.telefone }),
             ...(telefonePublico === undefined ? {} : { telefonePublico }),
             ...pix.set,
+            ...(videoId ? { trajetoriaVideoId: videoId } : {}),
           },
           ...(Object.keys(unset).length ? { $unset: unset } : {}),
         },
@@ -167,6 +175,7 @@ export class ProducerProfileService {
       ...(user.atividades ? { atividades: user.atividades } : {}),
       ...(telefone ? { telefone } : {}),
       ...(user.fotoVersao ? { fotoUrl: photoPath(id, user.fotoVersao) } : {}),
+      ...(user.trajetoriaVideoId ? { videoId: user.trajetoriaVideoId } : {}),
     };
   }
 
@@ -226,6 +235,7 @@ export class ProducerProfileService {
             },
           }
         : {}),
+      ...(user.trajetoriaVideoId ? { videoId: user.trajetoriaVideoId } : {}),
     };
   }
 }

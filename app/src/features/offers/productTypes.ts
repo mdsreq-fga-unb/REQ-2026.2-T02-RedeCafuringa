@@ -20,6 +20,8 @@ export type Product = {
     requiresDeposit?: boolean;
     /** Experiência: formas que a produtora aceita no dia. */
     dayPaymentMethods?: PaymentMethod[];
+    /** Id do vídeo do YouTube divulgado pela produtora. */
+    videoId?: string;
     id: string;
     name: string;
     producerName: string;

@@ -1349,6 +1349,11 @@ export interface components {
              * @example /producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90
              */
             fotoUrl?: string;
+            /**
+             * @description Id do vídeo do YouTube da trajetória. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}. Ausente se não houver vídeo.
+             * @example dQw4w9WgXcQ
+             */
+            videoId?: string;
         };
         OwnPixResponse: {
             /**
@@ -1407,6 +1412,11 @@ export interface components {
             fotoUrl?: string;
             /** @description Ausente enquanto a produtora não cadastrar a chave Pix */
             pix?: components["schemas"]["OwnPixResponse"];
+            /**
+             * @description Id do vídeo do YouTube da trajetória. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}. Ausente se não houver vídeo.
+             * @example dQw4w9WgXcQ
+             */
+            videoId?: string;
         };
         SavePixDto: {
             /**
@@ -1453,6 +1463,11 @@ export interface components {
             telefonePublico?: boolean;
             /** @description Chave Pix para receber o sinal das pré-reservas. Se omitido, o Pix salvo não muda. Com `null`, a chave é removida e o Pix fica privado. Nunca aparece no perfil público. */
             pix?: components["schemas"]["SavePixDto"] | null;
+            /**
+             * @description Link de um vídeo do YouTube para o perfil público. Se omitido (ou em branco), o vídeo salvo não muda. Com `null`, o vídeo é removido. A API guarda só o id e devolve `videoId`.
+             * @example https://youtu.be/dQw4w9WgXcQ
+             */
+            videoUrl?: string | null;
         };
         PhotoResponse: {
             /**
@@ -1503,6 +1518,11 @@ export interface components {
              *     ]
              */
             fotos: string[];
+            /**
+             * @description Id do vídeo do YouTube divulgado pelo produtor, ou `null` sem vídeo. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}.
+             * @example dQw4w9WgXcQ
+             */
+            videoId: string | null;
             produtor: components["schemas"]["ProductProducerResponse"];
             /**
              * @description Data do cadastro
@@ -1564,6 +1584,11 @@ export interface components {
             fotos: string[];
             /** @description Responsável pela oferta (CA03, CA08, RN09): só dados de divulgação, nunca e-mail, telefone ou documentos */
             produtor: components["schemas"]["ProductProducerResponse"];
+            /**
+             * @description Id do vídeo do YouTube divulgado pelo produtor, ou `null` sem vídeo. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}.
+             * @example dQw4w9WgXcQ
+             */
+            videoId: string | null;
             /**
              * @description Data do cadastro
              * @example 2026-11-16T12:00:00.000Z
@@ -3624,6 +3649,11 @@ export interface operations {
                     /** @description Reais, com ponto e até 2 casas decimais */
                     precoPorUnidade: number;
                     gramasPorUnidade: number;
+                    /**
+                     * @description Opcional. Link de um vídeo do YouTube (watch, youtu.be, shorts ou embed). A API guarda só o id e devolve `videoId`. Em branco equivale a sem vídeo.
+                     * @example https://www.youtube.com/watch?v=dQw4w9WgXcQ
+                     */
+                    videoUrl?: string;
                     /** @description De 1 a 10 imagens PNG, JPEG ou WebP de até 5 MB cada, na ordem da galeria (a primeira é a capa) */
                     fotos: string[];
                 };
@@ -3859,6 +3889,11 @@ export interface operations {
                      * @example dinheiro,pix
                      */
                     formasPagamentoNoDia?: string;
+                    /**
+                     * @description Opcional. Link de um vídeo do YouTube (watch, youtu.be, shorts ou embed). A API guarda só o id e devolve `videoId`. Em branco equivale a sem vídeo.
+                     * @example https://www.youtube.com/watch?v=dQw4w9WgXcQ
+                     */
+                    videoUrl?: string;
                     /** @description De 1 a 10 imagens PNG, JPEG ou WebP de até 5 MB cada, na ordem da galeria (a primeira é a capa) */
                     fotos: string[];
                 };

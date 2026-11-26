@@ -4,6 +4,7 @@ import { BackButton } from "@/components/navigation/BackButton";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { formatPhone } from "@/features/register/validators";
 import type { PixKeyType } from "@/features/payments/pixCode";
+import { VideoUrlField } from "@/features/video/VideoUrlField";
 import {
     PIX_RECEIVER_MAX,
     TEXT_LIMIT,
@@ -108,7 +109,7 @@ export function TrajectoryForm({
             requestAnimationFrame(() =>
                 form.current
                     ?.querySelector<HTMLElement>(
-                        `[data-trajectory-field="${key}"]`,
+                        `[data-trajectory-field="${key}"], [name="${key}"]`,
                     )
                     ?.focus(),
             );
@@ -228,6 +229,15 @@ export function TrajectoryForm({
                             )}
                         </div>
                     ))}
+                    <div className="trajectory-field">
+                        <VideoUrlField
+                            id={`${id}-videoUrl`}
+                            description="Conte sua história em vídeo: a família, a propriedade e o dia a dia. O vídeo aparece no seu perfil público."
+                            value={draft.videoUrl}
+                            error={errors.videoUrl}
+                            onChange={(value) => change("videoUrl", value)}
+                        />
+                    </div>
                     <div className="trajectory-field">
                         <label className="field-label" htmlFor={`${id}-phone`}>
                             Número de Contato

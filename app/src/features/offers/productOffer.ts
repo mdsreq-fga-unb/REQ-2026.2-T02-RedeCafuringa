@@ -13,6 +13,7 @@ export function productToOffer(product: Product): Offer {
         category: product.category ?? "Produtos",
         image: product.image,
         ...(product.photos ? { images: product.photos } : {}),
+        ...(product.videoId ? { videoId: product.videoId } : {}),
         price: formatProductPrice(product.price, product.unit),
         details: experience
             ? [

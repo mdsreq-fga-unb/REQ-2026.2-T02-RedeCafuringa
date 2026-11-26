@@ -6,6 +6,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { isObjectIdOrHexString, Model, Types } from 'mongoose';
 import { PhotoOwnerType } from '../../common/photos/photo-gallery.policy.js';
+import { extractYoutubeId } from '../../common/video/youtube.js';
 import {
   PhotoGalleryService,
   type StoredPhoto,
@@ -90,6 +91,7 @@ export class ExperiencesService {
     );
 
     const experienceId = new Types.ObjectId();
+    const videoId = extractYoutubeId(dto.videoUrl);
     // Fotos primeiro: quem lê a experiência nunca encontra uma foto ausente.
     const fotos = await this.gallery.store(owner(experienceId), processed);
     try {
@@ -105,6 +107,7 @@ export class ExperiencesService {
         fotos,
         exigeSinal: dto.exigeSinal ?? true,
         formasPagamentoNoDia: dto.formasPagamentoNoDia ?? [],
+        ...(videoId ? { videoId } : {}),
         ...(key ? { chaveIdempotencia: key } : {}),
       });
       return this.toResponse(created.toObject() as ExperienceDoc, producer);
@@ -263,6 +266,7 @@ export class ExperiencesService {
         ...(primeiroNome ? { primeiroNome } : {}),
         ...(localidade ? { localidade } : {}),
       },
+      videoId: experience.videoId ?? null,
       criadoEm: (experience.criadoEm ?? new Date()).toISOString(),
       disponivel: experience.disponivel ?? true,
       exigeSinal: experience.exigeSinal ?? true,

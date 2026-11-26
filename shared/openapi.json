@@ -2212,6 +2212,12 @@
                     "exclusiveMinimum": true,
                     "maximum": 1000000
                   },
+                  "videoUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "description": "Opcional. Link de um vídeo do YouTube (watch, youtu.be, shorts ou embed). A API guarda só o id e devolve `videoId`. Em branco equivale a sem vídeo."
+                  },
                   "fotos": {
                     "type": "array",
                     "minItems": 1,
@@ -2571,6 +2577,12 @@
                     "type": "string",
                     "example": "dinheiro,pix",
                     "description": "Opcional. Formas aceitas no dia, separadas por vírgula (pix, dinheiro, cartao_credito, cartao_debito)."
+                  },
+                  "videoUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                    "description": "Opcional. Link de um vídeo do YouTube (watch, youtu.be, shorts ou embed). A API guarda só o id e devolve `videoId`. Em branco equivale a sem vídeo."
                   },
                   "fotos": {
                     "type": "array",
@@ -4941,6 +4953,11 @@
             "type": "string",
             "example": "/producers/64b0c0ffee0000000000abcd/photo?v=Q2FmdXJpbmdhRm90",
             "description": "Foto de perfil (RF12): caminho relativo à URL base da API, versionado (pode ficar em cache indefinidamente). Ausente se não houver foto."
+          },
+          "videoId": {
+            "type": "string",
+            "example": "dQw4w9WgXcQ",
+            "description": "Id do vídeo do YouTube da trajetória. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}. Ausente se não houver vídeo."
           }
         },
         "required": [
@@ -5029,6 +5046,11 @@
                 "$ref": "#/components/schemas/OwnPixResponse"
               }
             ]
+          },
+          "videoId": {
+            "type": "string",
+            "example": "dQw4w9WgXcQ",
+            "description": "Id do vídeo do YouTube da trajetória. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}. Ausente se não houver vídeo."
           }
         },
         "required": [
@@ -5107,6 +5129,13 @@
                 "$ref": "#/components/schemas/SavePixDto"
               }
             ]
+          },
+          "videoUrl": {
+            "type": "string",
+            "example": "https://youtu.be/dQw4w9WgXcQ",
+            "nullable": true,
+            "maxLength": 2048,
+            "description": "Link de um vídeo do YouTube para o perfil público. Se omitido (ou em branco), o vídeo salvo não muda. Com `null`, o vídeo é removido. A API guarda só o id e devolve `videoId`."
           }
         },
         "required": [
@@ -5195,6 +5224,12 @@
               "type": "string"
             }
           },
+          "videoId": {
+            "type": "string",
+            "nullable": true,
+            "example": "dQw4w9WgXcQ",
+            "description": "Id do vídeo do YouTube divulgado pelo produtor, ou `null` sem vídeo. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}."
+          },
           "produtor": {
             "$ref": "#/components/schemas/ProductProducerResponse"
           },
@@ -5217,6 +5252,7 @@
           "precoPorUnidade",
           "gramasPorUnidade",
           "fotos",
+          "videoId",
           "produtor",
           "criadoEm",
           "disponivel"
@@ -5308,6 +5344,12 @@
               }
             ]
           },
+          "videoId": {
+            "type": "string",
+            "nullable": true,
+            "example": "dQw4w9WgXcQ",
+            "description": "Id do vídeo do YouTube divulgado pelo produtor, ou `null` sem vídeo. O app monta o embed em https://www.youtube-nocookie.com/embed/{videoId}."
+          },
           "criadoEm": {
             "type": "string",
             "example": "2026-11-16T12:00:00.000Z",
@@ -5351,6 +5393,7 @@
           "duracao",
           "fotos",
           "produtor",
+          "videoId",
           "criadoEm",
           "disponivel",
           "exigeSinal",

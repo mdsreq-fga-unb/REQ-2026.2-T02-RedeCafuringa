@@ -66,6 +66,10 @@ export class User {
   @Prop()
   trajetoriaAtualizadaEm?: Date;
 
+  /** Id do vídeo do YouTube do perfil público; o link enviado não é guardado. */
+  @Prop()
+  trajetoriaVideoId?: string;
+
   /**
    * Pagamento por Pix: chave normalizada da produtora, para receber o sinal das
    * pré-reservas. Nunca aparece no perfil público; só a consumidora com

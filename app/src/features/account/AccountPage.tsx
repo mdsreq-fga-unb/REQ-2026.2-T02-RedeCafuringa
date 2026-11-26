@@ -247,6 +247,13 @@ export function AccountPage(props: AccountPageProps) {
             </div>
             {role === "producer" && (
                 <>
+                    {/* HU12: história, atividades, foto e vídeo do perfil público. */}
+                    <ActionButton
+                        variant="orange"
+                        onClick={() => onNavigate("/minha-trajetoria")}
+                    >
+                        Minha trajetória
+                    </ActionButton>
                     {userId != null && (
                         <ProducerAccountForm key={userId} userId={userId} />
                     )}

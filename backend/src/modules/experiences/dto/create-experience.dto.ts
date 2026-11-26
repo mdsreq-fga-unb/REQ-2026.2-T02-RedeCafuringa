@@ -12,6 +12,11 @@ import {
   type ValidationArguments,
 } from 'class-validator';
 import { PaymentMethod } from '../../bookings/domain/booking.js';
+import {
+  IsYoutubeUrl,
+  NormalizeVideoUrl,
+} from '../../../common/video/is-youtube-url.decorator.js';
+import { VIDEO_URL_MAX } from '../../../common/video/youtube.js';
 import { normalizeFreeText } from '../../producer-profile/domain/trajectory.js';
 import {
   type AmountProblem,
@@ -173,4 +178,15 @@ export class CreateExperienceDto {
     message: `Formas de pagamento no dia devem ser ${PAYMENT_METHODS_TEXT}`,
   })
   formasPagamentoNoDia?: PaymentMethod[];
+
+  @ApiPropertyOptional({
+    example: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    maxLength: VIDEO_URL_MAX,
+    description:
+      'Link de um vídeo do YouTube (watch, youtu.be, shorts ou embed). A API guarda só o id do vídeo e devolve `videoId`. Em branco equivale a sem vídeo.',
+  })
+  @NormalizeVideoUrl()
+  @IsOptional()
+  @IsYoutubeUrl()
+  videoUrl?: string;
 }

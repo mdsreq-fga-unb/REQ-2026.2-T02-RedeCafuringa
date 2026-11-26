@@ -2,6 +2,7 @@ import { ApiHttpError, apiResourceUrl, getApiClient } from "@/shared/api";
 import type { components } from "@/shared/api/schema";
 import { isMockAuthEnabled } from "@/features/auth/authMode";
 import { readMockUserDetails } from "@/features/auth/mockAuth";
+import { extractYoutubeId } from "@/features/video/youtube";
 import { prepareProfilePhoto } from "./photoResize";
 import type { TrajectoryDraft } from "./trajectoryModel";
 import { demoPublicProfiles } from "@/features/profile/publicProfileDemo";
@@ -70,6 +71,10 @@ export async function saveTrajectory(
                         publico: body.pix.publico === true,
                         atualizadoEm: new Date().toISOString(),
                     };
+        const videoId =
+            body.videoUrl === undefined
+                ? previous?.videoId
+                : extractYoutubeId(body.videoUrl ?? "");
         const result: OwnTrajectory = {
             trajetoria: body.trajetoria,
             atividades: body.atividades,
@@ -80,6 +85,7 @@ export async function saveTrajectory(
             atualizadoEm: new Date().toISOString(),
             ...(previous?.fotoUrl ? { fotoUrl: previous.fotoUrl } : {}),
             ...(pix ? { pix } : {}),
+            ...(videoId ? { videoId } : {}),
         };
         demoTrajectories.set(headers.Authorization, result);
         return result;
@@ -117,6 +123,7 @@ export async function getPublicTrajectory(
                 ? { telefone: saved.telefone }
                 : {}),
             ...(saved.fotoUrl ? { fotoUrl: saved.fotoUrl } : {}),
+            ...(saved.videoId ? { videoId: saved.videoId } : {}),
         };
     }
     return getApiClient().get<PublicTrajectory>(

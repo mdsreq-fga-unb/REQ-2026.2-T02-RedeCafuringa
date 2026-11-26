@@ -1,4 +1,5 @@
 import { normalizePixKey, type PixKeyType } from "@/features/payments/pixCode";
+import { validateVideoUrl } from "@/features/video/youtube";
 import type { SaveTrajectory } from "./trajectoryService";
 
 export type TrajectoryDraft = {
@@ -19,6 +20,10 @@ export type TrajectoryDraft = {
     pixPublic: boolean;
     /** Já havia Pix salvo: apagar os campos pede a remoção ao salvar. */
     hadPix: boolean;
+    /** Link do vídeo do YouTube, como está no campo. */
+    videoUrl: string;
+    /** Já havia vídeo salvo: apagar o link pede a remoção ao salvar. */
+    hadVideo: boolean;
 };
 export const emptyTrajectory: TrajectoryDraft = {
     story: "",
@@ -33,6 +38,8 @@ export const emptyTrajectory: TrajectoryDraft = {
     pixReceiver: "",
     pixPublic: false,
     hadPix: false,
+    videoUrl: "",
+    hadVideo: false,
 };
 export const PIX_RECEIVER_MAX = 60;
 
@@ -92,17 +99,24 @@ export function validateTrajectory(draft: TrajectoryDraft): TrajectoryErrors {
         else if (receiver.length > PIX_RECEIVER_MAX)
             errors.pixReceiver = `Nome de quem recebe o Pix deve ter no máximo ${PIX_RECEIVER_MAX} caracteres.`;
     }
+
+    const video = validateVideoUrl(draft.videoUrl);
+    if (video) errors.videoUrl = video;
     return errors;
 }
 
 export function trajectoryBody(draft: TrajectoryDraft): SaveTrajectory {
     const telefone = draft.phone.replace(/\D/g, "");
+    const videoUrl = draft.videoUrl.trim();
     return {
         trajetoria: normalizeTrajectoryText(draft.story),
         atividades: normalizeTrajectoryText(draft.activities),
         telefone: telefone || null,
         telefonePublico: Boolean(telefone && draft.phonePublic),
         ...pixBody(draft),
+        // Sem link, o campo só vai quando é para remover o vídeo salvo:
+        // omitido, a API mantém o que já existe.
+        ...(videoUrl ? { videoUrl } : draft.hadVideo ? { videoUrl: null } : {}),
     };
 }
 

@@ -20,6 +20,7 @@ export function toProductList(
             ...(item.produtor.localidade
                 ? { producerLocation: item.produtor.localidade }
                 : {}),
+            ...(item.videoId ? { videoId: item.videoId } : {}),
             price: item.precoPorUnidade,
             unit: "unidade",
             image: item.fotos[0] ? resolvePhoto(item.fotos[0]) : "",

@@ -22,6 +22,7 @@ export function registeredToCatalogItem(offer: RegisteredOffer): Product {
             : {}),
         ...(localidade ? { producerLocation: localidade } : {}),
         description: offer.descricao,
+        ...(offer.videoId ? { videoId: offer.videoId } : {}),
         category: experience ? "Experiências" : "Produtos",
         price: experience ? offer.valorPorPessoa : offer.precoPorUnidade,
         unit: experience ? "pessoa" : "unidade",

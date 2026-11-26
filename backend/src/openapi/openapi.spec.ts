@@ -352,6 +352,52 @@ describe('contrato OpenAPI', () => {
     expect(form).toContain('"formasPagamentoNoDia"');
   });
 
+  it('vídeo do YouTube: link opcional na entrada e id na saída', () => {
+    const schemas = doc.components?.schemas as Record<
+      string,
+      {
+        required?: string[];
+        properties?: Record<string, { type?: string; nullable?: boolean }>;
+      }
+    >;
+    // Cadastros de oferta são multipart: o corpo é descrito na própria rota.
+    for (const path of ['/api/v1/products', '/api/v1/experiences']) {
+      const body = JSON.stringify(
+        (doc.paths[path] as Record<string, { requestBody?: unknown }>).post
+          .requestBody,
+      );
+      const form = (
+        JSON.parse(body) as {
+          content: Record<
+            string,
+            { schema: { required?: string[]; properties: object } }
+          >;
+        }
+      ).content['multipart/form-data'].schema;
+      expect(form.properties, path).toHaveProperty('videoUrl');
+      expect(form.required ?? [], path).not.toContain('videoUrl');
+    }
+    expect(schemas.SaveTrajectoryDto.properties).toHaveProperty('videoUrl');
+    expect(schemas.SaveTrajectoryDto.required ?? []).not.toContain('videoUrl');
+    expect(schemas.SaveTrajectoryDto.properties?.videoUrl).toMatchObject({
+      type: 'string',
+      nullable: true,
+    });
+    for (const output of ['ProductResponse', 'ExperienceResponse']) {
+      expect(schemas[output].properties?.videoId, output).toMatchObject({
+        type: 'string',
+        nullable: true,
+      });
+    }
+    for (const output of [
+      'OwnTrajectoryResponse',
+      'PublicTrajectoryResponse',
+    ]) {
+      expect(schemas[output].properties, output).toHaveProperty('videoId');
+      expect(schemas[output].required ?? [], output).not.toContain('videoId');
+    }
+  });
+
   it('todo DTO usado na API aparece no contrato', () => {
     const names = Object.keys(doc.components?.schemas ?? {});
     for (const dto of [

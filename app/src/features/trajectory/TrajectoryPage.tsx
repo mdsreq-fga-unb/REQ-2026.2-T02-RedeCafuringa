@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { youtubeWatchUrl } from "@/features/video/youtube";
 import { emptyTrajectory, trajectoryBody } from "./trajectoryModel";
 import type { TrajectoryDraft } from "./trajectoryModel";
 import {
@@ -54,6 +55,8 @@ export function TrajectoryPage({
                               hadPix: true,
                           }
                         : {}),
+                    videoUrl: youtubeWatchUrl(data.videoId),
+                    hadVideo: Boolean(data.videoId),
                 });
             })
             .catch((cause: unknown) => {
@@ -73,11 +76,14 @@ export function TrajectoryPage({
         try {
             const body = trajectoryBody(draft);
             await saveTrajectory(body);
-            // Salvo o Pix, apagar os campos depois passa a pedir a remoção.
-            if (active.current && body.pix !== undefined)
+            // Salvos o link e o Pix, apagar os campos depois passa a pedir a remoção.
+            if (active.current)
                 setDraft((current) => ({
                     ...current,
-                    hadPix: body.pix !== null,
+                    hadVideo: Boolean(draft.videoUrl.trim()),
+                    ...(body.pix !== undefined
+                        ? { hadPix: body.pix !== null }
+                        : {}),
                 }));
         } catch (cause) {
             if (active.current) setError(trajectoryError(cause));

@@ -17,6 +17,7 @@ const apiMel: ApiProduct = {
     produtor: { id: "p1", nomeIniciativa: "Dona Maria" },
     criadoEm: "2026-11-13T12:00:00.000Z",
     disponivel: true,
+    videoId: null,
 };
 
 describe("toProductList", () => {

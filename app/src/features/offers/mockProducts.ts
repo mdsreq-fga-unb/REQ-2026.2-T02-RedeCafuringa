@@ -18,6 +18,7 @@ export const mockApiProducts: ApiProduct[] = [
         },
         criadoEm: "2026-11-01T12:00:00.000Z",
         disponivel: true,
+        videoId: null,
     },
     {
         id: "cesta",
@@ -36,6 +37,7 @@ export const mockApiProducts: ApiProduct[] = [
         },
         criadoEm: "2026-11-02T12:00:00.000Z",
         disponivel: true,
+        videoId: null,
     },
     {
         id: "geleia",
@@ -54,5 +56,6 @@ export const mockApiProducts: ApiProduct[] = [
         },
         criadoEm: "2026-11-03T12:00:00.000Z",
         disponivel: false,
+        videoId: null,
     },
 ];

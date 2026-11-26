@@ -3,6 +3,8 @@ import { ActionButton } from "../../components/ui/ActionButton";
 import { BackButton } from "../../components/navigation/BackButton";
 import { WhatsAppContactLink } from "../contact/WhatsAppContactLink";
 import type { Offer } from "../../shared/types";
+import { VideoEmbed } from "@/features/video/VideoEmbed";
+import { youtubeEmbedUrl } from "@/features/video/youtube";
 
 type OfferDetailsPageProps = {
     offer: Offer;
@@ -91,6 +93,15 @@ export function OfferDetailsPage({
                 </div>
                 <h2 className="description-heading">Descrição</h2>
                 <p className="body-copy">{offer.description}</p>
+                {offer.videoId && youtubeEmbedUrl(offer.videoId) && (
+                    <>
+                        <h2 className="description-heading">Vídeo</h2>
+                        <VideoEmbed
+                            videoId={offer.videoId}
+                            title={offer.title}
+                        />
+                    </>
+                )}
                 <div className="offer-actions">
                     {onRequestBooking && (
                         <ActionButton
