@@ -105,6 +105,8 @@ describe("carrossel rural", () => {
 
     it("mostra as seis fotos da APA em WebP leve, sem metadados e com versão para celular", () => {
         const { container } = render(<RuralCarousel />);
+        const next = screen.getByRole("button", { name: "Próxima imagem" });
+        for (let step = 0; step < 5; step++) fireEvent.click(next);
         const photos = Array.from(container.querySelectorAll("img"));
         expect(photos.map((photo) => photo.alt)).toEqual([
             MORRO,
@@ -132,5 +134,34 @@ describe("carrossel rural", () => {
                 expect(bytes.includes("XMP ")).toBe(false);
             }
         }
+    });
+
+    it("baixa só a foto visível e a próxima, poupando dados em conexão rural", async () => {
+        const user = userEvent.setup();
+        const { container } = render(<RuralCarousel />);
+        const loaded = () =>
+            Array.from(container.querySelectorAll("img"))
+                .filter((photo) => photo.hasAttribute("src"))
+                .map((photo) => photo.alt);
+        expect(loaded()).toEqual([MORRO, CHALE_FRENTE]);
+        expect(
+            Array.from(container.querySelectorAll("img:not([src])")).every(
+                (photo) => !photo.hasAttribute("srcset"),
+            ),
+        ).toBe(true);
+        await user.click(
+            screen.getByRole("button", { name: "Próxima imagem" }),
+        );
+        expect(loaded()).toEqual([MORRO, CHALE_FRENTE, ESTRADA]);
+        await user.click(
+            screen.getByRole("button", { name: "Ir para imagem 5" }),
+        );
+        expect(loaded()).toEqual([
+            MORRO,
+            CHALE_FRENTE,
+            ESTRADA,
+            CHALE_SOL,
+            SERRA,
+        ]);
     });
 });
