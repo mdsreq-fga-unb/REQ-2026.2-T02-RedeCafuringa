@@ -577,3 +577,36 @@
     color: var(--orange-text);
     font-weight: 600;
 }
+
+/* Comprovante do sinal: botão de arquivo no padrão dos botões contornados do site. */
+.booking-payment-receipt input[type="file"] {
+    max-width: 100%;
+    color: var(--muted);
+    font: inherit;
+    font-size: 14px;
+}
+
+.booking-payment-receipt input[type="file"]::file-selector-button {
+    min-height: 44px;
+    margin-right: 12px;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 750;
+    cursor: pointer;
+}
+
+.booking-payment-receipt input[type="file"]::file-selector-button:hover {
+    border-color: var(--orange-text);
+    color: var(--orange-text);
+}
+
+.booking-payment-receipt input[type="file"]:focus-visible {
+    outline: 2px solid var(--orange-text);
+    outline-offset: 3px;
+    border-radius: 14px;
+}
