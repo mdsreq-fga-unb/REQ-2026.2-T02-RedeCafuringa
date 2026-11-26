@@ -31,7 +31,7 @@ Uma característica pode contribuir para mais de um objetivo, sendo identificado
 | **CP3** | Atrativos e Experiências Rurais | Permitir a divulgação de atrativos e experiências oferecidos no território, como trilhas, visitas, vivências agroecológicas, passeios e hospedagens. | **OE2** | OE1, OE3 |
 | **CP4** | Busca e Descoberta | Permitir que consumidores e visitantes encontrem produtores, produtos, propriedades e atrativos por meio de critérios de busca. | **OE2** | OE1, OE3 |
 | **CP5** | Intenção de Compra e Conexão Direta | Permitir que consumidores manifestem interesse nos produtos e estabeleçam contato direto com os respectivos produtores para continuidade da negociação fora da plataforma. | **OE3** | OE1 |
-| **CP6** | Pré-reserva de Experiências | Permitir que visitantes manifestem interesse e solicitem previamente participação em visitas, experiências ou hospedagens, sujeitas à confirmação do respectivo responsável. | **OE3** | OE1 |
+| **CP6** | Pré-reserva de Experiências | Permitir que visitantes manifestem interesse e solicitem previamente participação em visitas, experiências ou hospedagens, sujeitas à confirmação do respectivo responsável, inclusive pelo sinal combinado diretamente entre as partes. | **OE3** | OE1 |
 
 ### Matriz de Rastreabilidade OE × CP
 
@@ -82,7 +82,7 @@ Dessa forma, a viabilidade da proposta está condicionada aos seguintes fatores-
 
 * A manutenção de um escopo controlado, com foco rigoroso nas características essenciais e corte inflexível de escopos secundários para garantir a entrega do MVP;
 
-* A estruturação da reserva de experiências e hospedagem estritamente como pré-reserva com aceite do anfitrião, sem pagamentos ou contratos integrados;
+* A estruturação da reserva de experiências e hospedagem estritamente como pré-reserva com aceite do anfitrião, sem intermediação financeira nem contratos integrados;
 
 * A definição clara de um responsável (dono) pela conferência dos cadastros e auditoria contínua de conteúdo.
 
