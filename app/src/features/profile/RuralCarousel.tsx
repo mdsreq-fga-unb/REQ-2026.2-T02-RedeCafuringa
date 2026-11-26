@@ -46,6 +46,13 @@ export function RuralCarousel() {
     const [interacting, setInteracting] = useState(false);
     const [hidden, setHidden] = useState(document.hidden);
     const touchStart = useRef<number | null>(null);
+    // Só baixa a foto visível e a próxima (RNF06); as já baixadas ficam.
+    const [loaded, setLoaded] = useState<ReadonlySet<number>>(
+        () => new Set([0, 1]),
+    );
+    const upcoming = (index + 1) % slides.length;
+    if (!loaded.has(index) || !loaded.has(upcoming))
+        setLoaded(new Set([...loaded, index, upcoming]));
     useEffect(() => {
         const preference = window.matchMedia?.(
             "(prefers-reduced-motion: reduce)",
@@ -108,8 +115,8 @@ export function RuralCarousel() {
                 <img
                     key={slide.image}
                     className={`explore-hero-image${position === index ? " is-active" : ""}`}
-                    src={slide.image}
-                    srcSet={slide.srcSet}
+                    src={loaded.has(position) ? slide.image : undefined}
+                    srcSet={loaded.has(position) ? slide.srcSet : undefined}
                     sizes="(min-width: 1200px) 1120px, 100vw"
                     alt={slide.description}
                     aria-hidden={position !== index}
