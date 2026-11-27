@@ -66,6 +66,17 @@ describe('AuthService', () => {
       vi.useRealTimers();
     });
 
+    it('busca a conta do perfil da tela de login (mesmo e-mail em dois perfis)', async () => {
+      const { service, users } = setup();
+
+      await service.login('maria@exemplo.com', 'Senha123', Role.CONSUMIDOR);
+
+      expect(users.findByEmail).toHaveBeenCalledWith(
+        'maria@exemplo.com',
+        Role.CONSUMIDOR,
+      );
+    });
+
     it('recusa senha errada com 401 genérico', async () => {
       const { service, hasher } = setup();
       hasher.verify.mockResolvedValue(false);

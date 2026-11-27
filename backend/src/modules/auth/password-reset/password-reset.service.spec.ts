@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 import type { Model } from 'mongoose';
 import type { MailService } from '../../../common/mail/mail.service.js';
 import type { MetricsRegistry } from '../../metrics/metrics.registry.js';
+import { Role } from '../../users/domain/role.js';
 import type { UserDocument } from '../../users/schemas/user.schema.js';
 import type { UsersService } from '../../users/users.service.js';
 import { generateResetToken, hashResetToken } from './domain/reset-token.js';
@@ -103,6 +104,18 @@ describe('PasswordResetService', () => {
 
       expect(service.request('maria@exemplo.com')).toBeUndefined();
       expect(users.findByEmail).toHaveBeenCalledWith('maria@exemplo.com');
+    });
+
+    it('busca a conta do perfil da tela (mesmo e-mail em dois perfis)', () => {
+      const { service, users } = setup();
+      users.findByEmail.mockReturnValue(new Promise(() => undefined));
+
+      service.request('maria@exemplo.com', Role.PRODUTOR);
+
+      expect(users.findByEmail).toHaveBeenCalledWith(
+        'maria@exemplo.com',
+        Role.PRODUTOR,
+      );
     });
 
     it('erro inesperado no processamento vira só um aviso no log, sem e-mail', async () => {

@@ -10,7 +10,7 @@ import { Types } from 'mongoose';
 import type { PasswordHasher } from '../../common/crypto/password-hasher.js';
 import type { PiiCipher } from '../../common/crypto/pii-cipher.js';
 import { Role } from './domain/role.js';
-import type { User } from './schemas/user.schema.js';
+import { type User, UserSchema } from './schemas/user.schema.js';
 import { UsersService } from './users.service.js';
 
 function query<T>(value: T) {
@@ -193,6 +193,66 @@ describe('UsersService', () => {
       ).rejects.toBeInstanceOf(ForbiddenException);
       expect(bans.isBanned).toHaveBeenCalledWith({ email: 'adm@exemplo.com' });
       expect(model.create).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('mesmo e-mail e CPF em perfis diferentes', () => {
+    it('consumidor: e-mail e CPF só conflitam com outro consumidor (ou e-mail de admin)', async () => {
+      const { service, model, cipher } = setup();
+      const dto = makeConsumer({ email: 'Maria@Exemplo.com' });
+
+      await service.createConsumer(dto);
+
+      expect(model.exists).toHaveBeenCalledWith({
+        cpfHash: cipher.blindIndex(dto.cpf),
+        perfil: Role.CONSUMIDOR,
+      });
+      expect(model.exists).toHaveBeenCalledWith({
+        email: 'maria@exemplo.com',
+        perfil: { $in: [Role.CONSUMIDOR, Role.ADMINISTRADOR] },
+      });
+    });
+
+    it('produtor: e-mail e CPF só conflitam com outro produtor (ou e-mail de admin)', async () => {
+      const { service, model, cipher } = setup();
+      const dto = makeProducer({ email: 'Maria@Exemplo.com' });
+
+      await service.createProducer(dto);
+
+      expect(model.exists).toHaveBeenCalledWith({
+        cpfHash: cipher.blindIndex(dto.cpf),
+        perfil: Role.PRODUTOR,
+      });
+      expect(model.exists).toHaveBeenCalledWith({
+        email: 'maria@exemplo.com',
+        perfil: { $in: [Role.PRODUTOR, Role.ADMINISTRADOR] },
+      });
+    });
+
+    it('o e-mail do administrador segue exclusivo em toda a base', async () => {
+      const { service, model } = setup();
+
+      await service.createAdmin({ email: 'a@b.com', senha: 'SenhaForte123' });
+
+      expect(model.exists).toHaveBeenCalledWith({ email: 'a@b.com' });
+    });
+
+    it('os índices únicos de e-mail e CPF são por perfil', () => {
+      const indexes = UserSchema.indexes();
+
+      expect(indexes).toContainEqual([
+        { email: 1, perfil: 1 },
+        expect.objectContaining({ unique: true }),
+      ]);
+      expect(indexes).toContainEqual([
+        { cpfHash: 1, perfil: 1 },
+        expect.objectContaining({
+          unique: true,
+          partialFilterExpression: { cpfHash: { $exists: true } },
+        }),
+      ]);
+      expect(UserSchema.path('email').options).not.toHaveProperty('unique');
+      expect(UserSchema.path('cpfHash').options).not.toHaveProperty('unique');
     });
   });
 
@@ -500,14 +560,35 @@ describe('UsersService', () => {
   });
 
   describe('findByEmail (RN05)', () => {
-    it('busca pelo e-mail normalizado em minúsculas', async () => {
+    it('com perfil, busca a conta daquele perfil (ou o administrador do e-mail)', async () => {
       const { service, model } = setup();
 
-      await service.findByEmail('Maria@Exemplo.COM');
+      await service.findByEmail('Maria@Exemplo.COM', Role.PRODUTOR);
 
       expect(model.findOne).toHaveBeenCalledWith({
         email: 'maria@exemplo.com',
+        perfil: { $in: [Role.PRODUTOR, Role.ADMINISTRADOR] },
       });
+    });
+
+    it('sem perfil, devolve a única conta do e-mail normalizado', async () => {
+      const { service, model } = setup();
+      const account = { id: 'unica' };
+      model.find.mockReturnValue(chainQuery([account]));
+
+      await expect(service.findByEmail('Maria@Exemplo.COM')).resolves.toBe(
+        account,
+      );
+      expect(model.find).toHaveBeenCalledWith({ email: 'maria@exemplo.com' });
+    });
+
+    it('sem perfil, não escolhe entre duas contas do mesmo e-mail', async () => {
+      const { service, model } = setup();
+      model.find.mockReturnValue(chainQuery([{ id: 'a' }, { id: 'b' }]));
+
+      await expect(
+        service.findByEmail('maria@exemplo.com'),
+      ).resolves.toBeNull();
     });
   });
 

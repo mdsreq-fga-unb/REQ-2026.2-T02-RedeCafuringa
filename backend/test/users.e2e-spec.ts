@@ -245,7 +245,15 @@ describe('HU02 — Cadastrar perfil de produtor (e2e)', () => {
     await t.request().post(path).send({ cpf, email }).expect(204);
     expect(await t.connection.collection('users').countDocuments()).toBe(0);
 
+    // A mesma pessoa pode ser consumidora e produtora: só outro produtor barra.
     await t.request().post(REGISTER).send(makeConsumer({ cpf })).expect(201);
+    await t.request().post(path).send({ cpf, email }).expect(204);
+
+    await t
+      .request()
+      .post(PRODUCER_REGISTER)
+      .send(makeProducer({ cpf }))
+      .expect(201);
     const response = await t
       .request()
       .post(path)
