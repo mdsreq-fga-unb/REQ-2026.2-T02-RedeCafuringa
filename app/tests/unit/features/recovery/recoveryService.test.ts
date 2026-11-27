@@ -52,6 +52,19 @@ describe("recoveryService — API real (HU10)", () => {
         );
     });
 
+    it("pede a recuperação da conta do perfil informado", async () => {
+        const { service, post } = createService();
+        post.mockResolvedValue(undefined);
+
+        await service.requestAccessRecovery("ana@exemplo.com", "producer");
+
+        expect(post).toHaveBeenCalledWith(
+            "/auth/password-reset/request",
+            { email: "ana@exemplo.com", perfil: "PRODUTOR" },
+            { auth: false },
+        );
+    });
+
     it("informa o limite de tentativas ao pedir a recuperação", async () => {
         const { service, post } = createService();
         post.mockRejectedValue(httpError(429, { retryAfterSeconds: 30 }));

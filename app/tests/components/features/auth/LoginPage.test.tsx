@@ -89,7 +89,23 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
         expect(login).toHaveBeenCalledWith({
             email: validEmail,
             password: "senha123",
+            profile: "producer",
         });
+    });
+
+    it("entra na conta de consumidor pelo login do consumidor (mesmo e-mail nos dois perfis)", async () => {
+        vi.mocked(login).mockResolvedValue(producerAuth);
+        const { user } = renderLogin({ profile: "consumer" });
+
+        await fillAndSubmit(user, { email: validEmail, password: "senha123" });
+
+        await waitFor(() =>
+            expect(login).toHaveBeenCalledWith({
+                email: validEmail,
+                password: "senha123",
+                profile: "consumer",
+            }),
+        );
     });
 
     // Critério 4
@@ -244,16 +260,22 @@ describe("LoginPage — HU09 Autenticar usuário", () => {
             screen.getByRole("button", { name: "Esqueci minha senha" }),
         );
 
-        expect(onNavigate).toHaveBeenCalledWith("/recuperar-acesso");
+        expect(onNavigate).toHaveBeenCalledWith(
+            "/recuperar-acesso?perfil=producer",
+        );
         expect(login).not.toHaveBeenCalled();
     });
 
-    it("oferece a recuperação de acesso também no login do consumidor", () => {
-        renderLogin({ profile: "consumer" });
+    it("oferece a recuperação de acesso também no login do consumidor, levando o perfil", async () => {
+        const { onNavigate, user } = renderLogin({ profile: "consumer" });
 
-        expect(
+        await user.click(
             screen.getByRole("button", { name: "Esqueci minha senha" }),
-        ).toBeTruthy();
+        );
+
+        expect(onNavigate).toHaveBeenCalledWith(
+            "/recuperar-acesso?perfil=consumer",
+        );
     });
 
     // HU10, critério 5 (depois de redefinir, o usuário segue para o login)

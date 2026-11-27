@@ -8,13 +8,17 @@ import type { RecoverAccessResult } from "@/features/recovery/recoveryService";
 vi.mock("@/features/recovery/recoveryService");
 
 function renderPage(
-    props: { getDemoLink?: (email: string) => string | null } = {},
+    props: {
+        getDemoLink?: (email: string) => string | null;
+        profile?: "consumer" | "producer";
+    } = {},
 ) {
     const onNavigate = vi.fn();
     render(
         <RecoverAccessPage
             onNavigate={onNavigate}
             getDemoLink={props.getDemoLink}
+            profile={props.profile}
         />,
     );
     return { onNavigate, user: userEvent.setup() };
@@ -62,6 +66,25 @@ describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
     });
 
     // Critério 6
+    it("pede a recuperação da conta do perfil do login de origem", async () => {
+        const { user } = renderPage({ profile: "consumer" });
+
+        await sendEmail(user);
+
+        expect(requestAccessRecovery).toHaveBeenCalledWith(
+            "ana@exemplo.com",
+            "consumer",
+        );
+    });
+
+    it("volta para o login do perfil de origem", async () => {
+        const { onNavigate, user } = renderPage({ profile: "consumer" });
+
+        await user.click(backButton());
+
+        expect(onNavigate).toHaveBeenCalledWith("/login/consumer");
+    });
+
     it("sinaliza e-mail vazio e não pede a recuperação", async () => {
         const { user } = renderPage();
 
@@ -94,7 +117,10 @@ describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
         expect(
             await screen.findByRole("heading", { name: "Confira seu e-mail" }),
         ).toBeTruthy();
-        expect(requestAccessRecovery).toHaveBeenCalledWith("ana@exemplo.com");
+        expect(requestAccessRecovery).toHaveBeenCalledWith(
+            "ana@exemplo.com",
+            undefined,
+        );
         expect(
             screen.getByText("Endereço informado: ana@exemplo.com"),
         ).toBeTruthy();

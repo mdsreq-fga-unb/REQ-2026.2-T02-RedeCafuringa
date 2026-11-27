@@ -84,6 +84,34 @@ describe("authService.login", () => {
         });
     });
 
+    it.each([
+        ["consumer", "CONSUMIDOR"],
+        ["producer", "PRODUTOR"],
+    ] as const)(
+        "envia o perfil da tela de login (%s) para escolher a conta do e-mail",
+        async (profile, perfil) => {
+            const fetchMock = vi
+                .fn<typeof fetch>()
+                .mockResolvedValue(jsonResponse(backendLogin(perfil)));
+            vi.stubGlobal("fetch", fetchMock);
+            const { login } = await load();
+
+            await login({
+                email: "maria@exemplo.com",
+                password: "senha123",
+                profile,
+            });
+
+            expect(
+                JSON.parse(String(fetchMock.mock.calls[0][1]?.body)),
+            ).toEqual({
+                email: "maria@exemplo.com",
+                senha: "senha123",
+                perfil,
+            });
+        },
+    );
+
     it("mapeia CONSUMIDOR para consumer e PRODUTOR para producer", async () => {
         const { toAuthResult } = await load();
 

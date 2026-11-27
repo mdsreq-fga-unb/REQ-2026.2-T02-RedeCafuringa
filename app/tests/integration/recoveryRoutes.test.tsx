@@ -80,6 +80,23 @@ describe("App — rotas da recuperação de acesso (HU10)", () => {
                 name: "Vamos recuperar seu acesso",
             }),
         ).toBeTruthy();
-        expect(window.location.hash).toBe("#/recuperar-acesso");
+        expect(window.location.hash).toBe("#/recuperar-acesso?perfil=producer");
+    });
+
+    it("leva o perfil do login de consumidor até a recuperação e volta para ele", async () => {
+        renderAt("/login/consumer");
+        const user = userEvent.setup();
+
+        await user.click(
+            await screen.findByRole("button", { name: "Esqueci minha senha" }),
+        );
+        await screen.findByRole("heading", {
+            name: "Vamos recuperar seu acesso",
+        });
+        expect(window.location.hash).toBe("#/recuperar-acesso?perfil=consumer");
+
+        await user.click(screen.getByRole("button", { name: /^Voltar$/ }));
+
+        expect(window.location.hash).toBe("#/login/consumer");
     });
 });

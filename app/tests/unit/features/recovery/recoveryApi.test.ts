@@ -11,6 +11,21 @@ describe("recoveryApi — contrato da HU10", () => {
         });
     });
 
+    it("inclui o perfil da conta quando a recuperação vem de um login de perfil", () => {
+        expect(
+            toRecoverAccessBody({
+                email: "ana@exemplo.com",
+                profile: "consumer",
+            }),
+        ).toEqual({ email: "ana@exemplo.com", perfil: "CONSUMIDOR" });
+        expect(
+            toRecoverAccessBody({
+                email: "ana@exemplo.com",
+                profile: "producer",
+            }),
+        ).toEqual({ email: "ana@exemplo.com", perfil: "PRODUTOR" });
+    });
+
     it("monta o corpo da redefinição com token e novaSenha", () => {
         expect(
             toResetPasswordBody({ token: "abc123", password: "novaSenha1" }),
