@@ -178,6 +178,72 @@ describe("BookingFormPage: estrutura (HU44 CA02 e CA03)", () => {
         ]);
     });
 
+    it("oferece só as formas que a produtora aceita na experiência", () => {
+        render(
+            <BookingFormPage
+                experience={{
+                    ...experience,
+                    requiresDeposit: false,
+                    dayPaymentMethods: ["dinheiro", "cartao_debito"],
+                }}
+                onBack={vi.fn()}
+                onSent={vi.fn()}
+            />,
+        );
+        expect(
+            optionLabels(screen.getByLabelText("Forma de pagamento")),
+        ).toEqual(["Selecione", "Dinheiro", "Cartão de débito"]);
+    });
+
+    it("com sinal, oferece o Pix junto das formas do dia", () => {
+        render(
+            <BookingFormPage
+                experience={{
+                    ...experience,
+                    requiresDeposit: true,
+                    dayPaymentMethods: ["dinheiro"],
+                }}
+                onBack={vi.fn()}
+                onSent={vi.fn()}
+            />,
+        );
+        expect(
+            optionLabels(screen.getByLabelText("Forma de pagamento")),
+        ).toEqual(["Selecione", "Pix", "Dinheiro"]);
+    });
+
+    it("não envia um rascunho com forma que a experiência deixou de aceitar", async () => {
+        localStorage.setItem("cafuringa-user-id", "user-1");
+        saveBookingDraft(experience.id, {
+            data: "2099-12-20",
+            horario: "09:00",
+            participantes: "2",
+            formaPagamento: "pix",
+            mensagem: "",
+        });
+        const user = userEvent.setup();
+        render(
+            <BookingFormPage
+                experience={{
+                    ...experience,
+                    requiresDeposit: false,
+                    dayPaymentMethods: ["dinheiro"],
+                }}
+                onBack={vi.fn()}
+                onSent={vi.fn()}
+            />,
+        );
+
+        await user.click(
+            screen.getByRole("button", { name: "Enviar pré-reserva" }),
+        );
+
+        expect(
+            await screen.findByText("Escolha uma forma de pagamento da lista."),
+        ).toBeTruthy();
+        expect(createBookingMock).not.toHaveBeenCalled();
+    });
+
     it("marca os quatro campos obrigatórios e deixa a mensagem opcional", () => {
         renderPage();
         for (const label of [

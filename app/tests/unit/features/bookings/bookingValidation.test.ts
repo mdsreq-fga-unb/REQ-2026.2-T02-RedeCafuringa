@@ -96,6 +96,26 @@ describe("validateBookingForm: valores permitidos (HU44 CA04)", () => {
         });
     });
 
+    it("rejeita uma forma que a experiência não aceita", () => {
+        expect(
+            validateBookingForm({ ...validForm, formaPagamento: "pix" }, NOW, [
+                "dinheiro",
+            ]),
+        ).toEqual({
+            formaPagamento: "Escolha uma forma de pagamento da lista.",
+        });
+    });
+
+    it("aceita uma forma que a experiência aceita", () => {
+        expect(
+            validateBookingForm(
+                { ...validForm, formaPagamento: "dinheiro" },
+                NOW,
+                ["dinheiro"],
+            ),
+        ).toEqual({});
+    });
+
     it.each(["pix", "dinheiro", "cartao_credito", "cartao_debito"])(
         "aceita a forma de pagamento %s",
         (formaPagamento) => {

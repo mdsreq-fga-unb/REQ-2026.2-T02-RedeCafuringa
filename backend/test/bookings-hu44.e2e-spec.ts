@@ -3,6 +3,7 @@ process.env.AUTH_THROTTLE_LIMIT = '1000';
 import { futureBookingDate, makeBooking } from '@test/factories';
 import { getModelToken } from '@nestjs/mongoose';
 import { Types, type Model } from 'mongoose';
+import { PaymentMethod } from '../src/modules/bookings/domain/booking.js';
 import { Booking } from '../src/modules/bookings/schemas/booking.schema.js';
 import { ExperienceCategory } from '../src/modules/experiences/domain/experience.js';
 import { Experience } from '../src/modules/experiences/schemas/experience.schema.js';
@@ -187,6 +188,59 @@ describe('HU44/RF44 — Solicitar pré-reserva de experiência (e2e)', () => {
   });
 
   describe('CA07: experiência indisponível não recebe pré-reserva', () => {
+    it('400 quando a forma de pagamento não é aceita pela experiência', async () => {
+      const { experienceId } = await seedExperience({
+        exigeSinal: false,
+        formasPagamentoNoDia: ['dinheiro'],
+      });
+      const token = await loginAs(t, Role.CONSUMIDOR);
+
+      const res = await post(
+        token,
+        makeBooking({
+          experienciaId: experienceId,
+          formaPagamento: PaymentMethod.PIX,
+        }),
+      ).expect(400);
+
+      expect(res.body.message).toEqual([
+        'Esta experiência não aceita essa forma de pagamento. Escolha uma das formas oferecidas pela produtora.',
+      ]);
+      expect(await bookings().countDocuments()).toBe(0);
+    });
+
+    it('201 com uma forma de pagamento aceita pela experiência', async () => {
+      const { experienceId } = await seedExperience({
+        exigeSinal: false,
+        formasPagamentoNoDia: ['dinheiro', 'cartao_credito'],
+      });
+      const token = await loginAs(t, Role.CONSUMIDOR);
+
+      await post(
+        token,
+        makeBooking({
+          experienciaId: experienceId,
+          formaPagamento: PaymentMethod.CARTAO_CREDITO,
+        }),
+      ).expect(201);
+    });
+
+    it('com sinal, aceita Pix mesmo fora das formas do dia', async () => {
+      const { experienceId } = await seedExperience({
+        exigeSinal: true,
+        formasPagamentoNoDia: ['dinheiro'],
+      });
+      const token = await loginAs(t, Role.CONSUMIDOR);
+
+      await post(
+        token,
+        makeBooking({
+          experienciaId: experienceId,
+          formaPagamento: PaymentMethod.PIX,
+        }),
+      ).expect(201);
+    });
+
     it('404 quando a experiência não existe', async () => {
       const token = await loginAs(t, Role.CONSUMIDOR);
 

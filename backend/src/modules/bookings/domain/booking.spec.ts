@@ -1,4 +1,5 @@
 import {
+  acceptedPaymentMethods,
   BOOKING_HOURS,
   BookingStatus,
   INITIAL_BOOKING_STATUS,
@@ -32,6 +33,52 @@ describe('HU44 — regras da pré-reserva', () => {
       'cartao_credito',
       'cartao_debito',
     ]);
+  });
+
+  describe('acceptedPaymentMethods — formas que a produtora aceita', () => {
+    it('só as formas cadastradas na experiência, na ordem do app', () => {
+      expect(
+        acceptedPaymentMethods({
+          exigeSinal: false,
+          formasPagamentoNoDia: [
+            PaymentMethod.CARTAO_DEBITO,
+            PaymentMethod.DINHEIRO,
+          ],
+        }),
+      ).toEqual([PaymentMethod.DINHEIRO, PaymentMethod.CARTAO_DEBITO]);
+    });
+
+    it('com sinal, o Pix sempre entra (o sinal é pago por Pix)', () => {
+      expect(
+        acceptedPaymentMethods({
+          exigeSinal: true,
+          formasPagamentoNoDia: [PaymentMethod.DINHEIRO],
+        }),
+      ).toEqual([PaymentMethod.PIX, PaymentMethod.DINHEIRO]);
+    });
+
+    it('experiência antiga (sem o campo de sinal) pede sinal: inclui o Pix', () => {
+      expect(
+        acceptedPaymentMethods({
+          formasPagamentoNoDia: [PaymentMethod.DINHEIRO],
+        }),
+      ).toEqual([PaymentMethod.PIX, PaymentMethod.DINHEIRO]);
+    });
+
+    it('sem nenhuma forma cadastrada e sem sinal, aceita todas para não travar a reserva', () => {
+      expect(
+        acceptedPaymentMethods({ exigeSinal: false, formasPagamentoNoDia: [] }),
+      ).toEqual(Object.values(PaymentMethod));
+      expect(acceptedPaymentMethods({ exigeSinal: false })).toEqual(
+        Object.values(PaymentMethod),
+      );
+    });
+
+    it('com sinal e sem formas do dia, aceita todas (experiência antiga)', () => {
+      expect(acceptedPaymentMethods({ formasPagamentoNoDia: [] })).toEqual(
+        Object.values(PaymentMethod),
+      );
+    });
   });
 
   it('CA03 — participantes vão de 1 a 50, como no formulário', () => {
