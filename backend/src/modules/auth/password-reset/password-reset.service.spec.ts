@@ -103,7 +103,10 @@ describe('PasswordResetService', () => {
       users.findByEmail.mockReturnValue(new Promise(() => undefined));
 
       expect(service.request('maria@exemplo.com')).toBeUndefined();
-      expect(users.findByEmail).toHaveBeenCalledWith('maria@exemplo.com');
+      expect(users.findByEmail).toHaveBeenCalledWith(
+        'maria@exemplo.com',
+        undefined,
+      );
     });
 
     it('busca a conta do perfil da tela (mesmo e-mail em dois perfis)', () => {

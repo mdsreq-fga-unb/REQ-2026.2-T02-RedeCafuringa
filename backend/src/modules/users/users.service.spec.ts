@@ -251,8 +251,8 @@ describe('UsersService', () => {
           partialFilterExpression: { cpfHash: { $exists: true } },
         }),
       ]);
-      expect(UserSchema.path('email').options).not.toHaveProperty('unique');
-      expect(UserSchema.path('cpfHash').options).not.toHaveProperty('unique');
+      expect(UserSchema.path('email').options.unique).toBeUndefined();
+      expect(UserSchema.path('cpfHash').options.unique).toBeUndefined();
     });
   });
 

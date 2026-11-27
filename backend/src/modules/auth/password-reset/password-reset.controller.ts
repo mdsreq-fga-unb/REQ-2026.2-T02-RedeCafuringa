@@ -56,7 +56,7 @@ export class PasswordResetController {
     @Body() dto: RequestPasswordResetDto,
   ): PasswordResetRequestedResponse {
     // Não aguarda: o processamento roda depois da resposta (tempo constante).
-    this.passwordReset.request(dto.email);
+    this.passwordReset.request(dto.email, dto.perfil);
     return {
       mensagem:
         'Se houver uma conta com esse e-mail, você receberá as instruções para recuperar o acesso.',

@@ -14,14 +14,15 @@ export class User {
   @Prop({ required: true, trim: true })
   nome: string;
 
-  // Administrador (HU03) não tem CPF: o índice único é esparso.
-  @Prop({ unique: true, sparse: true })
+  // Único por perfil (ver índices abaixo); administrador (HU03) não tem CPF.
+  @Prop()
   cpfHash?: string;
 
   @Prop()
   cpfCifrado?: string;
 
-  @Prop({ required: true, unique: true, lowercase: true, trim: true })
+  // Único por perfil: consumidora e produtora podem usar o mesmo e-mail.
+  @Prop({ required: true, lowercase: true, trim: true })
   email: string;
 
   @Prop()
@@ -117,3 +118,12 @@ export class User {
 
 export type UserDocument = HydratedDocument<User>;
 export const UserSchema = SchemaFactory.createForClass(User);
+
+// A mesma pessoa pode ter uma conta de consumidora e uma de produtora, com o
+// mesmo e-mail e CPF; dentro do perfil, os dois seguem únicos. O e-mail do
+// administrador é exclusivo pela checagem do UsersService.
+UserSchema.index({ email: 1, perfil: 1 }, { unique: true });
+UserSchema.index(
+  { cpfHash: 1, perfil: 1 },
+  { unique: true, partialFilterExpression: { cpfHash: { $exists: true } } },
+);

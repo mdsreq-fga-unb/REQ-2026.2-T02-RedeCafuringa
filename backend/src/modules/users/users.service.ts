@@ -17,7 +17,7 @@ import {
 } from './banned-identities.service.js';
 import { isAdult } from './domain/age.js';
 import { ProducerCategory } from './domain/producer-category.js';
-import { Role } from './domain/role.js';
+import { type LoginProfile, Role } from './domain/role.js';
 import { buildUserFilter } from './domain/user-filter.js';
 import { DEFAULT_PAGE_SIZE, ListUsersQuery } from './dto/list-users.query.js';
 import { UserDetailResponse } from './dto/user-detail.response.js';
@@ -63,6 +63,23 @@ export class UsersService {
       throw new ForbiddenException(BANNED);
   }
 
+  /**
+   * E-mail e CPF são únicos dentro do perfil: a mesma pessoa pode ser
+   * consumidora e produtora. O e-mail de um administrador segue exclusivo.
+   */
+  private async assertAvailable(
+    perfil: Role,
+    { cpfHash, email }: { cpfHash: string; email: string },
+  ): Promise<void> {
+    if (await this.users.exists({ cpfHash, perfil }).exec()) {
+      throw new ConflictException('CPF já cadastrado');
+    }
+    const perfis = { $in: [perfil, Role.ADMINISTRADOR] };
+    if (await this.users.exists({ email, perfil: perfis }).exec()) {
+      throw new ConflictException('E-mail já cadastrado');
+    }
+  }
+
   /** HU01: o cadastro público sempre cria um consumidor (RN01). */
   createConsumer(dto: CreateConsumerDto): Promise<UserDocument> {
     return this.create(dto, Role.CONSUMIDOR);
@@ -102,13 +119,7 @@ export class UsersService {
     const cpfHash = this.cipher.blindIndex(dto.cpf);
     const cnpjHash = dto.cnpj ? this.cipher.blindIndex(dto.cnpj) : undefined;
     await this.assertNotBanned({ cpfHash, cnpjHash, email });
-
-    if (await this.users.exists({ cpfHash }).exec()) {
-      throw new ConflictException('CPF já cadastrado');
-    }
-    if (await this.users.exists({ email }).exec()) {
-      throw new ConflictException('E-mail já cadastrado');
-    }
+    await this.assertAvailable(Role.PRODUTOR, { cpfHash, email });
 
     if (cnpjHash && (await this.users.exists({ cnpjHash }).exec())) {
       throw new ConflictException('CNPJ já cadastrado');
@@ -203,12 +214,7 @@ export class UsersService {
     const cpfHash = this.cipher.blindIndex(dto.cpf);
     const email = dto.email.toLowerCase();
     await this.assertNotBanned({ cpfHash, email });
-    if (await this.users.exists({ cpfHash }).exec()) {
-      throw new ConflictException('CPF já cadastrado');
-    }
-    if (await this.users.exists({ email }).exec()) {
-      throw new ConflictException('E-mail já cadastrado');
-    }
+    await this.assertAvailable(perfil, { cpfHash, email });
 
     try {
       return await this.users.create({
@@ -230,9 +236,29 @@ export class UsersService {
     }
   }
 
-  /** RN05: o login identifica a conta pelo e-mail. */
-  findByEmail(email: string): Promise<UserDocument | null> {
-    return this.users.findOne({ email: email.toLowerCase() }).exec();
+  /**
+   * RN05: o login identifica a conta pelo e-mail e pelo perfil da tela. O
+   * administrador entra por qualquer tela (o e-mail dele é exclusivo). Sem
+   * perfil, só devolve a conta quando o e-mail tem uma única conta.
+   */
+  async findByEmail(
+    email: string,
+    perfil?: LoginProfile,
+  ): Promise<UserDocument | null> {
+    const normalized = email.toLowerCase();
+    if (perfil) {
+      return this.users
+        .findOne({
+          email: normalized,
+          perfil: { $in: [perfil, Role.ADMINISTRADOR] },
+        })
+        .exec();
+    }
+    const accounts = await this.users
+      .find({ email: normalized })
+      .limit(2)
+      .exec();
+    return accounts.length === 1 ? accounts[0] : null;
   }
 
   /**

@@ -62,7 +62,7 @@ export class AuthController {
     headers: RETRY_AFTER_HEADER,
   })
   login(@Body() dto: LoginDto): Promise<LoginResponse> {
-    return this.auth.login(dto.email, dto.senha);
+    return this.auth.login(dto.email, dto.senha, dto.perfil);
   }
 
   @Get('me')

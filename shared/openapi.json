@@ -4793,6 +4793,15 @@
           "senha": {
             "type": "string",
             "example": "SenhaForte123"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR"
+            ],
+            "example": "CONSUMIDOR",
+            "description": "Perfil da tela de login. A mesma pessoa pode ter conta de consumidor e de produtor com o mesmo e-mail; o administrador entra por qualquer uma."
           }
         },
         "required": [
@@ -4834,6 +4843,15 @@
             "type": "string",
             "example": "maria@exemplo.com",
             "description": "E-mail cadastrado na conta (sem distinção de maiúsculas)"
+          },
+          "perfil": {
+            "type": "string",
+            "enum": [
+              "CONSUMIDOR",
+              "PRODUTOR"
+            ],
+            "example": "CONSUMIDOR",
+            "description": "Perfil da conta a recuperar, quando o e-mail tem conta de consumidor e de produtor."
           }
         },
         "required": [

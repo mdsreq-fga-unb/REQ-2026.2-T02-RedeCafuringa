@@ -6,6 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PasswordHasher } from '../../common/crypto/password-hasher.js';
+import type { LoginProfile } from '../users/domain/role.js';
 import { UserResponse } from '../users/dto/user.response.js';
 import { UsersService } from '../users/users.service.js';
 import { LoginResponse } from './dto/login.response.js';
@@ -24,8 +25,12 @@ export class AuthService {
   ) {}
 
   /** HU09 / RN05: autentica por e-mail e senha e emite o token de acesso. */
-  async login(email: string, senha: string): Promise<LoginResponse> {
-    const user = await this.users.findByEmail(email);
+  async login(
+    email: string,
+    senha: string,
+    perfil?: LoginProfile,
+  ): Promise<LoginResponse> {
+    const user = await this.users.findByEmail(email, perfil);
     if (!user) {
       await this.hasher.verifyDummy(senha);
       throw new UnauthorizedException(INVALID_CREDENTIALS);

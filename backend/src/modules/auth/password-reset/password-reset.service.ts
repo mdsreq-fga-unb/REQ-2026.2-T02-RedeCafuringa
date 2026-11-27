@@ -14,6 +14,7 @@ import {
   sendWithRetry,
 } from '../../../common/mail/send-with-retry.js';
 import { MetricsRegistry } from '../../metrics/metrics.registry.js';
+import type { LoginProfile } from '../../users/domain/role.js';
 import { UsersService } from '../../users/users.service.js';
 import { buildResetEmail } from './domain/reset-email.js';
 import {
@@ -56,8 +57,8 @@ export class PasswordResetService
    * gravação do token, envio) roda depois, fora do caminho da resposta: o tempo
    * de resposta é o mesmo exista ou não a conta (RNF11, sem enumeração).
    */
-  request(email: string): void {
-    const task = this.processRequest(email)
+  request(email: string, perfil?: LoginProfile): void {
+    const task = this.processRequest(email, perfil)
       .catch((error: unknown) => {
         // Sem e-mail nem token no log (RNF11): só o tipo da falha.
         this.logger.warn(
@@ -85,8 +86,8 @@ export class PasswordResetService
   }
 
   /** CA03: gera o token e o envia ao e-mail cadastrado da conta (RN05). */
-  async processRequest(email: string): Promise<void> {
-    const user = await this.users.findByEmail(email);
+  async processRequest(email: string, perfil?: LoginProfile): Promise<void> {
+    const user = await this.users.findByEmail(email, perfil);
     if (!user?.ativo) return;
 
     const now = new Date();

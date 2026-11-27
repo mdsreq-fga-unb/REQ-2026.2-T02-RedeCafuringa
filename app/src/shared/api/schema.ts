@@ -1252,6 +1252,12 @@ export interface components {
             email: string;
             /** @example SenhaForte123 */
             senha: string;
+            /**
+             * @description Perfil da tela de login. A mesma pessoa pode ter conta de consumidor e de produtor com o mesmo e-mail; o administrador entra por qualquer uma.
+             * @example CONSUMIDOR
+             * @enum {string}
+             */
+            perfil?: "CONSUMIDOR" | "PRODUTOR";
         };
         LoginResponse: {
             /** @description JWT a enviar em Authorization: Bearer <token> */
@@ -1271,6 +1277,12 @@ export interface components {
              * @example maria@exemplo.com
              */
             email: string;
+            /**
+             * @description Perfil da conta a recuperar, quando o e-mail tem conta de consumidor e de produtor.
+             * @example CONSUMIDOR
+             * @enum {string}
+             */
+            perfil?: "CONSUMIDOR" | "PRODUTOR";
         };
         PasswordResetRequestedResponse: {
             /**
