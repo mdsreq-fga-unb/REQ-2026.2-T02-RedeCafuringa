@@ -20,6 +20,7 @@ import { Experience } from '../experiences/schemas/experience.schema.js';
 import { Role } from '../users/domain/role.js';
 import { User } from '../users/schemas/user.schema.js';
 import {
+  acceptedPaymentMethods,
   BookingStatus,
   bookingProducerFilter,
   INITIAL_BOOKING_STATUS,
@@ -50,6 +51,8 @@ import { Booking, type BookingPayment } from './schemas/booking.schema.js';
 
 const EXPERIENCE_UNAVAILABLE = 'Experiência indisponível para pré-reserva';
 const IN_PAST = 'A data e o horário da pré-reserva não podem estar no passado';
+const PAYMENT_NOT_ACCEPTED =
+  'Esta experiência não aceita essa forma de pagamento. Escolha uma das formas oferecidas pela produtora.';
 const PAST_BOOKING_CANNOT_BE_ACCEPTED =
   'Não é possível aceitar uma pré-reserva com data e horário passados.';
 const BOOKING_NOT_FOUND = 'Pré-reserva não encontrada';
@@ -79,7 +82,10 @@ const PRODUCER_NOT_CANCELLABLE: Partial<Record<BookingStatus, string>> = {
 type CancelSource = Pick<Booking, 'status' | 'data' | 'horario' | 'pagamento'>;
 
 type BookingDoc = Booking & { _id: Types.ObjectId };
-type BookableExperience = { _id: Types.ObjectId; produtor: Types.ObjectId };
+type BookableExperience = Pick<
+  Experience,
+  'exigeSinal' | 'formasPagamentoNoDia'
+> & { _id: Types.ObjectId; produtor: Types.ObjectId };
 type ReceivedExperience = Pick<Experience, 'nome' | 'valorCentavos'> & {
   _id: Types.ObjectId;
 };
@@ -116,6 +122,9 @@ export class BookingsService implements BeforeApplicationShutdown {
 
     const experience = await this.bookableExperience(dto.experienciaId);
     if (!experience) throw new NotFoundException(EXPERIENCE_UNAVAILABLE);
+    if (!acceptedPaymentMethods(experience).includes(dto.formaPagamento)) {
+      throw new BadRequestException([PAYMENT_NOT_ACCEPTED]);
+    }
 
     const created = await this.bookings.create({
       consumidor: new Types.ObjectId(userId),
@@ -405,7 +414,7 @@ export class BookingsService implements BeforeApplicationShutdown {
     if (!isObjectIdOrHexString(id)) return null;
     const experience = await this.experiences
       .findOne({ _id: id, disponivel: true })
-      .select('produtor')
+      .select('produtor exigeSinal formasPagamentoNoDia')
       .lean<BookableExperience>()
       .exec();
     if (!experience) return null;

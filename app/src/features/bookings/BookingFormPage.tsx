@@ -16,7 +16,7 @@ import {
     saveBookingDraft,
 } from "./bookingDraft";
 import { describeBookingError } from "./bookingErrors";
-import { PAYMENT_OPTIONS } from "./bookingOptions";
+import { acceptedPaymentMethods, paymentOptionsFor } from "./bookingOptions";
 import { buildBookingPayload } from "./bookingPayload";
 import { createBooking } from "./bookingService";
 import type {
@@ -56,7 +56,7 @@ export type BookingExperience = Pick<
     Product,
     "id" | "name" | "producerName" | "local" | "duracao"
 > &
-    Partial<Pick<Product, "price" | "requiresDeposit">>;
+    Partial<Pick<Product, "price" | "requiresDeposit" | "dayPaymentMethods">>;
 
 type BookingFormPageProps = {
     experience: BookingExperience;
@@ -123,7 +123,11 @@ export function BookingFormPage({
         if (submitting) return;
         setSubmitError(null);
 
-        const validationErrors = validateBookingForm(values);
+        const validationErrors = validateBookingForm(
+            values,
+            new Date(),
+            acceptedPaymentMethods(experience),
+        );
         setErrors(validationErrors);
         const firstInvalid = FOCUS_ORDER.find(
             (field) => validationErrors[field],
@@ -200,7 +204,7 @@ export function BookingFormPage({
                     label="Forma de pagamento"
                     required
                     value={values.formaPagamento}
-                    options={PAYMENT_OPTIONS}
+                    options={paymentOptionsFor(experience)}
                     error={errors.formaPagamento}
                     onChange={(value) => setField("formaPagamento", value)}
                 />

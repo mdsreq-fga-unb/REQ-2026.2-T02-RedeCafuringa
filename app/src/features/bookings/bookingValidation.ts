@@ -3,6 +3,7 @@ import {
     BOOKING_MESSAGE_MAX,
     MAX_PARTICIPANTS,
     PAYMENT_METHODS,
+    type PaymentMethod,
     type BookingField,
     type BookingFormErrors,
     type BookingFormValues,
@@ -33,12 +34,9 @@ const VALUE_RULES: Partial<Record<BookingField, Rule>> = {
         },
         message: `Informe de 1 a ${MAX_PARTICIPANTS} participantes.`,
     },
-    formaPagamento: {
-        isValid: (value) =>
-            (PAYMENT_METHODS as readonly string[]).includes(value),
-        message: "Escolha uma forma de pagamento da lista.",
-    },
 };
+
+const PAYMENT_MESSAGE = "Escolha uma forma de pagamento da lista.";
 
 const DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
 
@@ -94,6 +92,8 @@ function validateSchedule(
 export function validateBookingForm(
     values: BookingFormValues,
     now: Date = new Date(),
+    /** Formas que a experiência aceita; por padrão, todas. */
+    accepted: readonly PaymentMethod[] = PAYMENT_METHODS,
 ): BookingFormErrors {
     const errors: BookingFormErrors = {};
     for (const field of Object.keys(
@@ -106,6 +106,10 @@ export function validateBookingForm(
         }
         const rule = VALUE_RULES[field];
         if (rule && !rule.isValid(value)) errors[field] = rule.message;
+    }
+    const payment = values.formaPagamento.trim();
+    if (payment && !(accepted as readonly string[]).includes(payment)) {
+        errors.formaPagamento = PAYMENT_MESSAGE;
     }
     if (values.mensagem.length > BOOKING_MESSAGE_MAX) {
         errors.mensagem = `Escreva uma mensagem de até ${BOOKING_MESSAGE_MAX} caracteres.`;

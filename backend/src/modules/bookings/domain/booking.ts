@@ -24,6 +24,26 @@ export enum PaymentMethod {
   CARTAO_DEBITO = 'cartao_debito',
 }
 
+/**
+ * Formas de pagamento que a experiência aceita, na ordem do app: as que a
+ * produtora cadastrou para o dia, mais o Pix quando há sinal (o sinal é pago
+ * por Pix; experiência antiga, sem o campo, pede sinal). Sem nenhuma forma
+ * cadastrada, aceita todas, para não travar a reserva de experiências antigas.
+ */
+export function acceptedPaymentMethods(experience: {
+  exigeSinal?: boolean;
+  formasPagamentoNoDia?: readonly PaymentMethod[];
+}): PaymentMethod[] {
+  const all = Object.values(PaymentMethod);
+  const day = experience.formasPagamentoNoDia ?? [];
+  if (day.length === 0) return all;
+  const withDeposit = experience.exigeSinal !== false;
+  return all.filter(
+    (method) =>
+      day.includes(method) || (withDeposit && method === PaymentMethod.PIX),
+  );
+}
+
 export const PARTICIPANTES_MIN = 1;
 export const PARTICIPANTES_MAX = 50;
 export const MENSAGEM_MAX = 500;
