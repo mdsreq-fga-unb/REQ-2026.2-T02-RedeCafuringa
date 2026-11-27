@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { BackButton } from "@/components/navigation/BackButton";
+import type { LoginProfile } from "@/features/auth/loginProfile";
 import { requestAccessRecovery } from "./recoveryService";
 import type { RecoverAccessResult } from "./recoveryService";
 import { validateRecoveryRequest } from "./recoveryValidation";
@@ -11,6 +12,8 @@ type RecoverAccessPageProps = {
     onNavigate: (path: string) => void;
     /** Só no modo de demonstração: link que substitui o e-mail real. */
     getDemoLink?: (email: string) => string | null;
+    /** Perfil do login de origem: escolhe a conta quando o e-mail tem duas. */
+    profile?: LoginProfile;
 };
 
 function failureMessage(
@@ -25,7 +28,9 @@ function failureMessage(
 export function RecoverAccessPage({
     onNavigate,
     getDemoLink,
+    profile,
 }: RecoverAccessPageProps) {
+    const loginPath = profile ? `/login/${profile}` : "/entrar";
     const [email, setEmail] = useState("");
     const [fieldError, setFieldError] = useState("");
     const [formError, setFormError] = useState("");
@@ -37,7 +42,7 @@ export function RecoverAccessPage({
         setLoading(true);
         setFormError("");
         setResent(false);
-        const result = await requestAccessRecovery(address);
+        const result = await requestAccessRecovery(address, profile);
         setLoading(false);
         if (!result.ok) {
             setFormError(failureMessage(result));
@@ -121,7 +126,7 @@ export function RecoverAccessPage({
                     <ActionButton
                         variant="outline"
                         type="button"
-                        onClick={() => onNavigate("/entrar")}
+                        onClick={() => onNavigate(loginPath)}
                     >
                         Voltar para entrar
                     </ActionButton>
@@ -132,7 +137,7 @@ export function RecoverAccessPage({
 
     return (
         <section className="login-page recovery-page">
-            <BackButton label="Voltar" onClick={() => onNavigate("/entrar")} />
+            <BackButton label="Voltar" onClick={() => onNavigate(loginPath)} />
             <h1>Vamos recuperar seu acesso</h1>
             <p className="body-copy">
                 Informe seu e-mail cadastrado para receber as instruções.

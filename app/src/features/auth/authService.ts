@@ -8,6 +8,7 @@ import {
 } from "./errors";
 import { loginMock } from "./mockAuth";
 import { isMockAuthEnabled } from "./authMode";
+import { perfilField, type LoginProfile } from "./loginProfile";
 
 export { isMockAuthEnabled } from "./authMode";
 
@@ -19,6 +20,8 @@ type LoginResponse = components["schemas"]["LoginResponse"];
 export type Credentials = {
     email: string;
     password: string;
+    /** Perfil da tela de login: escolhe a conta quando o e-mail tem duas. */
+    profile?: LoginProfile;
 };
 
 const roleByPerfil: Partial<Record<LoginResponse["usuario"]["perfil"], Role>> =
@@ -46,7 +49,7 @@ export function toAuthResult(response: LoginResponse): AuthResult {
     };
 }
 
-// POST /auth/login  { email, senha }  ->  200 { accessToken, tokenType, expiresIn, usuario }
+// POST /auth/login  { email, senha, perfil? }  ->  200 { accessToken, tokenType, expiresIn, usuario }
 //   401 credenciais inválidas | 403 conta desativada (senha correta) | 429 muitas tentativas
 export async function login(credentials: Credentials): Promise<AuthResult> {
     if (isMockAuthEnabled) return loginMock(credentials);
@@ -54,6 +57,7 @@ export async function login(credentials: Credentials): Promise<AuthResult> {
     const body: LoginRequest = {
         email: credentials.email.trim().toLowerCase(),
         senha: credentials.password,
+        ...perfilField(credentials.profile),
     };
 
     let response: LoginResponse;

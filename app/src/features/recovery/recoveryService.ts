@@ -1,4 +1,5 @@
 import { isMockAuthEnabled } from "@/features/auth/authMode";
+import type { LoginProfile } from "@/features/auth/loginProfile";
 import { ApiHttpError, getApiClient } from "@/shared/api";
 import { requestMockRecovery, resetMockPassword } from "./mockRecovery";
 import {
@@ -32,6 +33,7 @@ export function createRecoveryService(deps: RecoveryServiceDeps) {
         //   400 e-mail inválido | 429 muitas tentativas
         async requestAccessRecovery(
             email: string,
+            profile?: LoginProfile,
         ): Promise<RecoverAccessResult> {
             if (deps.useMock) {
                 await requestMockRecovery(email);
@@ -43,7 +45,7 @@ export function createRecoveryService(deps: RecoveryServiceDeps) {
                     .getClient()
                     .post<unknown>(
                         REQUEST_RECOVERY_PATH,
-                        toRecoverAccessBody({ email }),
+                        toRecoverAccessBody({ email, profile }),
                         { auth: false },
                     );
                 return { ok: true };

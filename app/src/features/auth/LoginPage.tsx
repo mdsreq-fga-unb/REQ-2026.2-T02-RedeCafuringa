@@ -80,7 +80,7 @@ export function LoginPage({
         setLoading(true);
         let auth: AuthResult;
         try {
-            auth = await login({ email, password });
+            auth = await login({ email, password, profile });
         } catch (error) {
             setFormError(loginErrorMessage(error));
             setLoading(false);
@@ -176,7 +176,9 @@ export function LoginPage({
                     <ActionButton
                         variant="outline"
                         type="button"
-                        onClick={() => onNavigate("/recuperar-acesso")}
+                        onClick={() =>
+                            onNavigate(`/recuperar-acesso?perfil=${profile}`)
+                        }
                     >
                         Esqueci minha senha
                     </ActionButton>

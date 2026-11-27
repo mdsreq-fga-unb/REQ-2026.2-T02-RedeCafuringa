@@ -167,6 +167,7 @@ describe("RecoverAccessPage — HU10 Recuperar acesso à conta", () => {
         expect(requestAccessRecovery).toHaveBeenCalledTimes(2);
         expect(requestAccessRecovery).toHaveBeenLastCalledWith(
             "ana@exemplo.com",
+            undefined,
         );
     });
 

@@ -201,6 +201,11 @@ export function App() {
             resetSignup();
     }, [path, signupDetails, resetSignup]);
     const query = new URLSearchParams(route.split("?")[1] || "");
+    const recoveryPerfil = query.get("perfil");
+    const recoveryProfile =
+        recoveryPerfil === "consumer" || recoveryPerfil === "producer"
+            ? recoveryPerfil
+            : undefined;
     const contactSubject =
         path === "/entrar" || path.startsWith("/login/")
             ? query.get("contato")
@@ -712,6 +717,7 @@ export function App() {
                 {path === "/recuperar-acesso" && (
                     <RecoverAccessPage
                         onNavigate={navigate}
+                        profile={recoveryProfile}
                         getDemoLink={
                             isMockAuthEnabled ? getMockRecoveryLink : undefined
                         }

@@ -1,7 +1,8 @@
+import { perfilField, type LoginProfile } from "@/features/auth/loginProfile";
 import type { components } from "@/shared/api/schema";
 
 // Contrato publicado pelo backend (shared/openapi.json, tag `auth`):
-//   POST /auth/password-reset/request  { email }            -> 202 (sempre, exista a conta ou não) | 400 | 429
+//   POST /auth/password-reset/request  { email, perfil? }       -> 202 (sempre, exista a conta ou não) | 400 | 429
 //   POST /auth/password-reset/confirm  { token, novaSenha } -> 200 | 400 (link inválido ou senha fora da política) | 429
 // Os corpos vêm dos tipos gerados: se o contrato mudar, o typecheck acusa.
 export type RecoverAccessBody =
@@ -14,8 +15,12 @@ export const CONFIRM_RESET_PATH = "/auth/password-reset/confirm";
 
 export function toRecoverAccessBody(input: {
     email: string;
+    profile?: LoginProfile;
 }): RecoverAccessBody {
-    return { email: input.email.trim().toLowerCase() };
+    return {
+        email: input.email.trim().toLowerCase(),
+        ...perfilField(input.profile),
+    };
 }
 
 export function toResetPasswordBody(input: {
